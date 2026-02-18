@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SessionStatus {
+  DRAFT
+  SAJU_READY
+  PAID_UNLOCKED
+  GEMINI_READY
+}
+
+enum OrderStatus {
+  READY
+  APPROVED
+  CANCELLED
+  FAILED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  kakaoId   String   @unique
+  email     String?
+  nickname  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions  AnalysisSession[]
+  orders    Order[]
+}
+
+model AnalysisSession {
+  id            String        @id @default(cuid())
+  userId        String?
+  user          User?         @relation(fields: [userId], references: [id])
+  status        SessionStatus @default(DRAFT)
+  inputRedacted Json?
+  sajuReportJson Json?
+  geminiJson    Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  orders        Order[]
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  userId     String
+  user       User        @relation(fields: [userId], references: [id])
+  sessionId  String
+  session    AnalysisSession @relation(fields: [sessionId], references: [id])
+  provider   String      // "KAKAOPAY"
+  itemCode   String      // "PREMIUM_REPORT_V1"
+  amount     Int
+  currency   String      @default("KRW")
+  status     OrderStatus @default(READY)
+  tid        String?     @unique
+  approvedAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@index([userId, status])
+  @@index([sessionId, status])
+}
