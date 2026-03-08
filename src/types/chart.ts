@@ -7,9 +7,72 @@
 export interface ChartPayload {
   meta: ChartMeta
   원국_baseline: BaselineData
+  궁성론?: GungseongItem[]
   대운기둥10: DaewoonBlock[]
   연도별_타임라인: YearlyDatum[]
+  월운_타임라인?: MonthlyTimeline
   보조지표_범례: Record<string, IndicatorLegend>
+}
+
+export interface MonthlyTimeline {
+  target_year: number
+  data: MonthlyDatum[]
+}
+
+export interface MonthlyDatum {
+  month: number
+  간지: string
+  stem: string
+  branch: string
+  stemElement: string
+  branchElement: string
+  대운_pillar: string
+  세운_pillar: string
+  십성_천간: string
+  십성_지지: string
+  '12운성': string
+  용신부합: number
+  희신부합: number
+  기신부합: number
+  구신부합?: number | boolean
+  관계_with_원국?: RelationGroup[]
+  관계_with_대운?: string[]
+  관계_with_세운?: string[]
+  일주관계?: string[]
+  신살_길신?: string[]
+  신살_흉살?: string[]
+  candle: CandleData
+  scores: {
+    종합: number
+    직업: number
+    재물: number
+    건강: number
+    연애: number
+    결혼: number
+  }
+  breakdown?: ScoreBreakdown
+  trine_hits?: TrineHit[]
+  gongmang_factors?: GongmangFactors
+  shinsal_context_adj?: Record<string, number>
+  indicators: {
+    용신력: number
+    에너지장: EnergyField
+    귀인력: number
+    오행균형도: number
+    '12운성곡선': number
+    십성밸런스: TengoBalance
+  }
+  시즌태그: SeasonTag
+  이벤트확률: EventProbabilities
+}
+
+export interface GungseongItem {
+  궁: string
+  위치: string
+  천간?: string
+  지지?: string
+  십성?: string
+  해석?: string
 }
 
 // ─── meta ───
@@ -20,9 +83,13 @@ export interface ChartMeta {
   dayElement: string
   strength: string
   geokguk: string
+  geokgukType?: string
   yongshin: { label: string; element: string }
   heeshin: Array<{ label: string; element: string }>
   gishin: Array<{ label: string; element: string }>
+  johu?: Record<string, unknown>
+  tonggwan?: Record<string, unknown>
+  confidence?: string
 }
 
 // ─── 원국 baseline ───
@@ -92,9 +159,9 @@ export interface DaewoonBlock {
   십성_지지: string
   '12운성': string
   납음: string
-  용신부합: boolean
-  희신부합: boolean
-  기신부합: boolean
+  용신부합: number
+  희신부합: number
+  기신부합: number
   오행변화: Record<string, number>
   관계_with_원국: RelationGroup[]
   신살_길신: string[]
@@ -110,14 +177,29 @@ export interface DaewoonBlock {
   domainScore: Record<string, number>
   종합운점수: number
   등급: string
+  breakdown?: ScoreBreakdown
+  trine_hits?: TrineHit[]
+  gongmang_factors?: GongmangFactors
+  shinsal_context_adj?: Record<string, number>
   시즌태그: SeasonTag
   이벤트확률: EventProbabilities
 }
 
-// ─── 연도별 데이터 (86년) ───
+// ─── 연도별 데이터 (100년) ───
+export interface DaewoonTransition {
+  전환기: boolean
+  전환연도?: number
+  이전대운?: string | null
+  신규대운?: string
+  비고?: string
+}
+
 export interface YearlyDatum {
   year: number
   age: number
+  대운전환기?: DaewoonTransition
+  세운_일주관계?: string[]
+  월운_요약?: Array<Record<string, unknown>>
   대운_pillar: string
   세운_pillar: string
   세운_stem: string
@@ -127,9 +209,9 @@ export interface YearlyDatum {
   세운_십성_천간: string
   세운_십성_지지: string
   세운_12운성: string
-  세운_용신부합: boolean
-  세운_희신부합: boolean
-  세운_기신부합: boolean
+  세운_용신부합: number
+  세운_희신부합: number
+  세운_기신부합: number
   세운_관계_with_원국: RelationGroup[]
   세운_관계_with_대운: string[]
   세운_신살_길신: string[]
@@ -143,6 +225,10 @@ export interface YearlyDatum {
     연애: number
     결혼: number
   }
+  breakdown?: ScoreBreakdown
+  trine_hits?: TrineHit[]
+  gongmang_factors?: GongmangFactors
+  shinsal_context_adj?: Record<string, number>
   indicators: {
     용신력: number
     에너지장: EnergyField
@@ -155,9 +241,28 @@ export interface YearlyDatum {
   이벤트확률: EventProbabilities
 }
 
+// ─── v5 메타 타입 ───
+export interface TrineHit {
+  type: '삼합' | '방합'
+  name: string
+  element: string
+  applies_to: 'daewoon' | 'yearly' | 'monthly' | 'daily'
+}
+
+export interface GongmangFactors {
+  unseong: number
+  rel: number
+  yfit_branch: number
+  is_gongmang: boolean
+}
+
+export type ScoreBreakdown = Record<string, number>
+
 // ─── 공통 하위 타입 ───
 export interface RelationGroup {
   with: string
+  pillar_idx?: number
+  with_pillar_key?: '연' | '월' | '일' | '시'
   relations: string[]
 }
 

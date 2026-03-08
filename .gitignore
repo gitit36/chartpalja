@@ -49,22 +49,11 @@ Thumbs.db
 .venv/
 __pycache__/
 *.pyc
+.pytest_cache/
 
 # DB
 *.db
 *.db-journal
 
-# Obsolete
-/obsolete/
-
-# Python
-.venv/
-__pycache__/
-*.pyc
-
-# DB
-*.db
-*.db-journal
-
-# Obsolete
+# Obsolete / archived files
 /obsolete/

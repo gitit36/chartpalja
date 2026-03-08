@@ -1,22 +1,39 @@
-# 사주 분석 서비스
+# 차트팔자 — 사주팔자, 차트로 읽다
 
-Next.js 기반 사주 분석 웹 애플리케이션. Saju 계산은 **Python을 “한 번만 실행되는 도구”**로 사용합니다 (상시 Python 서버 없음).
+100년 인생의 흐름을 하나의 차트로 시각화하는 사주 분석 서비스.
 
-## 동작 방식
+## 핵심 구조
 
-- **런타임**: 사용자가 "사주 분석 시작"을 누르면 Next.js가 `python_service/run_once.py`를 **한 번** 실행(서브프로세스)하고, stdin으로 입력을 넘겨 JSON 결과를 받아 DB에 저장합니다.
-- **Python 서버 불필요**: 포트 8000, 상시 실행 없음. Python은 요청 시마다 한 번씩만 실행됩니다.
+```
+사주 입력 → Python 엔진 (deterministic score)
+         → 100세 타임라인 + breakdown
+         → Gemini LLM (서사 해설)
+         → 차트 + 운세 해설 UI
+```
+
+- **점수**: Python 사주 엔진이 계산 (saju_engine.py v5)
+- **해설**: Google Gemini가 breakdown 기반으로 reasoning 서사 생성
+- **Python 서버 불필요**: 요청마다 subprocess로 1회 실행
+
+## 기술 스택
+
+| 레이어 | 기술 |
+|--------|------|
+| Frontend | Next.js 15, React, Tailwind CSS, Recharts |
+| Backend | Next.js API Routes, Prisma ORM |
+| Engine | Python 3 (sajupy, saju_engine.py) |
+| AI | Google Gemini 2.5 Flash |
+| DB | PostgreSQL |
+| Auth | Kakao OAuth + Guest Mode |
 
 ## Quick Start
 
 ### 1. 의존성 설치
 
-**Node:**
 ```bash
 npm install
 ```
 
-**Python (sajupy + saju_engine):**
 ```bash
 cd python_service && pip install -r requirements.txt && cd ..
 ```
@@ -25,20 +42,21 @@ cd python_service && pip install -r requirements.txt && cd ..
 
 ```bash
 cp .env.example .env
+# .env 파일에 실제 값 입력
 ```
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `PYTHON_PATH` | No (default: `python3`) | Python 실행 파일 (Windows: `python` 등) |
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `SESSION_SECRET` | Yes | Session encryption secret (min 32 chars) |
-| `KAKAO_*`, `KAKAOPAY_*` | For auth/pay | Kakao OAuth / KakaoPay 설정 |
+| `GEMINI_API_KEY` | Yes | Google Gemini API key |
+| `SESSION_SECRET` | Yes | Session encryption (min 32 chars) |
+| `KAKAO_CLIENT_ID` | For auth | Kakao OAuth Client ID |
+| `PYTHON_PATH` | No | Python 실행 파일 (default: `python3`) |
 
 ### 3. DB 설정
 
 ```bash
-npm run db:generate
-npm run db:migrate
+npx prisma db push
 ```
 
 ### 4. 실행
@@ -47,44 +65,55 @@ npm run db:migrate
 npm run dev
 ```
 
-Next.js만 실행됩니다. [http://localhost:3000](http://localhost:3000) 에서 사용합니다.
-
-- Python 서버를 띄울 필요 없음.
-- "사주 분석 시작" 시마다 `python3 python_service/run_once.py` 가 한 번 실행됩니다.
-
-## 검증 (1997-03-06 03:25 남성, 양력)
-
-1. **한 번에 실행 스크립트**
-   ```bash
-   echo '{"birth_date":"1997-03-06","birth_time":"03:25","gender":"male"}' | python3 python_service/run_once.py
-   ```
-   연·월·일·시주 등 정규화된 JSON이 stdout에 출력됩니다.
-
-2. **Next.js**
-   - `/app/input` 에서 생년월일·시간 입력 후 게스트로 시작 → summary에서 "사주 분석 시작" 클릭.
-   - summary에 사주 카드가 그대로 나오면 동일한 Python 계산이 쓰인 것입니다.
+[http://localhost:3000](http://localhost:3000) 에서 사용합니다.
 
 ## 프로젝트 구조
 
 ```
-saju/
-├── python_service/
-│   ├── run_once.py      # 한 번 실행: stdin(JSON) → stdout(보고서 JSON)
-│   ├── saju_lib.py      # 공통 계산·정규화 (saju_engine 래핑)
-│   ├── main.py          # (선택) FastAPI 서버 — 로컬 검증용
-│   └── requirements.txt
-├── saju_engine.py       # 사주 엔진 (17개 섹션, sajupy + shinsal_lookup.csv)
-├── shinsal_lookup.csv   # 신살 CSV 데이터
-├── obsolete/            # 구버전·미사용 파일 보관
-├── test/                # 테스트 전용 (별도)
 ├── src/
-│   └── lib/saju/
-│       └── saju-report.ts  # buildSajuReportViaPython() → subprocess로 run_once.py 호출
-└── package.json
+│   ├── app/
+│   │   ├── (marketing)/        # 랜딩 페이지
+│   │   ├── app/
+│   │   │   ├── input/          # 사주 입력
+│   │   │   ├── list/           # 사주 목록
+│   │   │   └── saju/[id]/      # 사주 상세 (차트 + 해설)
+│   │   └── api/
+│   │       ├── saju/           # 사주 CRUD + 운세 생성
+│   │       └── auth/kakao/     # 카카오 OAuth
+│   ├── components/
+│   │   ├── ChartTab.tsx        # 총운 차트 + 보조지표 + 비교하기
+│   │   ├── InfoTab.tsx         # 사주 정보 탭
+│   │   └── summary/           # 사주 요약 컴포넌트
+│   ├── lib/
+│   │   ├── ai/                # LLM 프롬프트 + 데이터 추출
+│   │   ├── saju/              # 사주 리포트 빌더 + 차트 데이터 변환
+│   │   └── auth/, db/         # 인증, DB
+│   └── types/                 # TypeScript 타입 정의
+├── python_service/
+│   ├── run_once.py            # 엔트리포인트 (stdin → stdout)
+│   ├── saju_lib.py            # 엔진 래퍼
+│   └── requirements.txt
+├── saju_engine.py             # 사주 엔진 v5 (핵심)
+├── shinsal_lookup.csv         # 신살 데이터
+├── prisma/schema.prisma       # DB 스키마
+├── test/
+│   ├── test_scoring_v5.py     # 엔진 테스트 (pytest)
+│   └── snapshots/             # 스냅샷 테스트 데이터
+├── docs/                      # 제품 기획서, 엔진 진화 기록
+└── public/                    # 정적 에셋 (로고)
 ```
 
-## 참고
+## 테스트
 
-- Saju 계산은 **saju_engine.py** (sajupy + CSV 신살)를 사용합니다.
-- DB에는 생년월일·시각 원본을 저장하지 않고, `inputRedacted`(birthYear + 옵션)와 계산된 보고서 JSON만 저장합니다.
-- Python이 PATH에 없으면 503 에러가 나며, `PYTHON_PATH` 로 실행 파일을 지정할 수 있습니다.
+```bash
+pytest test/test_scoring_v5.py -v
+```
+
+## 주요 기능
+
+- **100세 인생 차트**: 세운/월운/대운 시각화
+- **보조지표**: 유리한 흐름, 변화의 파도, 귀인의 도움, 오행 균형도, 십성 밸런스, 이벤트 확률
+- **비교하기**: 두 사람의 차트 오버레이 + 궁합 분석
+- **AI 운세 해설**: 엔진 breakdown 기반 LLM reasoning 서사
+- **사주 정보**: 원국, 오행 분포, 십성 배치, 대운 흐름, 신살, 사주관계
+- **음력 윤달 지원**

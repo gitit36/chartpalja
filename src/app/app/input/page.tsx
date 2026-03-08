@@ -1,35 +1,28 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useCallback, useRef, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 import { MobileContainer } from '@/components/MobileContainer'
 
-const SAJU_DRAFT_KEY = 'saju_input_draft'
-
-export type SajuDraft = {
+interface FormData {
   name: string
   birthDate: string
   birthTime: string
   timeUnknown: boolean
   gender: 'male' | 'female'
   isLunar: boolean
-  city: string
-  useSolarTime: boolean
-  earlyZiTime: boolean
-  utcOffset: number
+  isLeapMonth: boolean
 }
 
-const defaultDraft: SajuDraft = {
+const defaultForm: FormData = {
   name: '',
   birthDate: '',
   birthTime: '',
   timeUnknown: false,
   gender: 'male',
   isLunar: false,
-  city: 'Seoul',
-  useSolarTime: true,
-  earlyZiTime: true,
-  utcOffset: 9,
+  isLeapMonth: false,
 }
 
 function isValidDate(y: number, m: number, d: number): boolean {
@@ -72,31 +65,76 @@ function parseTimeStr(formatted: string): string | null {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
 
+function getHeaders(): Record<string, string> {
+  const h: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (typeof window !== 'undefined') {
+    const gid = localStorage.getItem('saju_guest_id')
+    if (gid) h['x-guest-id'] = gid
+  }
+  return h
+}
+
 const LOADING_MESSAGES = [
-  '하늘의 별자리를 읽고 있어요...',
-  '사주팔자의 기운을 분석하는 중...',
-  '당신만의 운명 지도를 그리고 있어요...',
-  '오행의 흐름을 계산하고 있어요...',
-  '대운의 파도를 읽어내는 중...',
-  '인생 그래프가 곧 완성돼요!',
+  '100년의 흐름을 분석하고 있어요...',
+  '당신만의 리듬을 찾고 있어요...',
+  '인생의 챕터를 나누고 있어요...',
+  '운명의 차트가 곧 완성돼요...',
 ]
 
-export default function InputPage() {
+function InputPageInner() {
   const router = useRouter()
-  const [formData, setFormData] = useState<SajuDraft>(defaultDraft)
+  const searchParams = useSearchParams()
+  const editId = searchParams.get('edit')
+
+  const [form, setForm] = useState<FormData>(defaultForm)
   const [dateDisplay, setDateDisplay] = useState('')
   const [timeDisplay, setTimeDisplay] = useState('')
   const [dateError, setDateError] = useState('')
   const [timeError, setTimeError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
+  const [prefilling, setPrefilling] = useState(!!editId)
   const loadingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    return () => {
-      if (loadingInterval.current) clearInterval(loadingInterval.current)
-    }
+    return () => { if (loadingInterval.current) clearInterval(loadingInterval.current) }
   }, [])
+
+  useEffect(() => {
+    if (!editId) return
+    setPrefilling(true)
+    const headers: Record<string, string> = {}
+    if (typeof window !== 'undefined') {
+      const gid = localStorage.getItem('saju_guest_id')
+      if (gid) headers['x-guest-id'] = gid
+    }
+    fetch(`/api/saju/${editId}`, { headers })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data) return
+        const bd = (data.birthDate ?? '') as string
+        const bt = (data.birthTime ?? '') as string
+        const newForm: FormData = {
+          name: data.name ?? '',
+          gender: data.gender === 'female' ? 'female' : 'male',
+          birthDate: bd,
+          birthTime: bt,
+          timeUnknown: !!data.timeUnknown,
+          isLunar: !!data.isLunar,
+          isLeapMonth: !!data.isLeapMonth,
+        }
+        setForm(newForm)
+        if (bd) {
+          const parts = bd.split('-')
+          if (parts.length === 3) setDateDisplay(parts.join('.'))
+        }
+        if (bt && !data.timeUnknown) {
+          setTimeDisplay(bt)
+        }
+      })
+      .catch(() => {})
+      .finally(() => setPrefilling(false))
+  }, [editId])
 
   const handleDateChange = useCallback((value: string) => {
     const formatted = formatDateInput(value)
@@ -104,16 +142,10 @@ export default function InputPage() {
     const digits = value.replace(/\D/g, '')
     if (digits.length === 8) {
       const parsed = parseDateStr(formatted)
-      if (parsed) {
-        setFormData(prev => ({ ...prev, birthDate: parsed }))
-        setDateError('')
-      } else {
-        setDateError('올바르지 않은 날짜입니다')
-        setFormData(prev => ({ ...prev, birthDate: '' }))
-      }
+      if (parsed) { setForm(p => ({ ...p, birthDate: parsed })); setDateError('') }
+      else { setDateError('올바르지 않은 날짜입니다'); setForm(p => ({ ...p, birthDate: '' })) }
     } else {
-      setDateError('')
-      setFormData(prev => ({ ...prev, birthDate: '' }))
+      setDateError(''); setForm(p => ({ ...p, birthDate: '' }))
     }
   }, [])
 
@@ -123,20 +155,14 @@ export default function InputPage() {
     const digits = value.replace(/\D/g, '')
     if (digits.length === 4) {
       const parsed = parseTimeStr(formatted)
-      if (parsed) {
-        setFormData(prev => ({ ...prev, birthTime: parsed }))
-        setTimeError('')
-      } else {
-        setTimeError('올바르지 않은 시간입니다')
-        setFormData(prev => ({ ...prev, birthTime: '' }))
-      }
+      if (parsed) { setForm(p => ({ ...p, birthTime: parsed })); setTimeError('') }
+      else { setTimeError('올바르지 않은 시간입니다'); setForm(p => ({ ...p, birthTime: '' })) }
     } else {
-      setTimeError('')
-      setFormData(prev => ({ ...prev, birthTime: '' }))
+      setTimeError(''); setForm(p => ({ ...p, birthTime: '' }))
     }
   }, [])
 
-  const canSubmit = formData.birthDate && (formData.timeUnknown || formData.birthTime)
+  const canSubmit = !!form.name.trim() && !!form.birthDate && (form.timeUnknown || !!form.birthTime)
 
   const handleSubmit = async () => {
     if (!canSubmit) return
@@ -147,71 +173,72 @@ export default function InputPage() {
     }, 1800)
 
     try {
-      const birthYear = parseInt(formData.birthDate.slice(0, 4), 10)
-      const inputRedacted = {
-        birthYear,
-        gender: formData.gender,
-        city: formData.city,
-        useSolarTime: formData.useSolarTime,
-        earlyZiTime: formData.earlyZiTime,
-        utcOffset: formData.utcOffset,
-        timeUnknown: formData.timeUnknown,
+      if (editId) {
+        const res = await fetch(`/api/saju/${editId}`, {
+          method: 'PATCH',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            name: form.name.trim(),
+            gender: form.gender,
+            birthDate: form.birthDate,
+            birthTime: form.timeUnknown ? null : form.birthTime,
+            timeUnknown: form.timeUnknown,
+            isLunar: form.isLunar,
+            isLeapMonth: form.isLunar && form.isLeapMonth,
+          }),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.error || '수정 실패')
+        }
+        if (loadingInterval.current) clearInterval(loadingInterval.current)
+        router.push(`/app/saju/${editId}`)
+      } else {
+        const res = await fetch('/api/saju', {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            name: form.name.trim(),
+            gender: form.gender,
+            birthDate: form.birthDate,
+            birthTime: form.timeUnknown ? null : form.birthTime,
+            timeUnknown: form.timeUnknown,
+            isLunar: form.isLunar,
+            isLeapMonth: form.isLunar && form.isLeapMonth,
+          }),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          if (err.error === 'duplicate') {
+            if (loadingInterval.current) clearInterval(loadingInterval.current)
+            setIsLoading(false)
+            const goExisting = confirm(err.message + '\n\n기존 결과를 보시겠습니까?')
+            if (goExisting && err.existingId) router.push('/app/saju/' + err.existingId)
+            return
+          }
+          throw new Error(err.error || '분석 실패')
+        }
+        const { id } = await res.json()
+        if (loadingInterval.current) clearInterval(loadingInterval.current)
+        router.push(`/app/saju/${id}`)
       }
-
-      if (typeof window !== 'undefined') {
-        window.sessionStorage.setItem(SAJU_DRAFT_KEY, JSON.stringify(formData))
-        if (formData.name) window.sessionStorage.setItem('saju_user_name', formData.name)
-      }
-
-      const createRes = await fetch('/api/sessions/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input: inputRedacted }),
-      })
-      if (!createRes.ok) throw new Error('세션 생성 실패')
-      const { sessionId } = await createRes.json()
-
-      const sajuRes = await fetch(`/api/sessions/${sessionId}/saju`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          birthDate: formData.birthDate,
-          birthTime: formData.timeUnknown ? '12:00' : formData.birthTime,
-          timeUnknown: formData.timeUnknown,
-          gender: formData.gender,
-          city: formData.city,
-          useSolarTime: formData.useSolarTime,
-          earlyZiTime: formData.earlyZiTime,
-          utcOffset: formData.utcOffset,
-        }),
-      })
-
-      if (!sajuRes.ok) {
-        const err = await sajuRes.json().catch(() => ({}))
-        throw new Error(err.error || '분석 실패')
-      }
-
-      window.sessionStorage.removeItem(SAJU_DRAFT_KEY)
-      if (loadingInterval.current) clearInterval(loadingInterval.current)
-      router.push(`/app/session/${sessionId}/summary`)
     } catch (error) {
       if (loadingInterval.current) clearInterval(loadingInterval.current)
       setIsLoading(false)
-      const msg = error instanceof Error ? error.message : '오류가 발생했습니다'
-      alert(msg)
+      alert(error instanceof Error ? error.message : '오류가 발생했습니다')
     }
   }
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 flex flex-col items-center justify-center px-6">
-        <div className="relative mb-10">
-          <div className="w-24 h-24 rounded-full border-4 border-purple-400/30 border-t-purple-400 animate-spin" />
+        <div className="relative mb-12">
+          <div className="w-32 h-32 rounded-full border-4 border-purple-400/30 border-t-purple-400 animate-spin" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-3xl animate-pulse">&#x2728;</div>
+            <Image src="/svc_logo.png" alt="차트8자" width={56} height={51} className="animate-pulse drop-shadow-lg" />
           </div>
         </div>
-        <p className="text-white/90 text-lg font-medium text-center animate-pulse min-h-[56px] flex items-center">
+        <p className="text-white/90 text-lg font-medium text-center min-h-[56px] flex items-center">
           {LOADING_MESSAGES[loadingStep]}
         </p>
         <div className="flex gap-1.5 mt-6">
@@ -223,143 +250,130 @@ export default function InputPage() {
     )
   }
 
+  if (prefilling) {
+    return (
+      <MobileContainer>
+        <div className="flex items-center justify-center min-h-screen text-gray-400">불러오는 중...</div>
+      </MobileContainer>
+    )
+  }
+
   return (
     <MobileContainer>
-      <div className="py-4">
+      <div className="px-4 pt-6 pb-8">
+        <div className="flex items-center justify-between mb-4">
+          <button onClick={() => router.back()} className="text-gray-400 text-sm hover:text-gray-600">&larr; 뒤로</button>
+          <Image src="/svc_logo.png" alt="차트8자" width={32} height={29} />
+        </div>
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">내 사주 분석</h1>
-          <p className="text-sm text-gray-500">생년월일을 입력하면 인생 운세 차트를 그려드려요</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">{editId ? '사주 정보 수정' : '사주 정보 입력'}</h1>
+          <p className="text-sm text-gray-500">{editId ? '수정할 내용을 변경한 뒤 저장해주세요' : '생년월일을 입력하면 인생 운세 차트를 그려드려요'}</p>
         </div>
 
         <div className="space-y-5">
-          {/* 이름 */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">이름 (선택)</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition"
-              placeholder="홍길동"
-            />
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">이름</label>
+            <input type="text" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition" placeholder="홍길동" />
           </div>
 
-          {/* 성별 */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">성별</label>
             <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setFormData({ ...formData, gender: 'male' })}
-                className={`py-3 rounded-xl text-base font-medium transition-all ${
-                  formData.gender === 'male'
-                    ? 'bg-blue-500 text-white shadow-md shadow-blue-200'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                남성
-              </button>
-              <button
-                onClick={() => setFormData({ ...formData, gender: 'female' })}
-                className={`py-3 rounded-xl text-base font-medium transition-all ${
-                  formData.gender === 'female'
-                    ? 'bg-pink-500 text-white shadow-md shadow-pink-200'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                여성
-              </button>
+              {(['male', 'female'] as const).map(g => (
+                <button key={g} onClick={() => setForm({ ...form, gender: g })}
+                  className={`py-3 rounded-xl text-base font-medium transition-all ${
+                    form.gender === g
+                      ? (g === 'male' ? 'bg-blue-500 text-white shadow-md shadow-blue-200' : 'bg-pink-500 text-white shadow-md shadow-pink-200')
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}>
+                  {g === 'male' ? '남성' : '여성'}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* 생년월일 */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-sm font-semibold text-gray-700">생년월일</label>
-              <button
-                onClick={() => setFormData(prev => ({ ...prev, isLunar: !prev.isLunar }))}
-                className={`text-xs px-3 py-1 rounded-full font-medium transition-all ${
-                  formData.isLunar
-                    ? 'bg-amber-100 text-amber-700 ring-1 ring-amber-300'
-                    : 'bg-blue-50 text-blue-600 ring-1 ring-blue-200'
-                }`}
-              >
-                {formData.isLunar ? '음력 선택됨' : '양력 선택됨'}
-              </button>
+              <div className="flex items-center gap-2">
+                {form.isLunar && (
+                  <div className="flex bg-amber-50 rounded-full p-0.5 border border-amber-200">
+                    <button onClick={() => setForm(p => ({ ...p, isLeapMonth: false }))}
+                      className={`text-xs px-2.5 py-0.5 rounded-full font-medium transition-all ${
+                        !form.isLeapMonth ? 'bg-white text-amber-700 shadow-sm' : 'text-amber-400'
+                      }`}>평달</button>
+                    <button onClick={() => setForm(p => ({ ...p, isLeapMonth: true }))}
+                      className={`text-xs px-2.5 py-0.5 rounded-full font-medium transition-all ${
+                        form.isLeapMonth ? 'bg-white text-amber-700 shadow-sm' : 'text-amber-400'
+                      }`}>윤달</button>
+                  </div>
+                )}
+                <div className="flex bg-gray-100 rounded-full p-0.5">
+                  <button onClick={() => setForm(p => ({ ...p, isLunar: false, isLeapMonth: false }))}
+                    className={`text-xs px-3 py-1 rounded-full font-medium transition-all ${
+                      !form.isLunar ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'
+                    }`}>양력</button>
+                  <button onClick={() => setForm(p => ({ ...p, isLunar: true }))}
+                    className={`text-xs px-3 py-1 rounded-full font-medium transition-all ${
+                      form.isLunar ? 'bg-white text-amber-700 shadow-sm' : 'text-gray-400'
+                    }`}>음력</button>
+                </div>
+              </div>
             </div>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={dateDisplay}
-              onChange={(e) => handleDateChange(e.target.value)}
-              className={`w-full border rounded-xl px-4 py-3 text-lg tracking-wider focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition ${
-                dateError ? 'border-red-400 bg-red-50' : 'border-gray-200'
-              }`}
-              placeholder="예: 19970306"
-              maxLength={10}
-            />
+            <input type="text" inputMode="numeric" value={dateDisplay} onChange={e => handleDateChange(e.target.value)}
+              className={`w-full border rounded-xl px-4 py-3 text-lg tracking-wider focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition ${dateError ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}
+              placeholder="예: 19970306" maxLength={10} />
             {dateError && <p className="text-red-500 text-xs mt-1">{dateError}</p>}
-            {dateDisplay && !dateError && formData.birthDate && (
-              <p className="text-emerald-600 text-xs mt-1">{formData.birthDate.replace(/-/g, '.')} ({formData.isLunar ? '음력' : '양력'})</p>
+            {dateDisplay && !dateError && form.birthDate && (
+              <p className="text-emerald-600 text-xs mt-1">
+                {form.birthDate.replace(/-/g, '.')} ({form.isLunar ? (form.isLeapMonth ? '음력 윤달' : '음력') : '양력'})
+              </p>
             )}
           </div>
 
-          {/* 태어난 시간 */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-sm font-semibold text-gray-700">태어난 시간</label>
               <label className="flex items-center gap-2 cursor-pointer">
-                <div
-                  onClick={() => setFormData(prev => ({ ...prev, timeUnknown: !prev.timeUnknown }))}
-                  className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer ${
-                    formData.timeUnknown ? 'bg-purple-500' : 'bg-gray-300'
-                  }`}
-                >
-                  <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
-                    formData.timeUnknown ? 'translate-x-5' : 'translate-x-0.5'
-                  }`} />
+                <div onClick={() => setForm(p => ({ ...p, timeUnknown: !p.timeUnknown }))}
+                  className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer ${form.timeUnknown ? 'bg-purple-500' : 'bg-gray-300'}`}>
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${form.timeUnknown ? 'translate-x-5' : 'translate-x-0.5'}`} />
                 </div>
                 <span className="text-xs text-gray-600">시간 모름</span>
               </label>
             </div>
-            {formData.timeUnknown ? (
-              <div className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg tracking-wider text-gray-400 bg-gray-50">
-                --:--
-              </div>
+            {form.timeUnknown ? (
+              <div className="w-full border border-gray-200 rounded-xl px-4 py-3 text-lg tracking-wider text-gray-400 bg-gray-50">--:--</div>
             ) : (
               <>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={timeDisplay}
-                  onChange={(e) => handleTimeChange(e.target.value)}
-                  className={`w-full border rounded-xl px-4 py-3 text-lg tracking-wider focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition ${
-                    timeError ? 'border-red-400 bg-red-50' : 'border-gray-200'
-                  }`}
-                  placeholder="예: 0325"
-                  maxLength={5}
-                />
+                <input type="text" inputMode="numeric" value={timeDisplay} onChange={e => handleTimeChange(e.target.value)}
+                  className={`w-full border rounded-xl px-4 py-3 text-lg tracking-wider focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition ${timeError ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}
+                  placeholder="예: 0325" maxLength={5} />
                 {timeError && <p className="text-red-500 text-xs mt-1">{timeError}</p>}
               </>
             )}
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 mt-6 mb-4 text-center">
-          입력된 정보는 분석에만 사용되며 서버에 저장되지 않습니다.
-        </p>
-
-        <button
-          onClick={handleSubmit}
-          disabled={!canSubmit}
+        <p className="text-xs text-gray-400 mt-6 mb-4 text-center">입력된 정보는 분석에만 사용됩니다.</p>
+        <button onClick={handleSubmit} disabled={!canSubmit}
           className={`w-full py-4 rounded-2xl text-lg font-bold transition-all ${
             canSubmit
-              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-200 hover:shadow-xl hover:from-purple-700 hover:to-indigo-700 active:scale-[0.98]'
+              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-200 hover:shadow-xl active:scale-[0.98]'
               : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-          }`}
-        >
-          내 운세 차트 보기
+          }`}>
+          {editId ? '수정 완료' : '내 운세 차트 보기'}
         </button>
       </div>
     </MobileContainer>
+  )
+}
+
+export default function InputPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-gray-400">불러오는 중...</div>}>
+      <InputPageInner />
+    </Suspense>
   )
 }

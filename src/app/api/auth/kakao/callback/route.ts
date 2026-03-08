@@ -85,8 +85,12 @@ export async function GET(request: Request) {
       nickname: user.nickname,
     })
 
-    redirect('/app/input?success=logged_in')
+    // 저장된 사주가 있으면 리스트, 없으면 입력 화면으로
+    const entryCount = await prisma.sajuEntry.count({ where: { userId: user.id } })
+    redirect(entryCount > 0 ? '/app/list' : '/app/input')
   } catch (error) {
+    const err = error as Error & { digest?: string }
+    if (err?.digest?.startsWith('NEXT_REDIRECT')) throw error
     console.error('Kakao OAuth error:', error)
     redirect('/app/input?error=oauth_error')
   }

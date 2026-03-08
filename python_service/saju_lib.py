@@ -103,6 +103,8 @@ def _normalize_for_frontend(report: Dict[str, Any], redact: bool) -> Dict[str, A
             jiji_list.append({
                 "branch": branch,
                 "hidden_stems": hidden_stems,
+                "12운성": item.get("12운성", ""),
+                "납음": item.get("납음", ""),
             })
         out["오행십성_상세"] = {
             "천간": cheongan_list,
@@ -218,6 +220,18 @@ def _normalize_for_frontend(report: Dict[str, Any], redact: bool) -> Dict[str, A
     if "chart_data" in report:
         out["chartData"] = report["chart_data"]
 
+    # 15) 사주관계 (합충형파해)
+    if "사주관계" in report:
+        out["사주관계"] = report["사주관계"]
+
+    # 16) 패턴점수
+    if "패턴점수" in report:
+        out["패턴점수"] = report["패턴점수"]
+
+    # 17) DomainScore
+    if "DomainScore" in report:
+        out["DomainScore"] = report["DomainScore"]
+
     return out
 
 
@@ -229,7 +243,9 @@ def compute_report(
     city: Optional[str] = "Seoul",
     utc_offset: int = 9,
     use_solar_time: bool = True,
-    early_zi_time: bool = True,
+    early_zi_time: bool = False,
+    is_lunar: bool = False,
+    is_leap_month: bool = False,
     redact: bool = True,
 ) -> Dict[str, Any]:
     """Compute Saju report using saju_engine.py and return normalized JSON."""
@@ -240,7 +256,7 @@ def compute_report(
     y, m, d = _parse_date(birth_date)
     hour, minute = (12, 0) if time_unknown else _parse_time(birth_time)
 
-    calendar = "solar"
+    calendar = "lunar" if is_lunar else "solar"
     birth = BirthInput(
         year=y,
         month=m,
@@ -248,6 +264,7 @@ def compute_report(
         hour=hour,
         minute=minute,
         calendar=calendar,
+        is_leap_month=is_leap_month,
         gender=gender,
         city=city or "Seoul",
         use_solar_time=use_solar_time,

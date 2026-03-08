@@ -47,7 +47,9 @@ export async function buildSajuReportViaPython(
     city: input.city ?? 'Seoul',
     utc_offset: input.utcOffset ?? 9,
     use_solar_time: input.useSolarTime ?? true,
-    early_zi_time: input.earlyZiTime ?? true,
+    early_zi_time: input.earlyZiTime ?? false,
+    is_lunar: !!input.isLunar,
+    is_leap_month: !!input.isLeapMonth,
   }
   const inputStr = JSON.stringify(body)
   console.log('[saju-report] Using Python:', PYTHON_CMD)

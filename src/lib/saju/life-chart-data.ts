@@ -4,10 +4,10 @@
  * 없으면 기존 대운기둥10 + 시드 로직으로 폴백합니다.
  */
 import type { SajuReportJson } from '@/types/saju-report'
-import type { ChartPayload, YearlyDatum } from '@/types/chart'
+import type { ChartPayload, YearlyDatum, MonthlyDatum, ScoreBreakdown, TrineHit, GongmangFactors } from '@/types/chart'
 import { pillarToHangul } from './hanja-hangul'
 
-const NUM_YEARS = 86
+const NUM_YEARS = 100
 
 // ── ChartDatum (캔들 + 보조지표 8종) ──
 
@@ -56,6 +56,11 @@ export type ChartDatum = {
   eventWealth: number
   eventStudy: number
   eventConflict: number
+  // v5 메타
+  breakdown?: ScoreBreakdown
+  trineHits?: TrineHit[]
+  gongmangFactors?: GongmangFactors
+  shinsalContextAdj?: Record<string, number>
 }
 
 export type DaewoonLabel = {
@@ -84,11 +89,65 @@ export type AnnotationItem = { year: number; text: string }
 export type LifeChartData = {
   years: number[]
   data: ChartDatum[]
+  monthlyData?: ChartDatum[]
   boundaryYears: number[]
   daewoonLabels: DaewoonLabel[]
   annotations: AnnotationItem[]
   lifeStages: LifeStage[]
   seasonBands: SeasonBand[]
+}
+
+// ── 월운 데이터 → ChartDatum[] 변환 ──
+
+function buildMonthlyData(monthly: MonthlyDatum[], daewoonPillarFallback: string): ChartDatum[] {
+  return monthly.map((md) => {
+    const ind = md.indicators
+    const ev = md['이벤트확률']
+    const season = md['시즌태그']
+    return {
+      year: md.month,
+      age: 0,
+      open: md.candle.open,
+      close: md.candle.close,
+      high: md.candle.high,
+      low: md.candle.low,
+      candleType: md.candle.type,
+      score: md.scores['종합'],
+      trend: md.candle.open,
+      yongshinPower: ind['용신력'],
+      energyTotal: ind['에너지장'].total,
+      energyDirection: ind['에너지장'].direction,
+      noblePower: ind['귀인력'],
+      ohangBalance: ind['오행균형도'],
+      unseongCurve: ind['12운성곡선'],
+      tengo비겁: ind['십성밸런스']['비겁'],
+      tengo식상: ind['십성밸런스']['식상'],
+      tengo재성: ind['십성밸런스']['재성'],
+      tengo관살: ind['십성밸런스']['관살'],
+      tengo인성: ind['십성밸런스']['인성'],
+      domainJob: md.scores['직업'],
+      domainWealth: md.scores['재물'],
+      domainHealth: md.scores['건강'],
+      domainLove: md.scores['연애'],
+      domainMarriage: md.scores['결혼'],
+      daewoonPillar: md['대운_pillar'] || daewoonPillarFallback,
+      sewoonPillar: md['세운_pillar'],
+      grade: '',
+      seasonTag: season.tag,
+      seasonEmoji: season.emoji,
+      seasonDesc: season.desc,
+      eventCareer: ev['이직_전환'],
+      eventLove: ev['연애_결혼'],
+      eventHealth: ev['건강_주의'],
+      eventWealth: ev['재물_기회'],
+      eventStudy: ev['학업_시험'],
+      eventConflict: ev['대인_갈등'],
+      breakdown: md.breakdown,
+      trineHits: md.trine_hits,
+      gongmangFactors: md.gongmang_factors,
+      shinsalContextAdj: md.shinsal_context_adj,
+    }
+  })
 }
 
 // ── 새 엔진 데이터 기반 빌더 ──
@@ -173,6 +232,10 @@ function buildFromChartPayload(chartPayload: ChartPayload): LifeChartData {
         eventWealth: ev['재물_기회'],
         eventStudy: ev['학업_시험'],
         eventConflict: ev['대인_갈등'],
+        breakdown: yd.breakdown,
+        trineHits: yd.trine_hits,
+        gongmangFactors: yd.gongmang_factors,
+        shinsalContextAdj: yd.shinsal_context_adj,
       })
     } else {
       data.push(emptyDatum(year, i, trend))
@@ -187,7 +250,13 @@ function buildFromChartPayload(chartPayload: ChartPayload): LifeChartData {
   const lifeStages = buildLifeStages(boundaryYears, birthYear)
   const seasonBands = buildSeasonBands(data)
 
-  return { years, data, boundaryYears, daewoonLabels, annotations, lifeStages, seasonBands }
+  // 월운 데이터 변환
+  const mt = chartPayload['월운_타임라인']
+  const monthlyData = mt?.data?.length
+    ? buildMonthlyData(mt.data, daewoonLabels[0]?.pillar ?? '')
+    : undefined
+
+  return { years, data, monthlyData, boundaryYears, daewoonLabels, annotations, lifeStages, seasonBands }
 }
 
 // ── 시즌밴드 (연속 같은 시즌태그 구간) ──
@@ -314,7 +383,11 @@ function buildLifeStages(boundaryYears: number[], birthYear: number): LifeStage[
     stages.push({ label: '여름: 성공과 위기의 공존', x1: boundaryYears[4]!, x2: boundaryYears[6]! - 1, fillOpacity: 0.08 })
   }
   if (boundaryYears.length >= 7) {
-    stages.push({ label: '가을: 수확과 안정', x1: boundaryYears[6]!, x2: lastYear, fillOpacity: 0.08 })
+    const autumnEnd = boundaryYears.length >= 9 ? boundaryYears[8]! - 1 : lastYear
+    stages.push({ label: '가을: 수확과 안정', x1: boundaryYears[6]!, x2: Math.min(autumnEnd, lastYear), fillOpacity: 0.08 })
+  }
+  if (boundaryYears.length >= 9) {
+    stages.push({ label: '만년: 지혜와 회고', x1: boundaryYears[8]!, x2: lastYear, fillOpacity: 0.06 })
   }
 
   return stages
@@ -334,4 +407,107 @@ export function buildLifeChartData(
     return buildLegacy(report, birthYear)
   }
   return null
+}
+
+// ── Prompt Helper: 전환기 + 최고/최저 연도 ──
+
+export type TransitionYear = {
+  year: number
+  age: number
+  reason: string
+}
+
+export function extractTransitionYears(data: ChartDatum[]): TransitionYear[] {
+  if (!data.length) return []
+  const results: TransitionYear[] = []
+  const seen = new Set<number>()
+
+  for (let i = 1; i < data.length; i++) {
+    const d = data[i]!
+    const prev = data[i - 1]!
+    if (d.daewoonPillar !== prev.daewoonPillar && !seen.has(d.year)) {
+      results.push({ year: d.year, age: d.age, reason: `대운교체(${prev.daewoonPillar}→${d.daewoonPillar})` })
+      seen.add(d.year)
+    }
+  }
+
+  const sorted = [...data].sort((a, b) => b.score - a.score)
+  const peak = sorted[0]!
+  if (!seen.has(peak.year)) {
+    results.push({ year: peak.year, age: peak.age, reason: `인생최고점(${Math.round(peak.score)}점)` })
+    seen.add(peak.year)
+  }
+  const valley = sorted[sorted.length - 1]!
+  if (!seen.has(valley.year)) {
+    results.push({ year: valley.year, age: valley.age, reason: `인생최저점(${Math.round(valley.score)}점)` })
+    seen.add(valley.year)
+  }
+
+  return results.sort((a, b) => a.year - b.year)
+}
+
+// ── Prompt Helper: 3년 요약 (작년/올해/내년) ──
+
+export type ThreeYearContext = {
+  prev: ChartDatum | null
+  current: ChartDatum | null
+  next: ChartDatum | null
+  trendLabel: string
+}
+
+export function extract3YearContext(data: ChartDatum[], currentYear: number): ThreeYearContext {
+  const prev = data.find(d => d.year === currentYear - 1) ?? null
+  const current = data.find(d => d.year === currentYear) ?? null
+  const next = data.find(d => d.year === currentYear + 1) ?? null
+
+  let trendLabel = '안정'
+  if (prev && current && next) {
+    const diff = next.score - prev.score
+    if (diff > 8) trendLabel = '상승세'
+    else if (diff < -8) trendLabel = '하락세'
+    else trendLabel = '횡보'
+  }
+
+  return { prev, current, next, trendLabel }
+}
+
+// ── Prompt Helper: 인생 전반 요약 통계 ──
+
+export type LifetimeSummary = {
+  avgScore: number
+  peakYear: number
+  peakScore: number
+  valleyYear: number
+  valleyScore: number
+  topSeasons: string[]
+  daewoonCount: number
+}
+
+export function extractLifetimeSummary(data: ChartDatum[]): LifetimeSummary {
+  if (!data.length) return { avgScore: 50, peakYear: 0, peakScore: 0, valleyYear: 0, valleyScore: 0, topSeasons: [], daewoonCount: 0 }
+
+  const scores = data.map(d => d.score)
+  const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+  const sorted = [...data].sort((a, b) => b.score - a.score)
+  const peak = sorted[0]!
+  const valley = sorted[sorted.length - 1]!
+
+  const seasonCounts: Record<string, number> = {}
+  for (const d of data) {
+    if (d.seasonTag) seasonCounts[d.seasonTag] = (seasonCounts[d.seasonTag] ?? 0) + 1
+  }
+  const topSeasons = Object.entries(seasonCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([tag, count]) => `${tag}(${count}년)`)
+
+  const pillars = new Set(data.map(d => d.daewoonPillar).filter(Boolean))
+
+  return {
+    avgScore,
+    peakYear: peak.year, peakScore: Math.round(peak.score),
+    valleyYear: valley.year, valleyScore: Math.round(valley.score),
+    topSeasons,
+    daewoonCount: pillars.size,
+  }
 }

@@ -32,6 +32,8 @@ def main() -> None:
         utc_offset=int(raw.get("utc_offset", 9)),
         use_solar_time=bool(raw.get("use_solar_time", True)),
         early_zi_time=bool(raw.get("early_zi_time", True)),
+        is_lunar=bool(raw.get("is_lunar", False)),
+        is_leap_month=bool(raw.get("is_leap_month", False)),
         redact=True,
     )
     print(json.dumps(result, ensure_ascii=False))
