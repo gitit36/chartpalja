@@ -13,6 +13,7 @@ COPY python_service/requirements.txt python_service/requirements.txt
 RUN pip install --no-cache-dir -r python_service/requirements.txt
 
 COPY package.json package-lock.json ./
+COPY prisma ./prisma
 RUN npm ci
 
 COPY . .
