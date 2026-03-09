@@ -8,7 +8,7 @@ export async function GET() {
     return new Response('Kakao OAuth not configured', { status: 500 })
   }
 
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`
+  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&prompt=login`
 
   redirect(kakaoAuthUrl)
 }

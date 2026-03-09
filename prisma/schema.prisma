@@ -14,13 +14,6 @@ enum SessionStatus {
   GEMINI_READY
 }
 
-enum OrderStatus {
-  READY
-  APPROVED
-  CANCELLED
-  FAILED
-}
-
 model User {
   id          String   @id @default(cuid())
   kakaoId     String   @unique
@@ -30,7 +23,10 @@ model User {
   updatedAt   DateTime @updatedAt
   sessions    AnalysisSession[]
   orders      Order[]
+  paymentOrders PaymentOrder[]
   sajuEntries SajuEntry[]
+  balance     UserBalance?
+  ledger      EntitlementLedger[]
 }
 
 model SajuEntry {
@@ -68,20 +64,67 @@ model AnalysisSession {
 }
 
 model Order {
-  id         String      @id @default(cuid())
+  id         String   @id @default(cuid())
   userId     String
-  user       User        @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
   sessionId  String
   session    AnalysisSession @relation(fields: [sessionId], references: [id])
   provider   String
   itemCode   String
   amount     Int
-  currency   String      @default("KRW")
-  status     OrderStatus @default(READY)
-  tid        String?     @unique
+  currency   String   @default("KRW")
+  status     String   @default("READY")
+  tid        String?  @unique
   approvedAt DateTime?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   @@index([userId, status])
   @@index([sessionId, status])
+}
+
+// ─── Payment System v2 ───────────────────────────
+
+model PaymentOrder {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  productCode     String
+  productType     String
+  quantity        Int
+  amount          Int
+  currency        String    @default("KRW")
+  status          String    @default("pending")
+  paymentMethod   String?
+  provider        String?
+  providerTxId    String?   @unique
+  rawPayload      Json?
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  ledgerEntries   EntitlementLedger[]
+  @@index([userId])
+  @@index([status])
+}
+
+model UserBalance {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  chartCredits   Int      @default(0)
+  periodCredits  Int      @default(3)
+  updatedAt      DateTime @updatedAt
+}
+
+model EntitlementLedger {
+  id          String        @id @default(cuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  orderId     String?
+  order       PaymentOrder? @relation(fields: [orderId], references: [id])
+  creditType  String
+  delta       Int
+  reason      String
+  createdAt   DateTime      @default(now())
+  @@index([userId])
+  @@index([orderId])
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
+import { consumeCredit } from '@/lib/payment/entitlement'
 import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt, buildCompatibilitySummaryPrompt } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { YearChartData } from '@/lib/ai/fortune-prompt'
@@ -141,6 +142,13 @@ export async function GET(
         return NextResponse.json({ month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, summary: cached[cacheKey] })
       }
 
+      if (user) {
+        const consumed = await consumeCredit(user.id, 'period')
+        if (!consumed) {
+          return NextResponse.json({ error: '기간 해설 이용권이 부족합니다.' }, { status: 402 })
+        }
+      }
+
       const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
       const targetYear = chartPayload?.['월운_타임라인']?.target_year ?? new Date().getFullYear()
       const monthlyData: Array<{ month: number; score: number; breakdown?: Record<string, number>; seasonTag?: string; seasonEmoji?: string; domainJob?: number; domainWealth?: number; domainHealth?: number; domainLove?: number; domainMarriage?: number }> = []
@@ -179,6 +187,13 @@ export async function GET(
     const cached = (entry.fortuneJson as Record<string, unknown> | null)
     if (cached && typeof cached === 'object' && cached[cacheKey]) {
       return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary: cached[cacheKey] })
+    }
+
+    if (user) {
+      const consumed = await consumeCredit(user.id, 'period')
+      if (!consumed) {
+        return NextResponse.json({ error: '기간 해설 이용권이 부족합니다.' }, { status: 402 })
+      }
     }
 
     let summary: string

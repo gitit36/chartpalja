@@ -4,10 +4,10 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: '차트팔자 — 내 인생의 리듬',
-  description: '80년의 흐름을 하나의 차트로. 사주 기반 인생 운세 시각화 서비스.',
+  description: '100년의 흐름을 하나의 차트로. 사주 기반 인생 운세 시각화 서비스.',
   openGraph: {
     title: '차트팔자 — 내 인생의 리듬',
-    description: '80년의 흐름을 하나의 차트로',
+    description: '100년의 흐름을 하나의 차트로',
     type: 'website',
   },
 }

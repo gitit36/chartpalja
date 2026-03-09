@@ -8,6 +8,7 @@ import { InfoTab } from '@/components/InfoTab'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { ChartPayload } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
+import { HamburgerMenu } from '@/components/HamburgerMenu'
 
 declare global {
   interface Window {
@@ -251,6 +252,7 @@ export default function PersonalSajuPage() {
   const [shareOpen, setShareOpen] = useState(false)
   const [imageSaving, setImageSaving] = useState(false)
   const [regenerating, setRegenerating] = useState(false)
+  const [regenModal, setRegenModal] = useState<'confirm' | 'no-credit' | null>(null)
   const chartAreaRef = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
   const [overlayEntries, setOverlayEntries] = useState<OverlayEntryBasic[]>([])
@@ -284,16 +286,39 @@ export default function PersonalSajuPage() {
   const birthYear = entry ? parseInt(entry.birthDate.slice(0, 4), 10) : null
   const stockLine = useMemo(() => buildStockLine(report, birthYear), [report, birthYear])
 
-  const handleRegenerate = useCallback(async () => {
-    if (!confirm('사주를 재분석 하시겠습니까?')) return
+  const handleRegenerateClick = useCallback(async () => {
+    try {
+      const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
+      if (balRes.ok) {
+        const bal = await balRes.json()
+        if ((bal.chartCredits ?? 0) > 0) {
+          setRegenModal('confirm')
+        } else {
+          setRegenModal('no-credit')
+        }
+      } else {
+        setRegenModal('confirm')
+      }
+    } catch {
+      setRegenModal('confirm')
+    }
+  }, [])
+
+  const handleRegenerateConfirm = useCallback(async () => {
+    setRegenModal(null)
     setRegenerating(true)
     try {
       const headers = getHeaders()
-      const res = await fetch(`/api/saju/${id}/fortune?regenerate=true`, { headers })
+      const res = await fetch(`/api/saju/${id}/fortune?regenerate=true&consumeCredit=true`, { headers })
       if (res.ok) {
         const d = await res.json()
         if (d?.items) {
           setEntry(prev => prev ? { ...prev, fortuneJson: { items: d.items } } : prev)
+        }
+      } else {
+        const err = await res.json().catch(() => ({}))
+        if (err.error?.includes('이용권')) {
+          setRegenModal('no-credit')
         }
       }
     } catch { /* ignore */ }
@@ -305,21 +330,46 @@ export default function PersonalSajuPage() {
     const kakao = window.Kakao
     if (!kakao) { alert('카카오 SDK를 불러오지 못했습니다.'); return }
     const jsKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
-    if (jsKey && !kakao.isInitialized()) kakao.init(jsKey)
+    if (jsKey && !kakao.isInitialized()) {
+      try { kakao.init(jsKey) } catch { /* already initialized */ }
+    }
     if (!kakao.isInitialized()) { alert('카카오 앱키가 설정되지 않았습니다.'); return }
     const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
-    kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: `${entry.name}님의 인생 차트`,
-        description: stockLine ? `올해 운세 ${stockLine.score}점 | ${stockLine.label}` : '80년의 흐름을 하나의 차트로',
-        imageUrl: 'https://chart-palja.vercel.app/og-image.png',
-        link: { mobileWebUrl: pageUrl, webUrl: pageUrl },
-      },
-      buttons: [{ title: '차트 보기', link: { mobileWebUrl: pageUrl, webUrl: pageUrl } }],
-    })
+    const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chartpalja.com'
+    try {
+      kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: `${entry.name}님의 인생 차트`,
+          description: stockLine ? `올해 운세 ${stockLine.score}점 | ${stockLine.label}` : '100년의 흐름을 하나의 차트로',
+          imageUrl: `${siteUrl}/svc_logo_with_slogan_horizontal.png`,
+          link: { mobileWebUrl: pageUrl, webUrl: pageUrl },
+        },
+        buttons: [{ title: '차트 보기', link: { mobileWebUrl: pageUrl, webUrl: pageUrl } }],
+      })
+    } catch (err) {
+      console.error('Kakao share error:', err)
+      alert('카카오톡 공유에 실패했습니다.')
+    }
     setShareOpen(false)
   }, [entry, stockLine])
+
+  const handleCopyLink = useCallback(async () => {
+    const url = window.location.href
+    try {
+      await navigator.clipboard.writeText(url)
+      alert('링크가 복사되었어요!')
+    } catch {
+      const textarea = document.createElement('textarea')
+      textarea.value = url
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      alert('링크가 복사되었어요!')
+    }
+    setShareOpen(false)
+  }, [])
 
   const handleImageSave = useCallback(async () => {
     setImageSaving(true)
@@ -370,16 +420,11 @@ export default function PersonalSajuPage() {
       <div ref={scrollContainerRef} className="h-screen overflow-y-auto">
         {/* Sticky Header + Tabs */}
         <div className="sticky top-0 z-30 bg-white border-b border-gray-100">
-          <div className="px-4 pt-3 pb-2 relative">
-            <button onClick={() => router.push('/app/list')} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none">&larr;</button>
-            <button onClick={handleRegenerate} disabled={regenerating}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-600 disabled:opacity-30 transition-colors p-1"
-              title="운세 재분석">
-              <svg className={`w-5 h-5 ${regenerating ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h4.586M20 20v-5h-4.586M4.929 9A8 8 0 0119.07 9M19.071 15A8 8 0 014.93 15" />
-              </svg>
-            </button>
-            <div className="text-center">
+          <div className="px-4 pt-3 pb-2 flex items-center">
+            <div className="flex items-center gap-1 flex-shrink-0 w-[72px]">
+              <button onClick={() => router.push('/app/list')} className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg leading-none">&larr;</button>
+            </div>
+            <div className="flex-1 text-center min-w-0">
               <div className="flex items-center justify-center gap-1.5 mb-0.5">
                 <span className="font-bold text-gray-900">{entry.name}</span>
                 <span className="text-sm text-gray-500">(만 {calcAge(entry.birthDate)}세)</span>
@@ -387,6 +432,16 @@ export default function PersonalSajuPage() {
                 <span className="text-sm text-gray-500">{entry.gender === 'female' ? '여성' : '남성'}</span>
               </div>
               <div className="text-xs text-gray-500">{formatBirthLine(entry)}</div>
+            </div>
+            <div className="flex items-center gap-1 flex-shrink-0 w-[72px] justify-end">
+              <button onClick={handleRegenerateClick} disabled={regenerating}
+                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-purple-600 disabled:opacity-30 transition-colors"
+                title="운세 재분석">
+                <svg className={`w-5 h-5 ${regenerating ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h4.586M20 20v-5h-4.586M4.929 9A8 8 0 0119.07 9M19.071 15A8 8 0 014.93 15" />
+                </svg>
+              </button>
+              <HamburgerMenu />
             </div>
           </div>
           <div className="flex border-t border-gray-50">
@@ -448,16 +503,60 @@ export default function PersonalSajuPage() {
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#3C1E1E"><path d="M12 3C6.48 3 2 6.36 2 10.5c0 2.67 1.78 5.01 4.44 6.35-.15.54-.97 3.5-.99 3.72 0 0-.02.17.09.24.11.06.24.01.24.01.32-.04 3.7-2.44 4.28-2.86.62.09 1.26.14 1.94.14 5.52 0 10-3.36 10-7.5S17.52 3 12 3z"/></svg>
                 카카오톡으로 공유
               </button>
+              <button onClick={handleCopyLink}
+                className="w-full py-3.5 rounded-xl text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
+                링크 복사
+              </button>
               <button onClick={handleImageSave} disabled={imageSaving}
                 className="w-full py-3.5 rounded-xl text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all flex items-center justify-center gap-2 disabled:opacity-50">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                {imageSaving ? '저장 중...' : '이미지로 저장 (9장)'}
+                {imageSaving ? '저장 중...' : '이미지로 저장'}
               </button>
             </div>
             <button onClick={() => setShareOpen(false)}
               className="w-full py-3 mt-3 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">
               닫기
             </button>
+          </div>
+        </div>
+      )}
+      {/* Regenerate confirmation modal */}
+      {regenModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setRegenModal(null)}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative bg-white rounded-2xl p-6 mx-6 max-w-sm w-full shadow-xl" onClick={e => e.stopPropagation()}>
+            {regenModal === 'confirm' ? (
+              <>
+                <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">새로운 운세 해설을 받아볼 수 있어요.</p>
+                <p className="text-sm text-gray-500 text-center mb-5">이용권 1회가 사용됩니다. 다시 생성할까요?</p>
+                <div className="flex gap-3">
+                  <button onClick={() => setRegenModal(null)}
+                    className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+                    나중에
+                  </button>
+                  <button onClick={handleRegenerateConfirm}
+                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
+                    다시 생성
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">이용권이 모두 사용됐어요.</p>
+                <p className="text-sm text-gray-500 text-center mb-5">새로운 해설을 보려면 이용권이 필요해요.</p>
+                <div className="flex gap-3">
+                  <button onClick={() => setRegenModal(null)}
+                    className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+                    나중에
+                  </button>
+                  <button onClick={() => { setRegenModal(null); router.push('/app/checkout') }}
+                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
+                    이용권 구매
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

@@ -1,12 +1,7 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import Image from 'next/image'
-
-function generateGuestId() {
-  return 'g_' + Math.random().toString(36).slice(2) + Date.now().toString(36)
-}
 
 function AbstractCurve() {
   return (
@@ -28,22 +23,9 @@ function AbstractCurve() {
 }
 
 export default function LandingPage() {
-  const router = useRouter()
-
   const handleKakaoLogin = useCallback(() => {
     window.location.href = '/api/auth/kakao/start'
   }, [])
-
-  const handleTestStart = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      let gid = localStorage.getItem('saju_guest_id')
-      if (!gid) {
-        gid = generateGuestId()
-        localStorage.setItem('saju_guest_id', gid)
-      }
-    }
-    router.push('/app/input')
-  }, [router])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col items-center justify-center px-6 relative overflow-hidden">
@@ -71,12 +53,6 @@ export default function LandingPage() {
             className="w-full py-4 rounded-2xl text-base font-bold bg-[#FEE500] text-[#3C1E1E] shadow-lg hover:brightness-95 active:scale-[0.98] transition-all"
           >
             카카오로 시작하기
-          </button>
-          <button
-            onClick={handleTestStart}
-            className="w-full py-3.5 rounded-2xl text-sm font-medium bg-white/10 text-white/70 border border-white/15 hover:bg-white/15 active:scale-[0.98] transition-all"
-          >
-            테스트로 바로 시작
           </button>
         </div>
 

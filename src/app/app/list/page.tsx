@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MobileContainer } from '@/components/MobileContainer'
 import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
+import { HamburgerMenu } from '@/components/HamburgerMenu'
 
 interface SajuCard {
   id: string
@@ -66,11 +67,13 @@ export default function SajuListPage() {
     <MobileContainer>
       {/* Sticky header */}
       <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
-        <div className="flex justify-center px-4 py-3">
-          <div className="flex items-center gap-2.5">
+        <div className="flex items-center px-4 py-3">
+          <div className="w-8" />
+          <div className="flex-1 flex items-center justify-center gap-2.5">
             <Image src="/svc_logo.png" alt="차트8자" width={32} height={29} />
             <h1 className="text-xl font-bold text-gray-900">내 사주 목록</h1>
           </div>
+          <HamburgerMenu />
         </div>
       </div>
 

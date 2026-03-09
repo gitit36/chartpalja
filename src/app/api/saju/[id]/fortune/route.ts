@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
+import { consumeCredit } from '@/lib/payment/entitlement'
 import { buildFortunePrompt } from '@/lib/ai/fortune-prompt'
 import type { ChartSummary } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
@@ -123,6 +124,16 @@ export async function GET(
     if (!regenerate && entry.fortuneJson && isValidFortuneFormat(entry.fortuneJson)) {
       const cached = entry.fortuneJson as { items: unknown[] }
       return NextResponse.json({ items: cached.items ?? cached })
+    }
+
+    const isFirstGeneration = !entry.fortuneJson || !isValidFortuneFormat(entry.fortuneJson)
+    const isRegenWithConsume = regenerate && request.nextUrl.searchParams.get('consumeCredit') === 'true'
+
+    if ((isFirstGeneration || isRegenWithConsume) && user) {
+      const consumed = await consumeCredit(user.id, 'chart')
+      if (!consumed) {
+        return NextResponse.json({ error: '이용권이 부족합니다.' }, { status: 402 })
+      }
     }
 
     const report = entry.sajuReportJson as SajuReportJson | null
