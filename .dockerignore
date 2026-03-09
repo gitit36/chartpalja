@@ -1,0 +1,11 @@
+node_modules
+.next
+.venv
+__pycache__
+.pytest_cache
+.env
+.git
+obsolete
+test/이미지
+*.tsbuildinfo
+.DS_Store
