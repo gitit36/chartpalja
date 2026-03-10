@@ -12,6 +12,10 @@ export interface CreateOrderResponse {
   amount: number
   productCode: string
   productName: string
+  paymentConfig?: {
+    storeId: string
+    channelKey: string
+  } | null
 }
 
 export interface PortOneConfirmRequest {
@@ -31,14 +35,26 @@ export function getProvider(method: PaymentMethod): PaymentProvider {
   return 'portone'
 }
 
+export function getPortOneStoreId(): string {
+  return process.env.PORTONE_STORE_ID
+    ?? process.env.NEXT_PUBLIC_PORTONE_STORE_ID
+    ?? ''
+}
+
 export function getPortOneChannelKey(method: PaymentMethod): string {
   switch (method) {
     case 'kakaopay':
-      return process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY_KAKAOPAY ?? ''
+      return process.env.PORTONE_CHANNEL_KEY_KAKAOPAY
+        ?? process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY_KAKAOPAY
+        ?? ''
     case 'tosspay':
-      return process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY_TOSSPAY ?? ''
+      return process.env.PORTONE_CHANNEL_KEY_TOSSPAY
+        ?? process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY_TOSSPAY
+        ?? ''
     case 'card':
-      return process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY_CARD ?? ''
+      return process.env.PORTONE_CHANNEL_KEY_CARD
+        ?? process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY_CARD
+        ?? ''
     default:
       return ''
   }

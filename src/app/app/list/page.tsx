@@ -147,14 +147,15 @@ export default function SajuListPage() {
       </div>
 
       {/* Sticky bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-20">
+      <div className="fixed bottom-0 left-0 right-0 z-30">
         <div className="mx-auto max-w-[446px] p-4 bg-white border-t border-gray-100">
-          <button
-            onClick={() => router.push('/app/input')}
-            className="w-full py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
+          <Link
+            href="/app/input"
+            prefetch={true}
+            className="flex w-full items-center justify-center py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
           >
             + 사주 추가하기
-          </button>
+          </Link>
         </div>
       </div>
     </MobileContainer>

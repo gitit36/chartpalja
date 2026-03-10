@@ -87,6 +87,21 @@ def get_jijanggan(branch: str) -> list:
             result.append((stem, role, weights[role]))
     return result
 
+
+def _hidden_stems_by_role(branch: str) -> List[str]:
+    """지장간을 본기→중기→여기 순서로 반환한다."""
+    return [stem for stem, _role, _weight in get_jijanggan(branch)]
+
+
+def _add_branch_weighted_elements(
+    cnt: Dict[str, float],
+    branch: str,
+    scale: float = 1.0,
+) -> None:
+    """지지 1개를 지장간 역할 가중치에 따라 오행 카운트로 분해한다."""
+    for stem, _role, weight in get_jijanggan(branch):
+        cnt[STEM_ELEMENT[stem]] += scale * weight
+
 GANZHI_60   = [HEAVENLY_STEMS[i%10]+EARTHLY_BRANCHES[i%12] for i in range(60)]
 BRANCH_INDEX = {b:i for i,b in enumerate(EARTHLY_BRANCHES)}
 
@@ -145,7 +160,7 @@ def ten_god(day: str, tgt: str) -> str:
     return "?"
 
 def branch_main_hs(br: str) -> Optional[str]:
-    hs = BRANCH_HIDDEN_STEMS.get(br, [])
+    hs = _hidden_stems_by_role(br)
     return hs[0] if hs else None
 
 def branch_main_tg(day: str, br: str) -> str:
@@ -616,7 +631,7 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
         return {"격국": "양인격", "격국_십성": "겁재", "월지_본기": None, "격국유형": "특수격", "비고": "월지가 일간의 양인(羊刃)"}
 
     # ── 월지 지장간 탐색 ─────────────────────
-    hidden = BRANCH_HIDDEN_STEMS.get(month_branch, [])
+    hidden = _hidden_stems_by_role(month_branch)
     if not hidden:
         return {"격국": "불명", "격국_십성": "?", "월지_본기": None, "격국유형": "불명", "비고": "월지 지장간 없음"}
 
@@ -1047,8 +1062,7 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
     ohang_cnt = {"木":0,"火":0,"土":0,"金":0,"水":0}
     for s in stems: ohang_cnt[STEM_ELEMENT[s]] += 1
     for b in branches:
-        for h in BRANCH_HIDDEN_STEMS.get(b,[]):
-            ohang_cnt[STEM_ELEMENT[h]] += 0.5
+        _add_branch_weighted_elements(ohang_cnt, b, scale=1.0)
     jehwa_info = []
     for (attk, dfnd), mediator in _JEHWA_MAP.items():
         if ohang_cnt.get(attk,0)>=2 and ohang_cnt.get(dfnd,0)>=1:
@@ -1143,14 +1157,36 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             "기신_오행": [tmap.get(g, "?") for g in eokbu.get("기신_cat", [])],
         })
 
+    tonggwan_applied = False
+    if tonggwan_elem:
+        current_hee = list(result.get("희신_오행", []))
+        current_gi = set(result.get("기신_오행", []))
+        # 명리학 원칙: 통관은 상극을 완충하는 보조축이므로, 주용신을 덮기보다
+        # 최종 용신/희신이 포착하지 못한 경우 보조 희신으로 편입한다.
+        if (
+            tonggwan_elem != result.get("용신_오행")
+            and tonggwan_elem not in current_hee
+            and tonggwan_elem not in current_gi
+        ):
+            result.setdefault("희신", []).append(f"통관보조({tonggwan_elem})")
+            result.setdefault("희신_오행", []).append(tonggwan_elem)
+            tonggwan_applied = True
+            bigo = f"{bigo}; 통관 보조오행 {tonggwan_elem} 반영"
+        else:
+            tonggwan_applied = (
+                tonggwan_elem == result.get("용신_오행")
+                or tonggwan_elem in current_hee
+            )
+
     result.update({
         "억부용신": eokbu,
         "조후용신": johu,
         "통관용신": tonggwan,
-        "용신체계": "억부+조후+통관",
+        "용신체계": "억부+조후+통관보조" if tonggwan_elem else "억부+조후",
         "판정확신도": confidence,
         "조후민감도": johu_importance,
         "조후전환": johu_override,
+        "통관적용": tonggwan_applied,
         "비고": bigo,
     })
     return _add_gushin(result)
@@ -1160,18 +1196,14 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
 # ══════════════════════════════════════════════
 
 def ohang_imbalance(stems: List[str], branches: List[str]) -> Dict[str, Any]:
-    """v3.3: 지장간 중기·여기까지 가중치 포함하여 오행 분포 산출"""
+    """v3.3: 지장간 역할 가중치까지 반영한 오행 분포 산출"""
     cnt = {"木": 0.0, "火": 0.0, "土": 0.0, "金": 0.0, "水": 0.0}
     # 천간: 각 1.0
     for s in stems:
         cnt[STEM_ELEMENT[s]] += 1.0
-    # 지지: 본기 1.0, 중기 0.5, 여기 0.3
+    # 지지: get_jijanggan 가중치(합계 1.0)로 분해
     for b in branches:
-        hidden = BRANCH_HIDDEN_STEMS.get(b, [])
-        weights = [1.0, 0.5, 0.3]
-        for i, h in enumerate(hidden):
-            w = weights[i] if i < len(weights) else 0.2
-            cnt[STEM_ELEMENT[h]] += w
+        _add_branch_weighted_elements(cnt, b, scale=1.0)
     # 정수 표현용
     cnt_display = {e: round(v, 1) for e, v in cnt.items()}
     cnt_int = {e: int(round(v)) for e, v in cnt.items()}
@@ -2077,7 +2109,7 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
     # 천간지지 상세
     ganji = []
     for k, st, br in [("연주", stems[0], branches[0]), ("월주", stems[1], branches[1]), ("일주", stems[2], branches[2]), ("시주", stems[3], branches[3])]:
-        hs = BRANCH_HIDDEN_STEMS.get(br, [])
+        hs = _hidden_stems_by_role(br)
         ganji.append({
             "주": k, "간지": st + br, "천간": st, "지지": br,
             "천간음양": YINYANG_STEM[st], "지지음양": YINYANG_BRANCH[br],
@@ -2091,7 +2123,7 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
     ten_gods = {"연간": ten_god(ds, stems[0]), "월간": ten_god(ds, stems[1]), "시간": ten_god(ds, stems[3])}
     hidden_tg = {}
     for lbl, br in [("연지", branches[0]), ("월지", branches[1]), ("일지", branches[2]), ("시지", branches[3])]:
-        hidden_tg[lbl] = [{"간": h, "십성": ten_god(ds, h)} for h in BRANCH_HIDDEN_STEMS.get(br, [])]
+        hidden_tg[lbl] = [{"간": h, "십성": ten_god(ds, h)} for h in _hidden_stems_by_role(br)]
 
     # 오행 (v3.3: 지장간 가중치)
     ohang = ohang_imbalance(stems, branches)
@@ -2146,7 +2178,7 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
             "방향": "순행" if fwd else "역행",
             "시작나이": dw_m["start_age"],
             "시작나이_정밀": dw_m.get("start_age_precise", dw_m["start_age"]),
-            "블록": build_daewoon(mp, fwd, dw_m["start_age"]),
+            "블록": build_daewoon(mp, fwd, dw_m.get("start_age_precise", dw_m["start_age"])),
             "메타": dw_m,
         },
         "세운": build_sewoon(now, 20),
@@ -2185,7 +2217,7 @@ def build_gungseong(day_stem: str, stems: List[str], branches: List[str],
         unseong = twelve_unseong(day_stem, br)
         is_gongmang = br in gongmang
         # 지장간 십성
-        hidden_tg = [{"간": h, "십성": ten_god(day_stem, h)} for h in BRANCH_HIDDEN_STEMS.get(br, [])]
+        hidden_tg = [{"간": h, "십성": ten_god(day_stem, h)} for h in _hidden_stems_by_role(br)]
         info = _GUNGSEONG[label]
         # 특이사항 판별
         warnings = []
@@ -2656,19 +2688,32 @@ def _check_yongshin_fit(stem: str, branch: str, yong_info: Dict[str, Any], day_s
     jj = get_jijanggan(branch)
 
     def _score(target_set):
-        s = 0.0
-        if se in target_set:
-            s += _STEM_FIT_W
+        stem_sc = _STEM_FIT_W if se in target_set else 0.0
+        branch_sc = 0.0
         for hs, _role, w in jj:
             if STEM_ELEMENT[hs] in target_set:
-                s += w
-        return min(1.0, round(s, 2))
+                branch_sc += w
+        total = min(1.0, round(stem_sc + branch_sc, 2))
+        return round(stem_sc, 2), round(branch_sc, 2), total
+
+    y_stem, y_branch, y_total = _score({yong_e})
+    h_stem, h_branch, h_total = _score(hee_es)
+    g_stem, g_branch, g_total = _score(gi_es)
+    u_stem, u_branch, u_total = _score(gu_es)
 
     return {
-        "용신부합": _score({yong_e}),
-        "희신부합": _score(hee_es),
-        "기신부합": _score(gi_es),
-        "구신부합": _score(gu_es),
+        "용신부합": y_total,
+        "용신부합_천간": y_stem,
+        "용신부합_지지": y_branch,
+        "희신부합": h_total,
+        "희신부합_천간": h_stem,
+        "희신부합_지지": h_branch,
+        "기신부합": g_total,
+        "기신부합_천간": g_stem,
+        "기신부합_지지": g_branch,
+        "구신부합": u_total,
+        "구신부합_천간": u_stem,
+        "구신부합_지지": u_branch,
     }
 
 # ── 외래 간지 vs 원국 관계 분석 ─────────────────
@@ -2820,8 +2865,7 @@ def _ohang_balance(stems_list: List[str], branches_list: List[str],
         if s in STEM_ELEMENT:
             cnt[STEM_ELEMENT[s]] += 1
     for b in branches_list:
-        if b in BRANCH_ELEMENT_MAIN:
-            cnt[BRANCH_ELEMENT_MAIN[b]] += 1
+        _add_branch_weighted_elements(cnt, b, scale=1.0)
 
     total = sum(cnt.values())
     if total == 0:
@@ -3000,13 +3044,22 @@ def _composite_score(
     if gm is None:
         gm = {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0}
 
+    def _fit_with_gongmang(key: str) -> float:
+        stem_sc = float(yong_fit.get(f"{key}_천간", 0.0))
+        branch_sc = float(
+            yong_fit.get(
+                f"{key}_지지",
+                max(0.0, float(yong_fit.get(key, 0.0)) - stem_sc),
+            )
+        )
+        return stem_sc + branch_sc * gm["yfit_branch"]
+
     # yongshin_fit component
-    yfit_sc = (float(yong_fit.get("용신부합", 0)) * 15
-               + float(yong_fit.get("희신부합", 0)) * 8
-               - float(yong_fit.get("기신부합", 0)) * 15
-               - float(yong_fit.get("구신부합", 0)) * 8)
-    yf = float(yong_fit.get("용신부합", 0))
-    gf = float(yong_fit.get("기신부합", 0))
+    yf = _fit_with_gongmang("용신부합")
+    hf = _fit_with_gongmang("희신부합")
+    gf = _fit_with_gongmang("기신부합")
+    uf = _fit_with_gongmang("구신부합")
+    yfit_sc = (yf * 15 + hf * 8 - gf * 15 - uf * 8)
     if yf > 0 and gf > 0:
         yfit_sc -= 3 * min(yf, gf)
 
@@ -3019,8 +3072,7 @@ def _composite_score(
     uns_ctx = _unseong_tengo_adj(unseong, tg_stem, tg_branch) * gm["unseong"]
 
     # relations
-    rel_sc = (energy_direction * 2 * gm["rel"]
-              + noble_power * 0.5)
+    rel_sc = (energy_direction * 2 * gm["rel"] + noble_power * 0.5)
 
     # trine
     tri_sc = (trine_pos - trine_neg) * gm["rel"]
@@ -3135,8 +3187,9 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
         stem, branch = gz[0], gz[1]
         start_age = blk["start_age"]
         end_age = blk["end_age"]
-        start_year = birth_year + int(start_age)
-        end_year = birth_year + int(end_age)
+        # 명리학/제품 원칙: 시작나이 정밀값은 블록에는 유지하고, 연도 경계는 절삭으로 일관화한다.
+        start_year = birth_year + math.floor(start_age)
+        end_year = birth_year + math.floor(end_age)
 
         # 십성
         tg_stem = ten_god(day_stem, stem)
@@ -3618,7 +3671,10 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
             dw = d
             break
     if not dw:
-        dw = dw_detail[-1] if dw_detail else None
+        if dw_detail:
+            dw = dw_detail[0] if target_year < dw_detail[0]["start_year"] else dw_detail[-1]
+        else:
+            dw = None
     if not dw:
         return []
 
@@ -3643,17 +3699,24 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     # 연간 기준 월간 산출
     try:
         now_proxy = datetime(target_year, 6, 15, tzinfo=KST)
-        _, ygz = _year_gz(now_proxy)
-        year_stem = ygz[0]
+        month_defs = build_wolwoon(now_proxy)
     except Exception:
-        year_stem = sw_s
+        month_defs = []
+        for mi in range(12):
+            month_defs.append({
+                "month_index": mi + 1,
+                "branch": MONTH_BRANCHES[mi],
+                "ganzhi": _month_stem(sw_s, mi) + MONTH_BRANCHES[mi],
+            })
 
     timeline = []
-    for mi in range(12):
-        m_stem = _month_stem(year_stem, mi)
-        m_branch = MONTH_BRANCHES[mi]
-        m_gz = m_stem + m_branch
-        month_num = mi + 1
+    for mi, month_meta in enumerate(month_defs):
+        m_gz = month_meta["ganzhi"]
+        m_stem = m_gz[0]
+        m_branch = month_meta["branch"]
+        month_num = month_meta.get("month_index", mi + 1)
+        month_start = month_meta.get("start")
+        month_end = month_meta.get("end")
 
         # ── 기본 정보 ────────────────────────
         m_tg_stem = ten_god(ds, m_stem)
@@ -3802,6 +3865,8 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
 
         timeline.append({
             "month": month_num,
+            "start": month_start,
+            "end": month_end,
             "월건": m_branch,
             "간지": m_gz,
             "stem": m_stem,
@@ -3888,7 +3953,7 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
     
     # 십신
     tg_stem = ten_god(ds, d_stem)
-    tg_branch = ten_god(ds, BRANCH_HIDDEN_STEMS.get(d_branch, [d_stem])[0])
+    tg_branch = ten_god(ds, branch_main_hs(d_branch) or d_stem)
     
     # 12운성
     d_unseong = twelve_unseong(ds, d_branch)

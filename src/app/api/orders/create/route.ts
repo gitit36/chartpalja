@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { requireUser } from '@/lib/auth/session'
 import { getProduct } from '@/lib/payment/products'
 import type { CreateOrderRequest } from '@/lib/payment/types'
-import { getProvider } from '@/lib/payment/types'
+import { getProvider, getPortOneChannelKey, getPortOneStoreId } from '@/lib/payment/types'
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,6 +16,19 @@ export async function POST(request: NextRequest) {
     }
 
     const provider = getProvider(body.paymentMethod)
+    const paymentConfig = provider === 'portone'
+      ? {
+          storeId: getPortOneStoreId(),
+          channelKey: getPortOneChannelKey(body.paymentMethod),
+        }
+      : null
+
+    if (provider === 'portone' && (!paymentConfig?.storeId || !paymentConfig.channelKey)) {
+      return NextResponse.json(
+        { error: '결제 설정이 완료되지 않았습니다. 관리자에게 문의해 주세요.' },
+        { status: 500 },
+      )
+    }
 
     const order = await prisma.paymentOrder.create({
       data: {
@@ -36,6 +49,7 @@ export async function POST(request: NextRequest) {
       amount: order.amount,
       productCode: product.code,
       productName: product.name,
+      paymentConfig,
     })
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {

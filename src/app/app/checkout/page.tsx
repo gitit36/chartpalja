@@ -7,8 +7,7 @@ import { ProductSelector } from '@/components/payment/ProductSelector'
 import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelector'
 import { OrderSummaryCard } from '@/components/payment/OrderSummaryCard'
 import { formatPrice, getProduct } from '@/lib/payment/products'
-import type { PaymentMethod } from '@/lib/payment/types'
-import { getPortOneChannelKey } from '@/lib/payment/types'
+import type { CreateOrderResponse, PaymentMethod } from '@/lib/payment/types'
 
 declare global {
   interface Window {
@@ -49,7 +48,8 @@ async function createAndPay(
     const err = await orderRes.json().catch(() => ({}))
     return { success: false, error: err.error || '주문 생성 실패' }
   }
-  const { orderId, amount } = await orderRes.json()
+  const orderData = await orderRes.json() as CreateOrderResponse
+  const { orderId, amount, paymentConfig } = orderData
 
   const isMock = process.env.NEXT_PUBLIC_PAYMENT_MOCK === 'true'
   if (isMock) {
@@ -75,12 +75,16 @@ async function createAndPay(
 
   if (!window.PortOne) return { success: false, error: '결제 모듈 미로드' }
 
-  const channelKey = getPortOneChannelKey(paymentMethod)
+  const storeId = paymentConfig?.storeId ?? ''
+  const channelKey = paymentConfig?.channelKey ?? ''
+  if (!storeId || !channelKey) {
+    return { success: false, orderId, error: '결제 설정이 완료되지 않았습니다. 잠시 후 다시 시도해 주세요.' }
+  }
   const payMethodMap: Record<string, string> = { kakaopay: 'EASY_PAY', tosspay: 'EASY_PAY', card: 'CARD' }
   const easyPayMap: Record<string, Record<string, string>> = { kakaopay: { provider: 'KAKAOPAY' }, tosspay: { provider: 'TOSSPAY' } }
 
   const params: Record<string, unknown> = {
-    storeId: process.env.NEXT_PUBLIC_PORTONE_STORE_ID,
+    storeId,
     channelKey,
     paymentId: `payment_${orderId}_${Date.now()}`,
     orderName: product.name,

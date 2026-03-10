@@ -183,6 +183,93 @@ class TestT9bYongshinFitFloat:
 
 
 # ─────────────────────────────────────────────────
+# T9c: 경계/공망/통관 보강 회귀
+# ─────────────────────────────────────────────────
+
+class TestT9cBoundaryAndMeta:
+    def test_start_age_precise_propagates_to_blocks(self):
+        """대운 블록은 반올림값이 아니라 시작나이_정밀을 사용해야 함."""
+        inp = se.BirthInput(
+            year=1990, month=6, day=15, hour=8, minute=0,
+            gender="male", calendar="solar",
+        )
+        r = se.enrich_saju(inp)
+        precise = r["대운"]["시작나이_정밀"]
+        rounded = r["대운"]["시작나이"]
+        first_block = r["대운"]["블록"][0]
+        assert precise != rounded, "fixture should have distinct precise age"
+        assert abs(first_block["start_age"] - precise) < 0.01, (
+            f"block start_age should use precise age: {first_block['start_age']} vs {precise}"
+        )
+
+    def test_monthly_pre_daewoon_uses_first_block(self):
+        """대운 시작 전 월운 조회는 마지막 대운이 아니라 첫 대운을 사용해야 함."""
+        inp = se.BirthInput(
+            year=1990, month=6, day=15, hour=8, minute=0,
+            gender="male", calendar="solar",
+        )
+        r = se.enrich_saju(inp)
+        dw = se.build_daewoon_detail(r)
+        monthly = se.build_monthly_timeline(r, dw, 1990)
+        assert monthly, "monthly timeline should exist before first daewoon year"
+        assert monthly[0]["대운_pillar"] == dw[0]["daewoon_pillar"], (
+            f"expected first daewoon pillar, got {monthly[0]['대운_pillar']}"
+        )
+
+    def test_monthly_uses_solar_term_boundaries(self):
+        """점수형 월운도 build_wolwoon과 같은 절기 경계를 노출해야 함."""
+        inp = se.BirthInput(
+            year=1998, month=10, day=2, hour=23, minute=54,
+            gender="female", calendar="solar",
+        )
+        r = se.enrich_saju(inp)
+        dw = se.build_daewoon_detail(r)
+        monthly = se.build_monthly_timeline(r, dw, 2026)
+        expected = se.build_wolwoon(se.datetime(2026, 6, 15, tzinfo=se.KST))
+        assert len(monthly) == len(expected) == 12
+        for item, month_meta in zip(monthly, expected):
+            assert item["start"] == month_meta["start"]
+            assert item["end"] == month_meta["end"]
+            assert item["간지"] == month_meta["ganzhi"]
+
+    def test_gongmang_branch_yfit_damp_applies_to_score(self):
+        """공망이면 지지 쪽 용신부합은 yfit_branch 계수만큼 감쇠되어야 함."""
+        yfit = {
+            "용신부합": 1.0,
+            "용신부합_천간": 0.0,
+            "용신부합_지지": 1.0,
+            "희신부합": 0.0,
+            "희신부합_천간": 0.0,
+            "희신부합_지지": 0.0,
+            "기신부합": 0.0,
+            "기신부합_천간": 0.0,
+            "기신부합_지지": 0.0,
+            "구신부합": 0.0,
+            "구신부합_천간": 0.0,
+            "구신부합_지지": 0.0,
+        }
+        gm = {"unseong": 1.0, "rel": 1.0, "yfit_branch": 0.7, "is_gongmang": True}
+        comp = se._composite_score(
+            50, yfit, "胎", 0, 0.0, 0.5, gm=gm
+        )
+        assert abs(comp["breakdown"]["yongshin_fit"] - 10.5) < 0.01, comp["breakdown"]
+
+    def test_tonggwan_is_applied_as_aux_heeshin(self):
+        """통관 오행이 최종 용신과 다르면 보조 희신으로 편입되어야 함."""
+        result = se.determine_yongshin(
+            {"격국": "편인격", "격국유형": "정격"},
+            "신강",
+            "甲",
+            "申",
+            ["庚", "辛", "甲", "庚"],
+            ["申", "酉", "申", "子"],
+        )
+        assert result["통관용신"]["통관용신"] == "水"
+        assert result["통관적용"] is True
+        assert "水" in result["희신_오행"], result
+
+
+# ─────────────────────────────────────────────────
 # T10: 스냅샷 회귀 — 극신약 사주, 나쁜 해 월운 변동
 # ─────────────────────────────────────────────────
 
