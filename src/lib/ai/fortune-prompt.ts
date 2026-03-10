@@ -251,6 +251,8 @@ function extractDaewoonSummary(chartPayload: ChartPayload | undefined): string {
 }
 
 interface CurrentYearDetail {
+  score: number
+  breakdown: ScoreBreakdown
   sewoonPillar: string; sewoonTgStem: string; sewoonTgBranch: string
   sewoonStemElement: string; sewoonBranchElement: string; sewoon12unseong: string
   candleOpen: number; candleClose: number; candleHigh: number; candleLow: number; candleType: string
@@ -298,6 +300,8 @@ function extractCurrentYearDetail(chartPayload: ChartPayload | undefined, year: 
   }
 
   return {
+    score: yd.scores?.['종합'] ?? 50,
+    breakdown: (yd.breakdown ?? {}) as ScoreBreakdown,
     sewoonPillar: yd['세운_pillar'] ? `${pillarToHangul(yd['세운_pillar'])}(${yd['세운_pillar']})` : '',
     sewoonTgStem: tgKr(yd['세운_십성_천간'] ?? ''),
     sewoonTgBranch: tgKr(yd['세운_십성_지지'] ?? ''),
@@ -511,8 +515,13 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
       cy.eventWealth > 40 ? `재물기회 ${cy.eventWealth}%` : '',
       cy.eventConflict > 40 ? `갈등 ${cy.eventConflict}%` : '',
     ].filter(Boolean).join(', ')
+    const bdEntries = Object.entries(cy.breakdown ?? {}).filter(([k]) => k !== 'base').sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+    const topUp = bdEntries.find(([, v]) => v > 0)
+    const topDown = bdEntries.find(([, v]) => v < 0)
+    const scoreFraming = `올해 종합 ${cy.score}점${topUp ? ` (가장 큰 상승 요인: ${topUp[0]})` : ''}${topDown ? ` (가장 큰 하락 요인: ${topDown[0]})` : ''}`
     currentYearBlock = `
 ## 올해(${currentYear}년) 상세
+- ★★ ${scoreFraming}
 - 세운: ${cy.sewoonPillar} / 천간 ${cy.sewoonTgStem}(${cy.sewoonStemElement}), 지지 ${cy.sewoonTgBranch}(${cy.sewoonBranchElement}), 12운성 ${cy.sewoon12unseong}
 - 영역별: 직업 ${cy.domainJob}, 재물 ${cy.domainWealth}, 건강 ${cy.domainHealth}, 연애 ${cy.domainLove}, 결혼 ${cy.domainMarriage}
 - 에너지장: ${cy.energyTotal.toFixed(1)}(${cy.energyDirection >= 0 ? '긍정' : '도전'} ${Math.abs(cy.energyDirection).toFixed(1)}) / 용신력 ${cy.yongshinPower} / 균형도 ${cy.ohangBalance.toFixed(2)}
@@ -563,6 +572,14 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
 - 명리학 전문용어를 설명 없이 나열하는 것 (정재, 편관, 장생, 관대, 12운성 등 → 반드시 일상어로 번역하거나 괄호 풀이)
 - 문서체/리포트체 ("~합니다", "~입니다" 반복). 반드시 비격식체 높임말(해요체/두루높임)로만 작성 ("~예요", "~거든요", "~해요", "~이에요").
 - 사주와 무관한 일반적 비유. 모든 비유는 이 사람의 원국에서 나와야 한다.
+- 누구에게나 적용 가능한 일반론. 모든 문장은 이 사람의 차트에서 나온 구체적 재료(간지/합충/신살/breakdown)를 근거로 해야 한다. 근거를 대지 못하면 그 문장을 삭제하라.
+  ❌ "올해는 변화가 많은 해입니다" / "건강에 유의하세요" / "좋은 인연이 올 수 있어요"
+  ⭕ "올해는 새로 들어오는 기운이 원래 사주의 흐름과 부딪히면서, 직장이나 주변 관계에서 묵혀 있던 갈등이 드러날 수 있는 시기예요" / "올해 세운과 대운의 기운이 겹치면서 소화기/비위 쪽이 특히 약해지거든요"
+
+## ★ 개인화 규칙 (핵심)
+- 3~9번 카테고리마다 최소 1곳에서 "왜냐하면..." 절을 포함하여, breakdown → 원시 재료 → 현실 영향을 역추적하라.
+- 작년/올해/내년 맥락에서 반드시 연도 간 비교를 하라. 예: "작년은 관계 점수가 마이너스였는데, 올해는 플러스로 반등했거든요. 이유는 세운이 바뀌면서..."
+- 올해 데이터가 있으면 반드시 breakdown에서 가장 큰 상승 요인/하락 요인을 읽고, 그것이 어떤 영역(직업/재물/건강/연애/결혼)에 구체적으로 영향을 주는지 서술하라.
 
 ## 비유 규칙 (물상 기반)
 - 비유/메타포는 반드시 이 사람의 일간 오행 + 지지 합충의 실제 물상에서 도출.
@@ -807,12 +824,14 @@ export function buildYearSummaryPrompt(
   const trStr = formatTrineHits(yearData.trineHits)
   const gmStr = formatGongmang(yearData.gongmangFactors)
 
-  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 그 점수를 원시 재료로 역추적하여 서사로 풀어라.
+  const shinsalStr = formatShinsalAdj(yearData.shinsalContextAdj)
+
+  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 너의 임무는 점수와 breakdown을 "원시 재료(간지/십성/12운성/지장간/합충형/신살/공망)"로 역추적해서 원인→영향→조언 서사를 만드는 것.
 사용자가 차트에서 ${yearData.year}년(만 ${age}세)을 클릭했어요.
 
-## 사주 핵심
+## 사주 원국 (원시 재료)
 [년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
-격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 기신: ${d.gishinStr}
+격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
 신강약: ${d.ssVerdict}, 공망: ${d.gongmang}
 십성: ${d.sipseongDetails}
 12운성: ${d.unseong12Details}
@@ -820,30 +839,32 @@ export function buildYearSummaryPrompt(
 신살: ${d.shinsalNames}
 지장간: ${d.jijangganDetails}
 
-## ${yearData.year}년 데이터
-- 점수: ${yearData.score}점 (대운기반 ${yearData.trend ?? '?'}점) / 시즌: ${yearData.seasonTag ?? '?'} ${yearData.seasonEmoji ?? ''}
-- 세운: ${yearData.sewoonPillar ? pillarToHangul(yearData.sewoonPillar) : '?'}, 12운성: ${yearData.sewoon12unseong ?? '?'}
+## ${yearData.year}년 데이터 (FACT)
+- 종합점수: ${yearData.score}점 (대운기반 ${yearData.trend ?? '?'}점) / 시즌: ${yearData.seasonTag ?? '?'} ${yearData.seasonEmoji ?? ''}
+- 세운: ${yearData.sewoonPillar ? pillarToHangul(yearData.sewoonPillar) : '?'} (오행: ${yearData.sewoonStemElement ?? '?'}/${yearData.sewoonBranchElement ?? '?'}), 십성: 천간${yearData.sewoonTgStem ?? '?'}/지지${yearData.sewoonTgBranch ?? '?'}, 12운성: ${yearData.sewoon12unseong ?? '?'}
 - 대운: ${yearData.daewoonPillar ? pillarToHangul(yearData.daewoonPillar) : '?'} ${yearData.grade ?? ''}
 - 영역별: ${domainStr || '정보 없음'}
 - 에너지: ${yearData.energyTotal?.toFixed(1) ?? '?'}(${(yearData.energyDirection ?? 0) >= 0 ? '긍정' : '도전'}) / 용신력 ${yearData.yongshinPower?.toFixed(2) ?? '?'}
-- 관계: 원국↔세운 ${yearData.sewoonRelsOrig ?? '?'} / 일주↔세운 ${yearData.sewoonIljuRel ?? '?'}
+- 관계: 원국↔세운 ${yearData.sewoonRelsOrig ?? '?'} / 일주↔세운 ${yearData.sewoonIljuRel ?? '?'} / 대운↔세운 ${yearData.sewoonRelsDw ?? '?'}
 - 신살: 길${yearData.gilshin ?? '없음'} / 흉${yearData.hyungshal ?? '없음'}${evtParts ? `\n- 이벤트: ${evtParts}` : ''}
-- 대운전환기: ${yearData.daewoonTransition ?? '해당없음'}${bdStr ? `\n- ★점수구성: ${bdStr}` : ''}${trStr ? `\n- 삼합/방합: ${trStr}` : ''}${gmStr ? `\n- ${gmStr}` : ''}
+- 대운전환기: ${yearData.daewoonTransition ?? '해당없음'}${bdStr ? `\n- ★점수구성(breakdown): ${bdStr}` : ''}${trStr ? `\n- 삼합/방합: ${trStr}` : ''}${gmStr ? `\n- ${gmStr}` : ''}${shinsalStr ? `\n- 신살보정: ${shinsalStr}` : ''}
 
-## 추론 방법
-1. ★점수구성(breakdown)에서 가장 큰 요인 2개를 잡는다.
-2. 그 요인의 원인을 간지 조합에서 찾는다.
-   예) 관계가 낮다 → "세운 지지 午와 원국 일지 子가 子午沖이라, 가까운 관계가 흔들리기 쉬운 해."
-   예) 용신부합이 높다 → "세운 천간이 용신과 같은 오행이라 필요한 기운이 들어오는 해."
+## 추론 방법 (반드시 따를 것)
+1. ★점수구성(breakdown)에서 가장 큰 요인 2개를 잡는다 — 이것이 이 해의 핵심 원인.
+2. 그 요인의 원인을 원시 재료(간지 조합)에서 찾는다.
+   예) 관계가 마이너스 → "세운 지지가 원국 일지와 충이라, 가까운 관계가 흔들리기 쉬운 해."
+   예) 유리한 흐름이 플러스 → "세운 천간이 용신과 같은 오행이라 필요한 기운이 들어오는 해."
 3. 간지 해석 → 현실 상황으로 번역: "직장에서 상사와 부딪힘", "연인과 사소한 다툼이 잦아짐" 등.
+4. 점수 높으면(55+): 어떤 영역에서 왜 유리한지 + 어떻게 최대화할지.
+5. 점수 낮으면(45-): 어떤 리스크가 왜 커지는지 + 구체적 대비 포인트.
 
 ## 규칙
 - 카톡/문자톤. 확신있게. 전문용어 금지(일상어로 번역). 한자 사용 금지(한글로만 작성).
-- 숫자/확률 낭독 절대 금지.
+- breakdown 숫자/확률/점수의 단순 낭독 절대 금지. 반드시 "그래서 현실에서 뭐가 일어나는지"로 번역.
   ❌ "용신부합 +3.2입니다" / "관계(합충) -8.0이에요"
   ⭕ "이 해는 필요한 기운이 딱 들어오는 해거든요" / "가까운 사람과 부딪히기 쉬운 시기예요"
 - 비유는 일간 오행 물상에서. 사주와 무관한 비유 금지.
-- 하면 좋은 일 1개, 피할 실수 1개, 체크포인트 1개.
+- 핵심 흐름 + 영역별 영향(좋은 점/조심할 점) + 실천 조언 1개.
 - 최대 300자.
 - special characters 금지 (*, #, $, %, &, ^, &).
 - 비격식체 높임말(해요체/두루높임)로 작성 ("~입니다/~합니다" ❌ → "~예요/~거든요/~해요" ⭕).
@@ -854,7 +875,14 @@ export function buildYearSummaryPrompt(
 
 export function buildMonthlySummaryPrompt(
   report: SajuReportJson,
-  monthlyData: Array<{ month: number; score: number; breakdown?: ScoreBreakdown; seasonTag?: string; seasonEmoji?: string; domainJob?: number; domainWealth?: number; domainHealth?: number; domainLove?: number; domainMarriage?: number }>,
+  monthlyData: Array<{
+    month: number; score: number; breakdown?: ScoreBreakdown;
+    seasonTag?: string; seasonEmoji?: string;
+    domainJob?: number; domainWealth?: number; domainHealth?: number; domainLove?: number; domainMarriage?: number;
+    trineHits?: unknown[]; gongmangFactors?: Record<string, unknown>; shinsalContextAdj?: Record<string, number>;
+    relationsOrig?: string; relationsDw?: string; relationsSw?: string;
+    ganzi?: string; stemElement?: string; branchElement?: string;
+  }>,
   targetYear: number,
   opts?: { birthYear?: number }
 ): string {
@@ -867,7 +895,19 @@ export function buildMonthlySummaryPrompt(
       md.domainWealth != null ? `재물${md.domainWealth}` : '',
       md.domainHealth != null ? `건강${md.domainHealth}` : '',
     ].filter(Boolean).join('/')
-    return `- ${md.month}월: ${md.score}점 ${md.seasonTag ?? ''}${md.seasonEmoji ?? ''}${domParts ? ` ${domParts}` : ''}${bdStr ? ` (${bdStr})` : ''}`
+    const trStr = formatTrineHits(md.trineHits as TrineHit[] | undefined)
+    const gmStr = formatGongmang(md.gongmangFactors as GongmangFactors | undefined)
+    const relParts = [
+      md.relationsOrig ? `원국↔${md.relationsOrig}` : '',
+      md.relationsDw ? `대운↔${md.relationsDw}` : '',
+      md.relationsSw ? `세운↔${md.relationsSw}` : '',
+    ].filter(Boolean).join(' / ')
+    const extras = [
+      trStr ? `삼합:${trStr}` : '',
+      gmStr || '',
+      relParts ? `관계:${relParts}` : '',
+    ].filter(Boolean).join(' | ')
+    return `- ${md.month}월${md.ganzi ? `(${pillarToHangul(md.ganzi)})` : ''}: ${md.score}점 ${md.seasonTag ?? ''}${md.seasonEmoji ?? ''}${domParts ? ` ${domParts}` : ''}${bdStr ? ` (${bdStr})` : ''}${extras ? `\n  ${extras}` : ''}`
   }).join('\n')
 
   const scores = monthlyData.map(m => m.score)
@@ -876,12 +916,12 @@ export function buildMonthlySummaryPrompt(
   const worst = monthlyData.reduce((a, b) => a.score < b.score ? a : b)
   const isSingle = monthlyData.length === 1
 
-  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 그 점수를 원시 재료로 역추적하여 서사로 풀어라.
+  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 너의 임무는 점수와 breakdown을 "원시 재료(간지/십성/12운성/지장간/합충형/신살/공망)"로 역추적해서 원인→영향→조언 서사를 만드는 것.
 사용자가 ${targetYear}년 월운 차트에서 ${isSingle ? `${monthlyData[0]!.month}월을 클릭` : `${monthlyData[0]!.month}~${monthlyData[monthlyData.length - 1]!.month}월 구간을 선택`}했어요.
 
-## 사주 핵심
+## 사주 원국 (원시 재료)
 [년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
-격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 기신: ${d.gishinStr}
+격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
 신강약: ${d.ssVerdict}, 공망: ${d.gongmang}
 십성: ${d.sipseongDetails}
 12운성: ${d.unseong12Details}
@@ -889,25 +929,25 @@ export function buildMonthlySummaryPrompt(
 신살: ${d.shinsalNames}
 지장간: ${d.jijangganDetails}
 
-## ${targetYear}년 월운 데이터
+## ${targetYear}년 월운 데이터 (FACT)
 ${monthLines}
 ${isSingle ? '' : `\n평균 ${avgScore}점 / 최고 ${best.month}월(${best.score}점) / 최저 ${worst.month}월(${worst.score}점)`}
 
-## 추론 방법
-1. 월운 breakdown에서 가장 큰 요인 1~2개를 잡는다.
-2. 그 달의 월간/월지가 원국의 어떤 기둥과 부딪히거나 돕는지 간지 조합으로 역추적.
-   예) "5월 월지 午가 원국 일지 子와 충이라, 가까운 사람과 사소한 마찰이 생기기 쉬운 달."
+## 추론 방법 (반드시 따를 것)
+1. 월운 breakdown에서 가장 큰 요인 1~2개를 잡는다 — 이것이 그 달의 핵심 원인.
+2. 그 달의 월간/월지가 원국/대운/세운의 어떤 기둥과 부딪히거나 돕는지 간지 조합으로 역추적.
+   예) "5월 월지가 원국 일지와 충이라, 가까운 사람과 사소한 마찰이 생기기 쉬운 달."
    예) "8월 월간이 용신 오행이라, 이 달은 기운이 살아나면서 일이 술술 풀리는 느낌."
 3. 간지 해석 → "그래서 현실에서 뭐가 일어나는지" 구체적 상황으로.
+4. 삼합/공망/신살이 있으면 왜 그 달이 특별한지 반드시 서사에 녹여라.
 
 ## 규칙
-- 카톡톤. 확신있게. 전문용어 금지(괄호 풀이 OK). 한자 사용 금지(한글로만 작성).
-- 숫자/확률 낭독 절대 금지.
+- 카톡톤. 확신있게. 전문용어 금지(일상어로 번역). 한자 사용 금지(한글로만 작성).
+- breakdown 숫자/확률/점수의 단순 낭독 절대 금지. 반드시 "그래서 현실에서 뭐가 일어나는지"로 번역.
   ❌ "용신부합 +3.2입니다" / "건강 점수 1.1점이에요"
   ⭕ "이 달은 필요한 기운이 잘 들어와서 몸이 가벼운 시기거든요" / "속이 답답하고 지치기 쉬운 달이에요"
 - 비유는 일간 오행 물상에서.
-- ${isSingle ? '최대 200자.' : '최대 300자.'}
-- 하면 좋은 일 1개, 피할 실수 1개.
+- ${isSingle ? '이번 달 핵심 흐름 1문장 + 왜 그런지 breakdown 기반 설명 + 조심할 점 or 활용할 점. 최대 200자.' : '구간 전체 흐름 + 가장 좋은 달/나쁜 달 이유 + 구간별 핵심 조언. 최대 300자.'}
 - special characters 사용 금지 (*, #, $, %, &, ^, &).
 - 비격식체 높임말(해요체/두루높임)로 작성.
 - 소개/인사말 금지.
@@ -958,12 +998,12 @@ export function buildRangeSummaryPrompt(
     ? transitionYears.map(y => `${y.year}년(${y.daewoonTransition})`).join(', ')
     : '없음'
 
-  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 그 점수를 원시 재료로 역추적하여 서사로 풀어라.
+  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 너의 임무는 점수와 breakdown을 "원시 재료(간지/십성/12운성/지장간/합충형/신살/공망)"로 역추적해서 원인→영향→조언 서사를 만드는 것.
 사용자가 차트에서 ${startYear}~${endYear}년(만 ${startAge}~${endAge}세) 구간을 선택했어요.
 
-## 사주 핵심
+## 사주 원국 (원시 재료)
 [년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
-격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 기신: ${d.gishinStr}
+격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
 신강약: ${d.ssVerdict}, 공망: ${d.gongmang}
 십성: ${d.sipseongDetails}
 12운성: ${d.unseong12Details}
@@ -971,7 +1011,7 @@ export function buildRangeSummaryPrompt(
 신살: ${d.shinsalNames}
 지장간: ${d.jijangganDetails}
 
-## 구간 데이터
+## 구간 데이터 (FACT)
 ${yearLines}
 
 ## 통계
@@ -980,20 +1020,21 @@ ${yearLines}
 - 시즌: ${Object.entries(seasonCounts).map(([k, v]) => `${k} ${v}년`).join(', ')}
 - 전환기: ${transStr}
 
-## 추론 방법
-1. 구간 내 점수 변화가 가장 큰 연도의 breakdown을 잡는다.
+## 추론 방법 (반드시 따를 것)
+1. 구간 전체를 상승기/하락기/전환기로 구분하고, 가장 큰 변화 원인을 breakdown에서 찾는다.
 2. 그 해의 세운 간지가 원국 어떤 기둥과 어떻게 작용하는지 역추적.
    예) "2028년 세운 지지가 원국 월지와 충이라, 직장 환경이 크게 뒤바뀌는 해."
 3. 간지 해석 → 현실 상황으로 번역.
+4. 전환기가 있으면 대운 교체의 의미를 반드시 서사에 녹여라.
 
 ## 규칙
 - 카톡/문자톤. 확신있게. 전문용어 금지(일상어로 번역). 한자 사용 금지(한글로만 작성).
 - 첫 문장에 이 기간 분위기를 일간 오행 물상 기반 비유로 압축.
-- 숫자/확률 낭독 절대 금지.
+- breakdown 숫자/확률/점수의 단순 낭독 절대 금지. 반드시 "그래서 현실에서 뭐가 일어나는지"로 번역.
   ❌ "관계(합충) -8.0이에요" / "용신부합 +4.1이라서"
   ⭕ "이 시기는 필요한 기운이 딱 맞게 들어와서" / "가까운 사람과 자꾸 부딪히는 시기"
 - 전환기가 포함되면 반드시 언급.
-- 하면 좋은 일 1개, 피할 실수 1개.
+- 이 구간의 전체 흐름 + 가장 큰 변화 원인 + 구간별 핵심 조언.
 - 최대 300자.
 - special characters 사용 금지 (*, #, $, %, &, ^, &).
 - 비격식체 높임말(해요체/두루높임)로 작성.

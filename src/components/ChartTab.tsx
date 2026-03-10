@@ -71,9 +71,15 @@ type PeriodKey = '1y' | '5y' | '10y' | 'all'
 type MainOverlayKey = (typeof MAIN_OVERLAYS)[number]['key']
 type AuxKey = (typeof AUX_PANELS)[number]['key']
 
-const BD_LABEL: Record<string, string> = {
-  yongshin_fit: '용신부합', unseong: '12운성', unseong_context: '12운성맥락',
-  relations: '관계', trine: '삼합/방합', balance: '오행균형', shinsal: '신살',
+const BD_LABEL_POS: Record<string, string> = {
+  yongshin_fit: '유리한 흐름', unseong: '생애 리듬', unseong_context: '시기 조합',
+  relations: '조화', trine: '에너지 합류', balance: '균형도', shinsal: '특수 영향',
+  disease_resolution: '체질 보완',
+}
+const BD_LABEL_NEG: Record<string, string> = {
+  yongshin_fit: '불리한 흐름', unseong: '생애 리듬', unseong_context: '시기 조합',
+  relations: '충돌', trine: '에너지 합류', balance: '균형도', shinsal: '특수 영향',
+  disease_resolution: '체질 보완',
 }
 
 function breakdownFactors(bd: ScoreBreakdown | undefined): { up: string[]; down: string[] } {
@@ -86,7 +92,7 @@ function breakdownFactors(bd: ScoreBreakdown | undefined): { up: string[]; down:
   const down: string[] = []
   for (const [k, v] of entries) {
     if (Math.abs(v) < 0.3) continue
-    const label = BD_LABEL[k] ?? k
+    const label = v >= 0 ? (BD_LABEL_POS[k] ?? k) : (BD_LABEL_NEG[k] ?? k)
     ;(v >= 0 ? up : down).push(`${label} ${v >= 0 ? '+' : ''}${v.toFixed(1)}`)
   }
   return { up: up.slice(0, 2), down: down.slice(0, 2) }

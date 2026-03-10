@@ -584,27 +584,42 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
             return {"격국": "종왕격", "격국_십성": "비겁", "월지_본기": None, "격국유형": "종격", "비고": f"극신강+제극 요소 미약({sum(cnt.values()):.1f})→종왕격"}
 
     # ── 화격(化格) 체크 ─────────────────────
-    # 일간이 포함된 천간합이 합화(化)를 이루고, 합화 오행이 월지 오행과 동일하면 화격
+    # 명리학 원칙: 화격 성립 조건이 매우 엄격함
+    # 1) 일간이 인접 천간(월간 or 시간)과 합
+    # 2) 합화 오행 = 월지 오행
+    # 3) 일간이 신약~중화여야 함 (신강이면 자기 힘이 강해 변화 거부)
+    # 4) 합화 오행을 극하는 오행이 천간에 없어야 함 (충극이 있으면 합화 파괴)
     mb_elem = BRANCH_ELEMENT_MAIN.get(month_branch, "")
     day_idx = 2  # stems[2] = 일간
-    for i, s in enumerate(stems):
-        if i == day_idx:
-            continue
-        pair = (stems[day_idx], s) if day_idx < i else (s, stems[day_idx])
-        hw_elem = _STEM_COMBINE_RESULT.get(pair)
-        if not hw_elem:
-            hw_elem = _STEM_COMBINE_RESULT.get((s, stems[day_idx]))
-        if hw_elem and hw_elem == mb_elem:
-            _HWHA_NAME = {"土": "화토격", "金": "화금격", "水": "화수격", "木": "화목격", "火": "화화격"}
-            hw_name = _HWHA_NAME.get(hw_elem, f"화{hw_elem}격")
-            labels = ["연간", "월간", "일간", "시간"]
-            return {
-                "격국": hw_name,
-                "격국_십성": "합화",
-                "월지_본기": None,
-                "격국유형": "화격",
-                "비고": f"일간{stems[day_idx]}+{labels[i]}{s} 합→{hw_elem}화, 월지{month_branch}({mb_elem})=화오행→화격 성립",
-            }
+    if verdict not in ("신강", "극신강"):  # 신강이면 화격 불성립
+        for i, s in enumerate(stems):
+            if i == day_idx:
+                continue
+            if abs(i - day_idx) != 1:  # 인접 천간만 유효 (월간=1, 시간=3)
+                continue
+            pair = (stems[day_idx], s) if day_idx < i else (s, stems[day_idx])
+            hw_elem = _STEM_COMBINE_RESULT.get(pair)
+            if not hw_elem:
+                hw_elem = _STEM_COMBINE_RESULT.get((s, stems[day_idx]))
+            if hw_elem and hw_elem == mb_elem:
+                # 합화 오행을 극하는 오행이 천간에 있으면 화격 파괴
+                ke_of_hw = {v: k for k, v in KE_MAP.items()}.get(hw_elem, "")
+                has_ke = any(
+                    STEM_ELEMENT[stems[j]] == ke_of_hw
+                    for j in range(4) if j != day_idx and j != i
+                )
+                if has_ke:
+                    continue
+                _HWHA_NAME = {"土": "화토격", "金": "화금격", "水": "화수격", "木": "화목격", "火": "화화격"}
+                hw_name = _HWHA_NAME.get(hw_elem, f"화{hw_elem}격")
+                labels = ["연간", "월간", "일간", "시간"]
+                return {
+                    "격국": hw_name,
+                    "격국_십성": "합화",
+                    "월지_본기": None,
+                    "격국유형": "화격",
+                    "비고": f"일간{stems[day_idx]}+{labels[i]}{s} 합→{hw_elem}화, 월지{month_branch}({mb_elem})=화오행→화격 성립",
+                }
 
     # ── [Fix-15] 일행득기격(一行得氣格) = 외격 체크 ──
     # 방합(方合) 완성 + 일간 오행 = 방합 오행 → 곡직격/염상격/가색격/종혁격/윤하격
@@ -749,12 +764,12 @@ def _find_tonggwan(stems: List[str], branches: List[str], day_stem: str) -> Opti
     for b in branches:
         cnt[BRANCH_ELEMENT_MAIN[b]] += 1
 
-    # 일간 오행을 극하는 오행(관살)이 3개 이상이면 통관 필요
+    # 일간 오행을 극하는 오행(관살)이 2개 이상이면 통관 필요
     ke_elem = None
     for e, k in KE_MAP.items():
         if k == de: # e가 de를 극함 → e가 관살
             ke_elem = e; break
-    if ke_elem and cnt.get(ke_elem, 0) >= 3:
+    if ke_elem and cnt.get(ke_elem, 0) >= 2:
         # 통관 = 관살 오행이 생하는 오행 (관살→식상 of 관살)
         tonggwan = GEN_MAP.get(ke_elem)
         return tonggwan
@@ -865,19 +880,319 @@ def _johu_importance_score(day_stem: str, month_branch: str,
 
 JOHU_OVERRIDE_THRESHOLD = 1.2  # 이 이상이면 조후가 억부를 대체
 
+# ── 9-5c: 병인 진단 ──────────────────────────
+# 명리학 원칙: 용신은 "부족 오행"이 아니라 "사주의 가장 큰 병(불균형)을 해결하는 오행"이다.
+# 병인을 먼저 정의한 뒤 해결 오행을 선택해야 정확한 용신이 나온다.
+
+_HANNANJOSEUP = {
+    "寅": "온", "卯": "온", "辰": "온습",
+    "巳": "서", "午": "서조", "未": "서습",
+    "申": "량", "酉": "량조", "戌": "조",
+    "亥": "한", "子": "한습", "丑": "한습",
+}
+
+def _diagnose_disease(
+    day_stem: str,
+    month_branch: str,
+    stems: List[str],
+    branches: List[str],
+    verdict: str,
+    tmap: Dict[str, str],
+) -> Dict[str, Any]:
+    """
+    원국의 '가장 큰 병(불균형)'을 진단한다.
+    반환: {
+      "primary": {"병인": str, "병인_오행": str, "유형": "과다"|"부족"|"한서"|"극전쟁", "시급도": float},
+      "secondary": {...} | None,
+      "한난조습": str,
+      "조후_시급도": float,  # 0.0~1.0
+      "억부_시급도": float,  # 0.0~1.0
+      "십성분포": Dict[str, float],
+    }
+    """
+    de = STEM_ELEMENT[day_stem]
+    inv_gen = {v: k for k, v in GEN_MAP.items()}
+
+    # ── 오행 분포(지장간 가중치 포함) ──────────
+    ohang_cnt: Dict[str, float] = {"木": 0.0, "火": 0.0, "土": 0.0, "金": 0.0, "水": 0.0}
+    for s in stems:
+        ohang_cnt[STEM_ELEMENT[s]] += 1.0
+    for b in branches:
+        _add_branch_weighted_elements(ohang_cnt, b, scale=1.0)
+    total_oh = sum(ohang_cnt.values())
+    avg_oh = total_oh / 5.0
+
+    # ── 십성 분포(가중) ─────────────────────
+    cat_cnt: Dict[str, float] = {"비겁": 0.0, "식상": 0.0, "재성": 0.0, "관살": 0.0, "인성": 0.0}
+    _jj_dw = {"본기": 1.0, "중기": 0.6, "여기": 0.3}
+    for i, s in enumerate(stems):
+        if i == 2:
+            cat_cnt["비겁"] += 1.0
+            continue
+        tg = ten_god(day_stem, s)
+        cat = _TENGO_CATEGORY.get(tg)
+        if cat:
+            cat_cnt[cat] += 1.0
+    for b in branches:
+        for h, role, _w in get_jijanggan(b):
+            dw = _jj_dw.get(role, 0.2)
+            tg = ten_god(day_stem, h)
+            cat = _TENGO_CATEGORY.get(tg)
+            if cat:
+                cat_cnt[cat] += dw
+
+    # ── 한난조습 진단 ──────────────────────
+    climate = _HANNANJOSEUP.get(month_branch, "온")
+    fire_total = ohang_cnt["火"]
+    water_total = ohang_cnt["水"]
+    johu_urgency = 0.0
+    if "한" in climate:
+        johu_urgency = 0.3 + max(0, water_total - fire_total) * 0.15
+        if fire_total < 0.5:
+            johu_urgency += 0.3
+    elif "서" in climate:
+        johu_urgency = 0.3 + max(0, fire_total - water_total) * 0.15
+        if water_total < 0.5:
+            johu_urgency += 0.3
+    elif "조" in climate:
+        johu_urgency = 0.15 + max(0, (fire_total + ohang_cnt["土"]) - water_total * 2) * 0.1
+    elif "습" in climate:
+        johu_urgency = 0.15 + max(0, water_total - fire_total) * 0.1
+    johu_urgency = min(1.0, round(johu_urgency, 2))
+
+    # ── 억부 시급도 ──────────────────────
+    _VERDICT_URGENCY = {"극신강": 0.9, "신강": 0.5, "중화": 0.1, "신약": 0.5, "극신약": 0.9}
+    eokbu_urgency = _VERDICT_URGENCY.get(verdict, 0.3)
+
+    # ── 십성 과다/부족 병인 탐색 ───────────
+    diseases: List[Dict[str, Any]] = []
+
+    bigyeop = cat_cnt["비겁"] + cat_cnt["인성"]  # 일간 편 세력
+    seol_gi = cat_cnt["식상"] + cat_cnt["재성"] + cat_cnt["관살"]  # 반대 세력
+
+    for cat_name in ("비겁", "인성", "식상", "재성", "관살"):
+        val = cat_cnt[cat_name]
+        elem = tmap[cat_name]
+        if val >= 3.5:
+            diseases.append({"병인": f"{cat_name}과다", "병인_오행": elem,
+                             "유형": "과다", "시급도": round(0.5 + (val - 3.5) * 0.2, 2)})
+        elif val >= 2.5 and ohang_cnt[elem] >= avg_oh * 1.6:
+            diseases.append({"병인": f"{cat_name}과다", "병인_오행": elem,
+                             "유형": "과다", "시급도": round(0.3 + (val - 2.5) * 0.2, 2)})
+
+    # 관살 과다 → 일간 피극이 핵심 병인
+    if cat_cnt["관살"] >= 2.0 and verdict in ("신약", "극신약"):
+        urg = 0.6 + (cat_cnt["관살"] - 2.0) * 0.2
+        diseases.append({"병인": "관살과다+신약", "병인_오행": tmap["관살"],
+                         "유형": "극전쟁", "시급도": round(min(1.0, urg), 2)})
+
+    # 인성 과다 → 일간 과보호/설기 부족
+    if cat_cnt["인성"] >= 2.5 and verdict in ("신강", "극신강"):
+        urg = 0.5 + (cat_cnt["인성"] - 2.5) * 0.2
+        diseases.append({"병인": "인성과다+신강", "병인_오행": tmap["인성"],
+                         "유형": "과다", "시급도": round(min(1.0, urg), 2)})
+
+    # 비겁 과다 (신강인데 비겁이 많으면 식상/재성으로 빼야)
+    # 극신강은 비겁 임계값을 낮춤 (이미 세력이 과도하다고 판정됨)
+    bigyeop_threshold = 2.0 if verdict == "극신강" else 3.0
+    if cat_cnt["비겁"] >= bigyeop_threshold and verdict in ("신강", "극신강"):
+        urg = 0.4 + (cat_cnt["비겁"] - bigyeop_threshold) * 0.2
+        if verdict == "극신강":
+            urg = max(urg, 0.6)  # 극신강은 최소 시급도 0.6
+        diseases.append({"병인": "비겁과다", "병인_오행": de,
+                         "유형": "과다", "시급도": round(min(1.0, urg), 2)})
+
+    # 상극 대립 병인 (통관 필요)
+    # 관살과 비겁이 모두 강하면 양측이 격돌 → 통관이 병인 해결
+    ke_of_de = {v: k for k, v in KE_MAP.items()}.get(de, "")  # 일간을 극하는 오행 = 관살 오행
+    if ke_of_de:
+        gwansal_power = ohang_cnt.get(ke_of_de, 0)
+        bigyeop_power = ohang_cnt.get(de, 0)
+        if gwansal_power >= 1.8 and bigyeop_power >= 1.8:
+            clash_intensity = min(gwansal_power, bigyeop_power) * 0.3
+            tonggwan_elem = GEN_MAP.get(ke_of_de, "")  # 관살이 생하는 오행 = 통관
+            if tonggwan_elem:
+                diseases.append({
+                    "병인": f"상극대립({ke_of_de}↔{de})",
+                    "병인_오행": tonggwan_elem,
+                    "유형": "통관필요",
+                    "시급도": round(min(1.0, 0.3 + clash_intensity), 2)
+                })
+
+    # 한서 병인
+    if johu_urgency >= 0.5:
+        if "한" in climate:
+            diseases.append({"병인": "한(寒)", "병인_오행": "水",
+                             "유형": "한서", "시급도": johu_urgency})
+        elif "서" in climate:
+            diseases.append({"병인": "서(暑)", "병인_오행": "火",
+                             "유형": "한서", "시급도": johu_urgency})
+        elif "조" in climate:
+            diseases.append({"병인": "조(燥)", "병인_오행": "火",
+                             "유형": "한서", "시급도": johu_urgency})
+
+    # 한서 병인이 시급하면 최우선 (명리학 원칙: 조후가 가장 시급하면 다른 모든 것에 우선)
+    # 그 외에는 시급도 순 정렬
+    def _disease_priority(d):
+        priority = d["시급도"]
+        if d["유형"] == "한서" and priority >= 0.5:
+            priority += 1.0  # 한서 최우선 부스트
+        return priority
+    diseases.sort(key=_disease_priority, reverse=True)
+
+    primary = diseases[0] if diseases else {
+        "병인": "경미불균형", "병인_오행": "",
+        "유형": "약함", "시급도": 0.1
+    }
+    secondary = diseases[1] if len(diseases) >= 2 else None
+
+    return {
+        "primary": primary,
+        "secondary": secondary,
+        "한난조습": climate,
+        "조후_시급도": johu_urgency,
+        "억부_시급도": eokbu_urgency,
+        "십성분포": {k: round(v, 2) for k, v in cat_cnt.items()},
+        "오행분포_raw": {k: round(v, 2) for k, v in ohang_cnt.items()},
+    }
+
+
+# 병인으로부터 용신/희신/기신 오행을 동적 도출
+def _resolve_disease(
+    disease: Dict[str, Any],
+    day_stem: str,
+    month_branch: str,
+    tmap: Dict[str, str],
+    verdict: str,
+    cat_cnt: Dict[str, float],
+) -> Dict[str, Any]:
+    """
+    병인을 해결하는 용신/희신/기신 카테고리를 반환.
+    반환: {"용신_cat": str, "용신_오행": str,
+           "희신_cat": [str], "기신_cat": [str],
+           "비고": str}
+    """
+    de = STEM_ELEMENT[day_stem]
+    byungin = disease["병인"]
+    byungin_elem = disease["병인_오행"]
+    byungin_type = disease["유형"]
+
+    # 과다 병인의 해결 오행 → 극하거나 설기하는 카테고리
+    if byungin_type == "과다":
+        if "인성과다" in byungin:
+            # 인성(나를 생하는 오행)이 과다 → 재성(인성을 극)으로 제어 + 식상(설기)이 희신
+            return {"용신_cat": "재성", "용신_오행": tmap["재성"],
+                    "희신_cat": ["식상"], "기신_cat": ["인성"],
+                    "비고": f"병인:{byungin}→재성으로 인성 극제"}
+        if "관살과다" in byungin:
+            # 관살 과다 → 인성(화살, 관살 에너지를 흡수해 나를 생) 또는 식상(제살)
+            if cat_cnt.get("인성", 0) >= 1.0:
+                return {"용신_cat": "인성", "용신_오행": tmap["인성"],
+                        "희신_cat": ["비겁"], "기신_cat": ["재성", "관살"],
+                        "비고": f"병인:{byungin}→인성으로 화살(化殺)"}
+            else:
+                return {"용신_cat": "식상", "용신_오행": tmap["식상"],
+                        "희신_cat": ["비겁"], "기신_cat": ["재성"],
+                        "비고": f"병인:{byungin}→식상으로 제살(制殺)"}
+        if "비겁과다" in byungin:
+            # 비겁 과다 → 관살(극비겁) 또는 식상(설비겁)
+            if cat_cnt.get("관살", 0) >= 1.0:
+                return {"용신_cat": "관살", "용신_오행": tmap["관살"],
+                        "희신_cat": ["재성"], "기신_cat": ["인성", "비겁"],
+                        "비고": f"병인:{byungin}→관살로 비겁 제어"}
+            else:
+                return {"용신_cat": "식상", "용신_오행": tmap["식상"],
+                        "희신_cat": ["재성"], "기신_cat": ["인성"],
+                        "비고": f"병인:{byungin}→식상으로 설기"}
+        if "식상과다" in byungin:
+            return {"용신_cat": "인성", "용신_오행": tmap["인성"],
+                    "희신_cat": ["비겁"], "기신_cat": ["식상"],
+                    "비고": f"병인:{byungin}→인성으로 식상 극제"}
+        if "재성과다" in byungin:
+            return {"용신_cat": "비겁", "용신_오행": tmap["비겁"],
+                    "희신_cat": ["인성"], "기신_cat": ["재성"],
+                    "비고": f"병인:{byungin}→비겁으로 분재(分財)"}
+
+    if byungin_type == "극전쟁":
+        # 관살+신약 → 인성 화살(化殺)이 최선
+        return {"용신_cat": "인성", "용신_오행": tmap["인성"],
+                "희신_cat": ["비겁"], "기신_cat": ["재성", "관살"],
+                "비고": f"병인:{byungin}→인성으로 화살·신약 보강"}
+
+    if byungin_type == "통관필요":
+        # 상극 대립 → 통관 오행이 용신 (병인_오행이 이미 통관 오행)
+        tonggwan_e = byungin_elem
+        tg_cat = ""
+        for cat, e in tmap.items():
+            if e == tonggwan_e:
+                tg_cat = cat
+                break
+        # 희신 = 통관이 생하는 오행 (용신의 수혜측)
+        gen_of_tg = GEN_MAP.get(tonggwan_e, "")
+        hui_cat = ""
+        for cat, e in tmap.items():
+            if e == gen_of_tg:
+                hui_cat = cat
+                break
+        # 기신 = 용신을 극하는 오행 + 대립의 공격측
+        ke_inv_tg = {v: k for k, v in KE_MAP.items()}
+        gi_cats = []
+        # 1) 용신을 극하는 오행
+        ke_of_yong = ke_inv_tg.get(tonggwan_e, "")
+        if ke_of_yong:
+            for cat, e in tmap.items():
+                if e == ke_of_yong:
+                    gi_cats.append(cat)
+                    break
+        # 2) 대립의 공격측(관살 오행) — 용신/희신이 아닌 경우만
+        de_local = STEM_ELEMENT[day_stem]
+        ke_of_de = ke_inv_tg.get(de_local, "")
+        if ke_of_de and ke_of_de != tonggwan_e and ke_of_de != gen_of_tg:
+            for cat, e in tmap.items():
+                if e == ke_of_de and cat not in gi_cats:
+                    gi_cats.append(cat)
+                    break
+        return {"용신_cat": tg_cat or "통관", "용신_오행": tonggwan_e,
+                "희신_cat": [hui_cat] if hui_cat else [],
+                "기신_cat": gi_cats,
+                "비고": f"병인:{byungin}→통관용신({tonggwan_e})"}
+
+    if byungin_type == "한서":
+        # 한/서/조 → 조후 오행
+        johu_pair = _JOHU_TABLE.get((day_stem, month_branch))
+        if johu_pair:
+            johu_elem = johu_pair[0]
+            johu_cat = ""
+            for cat, e in tmap.items():
+                if e == johu_elem:
+                    johu_cat = cat
+                    break
+            gi_elem = {v: k for k, v in KE_MAP.items()}.get(johu_elem, "")
+            gi_cat = ""
+            for cat, e in tmap.items():
+                if e == gi_elem:
+                    gi_cat = cat
+                    break
+            return {"용신_cat": johu_cat or "조후", "용신_오행": johu_elem,
+                    "희신_cat": [], "기신_cat": [gi_cat] if gi_cat else [],
+                    "비고": f"병인:{byungin}→조후용신({johu_elem})"}
+
+    # fallback
+    return None
+
+
 # ── 9-6: 종합 용신 판별 ─────────────────────
 
 def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
                        month_branch: str, stems: List[str],
                        branches: List[str]) -> Dict[str, Any]:
     """
-    v3.3 용신 판별:
-    1) 종격이면 종격 전용 용신
-    2) 억부용신 (기존 테이블)
-    3) 조후용신 (계절 기반)
-    4) 통관용신 (상극 대립 시)
-    5) 합화 정보
-    6) 최종: 억부+조후+통관 종합 판단
+    v6 용신 판별 — 병인 진단 기반:
+    1) 종격/화격/외격이면 전용 용신
+    2) 병인 진단 → 가장 큰 병을 해결하는 오행 = 용신
+    3) 억부 테이블은 fallback
+    4) 조후 전환은 병인 시급도 비교로 결정
+    5) 통관용신은 보조 희신으로 편입
     """
     tmap = day_tengo_ohaeng(day_stem)
     geok = geok_info["격국"]
@@ -952,17 +1267,14 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
 
     # ── 화격 용신 ─────────────────────────────
     if geok_type == "화격":
-        # 화격: 합화 오행이 용신, 그 오행을 생하는 오행이 희신, 극하는 오행이 기신
         hw_elem = geok_info.get("비고", "")
-        # 합화 오행 추출: 격국명에서 추출 (화토격→土, 화금격→金, ...)
         _GEOK_TO_ELEM = {"화토격": "土", "화금격": "金", "화수격": "水", "화목격": "木", "화화격": "火"}
         hw_ohaeng = _GEOK_TO_ELEM.get(geok, "")
         if hw_ohaeng:
-            # 합화 오행을 생하는 오행 = 인성 of 합화오행
             gen_inv = {v: k for k, v in GEN_MAP.items()}
             ke_inv = {v: k for k, v in KE_MAP.items()}
-            hui_elem = gen_inv.get(hw_ohaeng, "")  # 합화오행을 생하는 오행
-            gi_elem = ke_inv.get(hw_ohaeng, "")    # 합화오행을 극하는 오행
+            hui_elem = gen_inv.get(hw_ohaeng, "")
+            gi_elem = ke_inv.get(hw_ohaeng, "")
             result.update({
                 "용신": f"합화오행({hw_ohaeng})", "용신_오행": hw_ohaeng,
                 "희신": [f"생화오행({hui_elem})"] if hui_elem else [],
@@ -994,7 +1306,11 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         })
         return _add_gushin(result)
 
-    # ── 억부용신 (기존 테이블 개선) ──────────
+    # ── 병인 진단 ────────────────────────────
+    diag = _diagnose_disease(day_stem, month_branch, stems, branches, verdict, tmap)
+    result["병인진단"] = diag
+
+    # ── 억부용신 (fallback 테이블) ──────────
     STRONG_TABLE = {
         "식신격": {"용신": "식상", "희신": ["재성"], "기신": ["인성", "비겁"]},
         "상관격": {"용신": "재성", "희신": ["관살"], "기신": ["비겁"]},
@@ -1031,6 +1347,14 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         row = WEAK_TABLE.get(geok, {"용신": "인성", "희신": ["비겁"], "기신": ["재성"]})
         eokbu = {"용신_cat": row["용신"], "용신_오행": tmap.get(row["용신"], "?"), "희신_cat": row["희신"], "기신_cat": row["기신"], "비고": f"억부법: {verdict}×{geok}"}
 
+    # ── 병인 기반 용신 도출 시도 ──────────────
+    disease_resolved = None
+    primary = diag["primary"]
+    if primary["시급도"] >= 0.3:
+        disease_resolved = _resolve_disease(
+            primary, day_stem, month_branch, tmap, verdict, diag["십성분포"]
+        )
+
     # ── 조후 민감도 계산 ─────────────────────
     johu_importance = _johu_importance_score(day_stem, month_branch, stems, branches)
 
@@ -1054,15 +1378,11 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         }
 
     # ── [Fix-12] 제화(制化) 보정 ──────────────────
-    # 원국에서 과도한 상극 2오행 사이를 중재하는 오행이 있으면 가산
     _JEHWA_MAP = {
         ("水","火"): "木", ("火","金"): "土", ("金","木"): "水",
         ("木","土"): "火", ("土","水"): "金",
     }
-    ohang_cnt = {"木":0,"火":0,"土":0,"金":0,"水":0}
-    for s in stems: ohang_cnt[STEM_ELEMENT[s]] += 1
-    for b in branches:
-        _add_branch_weighted_elements(ohang_cnt, b, scale=1.0)
+    ohang_cnt = diag["오행분포_raw"]
     jehwa_info = []
     for (attk, dfnd), mediator in _JEHWA_MAP.items():
         if ohang_cnt.get(attk,0)>=2 and ohang_cnt.get(dfnd,0)>=1:
@@ -1073,7 +1393,6 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
                 jehwa_info.append({"공격":attk,"방어":dfnd,"중재":mediator,"중재량":0,"효과":"용신이 제화 역할→용신 가치 ↑"})
     result["제화정보"] = jehwa_info
 
-    # 제화 오행이 용신과 일치하면 확신도 보너스
     jehwa_bonus = any(j["중재"] == eokbu.get("용신_오행") and j["중재량"] >= 1 for j in jehwa_info)
 
     # ── 조후 오행 → 십성 카테고리 역매핑 ────────
@@ -1082,42 +1401,97 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             if e == elem: return cat
         return ""
 
-    # ── 조후 우선순위 전환 판정 ─────────────────
+    # ── 최종 용신 결정: 병인 → 조후 → 억부 순 ──
+    # 병인 시급도와 조후 시급도를 비교하여 더 시급한 쪽이 주도권을 갖는다.
     johu_override = False
     johu_main_elem = johu.get("조후_주용신", "")
     johu_sub_elem = johu.get("조후_보조용신", "")
 
-    if eokbu["용신_cat"] == "균형":
-        # 중화: 억부가 결정 못함 → 조후 기반으로 희신/기신도 제공
-        johu_override = True
-    elif johu and eokbu["용신_오행"] != johu_main_elem:
-        # 억부·조후 불일치 → 조후 민감도가 threshold 이상이면 조후로 전환
-        if johu_importance >= JOHU_OVERRIDE_THRESHOLD:
-            johu_override = True
+    # 1) 병인 기반 판정이 성공적이면 그것을 우선 사용
+    # 2) 조후 시급도가 억부 시급도를 넘으면 조후 전환
+    # 3) 그 외에는 억부 유지
 
-    # ── 최종 종합 ────────────────────────────
-    if johu_override and johu_main_elem:
+    use_disease = False
+    if disease_resolved:
+        # 병인 시급도가 충분히 높고, 조후 한서 병인이면 조후 전환도 고려
+        if primary["유형"] == "한서":
+            johu_override = True
+        else:
+            use_disease = True
+
+    if not use_disease and not johu_override:
+        if eokbu["용신_cat"] == "균형":
+            johu_override = True
+        elif johu and eokbu["용신_오행"] != johu_main_elem:
+            if diag["조후_시급도"] > diag["억부_시급도"]:
+                johu_override = True
+            elif johu_importance >= JOHU_OVERRIDE_THRESHOLD:
+                johu_override = True
+
+    # ── 용신 확정 ────────────────────────────
+    if use_disease and disease_resolved:
+        dr = disease_resolved
+        final_elem = dr["용신_오행"]
+        yong_label = _cat_label(dr["용신_cat"]) if dr["용신_cat"] not in ("조후",) else f"조후({final_elem})"
+        confidence = f"높음(병인진단: {primary['병인']})"
+        bigo = dr["비고"]
+
+        hui_cats = dr.get("희신_cat", [])
+        gi_cats = dr.get("기신_cat", [])
+
+        # 조후 보조: 병인 용신이 조후와 일치하면 확신도 보너스
+        if johu and final_elem == johu_main_elem:
+            confidence = f"매우높음(병인+조후 일치: {primary['병인']})"
+        elif johu and johu_main_elem:
+            johu_cat = _elem_to_cat(johu_main_elem)
+            if johu_cat and johu_cat not in hui_cats and johu_cat != dr["용신_cat"]:
+                hui_cats = list(hui_cats) + [johu_cat]
+
+        result.update({
+            "용신": yong_label, "용신_오행": final_elem,
+            "희신": [_cat_label(c) for c in hui_cats],
+            "희신_오행": [tmap.get(c, "?") for c in hui_cats],
+            "기신": [_cat_label(c) for c in gi_cats],
+            "기신_오행": [tmap.get(c, "?") for c in gi_cats],
+        })
+    elif johu_override and johu_main_elem:
         final_elem = johu_main_elem
         johu_cat = _elem_to_cat(johu_main_elem)
         johu_sub_cat = _elem_to_cat(johu_sub_elem) if johu_sub_elem else ""
-        # 조후 기반 희신: 조후 보조용신 + 용신을 생하는 오행
         hui_cats = []
         hui_elems = []
+        ke_of_de = {v: k for k, v in KE_MAP.items()}.get(STEM_ELEMENT[day_stem], "")
+        # 조후 보조용신 → 일간을 극하는 관살이면 희신에서 제외
         if johu_sub_elem and johu_sub_elem != johu_main_elem:
-            hui_cats.append(johu_sub_cat)
-            hui_elems.append(johu_sub_elem)
+            if johu_sub_elem != ke_of_de:
+                hui_cats.append(johu_sub_cat)
+                hui_elems.append(johu_sub_elem)
+        # 용신이 생하는 오행 = 직접적 수혜 오행 (인성→비겁, 식상→재성 등)
+        gen_of_yong = GEN_MAP.get(johu_main_elem, "")
+        gen_of_yong_cat = _elem_to_cat(gen_of_yong)
+        if gen_of_yong and gen_of_yong not in hui_elems:
+            hui_cats.append(gen_of_yong_cat)
+            hui_elems.append(gen_of_yong)
+        # 용신을 생하는 오행 = 용신 강화 (부가 희신)
+        # 단, 해당 오행이 일간을 극하는(관살) 관계면 희신에서 제외
         gen_inv = {v: k for k, v in GEN_MAP.items()}
         gen_elem = gen_inv.get(johu_main_elem, "")
         gen_cat = _elem_to_cat(gen_elem)
         if gen_elem and gen_elem != johu_main_elem and gen_elem not in hui_elems:
-            hui_cats.append(gen_cat)
-            hui_elems.append(gen_elem)
-        # 기신: 조후 오행을 극하는 오행
+            if gen_elem != ke_of_de:
+                hui_cats.append(gen_cat)
+                hui_elems.append(gen_elem)
         ke_inv = {v: k for k, v in KE_MAP.items()}
         gi_elem = ke_inv.get(johu_main_elem, "")
         gi_cat = _elem_to_cat(gi_elem)
         gi_cats = [gi_cat] if gi_elem else []
         gi_elems = [gi_elem] if gi_elem else []
+        # 식상(일간의 설기)도 용신 효과를 상쇄하므로 기신에 포함
+        siksang_elem = tmap.get("식상", "")
+        siksang_cat = "식상"
+        if siksang_elem and siksang_elem not in gi_elems:
+            gi_cats.append(siksang_cat)
+            gi_elems.append(siksang_elem)
 
         if eokbu["용신_cat"] == "균형":
             yong_label = f"조후용신({johu_main_elem})"
@@ -1125,8 +1499,8 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             bigo = f"중화 판정→조후용신 적용 (민감도 {johu_importance})"
         else:
             yong_label = _cat_label(johu_cat) if johu_cat else f"조후({johu_main_elem})"
-            confidence = f"높음(조후 우선: 민감도 {johu_importance}≥{JOHU_OVERRIDE_THRESHOLD})"
-            bigo = f"억부({eokbu['용신_오행']})→조후({johu_main_elem}) 전환 (민감도 {johu_importance})"
+            confidence = f"높음(조후 우선: 시급도 {diag['조후_시급도']})"
+            bigo = f"억부({eokbu['용신_오행']})→조후({johu_main_elem}) 전환 (조후시급도 {diag['조후_시급도']})"
 
         result.update({
             "용신": yong_label, "용신_오행": final_elem,
@@ -1136,7 +1510,6 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             "기신_오행": gi_elems,
         })
     else:
-        # 억부용신 유지
         if johu and eokbu["용신_오행"] == johu.get("조후_주용신"):
             final_elem = eokbu["용신_오행"]
             confidence = "매우높음(억부+조후+제화 일치)" if jehwa_bonus else "높음(억부+조후 일치)"
@@ -1195,18 +1568,68 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
 # SECTION 10 : 오행분포 (v3.3 – 지장간 가중치 포함)
 # ══════════════════════════════════════════════
 
-def ohang_imbalance(stems: List[str], branches: List[str]) -> Dict[str, Any]:
-    """v3.3: 지장간 역할 가중치까지 반영한 오행 분포 산출"""
-    cnt = {"木": 0.0, "火": 0.0, "土": 0.0, "金": 0.0, "水": 0.0}
-    # 천간: 각 1.0
+def ohang_imbalance(stems: List[str], branches: List[str],
+                    month_branch: str = "", day_stem: str = "") -> Dict[str, Any]:
+    """v6: 6단계 다층 보정 오행분포 산출.
+    1차: 천간/지지 기본 점수
+    2차: 월령(계절) 가중치
+    3차: 통근/투출 보정
+    4차: 지장간 역할 가중치
+    5차: 생극 증감
+    6차: 조후(한난조습) 보정
+    """
+    # ── 1차: 기본 존재감 (천간 1.0, 지지 본기 1.0) ──
+    cnt_raw = {"木": 0.0, "火": 0.0, "土": 0.0, "金": 0.0, "水": 0.0}
     for s in stems:
-        cnt[STEM_ELEMENT[s]] += 1.0
-    # 지지: get_jijanggan 가중치(합계 1.0)로 분해
+        cnt_raw[STEM_ELEMENT[s]] += 1.0
     for b in branches:
-        _add_branch_weighted_elements(cnt, b, scale=1.0)
-    # 정수 표현용
-    cnt_display = {e: round(v, 1) for e, v in cnt.items()}
-    cnt_int = {e: int(round(v)) for e, v in cnt.items()}
+        _add_branch_weighted_elements(cnt_raw, b, scale=1.0)
+
+    # ── 역량 계산 (다층 보정) ──
+    cnt = dict(cnt_raw)
+
+    # ── 2차: 월령 가중치 — 월지 계절 오행에 보너스 ──
+    if month_branch:
+        season_elem = SEASON_SUPPORT.get(month_branch, "")
+        if season_elem:
+            cnt[season_elem] += 1.5
+
+    # ── 3차: 통근/투출 보정 — 천간이 지지에 뿌리 있으면 ──
+    if day_stem:
+        for i, s in enumerate(stems):
+            s_elem = STEM_ELEMENT[s]
+            for b in branches:
+                for h, role, _w in get_jijanggan(b):
+                    if STEM_ELEMENT[h] == s_elem and role == "본기":
+                        cnt[s_elem] += 0.3
+                        break
+
+    # ── 4차: 지장간은 이미 1차에서 반영됨 ──
+
+    # ── 5차: 생극 증감 ──
+    snapshot = dict(cnt)
+    for e in ("木", "火", "土", "金", "水"):
+        gen_target = GEN_MAP[e]  # e가 생하는 오행
+        ke_target = KE_MAP[e]    # e가 극하는 오행
+        if snapshot[e] >= 2.0:
+            cnt[gen_target] += snapshot[e] * 0.1  # 생 증가
+            cnt[ke_target] -= snapshot[e] * 0.1   # 극 감소
+    for e in cnt:
+        cnt[e] = max(0.0, cnt[e])
+
+    # ── 6차: 조후(한난조습) 보정 ──
+    if month_branch:
+        climate = _HANNANJOSEUP.get(month_branch, "온")
+        if "한" in climate:
+            cnt["水"] += 0.5
+            cnt["火"] = max(0.0, cnt["火"] - 0.3)
+        elif "서" in climate:
+            cnt["火"] += 0.5
+            cnt["水"] = max(0.0, cnt["水"] - 0.3)
+
+    cnt_display_raw = {e: round(v, 1) for e, v in cnt_raw.items()}
+    cnt_int_raw = {e: int(round(v)) for e, v in cnt_raw.items()}
+    cnt_power = {e: round(v, 1) for e, v in cnt.items()}
 
     excess = [e for e, v in cnt.items() if v >= 3.0]
     deficient = [e for e, v in cnt.items() if v < 0.5]
@@ -1219,10 +1642,11 @@ def ohang_imbalance(stems: List[str], branches: List[str]) -> Dict[str, Any]:
         "金": {"보완": "火", "팁": "댄스·레드 컬러, 협업 강화", "장부": "폐·대장"},
         "水": {"보완": "土", "팁": "근력 운동·브라운 컬러, 루틴 관리", "장부": "신장·방광"},
     }
-    
+
     return {
-        "분포": cnt_display,
-        "분포_정수": cnt_int,
+        "분포": cnt_display_raw,
+        "분포_정수": cnt_int_raw,
+        "분포_역량": cnt_power,
         "과다": excess,
         "부족": deficient,
         "적음": low,
@@ -2098,6 +2522,47 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
         use_solar_time=inp.use_solar_time, utc_offset=inp.utc_offset,
         early_zi_time=inp.early_zi_time)
 
+    # ── 반시(半時) 경계 보정 ──────────────────────
+    # 전통 시간 경계: 丑 01:30~03:30, 寅 03:30~05:30, ... (표준은 01:00~03:00, 03:00~05:00)
+    # sajupy는 표준 경계 사용 → 반시 경계와 다를 때 시주를 보정한다.
+    _HALFHOUR_BOUNDARIES = [
+        (23, 30,  1, 30, "子"), ( 1, 30,  3, 30, "丑"), ( 3, 30,  5, 30, "寅"),
+        ( 5, 30,  7, 30, "卯"), ( 7, 30,  9, 30, "辰"), ( 9, 30, 11, 30, "巳"),
+        (11, 30, 13, 30, "午"), (13, 30, 15, 30, "未"), (15, 30, 17, 30, "申"),
+        (17, 30, 19, 30, "酉"), (19, 30, 21, 30, "戌"), (21, 30, 23, 30, "亥"),
+    ]
+    def _halfhour_branch(h: int, m: int) -> str:
+        t = h * 60 + m
+        for sh, sm_, eh, em_, br in _HALFHOUR_BOUNDARIES:
+            start = sh * 60 + sm_
+            end = eh * 60 + em_
+            if start > end:  # 子시: 23:30 ~ 01:30 wraps midnight
+                if t >= start or t < end:
+                    return br
+            else:
+                if start <= t < end:
+                    return br
+        return "子"
+
+    # 오호결원법: 일간 → 시간 천간 시작 인덱스 (甲子=0)
+    _DAY_STEM_HOUR_START = {
+        "甲": 0, "己": 0, "乙": 2, "庚": 2, "丙": 4,
+        "辛": 4, "丁": 6, "壬": 6, "戊": 8, "癸": 8,
+    }
+    def _hour_stem_from_day(day_st: str, hour_br: str) -> str:
+        start = _DAY_STEM_HOUR_START[day_st]
+        br_idx = EARTHLY_BRANCHES.index(hour_br)
+        return HEAVENLY_STEMS[(start + br_idx) % 10]
+
+    correct_hb = _halfhour_branch(inp.hour, inp.minute)
+    sajupy_hb = saju["hour_branch"]
+    if correct_hb != sajupy_hb:
+        new_hs = _hour_stem_from_day(saju["day_stem"], correct_hb)
+        _dbg(f"[SAJU_DEBUG] 반시보정: {saju['hour_stem']}{sajupy_hb}→{new_hs}{correct_hb} ({inp.hour:02d}:{inp.minute:02d})\n")
+        saju["hour_stem"] = new_hs
+        saju["hour_branch"] = correct_hb
+        saju["hour_pillar"] = new_hs + correct_hb
+
     pillars = {"year": saju["year_pillar"], "month": saju["month_pillar"], "day": saju["day_pillar"], "hour": saju["hour_pillar"]}
     stems = [saju["year_stem"], saju["month_stem"], saju["day_stem"], saju["hour_stem"]]
     branches = [saju["year_branch"], saju["month_branch"], saju["day_branch"], saju["hour_branch"]]
@@ -2125,8 +2590,8 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
     for lbl, br in [("연지", branches[0]), ("월지", branches[1]), ("일지", branches[2]), ("시지", branches[3])]:
         hidden_tg[lbl] = [{"간": h, "십성": ten_god(ds, h)} for h in _hidden_stems_by_role(br)]
 
-    # 오행 (v3.3: 지장간 가중치)
-    ohang = ohang_imbalance(stems, branches)
+    # 오행 (v6: 6단계 다층 보정)
+    ohang = ohang_imbalance(stems, branches, month_branch=mb, day_stem=ds)
 
     # 사주관계
     rels = calc_relations(stems, branches)
@@ -2390,15 +2855,17 @@ _EVENT_TRIGGERS = {
 
 
 def _calc_yongshin_power(dw_fit, sw_fit=None):
-    """[v5] float 부합도 반영"""
+    """[v6] float 부합도 반영 (구신 포함)"""
     p = 0.0
     p += float(dw_fit.get("용신부합", 0)) * 0.3
     p += float(dw_fit.get("희신부합", 0)) * 0.15
     p -= float(dw_fit.get("기신부합", 0)) * 0.25
+    p -= float(dw_fit.get("구신부합", 0)) * 0.1
     if sw_fit:
         p += float(sw_fit.get("용신부합", 0)) * 0.3
         p += float(sw_fit.get("희신부합", 0)) * 0.15
         p -= float(sw_fit.get("기신부합", 0)) * 0.25
+        p -= float(sw_fit.get("구신부합", 0)) * 0.1
     return max(-1.0, min(1.0, round(p, 2)))
 
 
@@ -2538,19 +3005,21 @@ def _calc_noble_power(gil_list, hyung_list):
 
 
 def _calc_tengo_balance(day_stem, extra_stems, extra_branches):
-    bal = {"비겁": 0, "식상": 0, "재성": 0, "관살": 0, "인성": 0}
+    """십성 밸런스 (레이더 차트용). 천간은 1.0, 지지는 지장간 역할별 가중치 반영."""
+    bal = {"비겁": 0.0, "식상": 0.0, "재성": 0.0, "관살": 0.0, "인성": 0.0}
     for s in extra_stems:
         if s in STEM_ELEMENT:
             tg = ten_god(day_stem, s)
             cat = _TENGO_CATEGORY.get(tg)
-            if cat: bal[cat] += 1
+            if cat:
+                bal[cat] += 1.0
     for b in extra_branches:
-        mh = branch_main_hs(b)
-        if mh:
-            tg = ten_god(day_stem, mh)
+        for h, _role, w in get_jijanggan(b):
+            tg = ten_god(day_stem, h)
             cat = _TENGO_CATEGORY.get(tg)
-            if cat: bal[cat] += 1
-    return bal
+            if cat:
+                bal[cat] += w
+    return {k: round(v, 2) for k, v in bal.items()}
 
 
 def _calc_season_tag(yong_power, energy_total, energy_direction):
@@ -2571,9 +3040,15 @@ def _calc_event_probabilities(shinsal_all, rel_keys, unseong, tengo_list):
     result = {}
     for evt, triggers in _EVENT_TRIGGERS.items():
         prob = 5
+        shinsal_triggers = triggers.get("shinsal", {})
         for name in shinsal_all:
-            for k, v in triggers.get("shinsal", {}).items():
-                if (k in name) or (name in k): prob += v; break
+            # 한글 부분만 추출하여 정확한 매칭 (한자 괄호 무시)
+            name_kr = name.split("(")[0].strip()
+            for k, v in shinsal_triggers.items():
+                k_kr = k.split("(")[0].strip()
+                if name_kr == k_kr or k_kr in name_kr:
+                    prob += v
+                    break
         for k in rel_keys:
             prob += triggers.get("relation", {}).get(k, 0)
         prob += triggers.get("unseong", {}).get(unseong, 0)
@@ -2881,8 +3356,9 @@ def _ohang_balance(stems_list: List[str], branches_list: List[str],
     yong_e = yong_info.get("용신_오행", "")
     hee_es = set(yong_info.get("희신_오행", []))
     gi_es = set(yong_info.get("기신_오행", []))
+    gu_es = set(yong_info.get("구신_오행", []))
     good = sum(cnt.get(e, 0) for e in ({yong_e} | hee_es) if e)
-    bad = sum(cnt.get(e, 0) for e in gi_es if e)
+    bad = sum(cnt.get(e, 0) for e in (gi_es | gu_es) if e)
     ratio = (good - bad * 0.5) / total
     return round(max(0.0, min(1.0, 0.5 + ratio)), 2)
 
@@ -2965,12 +3441,14 @@ def _trine_energy_adj(trine_hits: list, yong_info: dict) -> tuple:
     return pos, neg
 
 
-# ── [v5] 공망 컴포넌트별 감쇠 ─────────────────────
-# 명리학 원칙: 공망 지지의 효력은 감소하되, 천간은 영향받지 않음.
+# ── [v6.1] 공망 항목별 차등 감쇠 ─────────────────────
+# 명리학 원칙: 공망은 "작용 실현성"을 깎는 방향.
+# 합/삼합/관계 작용에 더 크게, 생명력(12운성)에는 조금만 적용.
 _GONGMANG_DAMP = {
-    "unseong": 0.8,    # 12운성 효과 ×0.8
-    "rel": 0.7,        # 합충 관계 ×0.7 (0.6에서 완화)
-    "yfit_branch": 0.7 # 용신부합 지지 파트 ×0.7
+    "unseong": 0.9,       # 12운성 — 생명력 자체는 약한 감쇠
+    "rel": 0.75,          # 합충 관계 — 실현성 감소
+    "yfit_branch": 0.85,  # 용신부합 지지 — 약한 감쇠
+    "trine": 0.70,        # 삼합/방합 — 실현 불발 가능성 높음
 }
 
 def _gongmang_factors(branch: str, day_gz: str) -> dict:
@@ -2979,7 +3457,7 @@ def _gongmang_factors(branch: str, day_gz: str) -> dict:
         d = _GONGMANG_DAMP.copy()
         d["is_gongmang"] = True
         return d
-    return {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0, "is_gongmang": False}
+    return {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0, "trine": 1.0, "is_gongmang": False}
 
 
 # ── [v5] 신살 맥락 감응 ──────────────────────────
@@ -3023,6 +3501,72 @@ def _shinsal_adj_detail(
     return detail
 
 
+# ── [v6] 병인 해소 판정 ──────────────────────────
+def _disease_resolution_score(
+    inc_stem: str, inc_branch: str,
+    disease_info: Optional[Dict] = None,
+    tmap: Optional[Dict[str, str]] = None,
+) -> float:
+    """대운/세운 간지가 원국 병인을 해소(+) 또는 악화(-)하는 정도. ±0~8 범위."""
+    if not disease_info or not tmap:
+        return 0.0
+    primary = disease_info.get("primary")
+    if not primary or primary.get("시급도", 0) < 0.2:
+        return 0.0
+
+    byungin_elem = primary.get("병인_오행", "")
+    byungin_type = primary.get("유형", "")
+    if not byungin_elem:
+        return 0.0
+
+    inc_s_elem = STEM_ELEMENT.get(inc_stem, "")
+    inc_b_elem = BRANCH_ELEMENT_MAIN.get(inc_branch, "")
+
+    sc = 0.0
+    urgency = primary["시급도"]
+
+    if byungin_type in ("과다", "극전쟁"):
+        # 과다 병인: 극하는 오행이 오면 해소, 같은 오행이 오면 악화
+        ke_of_byungin = {v: k for k, v in KE_MAP.items()}.get(byungin_elem, "")
+        if inc_s_elem == ke_of_byungin:
+            sc += 3.0 * urgency
+        if inc_b_elem == ke_of_byungin:
+            sc += 5.0 * urgency
+        if inc_s_elem == byungin_elem:
+            sc -= 2.0 * urgency
+        if inc_b_elem == byungin_elem:
+            sc -= 4.0 * urgency
+        # 설기(병인 오행이 생하는 오행)도 약간의 해소
+        gen_of_byungin = GEN_MAP.get(byungin_elem, "")
+        if gen_of_byungin:
+            if inc_s_elem == gen_of_byungin:
+                sc += 1.0 * urgency
+            if inc_b_elem == gen_of_byungin:
+                sc += 1.5 * urgency
+
+    elif byungin_type == "통관필요":
+        # 통관 오행이 오면 해소, 대립 양측이 강화되면 악화
+        if inc_s_elem == byungin_elem:
+            sc += 3.0 * urgency
+        if inc_b_elem == byungin_elem:
+            sc += 5.0 * urgency
+
+    elif byungin_type == "한서":
+        # 한서 병인: 조후 해소 오행이 오면 해소
+        if "한" in primary["병인"]:
+            if inc_s_elem == "火": sc += 3.0 * urgency
+            if inc_b_elem == "火": sc += 5.0 * urgency
+            if inc_s_elem == "水": sc -= 2.0 * urgency
+            if inc_b_elem == "水": sc -= 3.0 * urgency
+        elif "서" in primary["병인"]:
+            if inc_s_elem == "水": sc += 3.0 * urgency
+            if inc_b_elem == "水": sc += 5.0 * urgency
+            if inc_s_elem == "火": sc -= 2.0 * urgency
+            if inc_b_elem == "火": sc -= 3.0 * urgency
+
+    return round(max(-8.0, min(8.0, sc)), 2)
+
+
 # ── 종합운점수 산출 ────────────────────────────
 def _composite_score(
     base: float,
@@ -3039,8 +3583,10 @@ def _composite_score(
     trine_neg: float = 0.0,
     gm: dict = None,
     shinsal_adj: float = 0.0,
+    disease_resolution: float = 0.0,
+    natal_balance: float = 0.5,
 ) -> Dict[str, Any]:
-    """0~100 종합운점수 + breakdown (v5 full)."""
+    """0~100 종합운점수 + breakdown (v6.1 full)."""
     if gm is None:
         gm = {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0}
 
@@ -3059,9 +3605,10 @@ def _composite_score(
     hf = _fit_with_gongmang("희신부합")
     gf = _fit_with_gongmang("기신부합")
     uf = _fit_with_gongmang("구신부합")
-    yfit_sc = (yf * 15 + hf * 8 - gf * 15 - uf * 8)
+    # 용신 적합도: 12/7 계수 (v6.1 — 다른 축이 살아나도록 진폭 축소)
+    yfit_sc = (yf * 12 + hf * 7 - gf * 12 - uf * 7)
     if yf > 0 and gf > 0:
-        yfit_sc -= 3 * min(yf, gf)
+        yfit_sc -= 2.5 * min(yf, gf)
 
     # unseong component
     uns_raw = _UNSEONG_SCORE.get(unseong, 0)
@@ -3071,21 +3618,25 @@ def _composite_score(
     # unseong context (十星)
     uns_ctx = _unseong_tengo_adj(unseong, tg_stem, tg_branch) * gm["unseong"]
 
-    # relations
-    rel_sc = (energy_direction * 2 * gm["rel"] + noble_power * 0.5)
+    # relations — noble_power 기여도 축소 (shinsal_adj와의 이중 반영 방지)
+    rel_sc = (energy_direction * 2 * gm["rel"] + noble_power * 0.25)
 
-    # trine
-    tri_sc = (trine_pos - trine_neg) * gm["rel"]
+    # trine — 공망 시 별도 감쇠 적용 (v6.1)
+    tri_sc = (trine_pos - trine_neg) * gm.get("trine", gm["rel"])
 
-    # balance
-    bal_sc = max(-5.0, min(5.0, (balance - 0.5) * 10))
+    # balance — 원국 대비 개선도 (v6.1: delta 기반)
+    balance_delta = balance - natal_balance
+    bal_sc = max(-5.0, min(5.0, balance_delta * 15))
     if geok_type in ("종격", "화격") or geok_type.startswith("외격"):
         bal_sc = -bal_sc
 
     # shinsal
     shin_sc = shinsal_adj
 
-    sc = base + yfit_sc + uns_sc + uns_ctx + rel_sc + tri_sc + bal_sc + shin_sc
+    # disease resolution
+    dis_sc = disease_resolution
+
+    sc = base + yfit_sc + uns_sc + uns_ctx + rel_sc + tri_sc + bal_sc + shin_sc + dis_sc
     clamped = max(0, min(100, round(sc)))
 
     return {
@@ -3099,6 +3650,7 @@ def _composite_score(
             "trine": round(tri_sc, 2),
             "balance": round(bal_sc, 2),
             "shinsal": round(shin_sc, 2),
+            "disease_resolution": round(dis_sc, 2),
         },
     }
 
@@ -3108,9 +3660,11 @@ def _calc_sewoon_independent_score(
     orig_stems: list, orig_branches: list,
     dw_stem: str, dw_branch: str,
     yong: dict, geok_type: str = "", verdict: str = "",
-    day_gz: str = ""
+    day_gz: str = "", disease_info: Optional[Dict] = None,
+    tmap: Optional[Dict[str, str]] = None,
+    natal_balance: float = 0.5,
 ) -> Dict[str, Any]:
-    """세운 독립점수 산출 (v5 full). Returns {"score": int, "breakdown": dict}."""
+    """세운 독립점수 산출 (v6.1 full). Returns {"score": int, "breakdown": dict}."""
     sw_yfit = _check_yongshin_fit(sw_stem, sw_branch, yong, day_stem)
     sw_unseong = twelve_unseong(day_stem, sw_branch)
     sw_rels = _calc_incoming_relations(sw_stem, sw_branch, orig_stems, orig_branches)
@@ -3132,6 +3686,7 @@ def _calc_sewoon_independent_score(
     sw_t_pos, sw_t_neg = _trine_energy_adj(sw_trine, yong)
     sw_gm = _gongmang_factors(sw_branch, day_gz) if day_gz else {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0}
     sw_shinsal_adj = _contextual_shinsal_adj(sw_gil, sw_hyung, verdict, geok_type)
+    sw_dis_res = _disease_resolution_score(sw_stem, sw_branch, disease_info, tmap)
 
     return _composite_score(
         50, sw_yfit, sw_unseong,
@@ -3140,6 +3695,8 @@ def _calc_sewoon_independent_score(
         tg_stem=sw_tg_s, tg_branch=sw_tg_b,
         trine_pos=sw_t_pos, trine_neg=sw_t_neg, gm=sw_gm,
         shinsal_adj=sw_shinsal_adj,
+        disease_resolution=sw_dis_res,
+        natal_balance=natal_balance,
     )
 
 
@@ -3167,10 +3724,15 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
     yong = r["용신"]
     geok_type = r.get("격국", {}).get("격국유형", "")
     verdict = r.get("신강신약", {}).get("판정", "")
+    disease_info = yong.get("병인진단")
+    tmap = day_tengo_ohaeng(day_stem)
     day_gz = day_stem + day_branch
 
     orig_stems = [r["원국"][k][0] for k in ("year", "month", "day", "hour")]
     orig_branches = [r["원국"][k][1] for k in ("year", "month", "day", "hour")]
+
+    # v6.1: 원국 고유 균형도 (balance delta 기준선)
+    natal_bal = _ohang_balance(orig_stems, orig_branches, yong_info=yong)
 
     birth_year = r["입력"]["년"]
 
@@ -3230,13 +3792,16 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
         dw_t_pos, dw_t_neg = _trine_energy_adj(dw_trine, yong)
         dw_gm = _gongmang_factors(branch, day_gz)
         dw_shinsal_adj = _contextual_shinsal_adj(gil, hyung, verdict, geok_type)
+        dw_dis_res = _disease_resolution_score(stem, branch, disease_info, tmap)
 
         _comp_result = _composite_score(
             50, yfit, unseong, dw_noble_for_score,
             dw_energy_for_score["direction"], balance, geok_type, verdict,
             tg_stem=tg_stem, tg_branch=tg_branch,
             trine_pos=dw_t_pos, trine_neg=dw_t_neg, gm=dw_gm,
-            shinsal_adj=dw_shinsal_adj
+            shinsal_adj=dw_shinsal_adj,
+            disease_resolution=dw_dis_res,
+            natal_balance=natal_bal,
         )
         composite = _comp_result["score"]
         composite_breakdown = _comp_result["breakdown"]
@@ -3264,7 +3829,7 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
         dw_energy = _calc_energy_field(rels_w_orig, yong_info=yong, inc_stem=stem, inc_branch=branch,
                                        orig_stems=orig_stems, orig_branches=orig_branches)
         dw_noble = _calc_noble_power(gil, hyung)
-        dw_tengo_bal = _calc_tengo_balance(day_stem, [stem], [branch])
+        dw_tengo_bal = _calc_tengo_balance(day_stem, orig_stems + [stem], orig_branches + [branch])
         dw_season = _calc_season_tag(dw_ypower, dw_energy["total"], dw_energy["direction"])
         _, _, dw_rel_keys = _extract_rel_keys(rels_w_orig, unseong)
         dw_events = _calc_event_probabilities(
@@ -3342,9 +3907,14 @@ def build_yearly_timeline(
     geok_type = r.get("격국", {}).get("격국유형", "")
     verdict = r.get("신강신약", {}).get("판정", "")
     day_gz = day_stem + day_branch
+    disease_info = yong.get("병인진단")
+    tmap_yt = day_tengo_ohaeng(day_stem)
 
     orig_stems = [r["원국"][k][0] for k in ("year", "month", "day", "hour")]
     orig_branches = [r["원국"][k][1] for k in ("year", "month", "day", "hour")]
+
+    # v6.1: 원국 고유 균형도
+    natal_bal = _ohang_balance(orig_stems, orig_branches, yong_info=yong)
 
     birth_year = r["입력"]["년"]
     sol = r["입력"].get("음력→양력")
@@ -3414,13 +3984,15 @@ def build_yearly_timeline(
             yong_info=yong,
         )
         unseong_12 = _UNSEONG_SCORE.get(sw_unseong, 0)
-        tengo_bal = _calc_tengo_balance(day_stem, [dw["stem"], sw_stem], [dw["branch"], sw_branch])
+        tengo_bal = _calc_tengo_balance(day_stem, orig_stems + [dw["stem"], sw_stem], orig_branches + [dw["branch"], sw_branch])
 
         # ── 종합 점수 (계층 가중합산 + 시너지) ──
         _sw_result = _calc_sewoon_independent_score(
             sw_stem, sw_branch, day_stem, year_branch,
             orig_stems, orig_branches, dw["stem"], dw["branch"],
-            yong, geok_type, verdict, day_gz=day_gz
+            yong, geok_type, verdict, day_gz=day_gz,
+            disease_info=disease_info, tmap=tmap_yt,
+            natal_balance=natal_bal,
         )
         sw_sc = _sw_result["score"]
         sw_breakdown = _sw_result["breakdown"]
@@ -3436,7 +4008,8 @@ def build_yearly_timeline(
         sw_dev = sw_sc - 50
         avg_dir = (dw_dev + sw_dev) / 100.0
         strength = abs(dw_dev / 50.0) * abs(sw_dev / 50.0)
-        synergy = avg_dir * strength * 12
+        # v6.1: 시너지 cap ±5 (과도한 방향 증폭 억제)
+        synergy = max(-5, min(5, avg_dir * strength * 12))
         score = max(0, min(100, round(float(dw_trend) * 0.6 + sw_sc * 0.4 + synergy)))
 
         # ── 캔들 OHLC ───────────────────────
@@ -3656,8 +4229,13 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     yong = r["용신"]
     geok_type = r.get("격국", {}).get("격국유형", "")
     verdict = r.get("신강신약", {}).get("판정", "")
+    disease_info_mt = yong.get("병인진단")
+    tmap_mt = day_tengo_ohaeng(ds)
     o_stems = [r["원국"][k][0] for k in ("year", "month", "day", "hour")]
     o_branches = [r["원국"][k][1] for k in ("year", "month", "day", "hour")]
+
+    # v6.1: 원국 고유 균형도
+    natal_bal = _ohang_balance(o_stems, o_branches, yong_info=yong)
 
     birth_year = r["입력"]["년"]
     sol = r["입력"].get("음력→양력")
@@ -3685,7 +4263,8 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     # ── 세운 독립점수 (통일 함수 사용) ────────────
     _sw_ind_result = _calc_sewoon_independent_score(
         sw_s, sw_b, ds, yb, o_stems, o_branches, dw["stem"], dw["branch"], yong, geok_type, verdict,
-        day_gz=ds + db
+        day_gz=ds + db, disease_info=disease_info_mt, tmap=tmap_mt,
+        natal_balance=natal_bal,
     )
     sw_ind = _sw_ind_result["score"]
     dw_t = float(dw["종합운점수"])
@@ -3693,7 +4272,8 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     sw_dev = sw_ind - 50
     avg_dir = (dw_dev + sw_dev) / 100.0
     strength = abs(dw_dev / 50.0) * abs(sw_dev / 50.0)
-    synergy = avg_dir * strength * 12
+    # v6.1: 시너지 cap ±5
+    synergy = max(-5, min(5, avg_dir * strength * 12))
     sw_base_score = max(0, min(100, round(dw_t * 0.6 + sw_ind * 0.4 + synergy)))
 
     # 연간 기준 월간 산출
@@ -3780,8 +4360,8 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
 
         m_tengo_bal = _calc_tengo_balance(
             ds,
-            [dw["stem"], sw_s, m_stem],
-            [dw["branch"], sw_b, m_branch],
+            o_stems + [dw["stem"], sw_s, m_stem],
+            o_branches + [dw["branch"], sw_b, m_branch],
         )
 
         # [v5] 삼합/방합 + 공망 + 신살맥락
@@ -3790,21 +4370,30 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
         m_gm = _gongmang_factors(m_branch, ds + db)
         m_shinsal_adj = _contextual_shinsal_adj(m_gil, m_hyung, verdict, geok_type)
         m_shinsal_detail = _shinsal_adj_detail(m_gil, m_hyung, verdict, geok_type)
+        m_dis_res = _disease_resolution_score(m_stem, m_branch, disease_info_mt, tmap_mt)
 
-        # ── 종합 점수: v5 가산 혼합 (곱셈 제거) ──
+        # ── 종합 점수: v6.1 가산 혼합 ──
         _m_comp = _composite_score(
             50, m_yfit, m_unseong, _calc_noble_power(m_gil, m_hyung),
             m_energy["direction"], m_balance, geok_type, verdict,
             tg_stem=m_tg_stem, tg_branch=m_tg_branch,
             trine_pos=m_t_pos, trine_neg=m_t_neg, gm=m_gm,
             shinsal_adj=m_shinsal_adj,
+            disease_resolution=m_dis_res,
+            natal_balance=natal_bal,
         )
         m_ind = _m_comp["score"]
         m_breakdown = _m_comp["breakdown"]
 
-        # [v5] 가산 혼합 모델: 나쁜 해에서도 용신 월운이면 실질 회복
+        # [v6.1] 가산 혼합 모델: 세운 중립(45~55)이면 월운 비중 높여 변동 체감↑
+        if 45 <= sw_base_score <= 55:
+            mw = 0.42  # 중립 해 → 월운 42%
+            sw_w = 1.0 - mw
+        else:
+            mw = MONTH_BLEND_MW   # 극단 해 → 월운 35%
+            sw_w = MONTH_BLEND_SW
         score = max(0, min(100, round(
-            sw_base_score * MONTH_BLEND_SW + m_ind * MONTH_BLEND_MW
+            sw_base_score * sw_w + m_ind * mw
         )))
 
         # ── 캔들 OHLC ────────────────────────

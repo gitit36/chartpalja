@@ -95,6 +95,10 @@ function buildYearChartDataFromSources(
     gilshin: (raw?.['세운_신살_길신'] ?? []).join(', ') || '없음',
     hyungshal: (raw?.['세운_신살_흉살'] ?? []).join(', ') || '없음',
     daewoonTransition: transStr,
+    breakdown: raw?.breakdown as Record<string, number> | undefined,
+    trineHits: raw?.trine_hits as YearChartData['trineHits'],
+    gongmangFactors: raw?.gongmang_factors as YearChartData['gongmangFactors'],
+    shinsalContextAdj: raw?.shinsal_context_adj as Record<string, number> | undefined,
   }
 }
 
@@ -151,16 +155,32 @@ export async function GET(
 
       const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
       const targetYear = chartPayload?.['월운_타임라인']?.target_year ?? new Date().getFullYear()
-      const monthlyData: Array<{ month: number; score: number; breakdown?: Record<string, number>; seasonTag?: string; seasonEmoji?: string; domainJob?: number; domainWealth?: number; domainHealth?: number; domainLove?: number; domainMarriage?: number }> = []
+      const monthlyData: Array<{
+        month: number; score: number; breakdown?: Record<string, number>;
+        seasonTag?: string; seasonEmoji?: string;
+        domainJob?: number; domainWealth?: number; domainHealth?: number; domainLove?: number; domainMarriage?: number;
+        trineHits?: unknown[]; gongmangFactors?: Record<string, unknown>; shinsalContextAdj?: Record<string, number>;
+        relationsOrig?: string; relationsDw?: string; relationsSw?: string;
+        ganzi?: string; stemElement?: string; branchElement?: string;
+      }> = []
       for (let m = monthStart; m <= monthEnd; m++) {
         const md = monthlyTimeline?.find((d: MonthlyDatum) => d.month === m)
         if (md) {
+          const mdAny = md as unknown as Record<string, unknown>
+          const rOrig = mdAny['관계_with_원국'] as Array<{ with?: string; relations?: string[] }> | undefined
+          const rOrigStr = rOrig?.map(r => `${r.with ?? ''}: ${(r.relations ?? []).join(', ')}`).join(' / ') || ''
+          const rDw = (mdAny['관계_with_대운'] ?? []) as string[]
+          const rSw = (mdAny['관계_with_세운'] ?? []) as string[]
           monthlyData.push({
             month: md.month, score: md.scores['종합'], breakdown: md.breakdown,
             seasonTag: md['시즌태그']?.tag, seasonEmoji: md['시즌태그']?.emoji,
             domainJob: md.scores['직업'], domainWealth: md.scores['재물'],
             domainHealth: md.scores['건강'], domainLove: md.scores['연애'],
             domainMarriage: md.scores['결혼'],
+            trineHits: md.trine_hits as unknown[], gongmangFactors: md.gongmang_factors as unknown as Record<string, unknown> | undefined,
+            shinsalContextAdj: md.shinsal_context_adj,
+            relationsOrig: rOrigStr, relationsDw: rDw.join(', '), relationsSw: rSw.join(', '),
+            ganzi: md['간지'], stemElement: md.stemElement, branchElement: md.branchElement,
           })
         } else {
           monthlyData.push({ month: m, score: 50 })
