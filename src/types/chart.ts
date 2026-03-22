@@ -53,6 +53,7 @@ export interface MonthlyDatum {
   breakdown?: ScoreBreakdown
   trine_hits?: TrineHit[]
   gongmang_factors?: GongmangFactors
+  haegong?: HaegongInfo
   shinsal_context_adj?: Record<string, number>
   indicators: {
     용신력: number
@@ -180,6 +181,7 @@ export interface DaewoonBlock {
   breakdown?: ScoreBreakdown
   trine_hits?: TrineHit[]
   gongmang_factors?: GongmangFactors
+  haegong?: HaegongInfo
   shinsal_context_adj?: Record<string, number>
   시즌태그: SeasonTag
   이벤트확률: EventProbabilities
@@ -228,6 +230,7 @@ export interface YearlyDatum {
   breakdown?: ScoreBreakdown
   trine_hits?: TrineHit[]
   gongmang_factors?: GongmangFactors
+  haegong?: HaegongInfo
   shinsal_context_adj?: Record<string, number>
   indicators: {
     용신력: number
@@ -254,6 +257,19 @@ export interface GongmangFactors {
   rel: number
   yfit_branch: number
   is_gongmang: boolean
+  gongmang_type?: '진공' | '가공(합)' | '가공(충)' | null
+}
+
+export interface HaegongInfo {
+  resolved: Array<{
+    branch: string
+    pillar: string
+    method: '합' | '충'
+    영역: string
+    source: string
+    bonus: number
+  }>
+  bonus: number
 }
 
 export type ScoreBreakdown = Record<string, number>

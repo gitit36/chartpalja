@@ -4,7 +4,7 @@
  * 없으면 기존 대운기둥10 + 시드 로직으로 폴백합니다.
  */
 import type { SajuReportJson } from '@/types/saju-report'
-import type { ChartPayload, YearlyDatum, MonthlyDatum, ScoreBreakdown, TrineHit, GongmangFactors } from '@/types/chart'
+import type { ChartPayload, YearlyDatum, MonthlyDatum, ScoreBreakdown, TrineHit, GongmangFactors, HaegongInfo } from '@/types/chart'
 import { pillarToHangul } from './hanja-hangul'
 
 const NUM_YEARS = 100
@@ -60,6 +60,7 @@ export type ChartDatum = {
   breakdown?: ScoreBreakdown
   trineHits?: TrineHit[]
   gongmangFactors?: GongmangFactors
+  haegong?: HaegongInfo
   shinsalContextAdj?: Record<string, number>
 }
 
@@ -145,6 +146,7 @@ function buildMonthlyData(monthly: MonthlyDatum[], daewoonPillarFallback: string
       breakdown: md.breakdown,
       trineHits: md.trine_hits,
       gongmangFactors: md.gongmang_factors,
+      haegong: md.haegong,
       shinsalContextAdj: md.shinsal_context_adj,
     }
   })
@@ -235,6 +237,7 @@ function buildFromChartPayload(chartPayload: ChartPayload): LifeChartData {
         breakdown: yd.breakdown,
         trineHits: yd.trine_hits,
         gongmangFactors: yd.gongmang_factors,
+        haegong: yd.haegong,
         shinsalContextAdj: yd.shinsal_context_adj,
       })
     } else {

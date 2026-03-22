@@ -25,7 +25,18 @@ export interface SajuReportJson {
     [key: string]: unknown
   }
   신살길성?: Record<string, unknown>
-  공망?: { 공망지지?: [string, string]; [key: string]: unknown }
+  공망?: {
+    공망지지?: [string, string]
+    년주_공망지지?: [string, string]
+    원국_적중?: string[]
+    년주_원국_적중?: string[]
+    [key: string]: unknown
+  }
+  공망분류?: {
+    일주공망?: { 공망지지: string[]; 원국적중: Array<{ branch: string; pillar_idx: number; pillar: string; type: string; 영역: string; source: string }> }
+    년주공망?: { 공망지지: string[]; 원국적중: Array<{ branch: string; pillar_idx: number; pillar: string; type: string; 영역: string; source: string }> }
+    all_hits?: Array<{ branch: string; pillar_idx: number; pillar: string; type: string; 영역: string; source: string }>
+  }
   오행십성_상세?: {
     천간?: Array<{ stem?: string; element?: string; ten_god?: string }>
     '지지(지장간포함)'?: Array<{

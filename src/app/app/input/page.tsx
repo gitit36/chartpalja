@@ -13,6 +13,7 @@ interface FormData {
   gender: 'male' | 'female'
   isLunar: boolean
   isLeapMonth: boolean
+  job: string
 }
 
 const defaultForm: FormData = {
@@ -23,6 +24,14 @@ const defaultForm: FormData = {
   gender: 'male',
   isLunar: false,
   isLeapMonth: false,
+  job: '',
+}
+
+const JOB_SUGGESTIONS = ['교사', '개발자', '트레이더', '디자이너', '마케터'] as const
+
+function normalizeJob(raw: string): string {
+  const trimmed = raw.trim().slice(0, 30)
+  return trimmed || ''
 }
 
 function isValidDate(y: number, m: number, d: number): boolean {
@@ -122,6 +131,7 @@ function InputPageInner() {
           timeUnknown: !!data.timeUnknown,
           isLunar: !!data.isLunar,
           isLeapMonth: !!data.isLeapMonth,
+          job: data.job ?? '',
         }
         setForm(newForm)
         if (bd) {
@@ -185,6 +195,7 @@ function InputPageInner() {
             timeUnknown: form.timeUnknown,
             isLunar: form.isLunar,
             isLeapMonth: form.isLunar && form.isLeapMonth,
+            job: normalizeJob(form.job) || null,
           }),
         })
         if (!res.ok) {
@@ -205,6 +216,7 @@ function InputPageInner() {
             timeUnknown: form.timeUnknown,
             isLunar: form.isLunar,
             isLeapMonth: form.isLunar && form.isLeapMonth,
+            job: normalizeJob(form.job) || null,
           }),
         })
         if (!res.ok) {
@@ -323,7 +335,7 @@ function InputPageInner() {
             </div>
             <input type="text" inputMode="numeric" value={dateDisplay} onChange={e => handleDateChange(e.target.value)}
               className={`w-full border rounded-xl px-4 py-3 text-lg tracking-wider focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition ${dateError ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}
-              placeholder="예: 19970306" maxLength={10} />
+              placeholder="예: 19990812" maxLength={10} />
             {dateError && <p className="text-red-500 text-xs mt-1">{dateError}</p>}
             {dateDisplay && !dateError && form.birthDate && (
               <p className="text-emerald-600 text-xs mt-1">
@@ -336,11 +348,11 @@ function InputPageInner() {
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-sm font-semibold text-gray-700">태어난 시간</label>
               <label className="flex items-center gap-2 cursor-pointer">
+                <span className="text-xs text-gray-600">시간 모름</span>
                 <div onClick={() => setForm(p => ({ ...p, timeUnknown: !p.timeUnknown }))}
                   className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer ${form.timeUnknown ? 'bg-purple-500' : 'bg-gray-300'}`}>
                   <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${form.timeUnknown ? 'translate-x-5' : 'translate-x-0.5'}`} />
                 </div>
-                <span className="text-xs text-gray-600">시간 모름</span>
               </label>
             </div>
             {form.timeUnknown ? (
@@ -349,14 +361,44 @@ function InputPageInner() {
               <>
                 <input type="text" inputMode="numeric" value={timeDisplay} onChange={e => handleTimeChange(e.target.value)}
                   className={`w-full border rounded-xl px-4 py-3 text-lg tracking-wider focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition ${timeError ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}
-                  placeholder="예: 0325" maxLength={5} />
+                  placeholder="예: 0530" maxLength={5} />
                 {timeError && <p className="text-red-500 text-xs mt-1">{timeError}</p>}
               </>
             )}
           </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              직업 <span className="font-normal text-gray-400">(선택)</span>
+            </label>
+            <input
+              type="text"
+              value={form.job}
+              onChange={e => setForm({ ...form, job: e.target.value.slice(0, 30) })}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-purple-300 focus:border-purple-400 outline-none transition"
+              placeholder="예: 디자이너, 마케터, 교사, 요리사"
+              maxLength={30}
+            />
+            <div className={`flex flex-wrap gap-2 mt-2 transition-opacity ${form.job.trim() ? 'opacity-40' : 'opacity-100'}`}>
+              {JOB_SUGGESTIONS.map(j => (
+                <button
+                  key={j}
+                  type="button"
+                  onClick={() => setForm({ ...form, job: j })}
+                  className={`px-3 py-1.5 text-sm rounded-full border transition-all ${
+                    form.job === j
+                      ? 'bg-purple-100 border-purple-300 text-purple-700 font-medium'
+                      : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100 hover:border-gray-300'
+                  }`}
+                >
+                  {j}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <p className="text-xs text-gray-400 mt-6 mb-4 text-center">입력된 정보는 분석에만 사용됩니다.</p>
+        <div className="mt-6"/>
         <button onClick={handleSubmit} disabled={!canSubmit}
           className={`w-full py-4 rounded-2xl text-lg font-bold transition-all ${
             canSubmit

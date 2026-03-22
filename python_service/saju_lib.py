@@ -139,12 +139,18 @@ def _normalize_for_frontend(report: Dict[str, Any], redact: bool) -> Dict[str, A
     # 6) 용신희신
     yong = report.get("용신희신(정밀엔진)") or report.get("용신희신") or report.get("용신")
     if yong and isinstance(yong, dict):
-        out["용신희신"] = {
+        yh: Dict[str, Any] = {
             "용신": yong.get("용신", ""),
             "용신_오행": yong.get("용신_오행", ""),
             "희신": yong.get("희신", []),
+            "희신_오행": yong.get("희신_오행", []),
             "기신": yong.get("기신", []),
+            "기신_오행": yong.get("기신_오행", []),
+            "구신_오행": yong.get("구신_오행", []),
         }
+        if yong.get("용신체계"):
+            yh["용신체계"] = yong["용신체계"]
+        out["용신희신"] = yh
 
     # 7) 신살길성
     shinsal_raw = report.get("신살길성")
@@ -171,6 +177,10 @@ def _normalize_for_frontend(report: Dict[str, Any], redact: bool) -> Dict[str, A
             out["공망"] = gm
     elif "공망" in report:
         out["공망"] = report["공망"]
+
+    # 8b) 공망분류 (v6.2 진공/가공/해공)
+    if "공망분류" in report:
+        out["공망분류"] = report["공망분류"]
 
     # 9) 대운
     if "대운" in report:
@@ -247,6 +257,7 @@ def compute_report(
     is_lunar: bool = False,
     is_leap_month: bool = False,
     redact: bool = True,
+    yongshin_override: Optional[Dict] = None,
 ) -> Dict[str, Any]:
     """Compute Saju report using saju_engine.py and return normalized JSON."""
     mod = _load_engine()
@@ -272,5 +283,5 @@ def compute_report(
         early_zi_time=early_zi_time,
     )
 
-    report = compute_all(birth)
+    report = compute_all(birth, yongshin_override=yongshin_override)
     return _normalize_for_frontend(report, redact=redact)

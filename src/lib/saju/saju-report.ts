@@ -18,6 +18,12 @@ export type SajuReportInput = {
   utcOffset?: number
   isLunar?: boolean
   isLeapMonth?: boolean
+  yongshinOverride?: {
+    용신_오행: string
+    희신_오행: string[]
+    기신_오행: string[]
+    구신_오행: string[]
+  }
 }
 
 function resolvePythonCmd(): string {
@@ -39,7 +45,7 @@ export async function buildSajuReportViaPython(
 ): Promise<Record<string, unknown>> {
   const cwd = process.cwd()
   const scriptPath = path.join(cwd, 'python_service', 'run_once.py')
-  const body = {
+  const body: Record<string, unknown> = {
     birth_date: input.birthDate,
     birth_time: input.timeUnknown ? '12:00' : (input.birthTime || '12:00'),
     time_unknown: !!input.timeUnknown,
@@ -50,6 +56,9 @@ export async function buildSajuReportViaPython(
     early_zi_time: input.earlyZiTime ?? false,
     is_lunar: !!input.isLunar,
     is_leap_month: !!input.isLeapMonth,
+  }
+  if (input.yongshinOverride) {
+    body.yongshin_override = input.yongshinOverride
   }
   const inputStr = JSON.stringify(body)
   console.log('[saju-report] Using Python:', PYTHON_CMD)

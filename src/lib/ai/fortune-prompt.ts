@@ -54,9 +54,9 @@ function extractSipseongDetails(report: SajuReportJson): string {
     const stem = cheongan[i]
     const branch = jiji[i]
     const stemTg = stem?.ten_god ? tgKr(stem.ten_god) : ''
-    const branchTg = branch?.hidden_stems?.[0]?.ten_god
-      ? tgKr(branch.hidden_stems[0].ten_god)
-      : ''
+    const hsArr = branch?.hidden_stems ?? []
+    const lastTg = hsArr.length ? hsArr[hsArr.length - 1]?.ten_god : undefined
+    const branchTg = lastTg ? tgKr(lastTg) : ''
     const items = [stemTg, branchTg].filter(Boolean).join('/')
     if (items) parts.push(`${name}: ${items}`)
   }
@@ -197,7 +197,14 @@ function formatTrineHits(hits: TrineHit[] | undefined): string {
 
 function formatGongmang(gm: GongmangFactors | undefined): string {
   if (!gm || !gm.is_gongmang) return ''
-  return `공망 감쇠 [12운성×${gm.unseong}, 관계×${gm.rel}, 용신지지×${gm.yfit_branch}]`
+  const typeStr = gm.gongmang_type ? `(${gm.gongmang_type})` : ''
+  return `공망${typeStr} 감쇠 [12운성×${gm.unseong}, 관계×${gm.rel}, 용신지지×${gm.yfit_branch}]`
+}
+
+function formatHaegong(haegong: { resolved: Array<{ branch: string; pillar: string; method: string; 영역: string }>; bonus: number } | undefined): string {
+  if (!haegong?.resolved?.length) return ''
+  const parts = haegong.resolved.map(r => `${r.pillar}(${r.branch}) ${r.method}해공→${r.영역} 활성화`)
+  return `해공: ${parts.join(', ')} (보너스 +${haegong.bonus})`
 }
 
 function formatShinsalAdj(adj: Record<string, number> | undefined): string {
@@ -241,11 +248,13 @@ function extractDaewoonSummary(chartPayload: ChartPayload | undefined): string {
     const seasonStr = season?.tag ?? ''
     const bdStr = formatBreakdownTop3(d.breakdown)
     const trStr = formatTrineHits(d.trine_hits)
-    const gmStr = d.gongmang_factors?.is_gongmang ? '[공망]' : ''
+    const gmStr = d.gongmang_factors?.is_gongmang ? `[공망${d.gongmang_factors.gongmang_type ? `(${d.gongmang_factors.gongmang_type})` : ''}]` : ''
+    const hgStr = formatHaegong((d as unknown as Record<string, unknown>).haegong as Parameters<typeof formatHaegong>[0])
     let line = `- ${d.start_year}~${d.end_year}년(${d.start_age_years}~${d.end_age_years}세): ${pillar} ${d['등급']}등급 ${d['종합운점수']}점 ${seasonStr}`
     if (bdStr) line += ` (${bdStr})`
     if (trStr) line += ` ${trStr}`
     if (gmStr) line += ` ${gmStr}`
+    if (hgStr) line += ` ${hgStr}`
     return line
   }).join('\n')
 }
@@ -269,6 +278,7 @@ interface CurrentYearDetail {
   breakdownStr: string
   trineStr: string
   gongmangStr: string
+  haegongStr: string
   shinsalAdjStr: string
 }
 
@@ -331,6 +341,7 @@ function extractCurrentYearDetail(chartPayload: ChartPayload | undefined, year: 
     breakdownStr: formatBreakdownTop3(yd.breakdown),
     trineStr: formatTrineHits(yd.trine_hits),
     gongmangStr: formatGongmang(yd.gongmang_factors),
+    haegongStr: formatHaegong(yd.haegong),
     shinsalAdjStr: formatShinsalAdj(yd.shinsal_context_adj),
   }
 }
@@ -440,7 +451,7 @@ export interface ChartSummary {
 
 export function buildFortunePrompt(
   report: SajuReportJson,
-  opts?: { birthYear?: number; chartData?: ChartDatum[] },
+  opts?: { birthYear?: number; chartData?: ChartDatum[]; job?: string | null },
   chart?: ChartSummary
 ): string {
   const d = extractCoreData(report, opts)
@@ -529,7 +540,7 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
 - 관계: 원국↔세운 ${cy.sewoonRelsOrig} / 일주↔세운 ${cy.sewoonIljuRel}
 - 신살: 길${cy.gilshin} / 흉${cy.hyungshal}${evtParts ? `\n- 이벤트확률: ${evtParts}` : ''}
 - 시즌: ${cy.seasonTag} ${cy.seasonEmoji} (${cy.seasonDesc})
-- 대운전환기: ${cy.daewoonTransition}${cy.breakdownStr ? `\n- ★점수 구성: ${cy.breakdownStr}` : ''}${cy.trineStr ? `\n- 삼합/방합: ${cy.trineStr}` : ''}${cy.gongmangStr ? `\n- ${cy.gongmangStr}` : ''}${cy.shinsalAdjStr ? `\n- 신살보정: ${cy.shinsalAdjStr}` : ''}`
+- 대운전환기: ${cy.daewoonTransition}${cy.breakdownStr ? `\n- ★점수 구성: ${cy.breakdownStr}` : ''}${cy.trineStr ? `\n- 삼합/방합: ${cy.trineStr}` : ''}${cy.gongmangStr ? `\n- ${cy.gongmangStr}` : ''}${cy.haegongStr ? `\n- ${cy.haegongStr}` : ''}${cy.shinsalAdjStr ? `\n- 신살보정: ${cy.shinsalAdjStr}` : ''}`
   }
 
   const chartBlock = chart ? `
@@ -607,7 +618,7 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
 - 격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}${d.geokgukNote ? ` — ${d.geokgukNote}` : ''}
 - 신강약: ${d.ssVerdict}(${d.ssScore})${confidenceStr}
 - 용신: ${d.yongStr} / 희신: ${d.heuiStr} / 기신: ${d.gishinStr}${johuBlock}
-- 공망: ${d.gongmang}
+- 공망: ${d.gongmang}${opts?.job ? `\n- 직업: ${opts.job}` : ''}
 - 십성: ${d.sipseongDetails}
 - 12운성: ${d.unseong12Details}
 - 지장간: ${d.jijangganDetails}
@@ -794,13 +805,14 @@ export interface YearChartData {
   breakdown?: ScoreBreakdown
   trineHits?: TrineHit[]
   gongmangFactors?: GongmangFactors
+  haegong?: { resolved: Array<{ branch: string; pillar: string; method: string; 영역: string }>; bonus: number }
   shinsalContextAdj?: Record<string, number>
 }
 
 export function buildYearSummaryPrompt(
   report: SajuReportJson,
   yearData: YearChartData,
-  opts?: { birthYear?: number }
+  opts?: { birthYear?: number; job?: string | null }
 ): string {
   const d = extractCoreData(report, opts)
   const age = yearData.year - d.birthYear
@@ -823,7 +835,7 @@ export function buildYearSummaryPrompt(
   const bdStr = formatBreakdownTop3(yearData.breakdown)
   const trStr = formatTrineHits(yearData.trineHits)
   const gmStr = formatGongmang(yearData.gongmangFactors)
-
+  const hgStr = formatHaegong(yearData.haegong)
   const shinsalStr = formatShinsalAdj(yearData.shinsalContextAdj)
 
   return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 너의 임무는 점수와 breakdown을 "원시 재료(간지/십성/12운성/지장간/합충형/신살/공망)"로 역추적해서 원인→영향→조언 서사를 만드는 것.
@@ -832,7 +844,7 @@ export function buildYearSummaryPrompt(
 ## 사주 원국 (원시 재료)
 [년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
 격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
-신강약: ${d.ssVerdict}, 공망: ${d.gongmang}
+신강약: ${d.ssVerdict}, 공망: ${d.gongmang}${opts?.job ? `\n직업: ${opts.job}` : ''}
 십성: ${d.sipseongDetails}
 12운성: ${d.unseong12Details}
 합충형: ${d.interactions}
@@ -847,7 +859,7 @@ export function buildYearSummaryPrompt(
 - 에너지: ${yearData.energyTotal?.toFixed(1) ?? '?'}(${(yearData.energyDirection ?? 0) >= 0 ? '긍정' : '도전'}) / 용신력 ${yearData.yongshinPower?.toFixed(2) ?? '?'}
 - 관계: 원국↔세운 ${yearData.sewoonRelsOrig ?? '?'} / 일주↔세운 ${yearData.sewoonIljuRel ?? '?'} / 대운↔세운 ${yearData.sewoonRelsDw ?? '?'}
 - 신살: 길${yearData.gilshin ?? '없음'} / 흉${yearData.hyungshal ?? '없음'}${evtParts ? `\n- 이벤트: ${evtParts}` : ''}
-- 대운전환기: ${yearData.daewoonTransition ?? '해당없음'}${bdStr ? `\n- ★점수구성(breakdown): ${bdStr}` : ''}${trStr ? `\n- 삼합/방합: ${trStr}` : ''}${gmStr ? `\n- ${gmStr}` : ''}${shinsalStr ? `\n- 신살보정: ${shinsalStr}` : ''}
+- 대운전환기: ${yearData.daewoonTransition ?? '해당없음'}${bdStr ? `\n- ★점수구성(breakdown): ${bdStr}` : ''}${trStr ? `\n- 삼합/방합: ${trStr}` : ''}${gmStr ? `\n- ${gmStr}` : ''}${hgStr ? `\n- ${hgStr}` : ''}${shinsalStr ? `\n- 신살보정: ${shinsalStr}` : ''}
 
 ## 추론 방법 (반드시 따를 것)
 1. ★점수구성(breakdown)에서 가장 큰 요인 2개를 잡는다 — 이것이 이 해의 핵심 원인.
@@ -884,7 +896,7 @@ export function buildMonthlySummaryPrompt(
     ganzi?: string; stemElement?: string; branchElement?: string;
   }>,
   targetYear: number,
-  opts?: { birthYear?: number }
+  opts?: { birthYear?: number; job?: string | null }
 ): string {
   const d = extractCoreData(report, opts)
 
@@ -897,6 +909,7 @@ export function buildMonthlySummaryPrompt(
     ].filter(Boolean).join('/')
     const trStr = formatTrineHits(md.trineHits as TrineHit[] | undefined)
     const gmStr = formatGongmang(md.gongmangFactors as GongmangFactors | undefined)
+    const hgStr = formatHaegong((md as unknown as Record<string, unknown>).haegong as Parameters<typeof formatHaegong>[0])
     const relParts = [
       md.relationsOrig ? `원국↔${md.relationsOrig}` : '',
       md.relationsDw ? `대운↔${md.relationsDw}` : '',
@@ -905,6 +918,7 @@ export function buildMonthlySummaryPrompt(
     const extras = [
       trStr ? `삼합:${trStr}` : '',
       gmStr || '',
+      hgStr || '',
       relParts ? `관계:${relParts}` : '',
     ].filter(Boolean).join(' | ')
     return `- ${md.month}월${md.ganzi ? `(${pillarToHangul(md.ganzi)})` : ''}: ${md.score}점 ${md.seasonTag ?? ''}${md.seasonEmoji ?? ''}${domParts ? ` ${domParts}` : ''}${bdStr ? ` (${bdStr})` : ''}${extras ? `\n  ${extras}` : ''}`
@@ -922,7 +936,7 @@ export function buildMonthlySummaryPrompt(
 ## 사주 원국 (원시 재료)
 [년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
 격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
-신강약: ${d.ssVerdict}, 공망: ${d.gongmang}
+신강약: ${d.ssVerdict}, 공망: ${d.gongmang}${opts?.job ? `\n직업: ${opts.job}` : ''}
 십성: ${d.sipseongDetails}
 12운성: ${d.unseong12Details}
 합충형: ${d.interactions}
@@ -958,7 +972,7 @@ ${isSingle ? '' : `\n평균 ${avgScore}점 / 최고 ${best.month}월(${best.scor
 export function buildRangeSummaryPrompt(
   report: SajuReportJson,
   yearDataArr: YearChartData[],
-  opts?: { birthYear?: number }
+  opts?: { birthYear?: number; job?: string | null }
 ): string {
   const d = extractCoreData(report, opts)
   const startYear = yearDataArr[0]!.year
@@ -1004,7 +1018,7 @@ export function buildRangeSummaryPrompt(
 ## 사주 원국 (원시 재료)
 [년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
 격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
-신강약: ${d.ssVerdict}, 공망: ${d.gongmang}
+신강약: ${d.ssVerdict}, 공망: ${d.gongmang}${opts?.job ? `\n직업: ${opts.job}` : ''}
 십성: ${d.sipseongDetails}
 12운성: ${d.unseong12Details}
 합충형: ${d.interactions}

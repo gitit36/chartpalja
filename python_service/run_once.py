@@ -45,6 +45,7 @@ def main() -> None:
             is_lunar=bool(raw.get("is_lunar", False)),
             is_leap_month=bool(raw.get("is_leap_month", False)),
             redact=True,
+            yongshin_override=raw.get("yongshin_override"),
         )
     finally:
         sys.stdout = real_stdout

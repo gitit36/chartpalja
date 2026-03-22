@@ -550,7 +550,7 @@ export default function PersonalSajuPage() {
                     className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
                     나중에
                   </button>
-                  <button onClick={() => { setRegenModal(null); router.push('/app/checkout') }}
+                  <button onClick={() => { setRegenModal(null); router.push(`/app/checkout?returnUrl=${encodeURIComponent(window.location.pathname)}`) }}
                     className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
                     이용권 구매
                   </button>

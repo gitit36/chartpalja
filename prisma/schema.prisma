@@ -41,6 +41,8 @@ model SajuEntry {
   timeUnknown    Boolean  @default(false)
   isLunar        Boolean  @default(false)
   isLeapMonth    Boolean  @default(false)
+  job            String?
+  dayElement     String?
   sajuReportJson Json?
   fortuneJson    Json?
   fortuneJsonB   Json?
@@ -127,4 +129,17 @@ model EntitlementLedger {
   createdAt   DateTime      @default(now())
   @@index([userId])
   @@index([orderId])
+}
+
+// 용신/희신/기신 LLM 판별 캐시 — 동일 4주 조합은 영구 재사용
+model YongshinCache {
+  id            String   @id @default(cuid())
+  fourPillars   String   @unique  // "辛巳_壬辰_乙巳_癸未" 형태
+  yongshinElem  String             // 용신 오행: "水"
+  heeshinElems  String[]           // 희신 오행: ["木"]
+  gishinElems   String[]           // 기신 오행: ["火","土"]
+  gushinElems   String[]           // 구신 오행: []
+  reasoning     String?            // LLM 판별 근거
+  model         String             // 사용 모델: "gemini-2.5-flash"
+  createdAt     DateTime @default(now())
 }

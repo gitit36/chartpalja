@@ -31,15 +31,39 @@ export function extractPillarStrings(report: SajuReportJson) {
 
 export function extractGongmang(report: SajuReportJson): string {
   const gm = report.공망
-  if (!gm?.공망지지) return '없음'
-  const branches = gm.공망지지 as string[]
-  const hangul = branches.map(b => `${branchToHangul(b)}(${b})`).join('')
-  const hits = (gm.원국_적중 ?? []) as string[]
-  if (hits.length > 0) {
-    const hitStr = hits.map(b => `${branchToHangul(b)}(${b})`).join(', ')
-    return `${hangul} [원국 적중: ${hitStr}]`
+  if (!gm) return '없음'
+  const parts: string[] = []
+
+  // 공망분류가 있으면 진공/가공 정보 활용
+  const gmClassify = (report as Record<string, unknown>).공망분류 as Record<string, unknown> | undefined
+  const allHits = (gmClassify?.all_hits ?? []) as Array<{ branch: string; pillar: string; type: string; 영역: string; source: string }>
+  const hitTypeMap = new Map(allHits.map(h => [`${h.source}:${h.branch}`, h.type]))
+
+  const dayBranches = gm.공망지지 as string[] | undefined
+  if (dayBranches?.length) {
+    const hangul = dayBranches.map(b => `${branchToHangul(b)}(${b})`).join('')
+    const hits = (gm.원국_적중 ?? []) as string[]
+    const hitParts = hits.map(b => {
+      const gType = hitTypeMap.get(`일주공망:${b}`) ?? ''
+      return `${branchToHangul(b)}(${b})${gType ? `[${gType}]` : ''}`
+    })
+    const hitStr = hitParts.length > 0 ? ` [원국 적중: ${hitParts.join(', ')}]` : ''
+    parts.push(`[일주공망] ${hangul}${hitStr}`)
   }
-  return hangul
+
+  const yearBranches = gm.년주_공망지지 as string[] | undefined
+  if (yearBranches?.length) {
+    const hangul = yearBranches.map(b => `${branchToHangul(b)}(${b})`).join('')
+    const hits = (gm.년주_원국_적중 ?? []) as string[]
+    const hitParts = hits.map(b => {
+      const gType = hitTypeMap.get(`년주공망:${b}`) ?? ''
+      return `${branchToHangul(b)}(${b})${gType ? `[${gType}]` : ''}`
+    })
+    const hitStr = hitParts.length > 0 ? ` [원국 적중: ${hitParts.join(', ')}]` : ''
+    parts.push(`[년주공망] ${hangul}${hitStr}`)
+  }
+
+  return parts.length > 0 ? parts.join(' / ') : '없음'
 }
 
 export function extractSipseongDetails(report: SajuReportJson): string {
@@ -53,9 +77,9 @@ export function extractSipseongDetails(report: SajuReportJson): string {
     const stem = cheongan[i]
     const branch = jiji[i]
     const stemTg = stem?.ten_god ? tgKr(stem.ten_god) : ''
-    const branchTg = branch?.hidden_stems?.[0]?.ten_god
-      ? tgKr(branch.hidden_stems[0].ten_god)
-      : ''
+    const hsArr = branch?.hidden_stems ?? []
+    const lastTg = hsArr.length ? hsArr[hsArr.length - 1]?.ten_god : undefined
+    const branchTg = lastTg ? tgKr(lastTg) : ''
     const items = [stemTg, branchTg].filter(Boolean).join('/')
     if (items) parts.push(`${name}: ${items}`)
   }

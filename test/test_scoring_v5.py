@@ -67,25 +67,25 @@ class TestT8UnseongDamping:
                 assert v <= 0, f"{uns} has positive penalty {v}"
 
     def test_singang_jewang_mild_negative(self):
-        """신강 + 帝旺 → 약한 마이너스 (-5 < total < 0)"""
-        raw = se._UNSEONG_SCORE["帝旺"]
-        mult = se._unseong_mult("帝旺", "신강", "")
-        pen = se._singang_excess_pen("帝旺", "신강", "")
+        """신강 + 제왕 → 약한 마이너스 (-5 < total < 0)"""
+        raw = se._UNSEONG_SCORE["제왕"]
+        mult = se._unseong_mult("제왕", "신강", "")
+        pen = se._singang_excess_pen("제왕", "신강", "")
         total = raw * 0.8 * mult + pen
         assert -5.0 < total < 0.0, f"Should be mildly negative: {total}"
 
     def test_singang_death_still_negative(self):
-        """신강 + 死 → 여전히 마이너스 (부호 보존)"""
-        raw = se._UNSEONG_SCORE["死"]
-        mult = se._unseong_mult("死", "신강", "")
-        pen = se._singang_excess_pen("死", "신강", "")
+        """신강 + 사 → 여전히 마이너스 (부호 보존)"""
+        raw = se._UNSEONG_SCORE["사"]
+        mult = se._unseong_mult("사", "신강", "")
+        pen = se._singang_excess_pen("사", "신강", "")
         total = raw * 0.8 * mult + pen
-        assert total < 0, f"死 should remain negative for 신강: {total}"
+        assert total < 0, f"사 should remain negative for 신강: {total}"
 
     def test_jongyeok_always_mult_one(self):
         """종격은 항상 mult=1.0, penalty=0"""
-        assert se._unseong_mult("帝旺", "극신강", "종격") == 1.0
-        assert se._singang_excess_pen("帝旺", "극신강", "종격") == 0.0
+        assert se._unseong_mult("제왕", "극신강", "종격") == 1.0
+        assert se._singang_excess_pen("제왕", "극신강", "종격") == 0.0
 
     def test_sinyang_uses_full_mult(self):
         """신약은 승수 1.0 (감쇠 없음)"""
@@ -250,7 +250,7 @@ class TestT9cBoundaryAndMeta:
         }
         gm = {"unseong": 1.0, "rel": 1.0, "yfit_branch": 0.7, "trine": 1.0, "is_gongmang": True}
         comp = se._composite_score(
-            50, yfit, "胎", 0, 0.0, 0.5, gm=gm
+            50, yfit, "태", 0, 0.0, 0.5, gm=gm
         )
         # v6.1: 12 * 0.7 = 8.4 (계수 15→12)
         assert abs(comp["breakdown"]["yongshin_fit"] - 8.4) < 0.01, comp["breakdown"]
@@ -344,7 +344,7 @@ class TestT11SingangMonthlySnapshot:
         )
         dw = se.build_daewoon_detail(r)
         target_dw = next(
-            (d for d in dw if d["12운성"] in ("帝旺", "臨官", "長生")),
+            (d for d in dw if d["12운성"] in ("제왕", "건록", "장생")),
             dw[0],
         )
         target_year = target_dw["start_year"] + 5
@@ -455,12 +455,12 @@ class TestT2GishinChungRemoval:
 class TestT3JeIpMyoRelief:
     def test_mu_with_pyeonjae_positive_adj(self):
         """墓 + 편재 → 재입묘로 패널티 완화(+방향)."""
-        adj = se._unseong_tengo_adj("墓", "편재", "")
+        adj = se._unseong_tengo_adj("묘", "편재", "")
         assert adj > 0, f"재입묘(墓+편재) should be positive: {adj}"
 
     def test_mu_with_jeonggwan_negative_adj(self):
         """墓 + 정관 → 관입묘로 패널티 유지/강화."""
-        adj = se._unseong_tengo_adj("墓", "정관", "")
+        adj = se._unseong_tengo_adj("묘", "정관", "")
         assert adj < 0, f"관입묘(墓+정관) should be negative: {adj}"
 
 
@@ -616,7 +616,7 @@ class TestT7RelationSpikeClamp:
 class TestT8GongmangRelSign:
     def test_gongmang_preserves_rel_sign(self):
         """공망 감쇠 후에도 관계 점수 sign이 유지되어야 함."""
-        gm = se._GONGMANG_DAMP.copy()
+        gm = se._GONGMANG_DAMP_JINGONG.copy()
         assert gm["rel"] > 0 and gm["rel"] < 1, (
             f"rel damping should be 0<x<1: {gm['rel']}"
         )
@@ -964,3 +964,193 @@ class TestV6DiseaseDiagnosis:
         assert "disease_resolution" in dw[0].get("breakdown", {}), (
             "Missing disease_resolution in daewoon breakdown"
         )
+
+
+# ─────────────────────────────────────────────────
+# T12: 공망 진공/가공/해공 검증 (v6.2)
+# ─────────────────────────────────────────────────
+
+class TestT12GongmangJingongGagong:
+    """진공(眞空)/가공(假空) 분류 + 해공(解空) 보너스 검증."""
+
+    def test_classify_natal_jingong(self):
+        """원국에 합·충 없는 공망 지지 → 진공 판별."""
+        # 乙酉일주 → xunkong = [午, 未].  시지=午인데 원국에 午와 합/충 없으면 진공
+        result = se.classify_natal_gongmang("乙酉", "己酉",
+                                            ["酉", "卯", "酉", "午"])
+        day_hits = result["일주공망"]["원국적중"]
+        # 午가 시주(idx=3)에서 진공
+        hit = [h for h in day_hits if h["branch"] == "午"]
+        assert len(hit) == 1, f"Expected 1 hit for 午, got {day_hits}"
+        assert hit[0]["type"] == "진공", f"Expected 진공, got {hit[0]['type']}"
+        assert hit[0]["pillar"] == "시주"
+
+    def test_classify_natal_gagong_hap(self):
+        """원국 내 합 관계 → 가공(합) 판별."""
+        # 공망 지지가 원국의 다른 지지와 六合이면 가공(합)
+        # 子-丑 합 관계 → 子가 공망이고 丑이 원국에 있으면 가공(합)
+        gm_type = se._gongmang_type("子", ["丑", "卯", "酉"])
+        assert gm_type == "가공(합)", f"Expected 가공(합), got {gm_type}"
+
+    def test_classify_natal_gagong_chung(self):
+        """원국 내 충 관계 → 가공(충) 판별."""
+        # 子-午 충 관계 → 子가 공망이고 午가 원국에 있으면 가공(충)
+        gm_type = se._gongmang_type("子", ["午", "卯", "酉"])
+        assert gm_type == "가공(충)", f"Expected 가공(충), got {gm_type}"
+
+    def test_gagong_dampening_weaker_than_jingong(self):
+        """가공 감쇠가 진공 감쇠보다 약해야 함."""
+        jingong = se._GONGMANG_DAMP_JINGONG
+        gagong_h = se._GONGMANG_DAMP_GAGONG_HAP
+        gagong_c = se._GONGMANG_DAMP_GAGONG_CHUNG
+        for key in ("rel", "trine", "yfit_branch"):
+            assert gagong_h[key] > jingong[key], (
+                f"가공(합) {key}={gagong_h[key]} should > 진공 {key}={jingong[key]}"
+            )
+            assert gagong_c[key] > jingong[key], (
+                f"가공(충) {key}={gagong_c[key]} should > 진공 {key}={jingong[key]}"
+            )
+            assert gagong_h[key] >= gagong_c[key], (
+                f"가공(합) {key}={gagong_h[key]} should >= 가공(충) {key}={gagong_c[key]}"
+            )
+
+    def test_gongmang_factors_jingong(self):
+        """_gongmang_factors가 orig_branches와 합/충 없으면 진공 감쇠 반환."""
+        # 乙酉일 → 공망=[午,未]. 午를 넣으면 공망.
+        # orig_branches에 午와 합/충 없는 지지만 넣음
+        gm = se._gongmang_factors("午", "乙酉", ["寅", "卯", "申"])
+        assert gm["is_gongmang"] is True
+        assert gm["gongmang_type"] == "진공"
+        assert gm["rel"] == se._GONGMANG_DAMP_JINGONG["rel"]
+
+    def test_gongmang_factors_gagong(self):
+        """_gongmang_factors가 orig_branches와 합 있으면 가공(합) 반환."""
+        # 午-未 합. orig에 未가 있으면 午는 가공(합)
+        gm = se._gongmang_factors("午", "乙酉", ["未", "卯", "申"])
+        assert gm["is_gongmang"] is True
+        assert gm["gongmang_type"] == "가공(합)"
+        assert gm["rel"] == se._GONGMANG_DAMP_GAGONG_HAP["rel"]
+
+    def test_haegong_bonus_basic(self):
+        """해공: 운의 지지가 원국 공망 지지와 충/합하면 보너스 발생."""
+        natal_gm = {
+            "일주공망": {"공망지지": ["午", "未"], "원국적중": [
+                {"branch": "午", "pillar_idx": 3, "pillar": "시주",
+                 "type": "진공", "영역": "자녀궁·말년운", "source": "일주공망"}
+            ]},
+            "년주공망": {"공망지지": [], "원국적중": []},
+            "all_hits": [
+                {"branch": "午", "pillar_idx": 3, "pillar": "시주",
+                 "type": "진공", "영역": "자녀궁·말년운", "source": "일주공망"}
+            ],
+        }
+        # 子는 午와 충 → 해공
+        result = se._haegong_check("子", natal_gm)
+        assert result["bonus"] > 0, f"Expected bonus > 0, got {result}"
+        assert len(result["resolved"]) == 1
+        assert result["resolved"][0]["method"] == "충"
+
+    def test_haegong_bonus_hap(self):
+        """합 해공이 충 해공보다 보너스가 크다."""
+        hit = {"branch": "午", "pillar_idx": 3, "pillar": "시주",
+               "type": "진공", "영역": "자녀궁·말년운", "source": "일주공망"}
+        natal_gm = {"all_hits": [hit]}
+        chung_result = se._haegong_check("子", natal_gm)  # 子-午 충
+        hit_copy = dict(hit)
+        natal_gm2 = {"all_hits": [hit_copy]}
+        # 未-午 합
+        hit_copy["branch"] = "丑"
+        natal_gm_hap = {
+            "all_hits": [{"branch": "子", "pillar_idx": 3, "pillar": "시주",
+                          "type": "진공", "영역": "자녀궁·말년운", "source": "일주공망"}]
+        }
+        hap_result = se._haegong_check("丑", natal_gm_hap)  # 丑-子 합
+        assert hap_result["bonus"] > chung_result["bonus"], (
+            f"합 해공({hap_result['bonus']}) should > 충 해공({chung_result['bonus']})"
+        )
+
+    def test_haegong_gagong_reduced(self):
+        """가공 상태의 해공은 진공 대비 보너스가 줄어든다."""
+        natal_gm_jingong = {
+            "all_hits": [{"branch": "午", "pillar_idx": 3, "pillar": "시주",
+                          "type": "진공", "영역": "자녀궁·말년운", "source": "일주공망"}],
+        }
+        natal_gm_gagong = {
+            "all_hits": [{"branch": "午", "pillar_idx": 3, "pillar": "시주",
+                          "type": "가공(충)", "영역": "자녀궁·말년운", "source": "일주공망"}],
+        }
+        r_j = se._haegong_check("子", natal_gm_jingong)
+        r_g = se._haegong_check("子", natal_gm_gagong)
+        assert r_j["bonus"] > r_g["bonus"], (
+            f"진공 해공({r_j['bonus']}) should > 가공 해공({r_g['bonus']})"
+        )
+
+    def test_no_haegong_when_no_gm(self):
+        """공망분류가 없으면 해공 보너스 0."""
+        result = se._haegong_check("子", None)
+        assert result["bonus"] == 0.0
+
+    def test_breakdown_has_haegong(self):
+        """v6.2 breakdown에 haegong 필드가 존재해야 함."""
+        inp = se.BirthInput(year=1969, month=3, day=11, hour=12, minute=15,
+                            gender="female", calendar="solar")
+        r = se.enrich_saju(inp)
+        dw = se.build_daewoon_detail(r)
+        assert "haegong" in dw[0].get("breakdown", {}), (
+            "Missing haegong in daewoon breakdown"
+        )
+
+    def test_gungseong_has_gm_type(self):
+        """궁성론에 공망유형(진공/가공)이 포함되어야 함."""
+        inp = se.BirthInput(year=1969, month=3, day=11, hour=12, minute=15,
+                            gender="female", calendar="solar")
+        r = se.enrich_saju(inp)
+        gung = r["궁성론"]
+        gm_items = [g for g in gung if g["공망여부"]]
+        for item in gm_items:
+            assert "공망유형" in item, f"Missing 공망유형 in {item['궁']}"
+            assert item["공망유형"] in ("진공", "가공(합)", "가공(충)"), (
+                f"Unexpected 공망유형: {item['공망유형']}"
+            )
+
+    def test_natal_gm_info_in_report(self):
+        """enrich_saju 결과에 공망분류가 포함되어야 함."""
+        inp = se.BirthInput(year=1969, month=3, day=11, hour=12, minute=15,
+                            gender="female", calendar="solar")
+        r = se.enrich_saju(inp)
+        assert "공망분류" in r
+        gm_info = r["공망분류"]
+        assert "일주공망" in gm_info
+        assert "년주공망" in gm_info
+        assert "all_hits" in gm_info
+
+    def test_daewoon_haegong_export(self):
+        """대운에 haegong export가 존재해야 함."""
+        inp = se.BirthInput(year=1969, month=3, day=11, hour=12, minute=15,
+                            gender="female", calendar="solar")
+        r = se.enrich_saju(inp)
+        dw = se.build_daewoon_detail(r)
+        for d in dw:
+            assert "haegong" in d, f"Missing haegong in daewoon block {d['order']}"
+            assert "resolved" in d["haegong"]
+            assert "bonus" in d["haegong"]
+
+    def test_yearly_haegong_export(self):
+        """세운에 haegong export가 존재해야 함."""
+        inp = se.BirthInput(year=1969, month=3, day=11, hour=12, minute=15,
+                            gender="female", calendar="solar")
+        r = se.enrich_saju(inp)
+        dw = se.build_daewoon_detail(r)
+        yt = se.build_yearly_timeline(r, dw, span=5)
+        for y in yt[:2]:
+            assert "haegong" in y, f"Missing haegong in yearly {y['year']}"
+
+    def test_monthly_haegong_export(self):
+        """월운에 haegong export가 존재해야 함."""
+        inp = se.BirthInput(year=1969, month=3, day=11, hour=12, minute=15,
+                            gender="female", calendar="solar")
+        r = se.enrich_saju(inp)
+        dw = se.build_daewoon_detail(r)
+        mt = se.build_monthly_timeline(r, dw, 1990)
+        for m in mt[:3]:
+            assert "haegong" in m, f"Missing haegong in month {m['month']}"

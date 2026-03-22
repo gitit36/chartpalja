@@ -67,19 +67,19 @@ const AUX_PANELS = [
   { key: 'event', label: '이벤트 확률', color: '#e74c3c' },
 ] as const
 
-type PeriodKey = '1y' | '5y' | '10y' | 'all'
+type PeriodKey = '1y' | '10y' | 'all'
 type MainOverlayKey = (typeof MAIN_OVERLAYS)[number]['key']
 type AuxKey = (typeof AUX_PANELS)[number]['key']
 
 const BD_LABEL_POS: Record<string, string> = {
   yongshin_fit: '유리한 흐름', unseong: '생애 리듬', unseong_context: '시기 조합',
   relations: '조화', trine: '에너지 합류', balance: '균형도', shinsal: '특수 영향',
-  disease_resolution: '체질 보완',
+  disease_resolution: '체질 보완', haegong: '공망 해소',
 }
 const BD_LABEL_NEG: Record<string, string> = {
   yongshin_fit: '불리한 흐름', unseong: '생애 리듬', unseong_context: '시기 조합',
   relations: '충돌', trine: '에너지 합류', balance: '균형도', shinsal: '특수 영향',
-  disease_resolution: '체질 보완',
+  disease_resolution: '체질 보완', haegong: '공망 해소',
 }
 
 function breakdownFactors(bd: ScoreBreakdown | undefined): { up: string[]; down: string[] } {
@@ -266,11 +266,12 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
   const [selection, setSelection] = useState<{ startYear: number; endYear: number } | null>(null)
   const [yearSummary, setYearSummary] = useState<{ startYear: number; endYear: number; text: string; compatText?: string } | null>(null)
   const [yearSummaryLoading, setYearSummaryLoading] = useState(false)
+  const [rangeMode, setRangeMode] = useState(false)
+  const rangeFirst = React.useRef<number | null>(null)
+  const [noCreditPeriod, setNoCreditPeriod] = useState(false)
   const [summaryCache] = useState<Map<string, { text: string; compatText?: string }>>(() => new Map())
   const chartRef = React.useRef<HTMLDivElement>(null)
   const lastHapticYear = React.useRef<number | null>(null)
-  const dragStartYear = React.useRef<number | null>(null)
-  const isDragging = React.useRef(false)
   const hasAnimated = React.useRef(false)
 
   useEffect(() => {
@@ -337,7 +338,6 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
         if (fullChartData.monthlyData?.length) { filtered = fullChartData.monthlyData; monthly = true }
         else { filtered = all.filter(d => d.year === THIS_YEAR) }
         break
-      case '5y': filtered = all.filter(d => d.year >= THIS_YEAR && d.year < THIS_YEAR + 5); break
       case '10y': filtered = all.filter(d => d.year >= THIS_YEAR && d.year < THIS_YEAR + 10); break
       default: filtered = all
     }
@@ -431,37 +431,66 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
     }
     if (overlayEntryId) url += `&overlayId=${overlayEntryId}`
     fetch(url, { headers })
-      .then(async r => { const d = await r.json().catch(() => null); if (!r.ok) throw new Error(d?.error ?? 'Failed'); return d })
+      .then(async r => {
+        const d = await r.json().catch(() => null)
+        if (r.status === 402) { setNoCreditPeriod(true); throw new Error('이용권 부족') }
+        if (!r.ok) throw new Error(d?.error ?? 'Failed')
+        return d
+      })
       .then(d => {
         const result = { text: d?.summary ?? '해석을 불러오지 못했습니다.', compatText: d?.compatSummary }
         summaryCache.set(cacheKey, result)
         setYearSummary({ startYear, endYear, ...result })
       })
-      .catch(() => setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' }))
+      .catch(e => {
+        if (!e?.message?.includes('이용권')) setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' })
+      })
       .finally(() => setYearSummaryLoading(false))
   }, [entryId, summaryCache, overlayEntryId])
 
+  const dragStartYear = React.useRef<number | null>(null)
+  const didDrag = React.useRef(false)
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMouseDown = useCallback((state: any) => {
+    if (!rangeMode) return
+    didDrag.current = false
     if (state?.activeTooltipIndex != null) {
       const yr = mergedData[state.activeTooltipIndex]?.year
-      if (yr) { dragStartYear.current = yr; isDragging.current = false }
+      if (yr) dragStartYear.current = yr
     }
-  }, [mergedData])
+  }, [mergedData, rangeMode])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMouseUp = useCallback((state: any) => {
     const startYr = dragStartYear.current; dragStartYear.current = null
-    if (!startYr) return
+    if (!startYr || !rangeMode) return
     const endIdx = state?.activeTooltipIndex
     const endYr = endIdx != null ? mergedData[endIdx]?.year : null
     if (endYr && endYr !== startYr) {
+      didDrag.current = true
       setSelection({ startYear: Math.min(startYr, endYr), endYear: Math.max(startYr, endYr) })
-    } else {
-      if (selection && selection.startYear === startYr && selection.endYear === startYr) return
-      setSelection({ startYear: startYr, endYear: startYr })
+      rangeFirst.current = null
     }
-  }, [mergedData, selection])
+  }, [mergedData, rangeMode])
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChartClick = useCallback((state: any) => {
+    if (!rangeMode) return
+    if (didDrag.current) { didDrag.current = false; return }
+    if (state?.activeTooltipIndex == null) return
+    const yr = mergedData[state.activeTooltipIndex]?.year
+    if (!yr) return
+
+    if (!rangeFirst.current) {
+      rangeFirst.current = yr
+      setSelection({ startYear: yr, endYear: yr })
+    } else {
+      const a = rangeFirst.current, b = yr
+      setSelection({ startYear: Math.min(a, b), endYear: Math.max(a, b) })
+      rangeFirst.current = null
+    }
+  }, [mergedData, rangeMode])
 
   const toggleMain = (k: MainOverlayKey) => setMainOverlays(p => ({ ...p, [k]: !p[k] }))
   const toggleAux = (k: AuxKey) => setAuxPanels(p => ({ ...p, [k]: !p[k] }))
@@ -475,6 +504,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
 
   return (
     <div>
+      {noCreditPeriod && <NoCreditModal type="period" onClose={() => setNoCreditPeriod(false)} />}
       {/* Chart area */}
       <div className="relative px-2 pt-3" data-capture="01_메인차트">
         {/* Settings gear — top-right of chart area */}
@@ -502,28 +532,29 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
         <div className="w-full h-[420px]">
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={mergedData} syncId="lc" margin={MARGIN}
+                onClick={handleChartClick}
                 onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
                 onMouseMove={(state: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
                   if (state?.activeTooltipIndex != null) {
                     const yr = mergedData[state.activeTooltipIndex]?.year ?? null
                     setHoverYear(yr)
                     if (yr && yr !== lastHapticYear.current) { lastHapticYear.current = yr; if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(3) }
-                    if (dragStartYear.current && yr && yr !== dragStartYear.current) isDragging.current = true
                   }
                 }}
                 onMouseLeave={() => { setHoverYear(null); lastHapticYear.current = null; dragStartYear.current = null }}>
               <XAxis dataKey="year" type="number" domain={xDomain} tick={{ fontSize: 8 }} angle={isMonthly ? 0 : -45} textAnchor={isMonthly ? 'middle' : 'end'} height={40}
-                    ticks={isMonthly ? [1,2,3,4,5,6,7,8,9,10,11,12] : (period === '5y' || period === '10y') ? filteredData.map(d => d.year) : undefined}
+                    ticks={isMonthly ? [1,2,3,4,5,6,7,8,9,10,11,12] : period === '10y' ? filteredData.map(d => d.year) : undefined}
                     tickCount={period === 'all' ? 10 : undefined}
                     tickFormatter={isMonthly ? (v: number) => MONTH_LABELS[v - 1] ?? '' : undefined}
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              <Tooltip content={<MainTooltip overlays={mainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName}/>} cursor={{ stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' }}/>
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName}/>} cursor={{ stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' }}/>}
+              {rangeMode && <Tooltip content={() => null} cursor={{ stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' }}/>}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#e0e0e0" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#aaa', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && seasonBands.map((b: SeasonBand, i: number) => (
                 <ReferenceArea key={i} x1={b.startYear} x2={b.endYear} fill={SEASON_COLORS[b.tag] ?? 'rgba(0,0,0,0.03)'} fillOpacity={1}/>
               ))}
-              {selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#a78bfa" fillOpacity={0.12} stroke="#a78bfa" strokeOpacity={0.3} strokeWidth={1}/>}
+              {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#a78bfa" fillOpacity={0.12} stroke="#a78bfa" strokeOpacity={0.3} strokeWidth={1}/>}
               {mainOverlays.daewoon && <Line type="stepAfter" dataKey="trend" stroke="#ffd700" strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>}
               <Line type="monotone" dataKey="score" stroke="#82ca9d" strokeWidth={1.5} dot={false} name={isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
               {overlayActive && mainOverlays.daewoon && <Line type="stepAfter" dataKey="trendOv" stroke="#fda4af" strokeWidth={2} dot={false} name="대운(비교)" strokeDasharray="6 3" isAnimationActive={false} connectNulls={false}/>}
@@ -534,18 +565,24 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
           </ResponsiveContainer>
         </div>
 
-        {!selection && !yearSummary && (
+        {rangeMode && !selection && (
           <div className="text-center mt-1 mb-0">
-            <span className="text-[10px] text-purple-300 animate-pulse">{isMonthly ? '👆 월을 눌러 상세를 확인하세요' : '👆 연도를 누르거나 구간을 드래그하여 해설을 확인하세요'}</span>
+            <span className="text-[10px] text-purple-400 animate-pulse">👆 시작 연도를 선택하거나 드래그하세요</span>
+          </div>
+        )}
+        {rangeMode && selection && selection.startYear === selection.endYear && rangeFirst.current && (
+          <div className="text-center mt-1 mb-0">
+            <span className="text-[10px] text-purple-400 animate-pulse">👆 끝 연도를 선택하세요</span>
           </div>
         )}
 
-        {/* Period selector + compare */}
-        <div className="flex justify-center items-center gap-2 mt-2 mb-1" ref={chartRef}>
-          {([['1y', '1년'], ['5y', '5년'], ['10y', '10년'], ['all', '전체']] as [PeriodKey, string][]).map(([k, l]) => (
-            <button key={k} onClick={() => { setPeriod(k); setSelection(null); setYearSummary(null); setYearSummaryLoading(false) }}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>{l}</button>
+        {/* Period selector + function buttons */}
+        <div className="flex justify-center items-center gap-1.5 mt-2 mb-1" ref={chartRef}>
+          {([['1y', '1년'], ['10y', '10년'], ['all', '전체']] as [PeriodKey, string][]).map(([k, l]) => (
+            <button key={k} onClick={() => { setPeriod(k); setSelection(null); setYearSummary(null); setYearSummaryLoading(false); setRangeMode(false); rangeFirst.current = null }}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>{l}</button>
           ))}
+          <span className="w-px h-4 bg-gray-200 mx-1"/>
           {otherEntries.length > 0 && (
             overlayActive ? (
               <button onClick={clearOverlay}
@@ -554,16 +591,31 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
               </button>
             ) : (
               <button onClick={() => setCompareSheetOpen(true)}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm group">
+                className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm group">
                 <span className="text-[10px] font-medium text-gray-400 group-hover:text-purple-500 transition-colors">👥 비교</span>
               </button>
             )
           )}
+          {!isMonthly && (
+            <button onClick={() => {
+              const next = !rangeMode
+              setRangeMode(next)
+              if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
+              else { setSelection(null); rangeFirst.current = null }
+            }}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
+                rangeMode
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 shadow-sm text-gray-400 hover:text-purple-500'
+              }`}>
+              🗓️ 구간
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Selection card */}
-      {selection && !yearSummary && !yearSummaryLoading && (
+      {/* Selection card — only in range mode */}
+      {rangeMode && selection && !yearSummary && !yearSummaryLoading && (
         <div className="mx-4 mt-3 mb-1">
           <div className="relative bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
             <button onClick={() => setSelection(null)}
@@ -591,7 +643,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
         </div>
       )}
 
-      {(yearSummaryLoading || yearSummary) && (
+      {rangeMode && (yearSummaryLoading || yearSummary) && (
         <div className="mx-4 mt-3 mb-1">
           <div className="relative bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
             <button onClick={() => { setYearSummary(null); setYearSummaryLoading(false); setSelection(null) }}
@@ -962,6 +1014,32 @@ function FortuneQuoteLoader() {
   )
 }
 
+function NoCreditModal({ type, onClose }: { type: 'chart' | 'period'; onClose: () => void }) {
+  const title = type === 'chart' ? '운세 해설 이용권이 부족해요' : '기간 해설 이용권이 부족해요'
+  const desc = type === 'chart'
+    ? '운세 해설을 보려면 이용권이 필요해요.'
+    : '연도/월별 해설을 보려면 기간 해설 이용권이 필요해요.'
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="relative bg-white rounded-2xl p-6 mx-6 max-w-sm w-full shadow-xl" onClick={e => e.stopPropagation()}>
+        <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">{title}</p>
+        <p className="text-sm text-gray-500 text-center mb-5">{desc}</p>
+        <div className="flex gap-3">
+          <button onClick={onClose}
+            className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+            나중에
+          </button>
+          <button onClick={() => { onClose(); window.location.href = `/app/checkout?returnUrl=${encodeURIComponent(window.location.pathname)}` }}
+            className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
+            이용권 구매
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 type FortuneItem = { category: string; title: string; content: string }
 
 function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entryId?: string }) {
@@ -969,6 +1047,7 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
   const [openIds, setOpenIds] = useState<Set<number>>(new Set())
   const [aiLoading, setAiLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [noCredit, setNoCredit] = useState(false)
   const fetchedRef = React.useRef(false)
 
   const getHeaders = useCallback(() => {
@@ -982,12 +1061,17 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
 
   const fetchFortune = useCallback((regen = false) => {
     if (!entryId) return
-    setError(null); setAiLoading(true)
+    setError(null); setNoCredit(false); setAiLoading(true)
     const url = regen ? `/api/saju/${entryId}/fortune?regenerate=true` : `/api/saju/${entryId}/fortune`
     fetch(url, { headers: getHeaders() })
-      .then(async r => { const d = await r.json().catch(() => null); if (!r.ok) throw new Error(d?.error ?? '운세 해설을 불러오지 못했습니다'); return d })
+      .then(async r => {
+        const d = await r.json().catch(() => null)
+        if (r.status === 402) { setNoCredit(true); throw new Error('이용권 부족') }
+        if (!r.ok) throw new Error(d?.error ?? '운세 해설을 불러오지 못했습니다')
+        return d
+      })
       .then(d => { if (d?.items?.length) { setItems(d.items); fetchedRef.current = true } else setError('운세 해설 데이터가 없습니다') })
-      .catch(e => setError(e?.message ?? '오류가 발생했습니다'))
+      .catch(e => { if (!e?.message?.includes('이용권')) setError(e?.message ?? '오류가 발생했습니다') })
       .finally(() => setAiLoading(false))
   }, [entryId, getHeaders])
 
@@ -1024,8 +1108,19 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
     <div className="px-4 mt-6">
       <h3 className="font-bold text-gray-900 mb-3">운세 해설</h3>
 
+      {noCredit && <NoCreditModal type="chart" onClose={() => setNoCredit(false)} />}
+
       {isLoading ? (
         <FortuneQuoteLoader />
+      ) : noCredit ? (
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-4 text-center">
+          <p className="text-sm text-gray-700 font-medium">운세 해설 이용권이 부족해요</p>
+          <p className="text-xs text-gray-500 mt-1">이용권을 구매하면 AI 운세 해설을 볼 수 있어요.</p>
+          <button onClick={() => { window.location.href = `/app/checkout?returnUrl=${encodeURIComponent(window.location.pathname)}` }}
+            className="mt-3 px-5 py-2 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:shadow-lg transition-all active:scale-[0.98]">
+            이용권 구매
+          </button>
+        </div>
       ) : error ? (
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
           <p className="text-sm text-gray-600">해설을 불러오는 중 문제가 발생했습니다.</p>

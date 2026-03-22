@@ -8,31 +8,54 @@ import type { SajuReportJson } from '@/types/saju-report'
 import type { ChartPayload } from '@/types/chart'
 import { buildLifeChartData, extractTransitionYears, extract3YearContext, extractLifetimeSummary } from '@/lib/saju/life-chart-data'
 import type { ChartDatum } from '@/lib/saju/life-chart-data'
+import { callGemini } from '@/lib/ai/gemini'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
 }
 
-async function callGemini(prompt: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY
-  if (!apiKey || apiKey === 'your-gemini-api-key') {
-    throw new Error('GEMINI_API_KEY가 설정되지 않았습니다. .env.local에 키를 추가해주세요.')
-  }
-  const { GoogleGenerativeAI } = await import('@google/generative-ai')
-  const genAI = new GoogleGenerativeAI(apiKey)
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
-  const result = await model.generateContent(prompt)
-  return result.response.text()
-}
-
 function parseJsonResponse(text: string): unknown[] {
   let cleaned = text.trim()
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '')
   const start = cleaned.indexOf('[')
   const end = cleaned.lastIndexOf(']')
   if (start >= 0 && end > start) {
     cleaned = cleaned.slice(start, end + 1)
   }
-  return JSON.parse(cleaned)
+  try {
+    return JSON.parse(cleaned)
+  } catch (e1) {
+    // LLM often embeds raw newlines, backticks, or control chars inside JSON
+    // string values. Walk char-by-char to properly escape them.
+    let sanitized = ''
+    let inString = false
+    let escape = false
+    for (let i = 0; i < cleaned.length; i++) {
+      const ch = cleaned[i]!
+      if (escape) { sanitized += ch; escape = false; continue }
+      if (ch === '\\' && inString) { sanitized += ch; escape = true; continue }
+      if (ch === '"') { inString = !inString; sanitized += ch; continue }
+      if (inString) {
+        const code = ch.charCodeAt(0)
+        if (code < 0x20) {
+          if (ch === '\n') { sanitized += '\\n'; continue }
+          if (ch === '\r') { sanitized += '\\r'; continue }
+          if (ch === '\t') { sanitized += '\\t'; continue }
+          continue
+        }
+        if (ch === '`') { sanitized += "'"; continue }
+        sanitized += ch
+      } else {
+        sanitized += ch
+      }
+    }
+    try {
+      return JSON.parse(sanitized)
+    } catch {
+      console.error('parseJsonResponse: both attempts failed', (e1 as Error).message)
+      throw e1
+    }
+  }
 }
 
 function isValidFortuneFormat(data: unknown): boolean {
@@ -146,7 +169,7 @@ export async function GET(
     const chartPayloadForPrompt = report.chartData as ChartPayload | undefined
     const lifeChart = buildLifeChartData(chartPayloadForPrompt, report, birthYear)
     const chartData = lifeChart?.data as ChartDatum[] | undefined
-    const prompt = buildFortunePrompt(report, { birthYear, chartData }, chartSummary)
+    const prompt = buildFortunePrompt(report, { birthYear, chartData, job: entry.job }, chartSummary)
     const raw = await callGemini(prompt)
     const items = parseJsonResponse(raw)
 

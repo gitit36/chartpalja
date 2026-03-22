@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import { buildSajuReportViaPython } from '@/lib/saju/saju-report'
+import { resolveYongshin } from '@/lib/ai/yongshin-llm'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -54,6 +55,7 @@ export async function PATCH(
     if (body.timeUnknown !== undefined) updates.timeUnknown = body.timeUnknown
     if (body.isLunar !== undefined) updates.isLunar = body.isLunar
     if (body.isLeapMonth !== undefined) updates.isLeapMonth = !!(body.isLunar ?? entry.isLunar) && body.isLeapMonth
+    if (body.job !== undefined) updates.job = typeof body.job === 'string' ? body.job.trim().slice(0, 30) || null : null
 
     const birthChanged =
       (body.birthDate !== undefined && body.birthDate !== entry.birthDate) ||
@@ -71,17 +73,40 @@ export async function PATCH(
       const newIsLunar = (body.isLunar ?? entry.isLunar) as boolean
       const newIsLeapMonth = newIsLunar ? !!(body.isLeapMonth ?? (entry as Record<string, unknown>).isLeapMonth) : false
 
-      const sajuReport = await buildSajuReportViaPython({
+      const baseInput = {
         birthDate: newBirthDate,
         birthTime: newBirthTime,
         timeUnknown: newTimeUnknown,
-        gender: newGender === 'female' ? 'female' : 'male',
+        gender: (newGender === 'female' ? 'female' : 'male') as 'male' | 'female',
         isLunar: newIsLunar,
         isLeapMonth: newIsLeapMonth,
+      }
+
+      let sajuReport = await buildSajuReportViaPython(baseInput)
+
+      const llmYongshin = await resolveYongshin(sajuReport, {
+        gender: baseInput.gender,
+        isLunar: baseInput.isLunar,
       })
+      if (llmYongshin) {
+        const yongObj = (sajuReport['용신희신'] ?? sajuReport['용신']) as Record<string, unknown> | undefined
+        const ruleYongshin = yongObj?.['용신_오행'] as string | undefined
+        if (ruleYongshin !== llmYongshin.result.용신_오행) {
+          sajuReport = await buildSajuReportViaPython({
+            ...baseInput,
+            yongshinOverride: llmYongshin.result,
+          })
+        }
+      }
+
       updates.sajuReportJson = sajuReport as object
       updates.fortuneJson = null
       updates.fortuneJsonB = null
+
+      try {
+        const detail = (sajuReport as Record<string, unknown>)['오행십성_상세'] as { 천간?: Array<{ element?: string }> } | undefined
+        updates.dayElement = detail?.천간?.[2]?.element ?? null
+      } catch { /* ignore */ }
     }
 
     const updated = await prisma.sajuEntry.update({

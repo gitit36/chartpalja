@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import { buildSajuReportViaPython } from '@/lib/saju/saju-report'
+import { resolveYongshin, extractFourPillarKey } from '@/lib/ai/yongshin-llm'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
       ? { userId: user.id }
       : { guestId: guestId! }
 
-    const raw = await prisma.sajuEntry.findMany({
+    const entries = await prisma.sajuEntry.findMany({
       where,
       orderBy: { createdAt: 'desc' },
       select: {
@@ -33,20 +34,29 @@ export async function GET(request: NextRequest) {
         isLunar: true,
         isLeapMonth: true,
         createdAt: true,
-        sajuReportJson: true,
+        dayElement: true,
       },
     })
 
-    const entries = raw.map(e => {
-      let dayElement: string | null = null
-      try {
-        const rpt = e.sajuReportJson as Record<string, unknown> | null
-        const detail = rpt?.['오행십성_상세'] as { 천간?: Array<{ element?: string }> } | undefined
-        dayElement = detail?.천간?.[2]?.element ?? null
-      } catch { /* ignore */ }
-      const { sajuReportJson: _rpt, ...rest } = e
-      return { ...rest, dayElement }
-    })
+    const needBackfill = entries.filter(e => !e.dayElement)
+    if (needBackfill.length > 0) {
+      const rows = await prisma.sajuEntry.findMany({
+        where: { id: { in: needBackfill.map(e => e.id) } },
+        select: { id: true, sajuReportJson: true },
+      })
+      for (const r of rows) {
+        try {
+          const rpt = r.sajuReportJson as Record<string, unknown> | null
+          const detail = rpt?.['오행십성_상세'] as { 천간?: Array<{ element?: string }> } | undefined
+          const elem = detail?.천간?.[2]?.element ?? null
+          if (elem) {
+            await prisma.sajuEntry.update({ where: { id: r.id }, data: { dayElement: elem } })
+            const entry = entries.find(e => e.id === r.id)
+            if (entry) entry.dayElement = elem
+          }
+        } catch { /* ignore */ }
+      }
+    }
 
     return NextResponse.json({ entries })
   } catch (error) {
@@ -61,7 +71,7 @@ export async function POST(request: NextRequest) {
     const guestId = getGuestId(request)
     const body = await request.json()
 
-    const { name, gender, birthDate, birthTime, timeUnknown, isLunar, isLeapMonth } = body
+    const { name, gender, birthDate, birthTime, timeUnknown, isLunar, isLeapMonth, job } = body
     if (!name || !birthDate) {
       return NextResponse.json({ error: 'name and birthDate required' }, { status: 400 })
     }
@@ -87,14 +97,42 @@ export async function POST(request: NextRequest) {
     }
 
     const birthTimeStr = timeUnknown ? '12:00' : (birthTime || '12:00')
-    const sajuReport = await buildSajuReportViaPython({
+    const baseInput = {
       birthDate,
       birthTime: birthTimeStr,
       timeUnknown: !!timeUnknown,
-      gender: gender === 'female' ? 'female' : 'male',
+      gender: (gender === 'female' ? 'female' : 'male') as 'male' | 'female',
       isLunar: !!isLunar,
       isLeapMonth: !!isLeapMonth,
+    }
+
+    // Phase 1: 룰 베이스 결과 (용신 판별 포함)
+    let sajuReport = await buildSajuReportViaPython(baseInput)
+
+    // Phase 2: LLM 용신 판별 (캐시 우선)
+    const llmYongshin = await resolveYongshin(sajuReport, {
+      gender: baseInput.gender,
+      isLunar: baseInput.isLunar,
     })
+    if (llmYongshin) {
+      const yongObj = (sajuReport['용신희신'] ?? sajuReport['용신']) as Record<string, unknown> | undefined
+      const ruleYongshin = yongObj?.['용신_오행'] as string | undefined
+      if (ruleYongshin !== llmYongshin.result.용신_오행) {
+        console.log(`[saju] 용신 override: ${ruleYongshin} → ${llmYongshin.result.용신_오행} (${llmYongshin.source})`)
+        sajuReport = await buildSajuReportViaPython({
+          ...baseInput,
+          yongshinOverride: llmYongshin.result,
+        })
+      } else {
+        console.log(`[saju] 용신 일치 (${ruleYongshin}), override 불필요`)
+      }
+    }
+
+    let dayElement: string | null = null
+    try {
+      const detail = (sajuReport as Record<string, unknown>)['오행십성_상세'] as { 천간?: Array<{ element?: string }> } | undefined
+      dayElement = detail?.천간?.[2]?.element ?? null
+    } catch { /* ignore */ }
 
     const entry = await prisma.sajuEntry.create({
       data: {
@@ -107,6 +145,8 @@ export async function POST(request: NextRequest) {
         timeUnknown: !!timeUnknown,
         isLunar: !!isLunar,
         isLeapMonth: !!(isLunar && isLeapMonth),
+        job: typeof job === 'string' ? job.trim().slice(0, 30) || null : null,
+        dayElement,
         sajuReportJson: sajuReport as object,
       },
     })

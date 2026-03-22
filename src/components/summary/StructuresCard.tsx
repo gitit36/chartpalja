@@ -31,13 +31,27 @@ function getShinsalInsight(name: string): string {
 export function StructuresCard({ report }: { report: SajuReportJson | null }) {
   const gongmang = report?.공망
   const shinsal = report?.신살길성
+  const ganji = report?.천간지지
 
-  const gongmangJi = gongmang?.공망지지 && Array.isArray(gongmang.공망지지) ? gongmang.공망지지 as string[] : []
+  const dayGmJi = gongmang?.공망지지 && Array.isArray(gongmang.공망지지) ? gongmang.공망지지 as string[] : []
+  const yearGmJi = gongmang?.년주_공망지지 && Array.isArray(gongmang.년주_공망지지) ? gongmang.년주_공망지지 as string[] : []
+  const allGmJi = [...new Set([...dayGmJi, ...yearGmJi])]
+  const dayGmSet = new Set(dayGmJi)
+  const yearGmSet = new Set(yearGmJi)
+  const branches = ganji?.지지 ? [ganji.지지.연지, ganji.지지.월지, ganji.지지.일지, ganji.지지.시지] : []
+  const pillarLabels = ['년지', '월지', '일지', '시지']
+  const gongmangHits: string[] = []
+  for (let i = 0; i < branches.length; i++) {
+    const br = branches[i]
+    if (!br) continue
+    if (i !== 2 && dayGmSet.has(br)) gongmangHits.push(`[일주]${pillarLabels[i]}(${br})`)
+    if (i !== 0 && yearGmSet.has(br)) gongmangHits.push(`[년주]${pillarLabels[i]}(${br})`)
+  }
   const hasShinsal = shinsal && typeof shinsal === 'object' && Object.keys(shinsal).filter((k) => k !== 'rule_notes').length > 0
   const stemChars = new Set(Object.keys(STEM_HANGUL))
   const branchChars = new Set(Object.keys(BRANCH_HANGUL))
 
-  const hasContent = gongmangJi.length > 0 || hasShinsal
+  const hasContent = allGmJi.length > 0 || hasShinsal
 
   if (!hasContent) {
     return (
@@ -59,14 +73,14 @@ export function StructuresCard({ report }: { report: SajuReportJson | null }) {
         사주에 깃든 특별한 기운입니다. 길성은 도움이 되는 쪽, 신살은 주의·보완을 참고할 수 있습니다.
       </p>
 
-      {gongmangJi.length > 0 && (
+      {allGmJi.length > 0 && (
         <div className="mb-4 rounded-xl p-4 bg-slate-50 border border-slate-100">
           <div className="text-xs font-medium text-gray-500 mb-2">공망</div>
           <p className="text-xs text-gray-600 mb-2">
             해당 지지의 힘이 상대적으로 비어 있다고 보는 관점입니다. 다른 기둥이나 대운으로 보완될 수 있어요.
           </p>
           <div className="flex flex-wrap gap-2">
-            {gongmangJi.map((c, i) => (
+            {allGmJi.map((c, i) => (
               <span
                 key={i}
                 className="inline-flex items-center rounded-lg bg-white border border-slate-200 px-2.5 py-1 text-sm text-gray-800"
@@ -76,6 +90,11 @@ export function StructuresCard({ report }: { report: SajuReportJson | null }) {
               </span>
             ))}
           </div>
+          {gongmangHits.length > 0 && (
+            <p className="mt-2 text-[11px] text-gray-500">
+              적용: {gongmangHits.join(', ')}
+            </p>
+          )}
         </div>
       )}
 

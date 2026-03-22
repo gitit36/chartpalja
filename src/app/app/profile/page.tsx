@@ -52,6 +52,7 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState<OrderItem[]>([])
   const [loading, setLoading] = useState(true)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [showAllOrders, setShowAllOrders] = useState(false)
 
   useEffect(() => {
     Promise.all([
@@ -121,7 +122,7 @@ export default function ProfilePage() {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {orders.map(o => (
+                  {(showAllOrders ? orders : orders.slice(0, 3)).map(o => (
                     <div key={o.id} className="bg-gray-50 rounded-xl p-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -132,6 +133,15 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   ))}
+                  {!showAllOrders && orders.length > 3 && (
+                    <div className="relative">
+                      <div className="absolute -top-8 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                      <button onClick={() => setShowAllOrders(true)}
+                        className="w-full py-2.5 text-sm font-medium text-purple-600 hover:text-purple-700 transition-colors">
+                        이전 내역 {orders.length - 3}건 더보기
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </section>

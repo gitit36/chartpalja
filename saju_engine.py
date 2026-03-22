@@ -52,16 +52,16 @@ BRANCH_HIDDEN_STEMS = {
 # BRANCH_HIDDEN_STEMS의 리스트 순서가 일부 지지에서 표준과 불일치하므로,
 # 역할(본기/중기/여기)을 명시적으로 지정하여 인덱스 의존을 제거한다.
 BRANCH_JIJANGGAN = {
-    "子": {"본기": "癸", "중기": None,  "여기": None},
+    "子": {"본기": "癸", "중기": "壬",  "여기": None},
     "丑": {"본기": "己", "중기": "辛",  "여기": "癸"},
     "寅": {"본기": "甲", "중기": "丙",  "여기": "戊"},
-    "卯": {"본기": "乙", "중기": None,  "여기": None},
+    "卯": {"본기": "乙", "중기": "甲",  "여기": None},
     "辰": {"본기": "戊", "중기": "癸",  "여기": "乙"},
     "巳": {"본기": "丙", "중기": "戊",  "여기": "庚"},
-    "午": {"본기": "丁", "중기": "己",  "여기": None},
+    "午": {"본기": "丁", "중기": "己",  "여기": "丙"},
     "未": {"본기": "己", "중기": "乙",  "여기": "丁"},
     "申": {"본기": "庚", "중기": "壬",  "여기": "戊"},
-    "酉": {"본기": "辛", "중기": None,  "여기": None},
+    "酉": {"본기": "辛", "중기": "庚",  "여기": None},
     "戌": {"본기": "戊", "중기": "丁",  "여기": "辛"},
     "亥": {"본기": "壬", "중기": "甲",  "여기": None},
 }
@@ -89,8 +89,9 @@ def get_jijanggan(branch: str) -> list:
 
 
 def _hidden_stems_by_role(branch: str) -> List[str]:
-    """지장간을 본기→중기→여기 순서로 반환한다."""
-    return [stem for stem, _role, _weight in get_jijanggan(branch)]
+    """지장간을 여기→중기→본기 순서로 반환한다 (전통 명리학 표기 순서)."""
+    items = get_jijanggan(branch)
+    return [stem for stem, _role, _weight in reversed(items)]
 
 
 def _add_branch_weighted_elements(
@@ -116,7 +117,7 @@ def jeomsin_round(x:float)->int:
 # ──────────────────────────────────────────────
 # SECTION 2 : 12운성 & 납음
 # ──────────────────────────────────────────────
-UNSEONG_ORDER = ["長生","沐浴","冠帶","臨官","帝旺","衰","病","死","墓","絶","胎","養"]
+UNSEONG_ORDER = ["장생","목욕","관대","건록","제왕","쇠","병","사","묘","절","태","양"]
 JANGSAENG_START_BRANCH = {"甲":"亥","乙":"午","丙":"寅","丁":"酉","戊":"寅","己":"酉",
                            "庚":"巳","辛":"子","壬":"申","癸":"卯"}
 def twelve_unseong(day_stem:str, branch:str)->str:
@@ -160,8 +161,8 @@ def ten_god(day: str, tgt: str) -> str:
     return "?"
 
 def branch_main_hs(br: str) -> Optional[str]:
-    hs = _hidden_stems_by_role(br)
-    return hs[0] if hs else None
+    jj = BRANCH_JIJANGGAN.get(br)
+    return jj["본기"] if jj else None
 
 def branch_main_tg(day: str, br: str) -> str:
     m = branch_main_hs(br)
@@ -468,7 +469,7 @@ def strength_score(day_stem: str, month_branch: str,stems: List[str], branches: 
     elif KE_MAP.get(se, "") == de:
         sc -= 2.0   # 囚(수): 월지 = 관살(나를 극하는 오행)
     elif se == jaesung_elem:
-        sc -= 1.0   # 死(사): 월지 = 재성(내가 극하는 오행)
+        sc -= 1.0   # 사(死): 월지 = 재성(내가 극하는 오행)
 
     # ── 천간 통기(투간) ──────────────────────
     stem_labels = ["연간", "월간", "일간", "시간"]
@@ -494,9 +495,9 @@ def strength_score(day_stem: str, month_branch: str,stems: List[str], branches: 
 
     # ── 12운성 보정 ────────────────────────
     _UNSEONG_STRENGTH = {
-        "長生": 0.8, "沐浴": 0.2, "冠帶": 0.6, "臨官": 1.0, "帝旺": 1.2,
-        "衰": -0.2, "病": -0.5, "死": -0.8, "墓": -0.6, "絶": -1.0,
-        "胎": 0.0, "養": 0.3,
+        "장생": 0.8, "목욕": 0.2, "관대": 0.6, "건록": 1.0, "제왕": 1.2,
+        "쇠": -0.2, "병": -0.5, "사": -0.8, "묘": -0.6, "절": -1.0,
+        "태": 0.0, "양": 0.3,
     }
     for i, b in enumerate(branches):
         w = _POSITION_WEIGHT_BRANCH.get(branch_labels[i], 1.0)
@@ -646,8 +647,11 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
         return {"격국": "양인격", "격국_십성": "겁재", "월지_본기": None, "격국유형": "특수격", "비고": "월지가 일간의 양인(羊刃)"}
 
     # ── 월지 지장간 탐색 ─────────────────────
-    hidden = _hidden_stems_by_role(month_branch)
-    if not hidden:
+    # 격국 결정은 본기 우선이므로 get_jijanggan (본기→중기→여기)을 직접 사용
+    jjg_items = get_jijanggan(month_branch)
+    hidden_bongi_first = [stem for stem, _role, _w in jjg_items]
+    hidden_display = _hidden_stems_by_role(month_branch)
+    if not hidden_bongi_first:
         return {"격국": "불명", "격국_십성": "?", "월지_본기": None, "격국유형": "불명", "비고": "월지 지장간 없음"}
 
     _TG_TO_GEOK = {
@@ -659,7 +663,7 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
     }
 
     # 투출 우선: 지장간 중 천간에 드러난 것
-    for h in hidden:
+    for h in hidden_bongi_first:
         if _is_stem_in_pillars(h, stems):
             tg = ten_god(day_stem, h)
             geok = _TG_TO_GEOK.get(tg)
@@ -669,29 +673,29 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
     # ── [Fix-15] 잡기격(雜氣格) 판별: 辰戌丑未 월지 ──
     _JAPGI_BRANCHES = {"辰", "戌", "丑", "未"}
     if month_branch in _JAPGI_BRANCHES:
-        for h in hidden:
+        for h in hidden_bongi_first:
             if _is_stem_in_pillars(h, stems):
                 tg = ten_god(day_stem, h)
                 geok = _TG_TO_GEOK.get(tg)
                 if geok:
                     return {"격국": geok, "격국_십성": tg, "월지_본기": h,
-                            "격국유형": "잡기격(투출)", "비고": f"잡기격: 월지 {month_branch}({','.join(hidden)}) 중 {h} 투출→{geok}"}
-        for h in hidden:
+                            "격국유형": "잡기격(투출)", "비고": f"잡기격: 월지 {month_branch}({','.join(hidden_display)}) 중 {h} 투출→{geok}"}
+        for h in hidden_bongi_first:
             tg = ten_god(day_stem, h)
             geok = _TG_TO_GEOK.get(tg)
             if geok:
                 return {"격국": geok, "격국_십성": tg, "월지_본기": h,
-                        "격국유형": "잡기격", "비고": f"잡기격: 월지 {month_branch}({','.join(hidden)}) 지장간 순서→{geok}"}
+                        "격국유형": "잡기격", "비고": f"잡기격: 월지 {month_branch}({','.join(hidden_display)}) 지장간 순서→{geok}"}
 
     # 투출 없으면 본기→중기→여기 순서
-    for h in hidden:
+    for h in hidden_bongi_first:
         tg = ten_god(day_stem, h)
         geok = _TG_TO_GEOK.get(tg)
         if geok:
             return {"격국": geok, "격국_십성": tg, "월지_본기": h, "격국유형": "정격", "비고": f"월지 지장간 {h} (본기/중기/여기 순)"}
 
     # 전부 비겁이면 → 건록격 변형
-    return {"격국": "비겁격", "격국_십성": "비견", "월지_본기": hidden[0], "격국유형": "변격", "비고": "월지 지장간 전체가 비겁"}
+    return {"격국": "비겁격", "격국_십성": "비견", "월지_본기": hidden_bongi_first[0], "격국유형": "변격", "비고": "월지 지장간 전체가 비겁"}
 
 
 # ── 9-2: 조후용신 테이블 ─────────────────────
@@ -1207,12 +1211,13 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         return f"{LABELS.get(cat, cat)}/{tmap.get(cat, '?')}"
 
     def _add_gushin(res):
-        """기신 오행으로부터 구신(仇神) 오행 도출: 기신을 생하는 오행"""
+        """기신 오행으로부터 구신(仇神) 오행 도출: 기신을 생하는 오행 (기신/용신/희신과 중복 제거)"""
         gi_es = res.get("기신_오행", [])
         gu_es = list({GEN_INV.get(e, "") for e in gi_es if e in GEN_INV} - {""})
         yong_e = res.get("용신_오행", "")
         hee_es = set(res.get("희신_오행", []))
-        gu_es = [e for e in gu_es if e != yong_e and e not in hee_es]
+        gi_set = set(gi_es)
+        gu_es = [e for e in gu_es if e != yong_e and e not in hee_es and e not in gi_set]
         res["구신_오행"] = gu_es
         return res
 
@@ -1331,15 +1336,38 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         "정재격": {"용신": "비겁", "희신": ["인성"], "기신": ["관살"]},
         "편관격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성"]},
         "정관격": {"용신": "인성", "희신": ["비겁"], "기신": ["식상"]},
-        "편인격": {"용신": "비겁", "희신": ["관살"], "기신": ["재성"]},
-        "정인격": {"용신": "비겁", "희신": ["관살"], "기신": ["재성"]},
+        # v6.1: 편인격/정인격 + 신약 → 인성이 격국 주성이자 일간 생조 → 인성이 용신
+        "편인격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성", "식상"]},
+        "정인격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성", "식상"]},
         "비겁격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성"]},
         "건록격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성"]},
         "양인격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성"]},
     }
 
+    # v6.1: 중화 판정에서도 격국 기반 방향성 제공 (조후 미적용 fallback용)
+    # 격국의 주성(격신)을 용신으로 → 격국 유지 방향
+    NEUTRAL_TABLE = {
+        "식신격": {"용신": "식상", "희신": ["재성"], "기신": ["인성"]},
+        "상관격": {"용신": "식상", "희신": ["재성"], "기신": ["인성"]},
+        "편재격": {"용신": "재성", "희신": ["식상"], "기신": ["비겁"]},
+        "정재격": {"용신": "재성", "희신": ["식상"], "기신": ["비겁"]},
+        "편관격": {"용신": "관살", "희신": ["재성"], "기신": ["식상"]},
+        "정관격": {"용신": "관살", "희신": ["재성"], "기신": ["식상"]},
+        "편인격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성", "식상"]},
+        "정인격": {"용신": "인성", "희신": ["비겁"], "기신": ["재성", "식상"]},
+        "비겁격": {"용신": "비겁", "희신": ["인성"], "기신": ["관살"]},
+        "건록격": {"용신": "비겁", "희신": ["인성"], "기신": ["관살"]},
+        "양인격": {"용신": "관살", "희신": ["인성"], "기신": ["비겁"]},
+    }
     if verdict in ("중화",):
-        eokbu = {"용신_cat": "균형", "용신_오행": "전체", "희신_cat": [], "기신_cat": [], "비고": "신강신약 균형→격국 유지 우선"}
+        neutral_row = NEUTRAL_TABLE.get(geok, {"용신": "비겁", "희신": ["인성"], "기신": ["관살"]})
+        eokbu = {
+            "용신_cat": "균형", "용신_오행": "전체",
+            "희신_cat": [], "기신_cat": [],
+            "비고": "신강신약 균형→격국 유지 우선",
+            # fallback: 조후 미적용 시 격국 기반 용신
+            "_neutral_row": neutral_row,
+        }
     elif verdict in ("신강", "극신강"):
         row = STRONG_TABLE.get(geok, {"용신": "식상", "희신": ["재성"], "기신": ["인성"]})
         eokbu = {"용신_cat": row["용신"], "용신_오행": tmap.get(row["용신"], "?"), "희신_cat": row["희신"], "기신_cat": row["기신"], "비고": f"억부법: {verdict}×{geok}"}
@@ -1420,8 +1448,26 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             use_disease = True
 
     if not use_disease and not johu_override:
-        if eokbu["용신_cat"] == "균형":
-            johu_override = True
+        de = STEM_ELEMENT[day_stem]
+        if eokbu["용신_cat"] == "균형" and johu_main_elem:
+            # v6.1: 중화→조후 override 전 검증
+            # (a) 조후 오행이 일간의 식상(설기) 또는 재성(간접설기)이면 → 일간을 약화시키므로 차단
+            johu_is_drain = (GEN_MAP.get(de) == johu_main_elem or
+                             KE_MAP.get(de) == johu_main_elem)
+            # (b) 조후 오행이 원국 천간에 이미 2개 이상 존재하면 → 조후 이미 해결
+            johu_stem_cnt = sum(1 for s in stems if STEM_ELEMENT.get(s) == johu_main_elem)
+            johu_branch_main_cnt = sum(
+                1 for b in branches
+                for h, role, _ in get_jijanggan(b)
+                if role == "본기" and STEM_ELEMENT.get(h) == johu_main_elem
+            )
+            johu_already_sufficient = (johu_stem_cnt + johu_branch_main_cnt) >= 2
+            if not johu_is_drain and not johu_already_sufficient:
+                johu_override = True
+            # else: 조후 부적합 → fallback to 격국 기반 억부
+        elif eokbu["용신_cat"] == "균형":
+            # 조후 테이블 자체가 없는 경우 → 격국 기반 fallback
+            pass
         elif johu and eokbu["용신_오행"] != johu_main_elem:
             if diag["조후_시급도"] > diag["억부_시급도"]:
                 johu_override = True
@@ -1510,25 +1556,39 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             "기신_오행": gi_elems,
         })
     else:
-        if johu and eokbu["용신_오행"] == johu.get("조후_주용신"):
-            final_elem = eokbu["용신_오행"]
-            confidence = "매우높음(억부+조후+제화 일치)" if jehwa_bonus else "높음(억부+조후 일치)"
-        elif johu:
-            final_elem = eokbu["용신_오행"]
-            confidence = "보통(억부·조후 불일치)"
+        # v6.1: 중화인데 조후 미적용 → 격국 기반 용신 fallback
+        if eokbu["용신_cat"] == "균형" and "_neutral_row" in eokbu:
+            nrow = eokbu["_neutral_row"]
+            final_elem = tmap.get(nrow["용신"], "?")
+            yong_label = _cat_label(nrow["용신"])
+            confidence = "보통(중화→격국유지)"
+            bigo = f"중화→조후부적합→격국({geok}) 주성 유지"
+            result.update({
+                "용신": yong_label, "용신_오행": final_elem,
+                "희신": [_cat_label(h) for h in nrow["희신"]],
+                "희신_오행": [tmap.get(h, "?") for h in nrow["희신"]],
+                "기신": [_cat_label(g) for g in nrow["기신"]],
+                "기신_오행": [tmap.get(g, "?") for g in nrow["기신"]],
+            })
         else:
-            final_elem = eokbu["용신_오행"]
-            confidence = "보통"
-        yong_label = _cat_label(eokbu["용신_cat"]) if eokbu["용신_cat"] != "균형" else "중화(균형유지)"
-        bigo = eokbu["비고"]
-
-        result.update({
-            "용신": yong_label, "용신_오행": final_elem,
-            "희신": [_cat_label(h) for h in eokbu.get("희신_cat", [])],
-            "희신_오행": [tmap.get(h, "?") for h in eokbu.get("희신_cat", [])],
-            "기신": [_cat_label(g) for g in eokbu.get("기신_cat", [])],
-            "기신_오행": [tmap.get(g, "?") for g in eokbu.get("기신_cat", [])],
-        })
+            if johu and eokbu["용신_오행"] == johu.get("조후_주용신"):
+                final_elem = eokbu["용신_오행"]
+                confidence = "매우높음(억부+조후+제화 일치)" if jehwa_bonus else "높음(억부+조후 일치)"
+            elif johu:
+                final_elem = eokbu["용신_오행"]
+                confidence = "보통(억부·조후 불일치)"
+            else:
+                final_elem = eokbu["용신_오행"]
+                confidence = "보통"
+            yong_label = _cat_label(eokbu["용신_cat"]) if eokbu["용신_cat"] != "균형" else "중화(균형유지)"
+            bigo = eokbu["비고"]
+            result.update({
+                "용신": yong_label, "용신_오행": final_elem,
+                "희신": [_cat_label(h) for h in eokbu.get("희신_cat", [])],
+                "희신_오행": [tmap.get(h, "?") for h in eokbu.get("희신_cat", [])],
+                "기신": [_cat_label(g) for g in eokbu.get("기신_cat", [])],
+                "기신_오행": [tmap.get(g, "?") for g in eokbu.get("기신_cat", [])],
+            })
 
     tonggwan_applied = False
     if tonggwan_elem:
@@ -2109,10 +2169,17 @@ def build_shinsal_detail(stems,branches,pillars)->Dict[str,Any]:
     hyung_hits = _pairs(branches, BRANCH_PUNISH)
     c.add("형살(刑殺)","흉살","지지조합",bool(hyung_hits),{"pairs":hyung_hits})
 
-    # 공망
-    emp=xunkong(day_gz); emp_h=_hb(emp,branches)
+    # 공망 (일주 기준 + 년주 기준)
+    year_gz = stems[0] + branches[0]
+    emp_day = xunkong(day_gz); emp_day_h = _hb(emp_day, branches)
+    emp_year = xunkong(year_gz); emp_year_h = _hb(emp_year, branches)
     return {"발현_신살":c.hits,"발현_수":c.hit_count,
-            "공망":{"일주":day_gz,"순시작":day_xun_start(day_gz),"공망지지":emp,"원국_적중":emp_h}}
+            "공망":{
+                "일주":day_gz,"순시작":day_xun_start(day_gz),
+                "공망지지":emp_day,"원국_적중":emp_day_h,
+                "년주":year_gz,"년주_순시작":day_xun_start(year_gz),
+                "년주_공망지지":emp_year,"년주_원국_적중":emp_year_h,
+            }}
 
 # ──────────────────────────────────────────────
 # SECTION 14 : 사주 관계 계산 [Q3 확장]
@@ -2610,9 +2677,10 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
     # 용신 (v3.3: 억부+조후+통관+종격)
     yong = determine_yongshin(geok, vd, ds, mb, stems, branches)
 
-    # 궁성론 (v3.3 신규)
+    # 궁성론 (v3.3 + v6.2 진공/가공)
+    natal_gm_info = classify_natal_gongmang(pillars["day"], pillars["year"], branches)
     gongmang = xunkong(pillars["day"])
-    gungseong = build_gungseong(ds, stems, branches, pillars, gongmang)
+    gungseong = build_gungseong(ds, stems, branches, pillars, gongmang, natal_gm_info)
 
     # DomainScore
     all_tg = {**ten_gods, **{f"{k}_{v['간']}": v["십성"] for k, vs in hidden_tg.items() for v in vs}}
@@ -2637,7 +2705,8 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
         "신강신약": {"점수": sc, "판정": vd},
         "격국": geok,
         "용신": yong,
-        "궁성론": gungseong, # v3.3 신규
+        "궁성론": gungseong,
+        "공망분류": natal_gm_info,
         "DomainScore": dscore,
         "대운": {
             "방향": "순행" if fwd else "역행",
@@ -2668,32 +2737,47 @@ _GUNGSEONG = {
 }
 
 def build_gungseong(day_stem: str, stems: List[str], branches: List[str],
-                    pillars: Dict[str, str], gongmang: List[str]) -> List[Dict[str, Any]]:
-    """궁성별 십성 + 공망 + 12운성 조합 분석"""
+                    pillars: Dict[str, str], gongmang: List[str],
+                    natal_gm_info: Optional[Dict] = None) -> List[Dict[str, Any]]:
+    """궁성별 십성 + 공망(진공/가공) + 12운성 조합 분석"""
     labels = ["연주", "월주", "일주", "시주"]
     pillar_keys = ["year", "month", "day", "hour"]
+    # 년주 공망 지지도 포함
+    year_gm = xunkong(pillars["year"]) if pillars.get("year") else []
+    all_gm = set(gongmang) | set(year_gm)
+    # natal_gm_info에서 각 기둥의 공망 유형 조회
+    _hit_map: Dict[int, Dict] = {}
+    if natal_gm_info:
+        for hit in natal_gm_info.get("all_hits", []):
+            _hit_map[hit["pillar_idx"]] = hit
     result = []
     for i, label in enumerate(labels):
         st, br = stems[i], branches[i]
         gz = pillars[pillar_keys[i]]
-        # 일간(i=2)은 본인이므로 십성 판별 대상이 아님
         tg_stem = ten_god(day_stem, st) if i != 2 else "일간(본인)"
         tg_branch = branch_main_tg(day_stem, br)
         unseong = twelve_unseong(day_stem, br)
-        is_gongmang = br in gongmang
-        # 지장간 십성
+        is_gongmang = br in all_gm and i != 2
+        gm_hit = _hit_map.get(i)
+        gm_type = gm_hit["type"] if gm_hit else None
+        gm_source = gm_hit["source"] if gm_hit else None
         hidden_tg = [{"간": h, "십성": ten_god(day_stem, h)} for h in _hidden_stems_by_role(br)]
         info = _GUNGSEONG[label]
-        # 특이사항 판별
         warnings = []
-        # 공망
-        if is_gongmang:
+        if is_gongmang and gm_type:
+            if gm_type == "진공":
+                warnings.append(f"{info['궁']}에 공망(진공)→해당 영역의 기운이 비어 실질적 결과 약화")
+            elif gm_type == "가공(합)":
+                warnings.append(f"{info['궁']}에 공망이나 합으로 해소(가공)→영향 미미")
+            elif gm_type == "가공(충)":
+                warnings.append(f"{info['궁']}에 공망이나 충으로 일부 해소(가공)→영향 약화")
+        elif is_gongmang:
             warnings.append(f"{info['궁']}에 공망→해당 영역 허(虛)한 기운, 실질적 결과 약화 가능")
         # 12운성 약세
-        if unseong in ("死", "墓", "絶"):
+        if unseong in ("사", "묘", "절"):
             warnings.append(f"{info['궁']}에 {unseong}→해당 영역 에너지 약함")
         # 12운성 강세
-        if unseong in ("帝旺", "臨官", "長生"):
+        if unseong in ("제왕", "건록", "장생"):
             warnings.append(f"{info['궁']}에 {unseong}→해당 영역 에너지 강함")
         # 양인이 해당 궁에 있는 경우
         if br == YANGREN.get(day_stem):
@@ -2715,6 +2799,8 @@ def build_gungseong(day_stem: str, stems: List[str], branches: List[str],
             "지지십성": tg_branch,
             "12운성": unseong,
             "공망여부": is_gongmang,
+            "공망유형": gm_type,
+            "공망출처": gm_source,
             "지장간십성": hidden_tg,
             "특이사항": warnings,
         })
@@ -2818,37 +2904,37 @@ _EVENT_TRIGGERS = {
     "이직_전환": {
         "shinsal": {"역마(驛馬)": 25, "겁살(劫殺)": 10, "양인(羊刃)": 8},
         "relation": {"충": 20, "형": 10, "파": 12},
-        "unseong": {"絶": 15, "墓": 10, "死": 8},
+        "unseong": {"절": 15, "묘": 10, "사": 8},
         "tengo": {"편관": 12, "상관": 10, "겁재": 8},
     },
     "연애_결혼": {
         "shinsal": {"도화(桃花)": 25, "홍란(紅鸞)": 20, "천희(天喜)": 15, "함지살(咸池)": 10},
         "relation": {"합": 15},
-        "unseong": {"沐浴": 12, "長生": 8},
+        "unseong": {"목욕": 12, "장생": 8},
         "tengo": {"정재": 12, "편재": 10, "정관": 8},
     },
     "건강_주의": {
         "shinsal": {"백호살(白虎)": 25, "귀문관살(鬼門關)": 15},
         "relation": {"충": 12, "형": 10},
-        "unseong": {"病": 20, "死": 18, "墓": 12, "絶": 10},
+        "unseong": {"병": 20, "사": 18, "묘": 12, "절": 10},
         "tengo": {"편관": 8},
     },
     "재물_기회": {
         "shinsal": {"록신(祿神)": 15, "천을귀인(天乙)": 10, "금여": 8},
         "relation": {"합": 12, "반합": 8},
-        "unseong": {"臨官": 12, "帝旺": 15, "長生": 8, "冠帶": 8},
+        "unseong": {"건록": 12, "제왕": 15, "장생": 8, "관대": 8},
         "tengo": {"정재": 18, "편재": 15, "식신": 10},
     },
     "학업_시험": {
         "shinsal": {"문창귀인(文昌)": 20, "학당귀인(學堂)": 15, "문곡귀인": 12, "사관귀인(詞館)": 10},
         "relation": {"합": 8},
-        "unseong": {"冠帶": 10, "臨官": 8, "長生": 8},
+        "unseong": {"관대": 10, "건록": 8, "장생": 8},
         "tengo": {"정인": 15, "편인": 12},
     },
     "대인_갈등": {
         "shinsal": {"원진살(怨嗔)": 20, "귀문관살(鬼門關)": 15, "고진(孤辰)": 12, "과숙(寡宿)": 10},
         "relation": {"충": 15, "형": 12, "해": 10, "극": 8},
-        "unseong": {"衰": 8},
+        "unseong": {"쇠": 8},
         "tengo": {"편관": 10, "겁재": 10, "상관": 8},
     },
 }
@@ -2870,8 +2956,8 @@ def _calc_yongshin_power(dw_fit, sw_fit=None):
 
 
 _UNSEONG_SEVERITY_MULT = {
-    "帝旺": 1.2, "臨官": 1.15, "長生": 1.1, "冠帶": 1.05,
-    "死": 1.15, "墓": 1.1, "絶": 1.2, "病": 1.1,
+    "제왕": 1.2, "건록": 1.15, "장생": 1.1, "관대": 1.05,
+    "사": 1.15, "묘": 1.1, "절": 1.2, "병": 1.1,
 }
 
 def _extract_rel_keys(rels_list, unseong=""):
@@ -3081,37 +3167,37 @@ except NameError:
 
 # ── 12운성 점수 매핑 ───────────────────────────
 _UNSEONG_SCORE = {
-    "長生": 10, "沐浴": 2, "冠帶": 8, "臨官": 10, "帝旺": 12,
-    "衰": -2, "病": -6, "死": -10, "墓": -8, "絶": -12, "胎": 0, "養": 4,
+    "장생": 10, "목욕": 2, "관대": 8, "건록": 10, "제왕": 12,
+    "쇠": -2, "병": -6, "사": -10, "묘": -8, "절": -12, "태": 0, "양": 4,
 }
 
 # ── [v5] 12운성 신강/신약별 감쇠 승수 (0.0~1.0만 허용, 부호 반전 금지) ──
 # 명리학 원칙: 신강이면 왕성한 운성의 *양적 효과*가 줄어들 뿐, 부호가 뒤집히지 않는다.
-# 신강+帝旺: 양 효과 거의 소멸(0.05) + 별도 과잉 penalty로 처리.
-# 신강+死/絶: 원래 음의 부호 유지, 감쇠만 적용(절대 양으로 전환 안 함).
+# 신강+제왕: 양 효과 거의 소멸(0.05) + 별도 과잉 penalty로 처리.
+# 신강+사/절: 원래 음의 부호 유지, 감쇠만 적용(절대 양으로 전환 안 함).
 _UNSEONG_VERDICT_MULT = {
     #                  신약/중  신강   극신강
-    "長生":           (1.0,    0.25,  0.1),
-    "沐浴":           (1.0,    0.8,   0.7),
-    "冠帶":           (1.0,    0.35,  0.15),
-    "臨官":           (1.0,    0.15,  0.05),
-    "帝旺":           (1.0,    0.05,  0.0),
-    "衰":             (1.0,    0.5,   0.35),
-    "病":             (1.0,    0.3,   0.2),
-    "死":             (1.0,    0.15,  0.1),
-    "墓":             (1.0,    0.2,   0.1),
-    "絶":             (1.0,    0.1,   0.05),
-    "胎":             (1.0,    1.0,   1.0),
-    "養":             (1.0,    0.65,  0.45),
+    "장생":           (1.0,    0.25,  0.1),
+    "목욕":           (1.0,    0.8,   0.7),
+    "관대":           (1.0,    0.35,  0.15),
+    "건록":           (1.0,    0.15,  0.05),
+    "제왕":           (1.0,    0.05,  0.0),
+    "쇠":             (1.0,    0.5,   0.35),
+    "병":             (1.0,    0.3,   0.2),
+    "사":             (1.0,    0.15,  0.1),
+    "묘":             (1.0,    0.2,   0.1),
+    "절":             (1.0,    0.1,   0.05),
+    "태":             (1.0,    1.0,   1.0),
+    "양":             (1.0,    0.65,  0.45),
 }
 
 # 신강에서 양의 운성이 올 때 별도 고정 감점 (과잉 부담)
 _SINGANG_EXCESS_PENALTY = {
     #               신강    극신강
-    "帝旺":        (-2.0,  -4.0),
-    "臨官":        (-1.0,  -2.5),
-    "長生":        (-0.5,  -1.0),
-    "冠帶":        (-0.5,  -1.0),
+    "제왕":        (-2.0,  -4.0),
+    "건록":        (-1.0,  -2.5),
+    "장생":        (-0.5,  -1.0),
+    "관대":        (-0.5,  -1.0),
 }
 
 
@@ -3367,12 +3453,12 @@ def _ohang_balance(stems_list: List[str], branches_list: List[str],
 # 명리학 원칙: 묘(墓)는 재성에겐 축적(+), 관성에겐 정체(-). 맥락 없는 일률 점수는 오류.
 # 보정은 기본 12운성 점수의 30~50% 범위로 제한.
 _UNSEONG_TENGO_CONTEXT = {
-    ("墓", "편재"):  +4,  ("墓", "정재"):  +4,
-    ("墓", "정관"):  -3,  ("墓", "편관"):  -3,
-    ("長生", "정관"): +3, ("長生", "정인"): +3,
-    ("帝旺", "편관"): -3, ("帝旺", "겁재"): -3,
-    ("沐浴", "정관"): -2, ("沐浴", "편재"): -2,
-    ("死", "편재"):   -3, ("絶", "정관"):   -3,
+    ("묘", "편재"):  +4,  ("묘", "정재"):  +4,
+    ("묘", "정관"):  -3,  ("묘", "편관"):  -3,
+    ("장생", "정관"): +3, ("장생", "정인"): +3,
+    ("제왕", "편관"): -3, ("제왕", "겁재"): -3,
+    ("목욕", "정관"): -2, ("목욕", "편재"): -2,
+    ("사", "편재"):   -3, ("절", "정관"):   -3,
 }
 
 def _unseong_tengo_adj(unseong: str, tg_stem: str, tg_branch: str) -> float:
@@ -3441,23 +3527,137 @@ def _trine_energy_adj(trine_hits: list, yong_info: dict) -> tuple:
     return pos, neg
 
 
-# ── [v6.1] 공망 항목별 차등 감쇠 ─────────────────────
-# 명리학 원칙: 공망은 "작용 실현성"을 깎는 방향.
-# 합/삼합/관계 작용에 더 크게, 생명력(12운성)에는 조금만 적용.
-_GONGMANG_DAMP = {
-    "unseong": 0.9,       # 12운성 — 생명력 자체는 약한 감쇠
-    "rel": 0.75,          # 합충 관계 — 실현성 감소
-    "yfit_branch": 0.85,  # 용신부합 지지 — 약한 감쇠
-    "trine": 0.70,        # 삼합/방합 — 실현 불발 가능성 높음
+# ── [v6.2] 공망 진공/가공 + 항목별 차등 감쇠 + 해공 ─────
+# 명리학 원칙:
+#   진공(眞空): 합·충 없이 그대로 공망 → 완전 감쇠
+#   가공(假空): 합·충으로 공망이 풀림 → 감쇠 완화/해소
+#   해공: 대운/세운/월운에서 충·합으로 공망 채워짐 → 영역 활성화
+
+_GONGMANG_DAMP_JINGONG = {  # 진공: 완전 감쇠
+    "unseong": 0.9,  "rel": 0.75,  "yfit_branch": 0.85,  "trine": 0.70,
+}
+_GONGMANG_DAMP_GAGONG_CHUNG = {  # 가공(충): 충으로 일부 해소
+    "unseong": 0.95, "rel": 0.88,  "yfit_branch": 0.92,  "trine": 0.85,
+}
+_GONGMANG_DAMP_GAGONG_HAP = {  # 가공(합): 합으로 거의 해소
+    "unseong": 1.0,  "rel": 0.95,  "yfit_branch": 0.98,  "trine": 0.95,
 }
 
-def _gongmang_factors(branch: str, day_gz: str) -> dict:
-    """공망이면 컴포넌트별 감쇠 계수, 아니면 모두 1.0. is_gongmang은 export용."""
-    if branch in xunkong(day_gz):
-        d = _GONGMANG_DAMP.copy()
-        d["is_gongmang"] = True
+_GONGMANG_NONE = {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0, "trine": 1.0}
+
+_HAEGONG_BONUS = {"합": 2.0, "충": 1.0}
+
+_GUNGSEONG_AREA = {
+    0: ("년주", "조상궁·초년운"),
+    1: ("월주", "부모궁·사회기반"),
+    2: ("일주", "배우자궁·자기기반"),
+    3: ("시주", "자녀궁·말년운"),
+}
+
+def _gongmang_type(gm_branch: str, other_branches: List[str]) -> str:
+    """공망 지지가 다른 지지와 합/충 관계가 있는지 → 진공/가공 판별."""
+    for ob in other_branches:
+        if ob == gm_branch:
+            continue
+        if (gm_branch, ob) in BRANCH_COMBINE:
+            return "가공(합)"
+        if (gm_branch, ob) in BRANCH_CLASH:
+            return "가공(충)"
+    return "진공"
+
+
+def classify_natal_gongmang(day_gz: str, year_gz: str,
+                            natal_branches: List[str]) -> Dict[str, Any]:
+    """원국 공망을 진공/가공으로 분류하고 위치별 매핑.
+
+    Returns: {
+        "일주공망": { "공망지지": [...], "원국적중": [{branch, pillar_idx, pillar, type, 영역}] },
+        "년주공망": { ... },
+        "all_hits": [...]   ← 편의용 flat list
+    }
+    """
+    result: Dict[str, Any] = {}
+    all_hits: List[Dict] = []
+
+    for source, gz, skip_idx in [("일주공망", day_gz, 2), ("년주공망", year_gz, 0)]:
+        gm_branches = xunkong(gz)
+        hits: List[Dict] = []
+        for i, nb in enumerate(natal_branches):
+            if i == skip_idx:
+                continue
+            if nb in gm_branches:
+                gm_t = _gongmang_type(nb, natal_branches)
+                hit = {
+                    "branch": nb,
+                    "pillar_idx": i,
+                    "pillar": _GUNGSEONG_AREA[i][0],
+                    "type": gm_t,
+                    "영역": _GUNGSEONG_AREA[i][1],
+                    "source": source,
+                }
+                hits.append(hit)
+                all_hits.append(hit)
+        result[source] = {"공망지지": gm_branches, "원국적중": hits}
+
+    result["all_hits"] = all_hits
+    return result
+
+
+def _gongmang_factors(branch: str, day_gz: str,
+                      orig_branches: Optional[List[str]] = None) -> dict:
+    """공망 감쇠 계수 (진공/가공 구분). is_gongmang, gongmang_type은 export용."""
+    if branch not in xunkong(day_gz):
+        d = _GONGMANG_NONE.copy()
+        d["is_gongmang"] = False
+        d["gongmang_type"] = None
         return d
-    return {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0, "trine": 1.0, "is_gongmang": False}
+
+    gm_t = "진공"
+    damp = _GONGMANG_DAMP_JINGONG
+    if orig_branches:
+        gm_t = _gongmang_type(branch, orig_branches)
+        if gm_t == "가공(합)":
+            damp = _GONGMANG_DAMP_GAGONG_HAP
+        elif gm_t == "가공(충)":
+            damp = _GONGMANG_DAMP_GAGONG_CHUNG
+
+    d = damp.copy()
+    d["is_gongmang"] = True
+    d["gongmang_type"] = gm_t
+    return d
+
+
+def _haegong_check(incoming_branch: str,
+                   natal_gm_info: Optional[Dict] = None) -> Dict[str, Any]:
+    """운의 지지가 원국 공망 지지를 충/합으로 해공하는지 확인.
+
+    Returns: {"resolved": [{branch, pillar, method, 영역, bonus}], "bonus": float}
+    """
+    if not natal_gm_info:
+        return {"resolved": [], "bonus": 0.0}
+
+    resolved = []
+    for hit in natal_gm_info.get("all_hits", []):
+        gm_br = hit["branch"]
+        method = None
+        if (incoming_branch, gm_br) in BRANCH_COMBINE:
+            method = "합"
+        elif (incoming_branch, gm_br) in BRANCH_CLASH:
+            method = "충"
+        if method:
+            base = _HAEGONG_BONUS[method]
+            # 이미 가공이면 해공 효과 축소
+            if hit["type"] == "가공(합)":
+                base *= 0.3
+            elif hit["type"] == "가공(충)":
+                base *= 0.5
+            resolved.append({
+                "branch": gm_br, "pillar": hit["pillar"],
+                "method": method, "영역": hit["영역"],
+                "source": hit["source"], "bonus": round(base, 2),
+            })
+
+    return {"resolved": resolved, "bonus": round(sum(r["bonus"] for r in resolved), 2)}
 
 
 # ── [v5] 신살 맥락 감응 ──────────────────────────
@@ -3585,8 +3785,9 @@ def _composite_score(
     shinsal_adj: float = 0.0,
     disease_resolution: float = 0.0,
     natal_balance: float = 0.5,
+    haegong_bonus: float = 0.0,
 ) -> Dict[str, Any]:
-    """0~100 종합운점수 + breakdown (v6.1 full)."""
+    """0~100 종합운점수 + breakdown (v6.2 full — 해공 포함)."""
     if gm is None:
         gm = {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0}
 
@@ -3636,7 +3837,10 @@ def _composite_score(
     # disease resolution
     dis_sc = disease_resolution
 
-    sc = base + yfit_sc + uns_sc + uns_ctx + rel_sc + tri_sc + bal_sc + shin_sc + dis_sc
+    # 해공 보너스 (운이 원국 공망 지지를 충/합으로 활성화)
+    haeg_sc = haegong_bonus
+
+    sc = base + yfit_sc + uns_sc + uns_ctx + rel_sc + tri_sc + bal_sc + shin_sc + dis_sc + haeg_sc
     clamped = max(0, min(100, round(sc)))
 
     return {
@@ -3651,6 +3855,7 @@ def _composite_score(
             "balance": round(bal_sc, 2),
             "shinsal": round(shin_sc, 2),
             "disease_resolution": round(dis_sc, 2),
+            "haegong": round(haeg_sc, 2),
         },
     }
 
@@ -3663,8 +3868,9 @@ def _calc_sewoon_independent_score(
     day_gz: str = "", disease_info: Optional[Dict] = None,
     tmap: Optional[Dict[str, str]] = None,
     natal_balance: float = 0.5,
+    natal_gm_info: Optional[Dict] = None,
 ) -> Dict[str, Any]:
-    """세운 독립점수 산출 (v6.1 full). Returns {"score": int, "breakdown": dict}."""
+    """세운 독립점수 산출 (v6.2 full — 진공/가공/해공). Returns {"score": int, "breakdown": dict}."""
     sw_yfit = _check_yongshin_fit(sw_stem, sw_branch, yong, day_stem)
     sw_unseong = twelve_unseong(day_stem, sw_branch)
     sw_rels = _calc_incoming_relations(sw_stem, sw_branch, orig_stems, orig_branches)
@@ -3684,7 +3890,8 @@ def _calc_sewoon_independent_score(
 
     sw_trine = _check_trine_direction(sw_branch, orig_branches, [dw_branch])
     sw_t_pos, sw_t_neg = _trine_energy_adj(sw_trine, yong)
-    sw_gm = _gongmang_factors(sw_branch, day_gz) if day_gz else {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0}
+    sw_gm = _gongmang_factors(sw_branch, day_gz, orig_branches) if day_gz else _GONGMANG_NONE.copy()
+    sw_haegong = _haegong_check(sw_branch, natal_gm_info)
     sw_shinsal_adj = _contextual_shinsal_adj(sw_gil, sw_hyung, verdict, geok_type)
     sw_dis_res = _disease_resolution_score(sw_stem, sw_branch, disease_info, tmap)
 
@@ -3697,6 +3904,7 @@ def _calc_sewoon_independent_score(
         shinsal_adj=sw_shinsal_adj,
         disease_resolution=sw_dis_res,
         natal_balance=natal_balance,
+        haegong_bonus=sw_haegong["bonus"],
     )
 
 
@@ -3730,6 +3938,7 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
 
     orig_stems = [r["원국"][k][0] for k in ("year", "month", "day", "hour")]
     orig_branches = [r["원국"][k][1] for k in ("year", "month", "day", "hour")]
+    natal_gm_info = r.get("공망분류")
 
     # v6.1: 원국 고유 균형도 (balance delta 기준선)
     natal_bal = _ohang_balance(orig_stems, orig_branches, yong_info=yong)
@@ -3787,10 +3996,11 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
         dw_energy_for_score = _calc_energy_field(rels_w_orig, yong_info=yong, inc_stem=stem, inc_branch=branch,
                                                    orig_stems=orig_stems, orig_branches=orig_branches)
 
-        # [v5] 삼합/방합 + 공망 + 신살맥락
+        # [v5] 삼합/방합 + 공망(진공/가공) + 신살맥락 + 해공
         dw_trine = _check_trine_direction(branch, orig_branches)
         dw_t_pos, dw_t_neg = _trine_energy_adj(dw_trine, yong)
-        dw_gm = _gongmang_factors(branch, day_gz)
+        dw_gm = _gongmang_factors(branch, day_gz, orig_branches)
+        dw_haegong = _haegong_check(branch, natal_gm_info)
         dw_shinsal_adj = _contextual_shinsal_adj(gil, hyung, verdict, geok_type)
         dw_dis_res = _disease_resolution_score(stem, branch, disease_info, tmap)
 
@@ -3802,6 +4012,7 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
             shinsal_adj=dw_shinsal_adj,
             disease_resolution=dw_dis_res,
             natal_balance=natal_bal,
+            haegong_bonus=dw_haegong["bonus"],
         )
         composite = _comp_result["score"]
         composite_breakdown = _comp_result["breakdown"]
@@ -3872,6 +4083,7 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
             "breakdown": composite_breakdown,
             "trine_hits": [dict(h, applies_to="daewoon") for h in dw_trine],
             "gongmang_factors": dw_gm,
+            "haegong": dw_haegong,
             "shinsal_context_adj": _shinsal_adj_detail(gil, hyung, verdict, geok_type),
             "시즌태그": dw_season,
             "이벤트확률": dw_events,
@@ -3912,6 +4124,7 @@ def build_yearly_timeline(
 
     orig_stems = [r["원국"][k][0] for k in ("year", "month", "day", "hour")]
     orig_branches = [r["원국"][k][1] for k in ("year", "month", "day", "hour")]
+    natal_gm_info = r.get("공망분류")
 
     # v6.1: 원국 고유 균형도
     natal_bal = _ohang_balance(orig_stems, orig_branches, yong_info=yong)
@@ -3986,20 +4199,21 @@ def build_yearly_timeline(
         unseong_12 = _UNSEONG_SCORE.get(sw_unseong, 0)
         tengo_bal = _calc_tengo_balance(day_stem, orig_stems + [dw["stem"], sw_stem], orig_branches + [dw["branch"], sw_branch])
 
-        # ── 종합 점수 (계층 가중합산 + 시너지) ──
+        # ── 종합 점수 (계층 가중합산 + 시너지 + 해공) ──
         _sw_result = _calc_sewoon_independent_score(
             sw_stem, sw_branch, day_stem, year_branch,
             orig_stems, orig_branches, dw["stem"], dw["branch"],
             yong, geok_type, verdict, day_gz=day_gz,
             disease_info=disease_info, tmap=tmap_yt,
-            natal_balance=natal_bal,
+            natal_balance=natal_bal, natal_gm_info=natal_gm_info,
         )
         sw_sc = _sw_result["score"]
         sw_breakdown = _sw_result["breakdown"]
 
-        # [v5 export] 삼합/방합·공망·신살 메타 (설명용, 점수에 무관)
+        # [v5 export] 삼합/방합·공망·신살 메타 (설명용)
         sw_trine_hits = _check_trine_direction(sw_branch, orig_branches, [dw["branch"]])
-        sw_gm_factors = _gongmang_factors(sw_branch, day_gz)
+        sw_gm_factors = _gongmang_factors(sw_branch, day_gz, orig_branches)
+        sw_haegong = _haegong_check(sw_branch, natal_gm_info)
         sw_shinsal_detail = _shinsal_adj_detail(
             dw["신살_길신"] + sw_gil, dw["신살_흉살"] + sw_hyung, verdict, geok_type
         )
@@ -4088,6 +4302,7 @@ def build_yearly_timeline(
             "breakdown": sw_breakdown,
             "trine_hits": [dict(h, applies_to="yearly") for h in sw_trine_hits],
             "gongmang_factors": sw_gm_factors,
+            "haegong": sw_haegong,
             "shinsal_context_adj": sw_shinsal_detail,
             "indicators": {
                 "용신력": ypower,
@@ -4233,6 +4448,7 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     tmap_mt = day_tengo_ohaeng(ds)
     o_stems = [r["원국"][k][0] for k in ("year", "month", "day", "hour")]
     o_branches = [r["원국"][k][1] for k in ("year", "month", "day", "hour")]
+    natal_gm_info = r.get("공망분류")
 
     # v6.1: 원국 고유 균형도
     natal_bal = _ohang_balance(o_stems, o_branches, yong_info=yong)
@@ -4264,7 +4480,7 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     _sw_ind_result = _calc_sewoon_independent_score(
         sw_s, sw_b, ds, yb, o_stems, o_branches, dw["stem"], dw["branch"], yong, geok_type, verdict,
         day_gz=ds + db, disease_info=disease_info_mt, tmap=tmap_mt,
-        natal_balance=natal_bal,
+        natal_balance=natal_bal, natal_gm_info=natal_gm_info,
     )
     sw_ind = _sw_ind_result["score"]
     dw_t = float(dw["종합운점수"])
@@ -4364,15 +4580,16 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
             o_branches + [dw["branch"], sw_b, m_branch],
         )
 
-        # [v5] 삼합/방합 + 공망 + 신살맥락
+        # [v5] 삼합/방합 + 공망(진공/가공) + 신살맥락 + 해공
         m_trine = _check_trine_direction(m_branch, o_branches, [dw["branch"], sw_b])
         m_t_pos, m_t_neg = _trine_energy_adj(m_trine, yong)
-        m_gm = _gongmang_factors(m_branch, ds + db)
+        m_gm = _gongmang_factors(m_branch, ds + db, o_branches)
+        m_haegong = _haegong_check(m_branch, natal_gm_info)
         m_shinsal_adj = _contextual_shinsal_adj(m_gil, m_hyung, verdict, geok_type)
         m_shinsal_detail = _shinsal_adj_detail(m_gil, m_hyung, verdict, geok_type)
         m_dis_res = _disease_resolution_score(m_stem, m_branch, disease_info_mt, tmap_mt)
 
-        # ── 종합 점수: v6.1 가산 혼합 ──
+        # ── 종합 점수: v6.2 가산 혼합 + 해공 ──
         _m_comp = _composite_score(
             50, m_yfit, m_unseong, _calc_noble_power(m_gil, m_hyung),
             m_energy["direction"], m_balance, geok_type, verdict,
@@ -4381,6 +4598,7 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
             shinsal_adj=m_shinsal_adj,
             disease_resolution=m_dis_res,
             natal_balance=natal_bal,
+            haegong_bonus=m_haegong["bonus"],
         )
         m_ind = _m_comp["score"]
         m_breakdown = _m_comp["breakdown"]
@@ -4496,6 +4714,7 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
             "breakdown": m_breakdown,
             "trine_hits": [dict(h, applies_to="monthly") for h in m_trine],
             "gongmang_factors": m_gm,
+            "haegong": m_haegong,
             "shinsal_context_adj": m_shinsal_detail,
             "indicators": {
                 "용신력": m_ypower,
@@ -4579,7 +4798,8 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
 
     d_tg_s = ten_god(ds, d_stem)
     d_tg_b = branch_main_tg(ds, d_branch)
-    d_gm = _gongmang_factors(d_branch, d_day_gz)
+    d_gm = _gongmang_factors(d_branch, d_day_gz, o_branches)
+    d_haegong = _haegong_check(d_branch, r.get("공망분류"))
     d_trine = _check_trine_direction(d_branch, o_branches)
     d_t_pos, d_t_neg = _trine_energy_adj(d_trine, yong)
     d_shinsal_adj = _contextual_shinsal_adj(d_gil, d_hyung, d_verdict, d_geok_type)
@@ -4596,6 +4816,7 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
         tg_stem=d_tg_s, tg_branch=d_tg_b,
         trine_pos=d_t_pos, trine_neg=d_t_neg, gm=d_gm,
         shinsal_adj=d_shinsal_adj,
+        haegong_bonus=d_haegong["bonus"],
     )
     score = _d_comp["score"]
     d_breakdown = _d_comp["breakdown"]
@@ -4631,6 +4852,7 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
         "breakdown": d_breakdown,
         "trine_hits": [dict(h, applies_to="daily") for h in d_trine],
         "gongmang_factors": d_gm,
+        "haegong": d_haegong,
         "shinsal_context_adj": _shinsal_adj_detail(d_gil, d_hyung, d_verdict, d_geok_type),
         "시즌태그": season,
         "오행": {"천간": STEM_ELEMENT[d_stem], "지지": BRANCH_ELEMENT_MAIN.get(d_branch, "")},
@@ -4757,10 +4979,37 @@ def build_chart_payload(r, include_monthly_year: int = None):
 # compute_all 패치: 월운 연도 파라미터 추가
 # ══════════════════════════════════════════════
 
-def compute_all(inp: BirthInput, monthly_year: int = None) -> Dict[str, Any]:
+def compute_all(inp: BirthInput, monthly_year: int = None,
+                yongshin_override: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     if monthly_year is None:
         monthly_year = datetime.now(KST).year
     r = enrich_saju(inp)
+
+    # LLM 용신 override: 캐시된 LLM 판별 결과로 룰 베이스 용신을 대체
+    if yongshin_override:
+        tmap = day_tengo_ohaeng(r["원국"]["day"][0])
+        _cat_for = {e: c for c, e in tmap.items()}
+        yo = yongshin_override.get("용신_오행", "")
+        he = yongshin_override.get("희신_오행", [])
+        gi = yongshin_override.get("기신_오행", [])
+        gu = yongshin_override.get("구신_오행", [])
+        def _label(elem):
+            cat = _cat_for.get(elem, "")
+            LABELS = {
+                "비겁": "비겁(비견·겁재)", "식상": "식상(식신·상관)",
+                "재성": "재성(편재·정재)", "관살": "관살(편관·정관)",
+                "인성": "인성(편인·정인)",
+            }
+            return f"{LABELS.get(cat, cat)}/{elem}" if cat else f"LLM({elem})"
+
+        r["용신"].update({
+            "용신": _label(yo), "용신_오행": yo,
+            "희신": [_label(e) for e in he], "희신_오행": list(he),
+            "기신": [_label(e) for e in gi], "기신_오행": list(gi),
+            "구신_오행": list(gu),
+            "용신체계": "LLM판별",
+        })
+
     r["chart_data"] = build_chart_payload(
         r,
         include_monthly_year=monthly_year

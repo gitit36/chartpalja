@@ -15,6 +15,7 @@ function SuccessContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const orderId = searchParams.get('orderId')
+  const returnUrl = searchParams.get('returnUrl')
   const [order, setOrder] = useState<OrderInfo | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -54,10 +55,10 @@ function SuccessContent() {
         ) : null}
 
         <button
-          onClick={() => router.push('/app/list')}
+          onClick={() => router.push(returnUrl || '/app/list')}
           className="w-full max-w-sm py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
         >
-          서비스 이용하러 가기
+          {returnUrl ? '돌아가기' : '서비스 이용하러 가기'}
         </button>
       </div>
     </MobileContainer>

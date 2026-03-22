@@ -8,21 +8,10 @@ import type { YearChartData } from '@/lib/ai/fortune-prompt'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import type { ChartPayload, YearlyDatum, MonthlyDatum } from '@/types/chart'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
+import { callGemini } from '@/lib/ai/gemini'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
-}
-
-async function callGemini(prompt: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY
-  if (!apiKey || apiKey === 'your-gemini-api-key') {
-    throw new Error('GEMINI_API_KEY not configured')
-  }
-  const { GoogleGenerativeAI } = await import('@google/generative-ai')
-  const genAI = new GoogleGenerativeAI(apiKey)
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
-  const result = await model.generateContent(prompt)
-  return result.response.text()
 }
 
 function buildYearChartDataFromSources(
@@ -187,7 +176,7 @@ export async function GET(
         }
       }
 
-      const prompt = buildMonthlySummaryPrompt(report, monthlyData, targetYear, { birthYear })
+      const prompt = buildMonthlySummaryPrompt(report, monthlyData, targetYear, { birthYear, job: entry.job })
       const summary = (await callGemini(prompt)).trim()
 
       const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>
@@ -224,11 +213,11 @@ export async function GET(
       for (let y = yearStart; y <= yearEnd; y++) {
         yearDataArr.push(buildYearChartDataFromSources(y, chartData, rawTimeline))
       }
-      const prompt = buildRangeSummaryPrompt(report, yearDataArr, { birthYear })
+      const prompt = buildRangeSummaryPrompt(report, yearDataArr, { birthYear, job: entry.job })
       summary = (await callGemini(prompt)).trim()
     } else {
       const yearChartData = buildYearChartDataFromSources(yearStart, chartData, rawTimeline)
-      const prompt = buildYearSummaryPrompt(report, yearChartData, { birthYear })
+      const prompt = buildYearSummaryPrompt(report, yearChartData, { birthYear, job: entry.job })
       summary = (await callGemini(prompt)).trim()
     }
 

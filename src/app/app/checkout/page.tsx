@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useMemo } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
 import { ProductSelector } from '@/components/payment/ProductSelector'
 import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelector'
@@ -119,6 +119,8 @@ async function createAndPay(
 
 export default function CheckoutPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const returnUrl = searchParams.get('returnUrl')
   const [chartCode, setChartCode] = useState<string | null>(null)
   const [periodCode, setPeriodCode] = useState<string | null>(null)
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null)
@@ -165,7 +167,8 @@ export default function CheckoutPage() {
         }
       }
 
-      router.push(`/app/checkout/success?orderId=${lastOrderId}`)
+      const successUrl = `/app/checkout/success?orderId=${lastOrderId}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ''}`
+      router.push(successUrl)
     } catch (err) {
       setError(err instanceof Error ? err.message : '결제 중 오류가 발생했습니다.')
     } finally {
