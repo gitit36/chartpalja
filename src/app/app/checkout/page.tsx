@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
+import { Suspense, useState, useCallback, useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
 import { ProductSelector } from '@/components/payment/ProductSelector'
@@ -118,6 +118,14 @@ async function createAndPay(
 }
 
 export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<MobileContainer><div className="py-20 text-center text-gray-400 text-sm">로딩 중...</div></MobileContainer>}>
+      <CheckoutContent />
+    </Suspense>
+  )
+}
+
+function CheckoutContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const returnUrl = searchParams.get('returnUrl')
