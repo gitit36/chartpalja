@@ -8,6 +8,7 @@ import {
   ReferenceArea, ReferenceLine, Cell, Customized,
 } from 'recharts'
 import type { SajuReportJson } from '@/types/saju-report'
+import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
 import type { ChartPayload, ScoreBreakdown } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import type { ChartDatum, SeasonBand } from '@/lib/saju/life-chart-data'
@@ -32,7 +33,7 @@ function InfoTip({ text }: { text: string }) {
     <span ref={ref} className="relative inline-block ml-1">
       <button onClick={() => setOpen(!open)} className="w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-500 text-[8px] leading-none hover:bg-gray-300 focus:outline-none inline-flex items-center justify-center font-normal" aria-label="정보">i</button>
       {open && (
-        <div className="absolute right-0 top-5 z-50 w-52 p-2.5 rounded-lg bg-white shadow-lg border border-gray-100 text-[10px] text-gray-600 leading-relaxed font-normal">
+        <div className="absolute right-0 top-5 z-50 w-56 p-2.5 rounded-lg bg-white shadow-lg border border-gray-100 text-[10px] text-gray-600 leading-relaxed font-normal text-left whitespace-pre-line">
           {text}
         </div>
       )}
@@ -239,6 +240,7 @@ export interface OverlayEntry {
   name: string
   gender: string
   birthDate: string
+  dayElement?: string | null
 }
 
 type MergedDatum = ChartDatum & {
@@ -263,6 +265,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
   const [mainOverlays, setMainOverlays] = useState<Record<MainOverlayKey, boolean>>({ daewoon: false, candle: false, season: false })
   const [auxPanels, setAuxPanels] = useState<Record<AuxKey, boolean>>({ yongshin: false, energy: false, noble: false, ohang: false, tengo: false, event: false })
   const [hoverYear, setHoverYear] = useState<number | null>(null)
+  const [clickedYear, setClickedYear] = useState<number | null>(null)
   const [selection, setSelection] = useState<{ startYear: number; endYear: number } | null>(null)
   const [yearSummary, setYearSummary] = useState<{ startYear: number; endYear: number; text: string; compatText?: string } | null>(null)
   const [yearSummaryLoading, setYearSummaryLoading] = useState(false)
@@ -393,17 +396,17 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
   }, [mergedData, isMonthly])
 
   const selectedData = useMemo(() => {
-    const yr = hoverYear ?? selection?.startYear
+    const yr = hoverYear ?? clickedYear ?? selection?.startYear
     return yr ? mergedData.find(d => d.year === yr) ?? null : null
-  }, [hoverYear, selection, mergedData])
+  }, [hoverYear, clickedYear, selection, mergedData])
 
   const selectedOverlayData = useMemo(() => {
     if (!overlayActive) return null
-    const yr = hoverYear ?? selection?.startYear
+    const yr = hoverYear ?? clickedYear ?? selection?.startYear
     if (!yr) return null
     const ovSrc = isMonthly ? overlayChartData!.monthlyData : overlayChartData!.data
     return ovSrc?.find(d => d.year === yr) ?? null
-  }, [hoverYear, selection, overlayActive, overlayChartData, isMonthly])
+  }, [hoverYear, clickedYear, selection, overlayActive, overlayChartData, isMonthly])
 
   const hasEngineData = !!(chartPayload?.['연도별_타임라인']?.length)
   const seasonBands = fullChartData?.seasonBands ?? []
@@ -476,11 +479,14 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChartClick = useCallback((state: any) => {
-    if (!rangeMode) return
     if (didDrag.current) { didDrag.current = false; return }
     if (state?.activeTooltipIndex == null) return
     const yr = mergedData[state.activeTooltipIndex]?.year
     if (!yr) return
+
+    setClickedYear(yr)
+
+    if (!rangeMode) return
 
     if (!rangeFirst.current) {
       rangeFirst.current = yr
@@ -696,7 +702,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
       {anyAux && hasEngineData && (
         <div className="px-2 mt-2 space-y-3" data-capture="02_보조지표">
           {auxPanels.yongshin && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">유리한 흐름<InfoTip text="용신(내게 가장 필요한 기운)이 얼마나 들어오는지 보여줘요. 양수면 좋은 기운이 충분하고, 음수면 부족한 상태예요." /></div>
+            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">유리한 흐름<InfoTip text={"용신(내게 가장 필요한 기운)이 얼마나 들어오는지 보여줘요.\n양수 → 좋은 기운이 충분한 시기\n음수 → 기운이 부족한 시기"} /></div>
             <div className="h-[80px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-1,1]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip monthly={isMonthly}/>}/><ReferenceLine y={0} stroke="#666"/>
@@ -710,7 +716,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
                 <span className="flex items-center gap-0.5"><span className="inline-block w-2 h-2 rounded-sm" style={{background:'#27ae60',opacity:0.7}}/><span className="text-gray-400">길한 변화</span></span>
                 <span className="flex items-center gap-0.5"><span className="inline-block w-2 h-2 rounded-sm" style={{background:'#e74c3c',opacity:0.7}}/><span className="text-gray-400">도전적 변화</span></span>
               </div>
-              <div className="text-[10px] text-gray-400">변화의 파도<InfoTip text="그 해/달에 일어날 수 있는 변화의 강도예요. 초록은 좋은 방향의 변화, 빨강은 도전적인 변화를 뜻해요. 막대가 클수록 변화가 큰 시기예요." /></div>
+              <div className="text-[10px] text-gray-400">변화의 파도<InfoTip text={"그 해/달에 일어날 수 있는 변화의 강도예요.\n🟢 초록 = 좋은 방향의 변화\n🔴 빨강 = 도전적 변화\n막대가 클수록 변화가 큰 시기예요."} /></div>
             </div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,8]} hide={true} width={0}/>
@@ -719,7 +725,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             </BarChart></ResponsiveContainer></div></div>
           )}
           {auxPanels.noble && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">귀인의 도움<InfoTip text="주변 사람과의 관계 에너지예요. 양수면 도움을 주는 인연이 활성화되고, 음수면 관계에서 마찰이 생기기 쉬운 시기예요." /></div>
+            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">귀인의 도움<InfoTip text={"주변 사람과의 관계 에너지예요.\n양수 → 도움을 주는 인연이 활성화\n음수 → 관계에서 마찰이 생기기 쉬운 시기"} /></div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-15,15]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip decimals={0} monthly={isMonthly}/>}/><ReferenceLine y={0} stroke="#666"/>
@@ -727,7 +733,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             </BarChart></ResponsiveContainer></div></div>
           )}
           {auxPanels.ohang && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">오행 균형도<InfoTip text="목·화·토·금·수 다섯 기운의 균형 정도예요. 0.5에 가까울수록 균형이 잘 맞는 거고, 0이나 1에 가까우면 특정 기운이 치우쳐 있다는 뜻이에요." /></div>
+            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">오행 균형도<InfoTip text={"목·화·토·금·수 다섯 기운의 균형 정도예요.\n0.5에 가까울수록 균형이 잘 맞고,\n0이나 1에 가까우면 특정 기운이 치우쳐 있다는 뜻이에요."} /></div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><LineChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,1]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip monthly={isMonthly}/>}/><ReferenceLine y={0.5} stroke="#999" strokeDasharray="3 3"/>
@@ -736,7 +742,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             </LineChart></ResponsiveContainer></div></div>
           )}
           {auxPanels.tengo && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">십성 밸런스 {selectedData ? `(${selectedData.year}${isMonthly ? '월' : '년'})` : '- 차트 클릭'}<InfoTip text="해당 시점의 다섯 가지 에너지 분포예요. 자아(비겁)=내 주체성, 표현(식상)=창의력·표현, 재물(재성)=돈·현실감각, 직업(관살)=조직·규율, 학업(인성)=배움·사고력. 균형이 잡혀야 안정적이에요." /></div>
+            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">십성 밸런스 {selectedData ? `(${selectedData.year}${isMonthly ? '월' : '년'})` : '- 차트 클릭'}<InfoTip text={"해당 시점의 다섯 가지 에너지 분포예요.\n자아(비겁) = 내 주체성\n표현(식상) = 창의력·표현\n재물(재성) = 돈·현실감각\n직업(관살) = 조직·규율\n학업(인성) = 배움·사고력\n균형이 잡혀야 안정적이에요."} /></div>
             {selectedData ? (() => {
               const rd = [{a:'자아',v:selectedData['tengo비겁'],vO:selectedOverlayData?.['tengo비겁']},{a:'표현',v:selectedData['tengo식상'],vO:selectedOverlayData?.['tengo식상']},{a:'재물',v:selectedData['tengo재성'],vO:selectedOverlayData?.['tengo재성']},{a:'직업',v:selectedData['tengo관살'],vO:selectedOverlayData?.['tengo관살']},{a:'학업',v:selectedData['tengo인성'],vO:selectedOverlayData?.['tengo인성']}]
               const allVals = rd.flatMap(d => [d.v, d.vO]).filter((v): v is number => typeof v === 'number')
@@ -767,7 +773,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             </div>
           )}
           {auxPanels.event && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">이벤트 확률 {selectedData ? `(${selectedData.year}${isMonthly ? '월' : '년'})` : '- 차트 클릭'}<InfoTip text="총운 점수와는 별개로, 특정 사건이 일어날 가능성을 보여줘요. 총운의 재물 점수는 '재물운의 좋고 나쁨'이고, 이벤트 재물확률은 '큰 돈이 오갈 이벤트가 생길 확률'이에요. 높다고 반드시 좋은 건 아니에요." /></div>
+            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">이벤트 확률 {selectedData ? `(${selectedData.year}${isMonthly ? '월' : '년'})` : '- 차트 클릭'}<InfoTip text={"총운 점수와는 별개로, 특정 사건이 일어날 가능성을 보여줘요.\n예) 총운의 재물 점수 = 재물운의 좋고 나쁨\n이벤트 재물확률 = 큰 돈이 오갈 이벤트가 생길 확률\n높다고 반드시 좋은 건 아니에요."} /></div>
             {selectedData ? (() => {
               const evData = [
                 {n:'이직', p:selectedData.eventCareer, pO:selectedOverlayData?.eventCareer ?? 0},
@@ -853,7 +859,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
                 {otherEntries.map(e => (
                   <button key={e.id} onClick={() => { setOverlayEntryId(e.id); setOverlayName(e.name); setCompareSheetOpen(false); setSelection(null); setYearSummary(null) }}
                     className="w-full text-left p-3.5 rounded-xl hover:bg-purple-50 flex items-center gap-3 transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-100 to-rose-100 flex items-center justify-center text-sm">👤</div>
+                    <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-gray-900 text-sm">{e.name}</div>
                       <div className="text-xs text-gray-400">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>

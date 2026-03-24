@@ -9,6 +9,7 @@ import type { SajuReportJson } from '@/types/saju-report'
 import type { ChartPayload } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import { HamburgerMenu } from '@/components/HamburgerMenu'
+import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
 
 declare global {
   interface Window {
@@ -39,6 +40,7 @@ interface OverlayEntryBasic {
   name: string
   gender: string
   birthDate: string
+  dayElement?: string | null
 }
 
 function getHeaders(): Record<string, string> {
@@ -250,11 +252,14 @@ export default function PersonalSajuPage() {
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<TabKey>('chart')
   const [shareOpen, setShareOpen] = useState(false)
+  const [switchSheetOpen, setSwitchSheetOpen] = useState(false)
   const [imageSaving, setImageSaving] = useState(false)
   const [regenerating, setRegenerating] = useState(false)
   const [regenModal, setRegenModal] = useState<'confirm' | 'no-credit' | null>(null)
   const chartAreaRef = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
+  const [toolbarVisible, setToolbarVisible] = useState(true)
+  const lastScrollY = useRef(0)
   const [overlayEntries, setOverlayEntries] = useState<OverlayEntryBasic[]>([])
 
   useEffect(() => {
@@ -272,15 +277,17 @@ export default function PersonalSajuPage() {
       .catch(() => {})
   }, [])
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container) return
-    const handleScroll = () => setScrolled(container.scrollTop > 120)
-    container.addEventListener('scroll', handleScroll, { passive: true })
-    return () => container.removeEventListener('scroll', handleScroll)
-  }, [entry])
+    const handleScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 120)
+      if (y > lastScrollY.current + 5) setToolbarVisible(false)
+      else if (y < lastScrollY.current - 5) setToolbarVisible(true)
+      lastScrollY.current = y
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const report = entry?.sajuReportJson ?? null
   const birthYear = entry ? parseInt(entry.birthDate.slice(0, 4), 10) : null
@@ -417,7 +424,7 @@ export default function PersonalSajuPage() {
 
   return (
     <MobileContainer>
-      <div ref={scrollContainerRef} className="h-screen overflow-y-auto">
+      <div>
         {/* Sticky Header + Tabs */}
         <div className="sticky top-0 z-30 bg-white border-b border-gray-100">
           <div className="px-4 pt-3 pb-2 flex items-center">
@@ -475,13 +482,13 @@ export default function PersonalSajuPage() {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 z-20">
+        <div className={`fixed bottom-0 left-0 right-0 z-20 transition-transform duration-300 ${toolbarVisible ? 'translate-y-0' : 'translate-y-full'}`}>
           <div className="mx-auto max-w-[446px] flex gap-2 px-4 py-2 bg-white/95 backdrop-blur-sm border-t border-gray-100">
             <button onClick={() => setShareOpen(true)}
               className="flex-1 py-2 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
               공유하기
             </button>
-            <button onClick={() => router.push('/app/list')}
+            <button onClick={() => setSwitchSheetOpen(true)}
               className="flex-1 py-2 rounded-lg text-xs font-semibold bg-purple-600 text-white hover:bg-purple-700 transition-colors">
               다른 사주 보기
             </button>
@@ -489,6 +496,46 @@ export default function PersonalSajuPage() {
         </div>
       </div>
 
+      {/* Switch saju bottom sheet */}
+      {switchSheetOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setSwitchSheetOpen(false)}>
+          <div className="absolute inset-0 bg-black/30" />
+          <div className="relative w-full max-w-[446px] bg-white rounded-t-2xl p-5 pb-8 max-h-[60vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
+            <h3 className="font-bold text-gray-900 mb-4">다른 사주 보기</h3>
+            {overlayEntries.filter(e => e.id !== id).length === 0 ? (
+              <div className="text-center py-6">
+                <p className="text-sm text-gray-400 mb-3">다른 사주가 없습니다</p>
+                <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
+                  className="text-sm text-purple-600 font-medium">+ 새 사주 등록하기</button>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {overlayEntries.filter(e => e.id !== id).map(e => (
+                  <button key={e.id} onClick={() => { setSwitchSheetOpen(false); router.push(`/app/saju/${e.id}`) }}
+                    className="w-full text-left p-3.5 rounded-xl hover:bg-purple-50 flex items-center gap-3 transition-colors">
+                    <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-gray-900 text-sm">{e.name}</div>
+                      <div className="text-xs text-gray-400">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="mt-3 pt-3 border-t border-gray-100 flex gap-2">
+              <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/list') }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+                목록으로
+              </button>
+              <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors">
+                새 사주 등록
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Share bottom sheet */}
       {shareOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setShareOpen(false)}>

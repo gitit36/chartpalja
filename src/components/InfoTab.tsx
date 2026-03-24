@@ -489,7 +489,7 @@ function PillarGrid({ report }: { report: SajuReportJson }) {
               {/* 천간 cell */}
               <div className={`w-full aspect-square rounded-xl ring-1 flex flex-col items-center justify-center gap-0.5 ${
                 stemStyle ? `${stemStyle.bg} ${stemStyle.ring}` : "bg-gray-50 ring-gray-200"
-              } ${isMe ? "ring-2 ring-purple-400" : ""}`}>
+              }`}>
                 <span className={`text-2xl font-bold leading-none ${stemStyle?.text ?? "text-gray-800"}`}>
                   {stemHangul}
                 </span>
@@ -505,7 +505,7 @@ function PillarGrid({ report }: { report: SajuReportJson }) {
               {/* 지지 cell */}
               <div className={`w-full aspect-square rounded-xl ring-1 flex flex-col items-center justify-center gap-0.5 relative ${
                 branchStyle ? `${branchStyle.bg} ${branchStyle.ring}` : "bg-gray-50 ring-gray-200"
-              } ${isMe ? "ring-2 ring-purple-400" : ""}`}>
+              }`}>
                 {isGongmang && <span className={`absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${gmInfo?.type === '진공' ? 'bg-rose-400' : 'bg-amber-400'}`} title={gmInfo?.type ? `공망(${gmInfo.type})` : '공망'} />}
                 <span className={`text-2xl font-bold leading-none ${branchStyle?.text ?? "text-gray-800"}`}>
                   {branchHangul}
@@ -862,7 +862,7 @@ function DaewoonCarousel({ report }: { report: SajuReportJson }) {
   return (
     <div>
       <h3 className="font-bold text-gray-900 text-sm mb-2">대운 타임라인</h3>
-      <div className="overflow-x-auto pb-2 -mx-4 px-4">
+      <div className="overflow-x-auto pb-2 -mx-4 px-4 show-scrollbar">
         <div className="flex gap-2 snap-x snap-mandatory" style={{ minWidth: "max-content" }}>
           {blocks.map((b, i) => {
             const pillar = b.daewoon_pillar ?? ""

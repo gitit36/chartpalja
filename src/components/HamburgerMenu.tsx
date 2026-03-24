@@ -88,6 +88,13 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
             <span className="text-base">📋</span>
             이용 내역
           </button>
+          <button
+            onClick={() => { onClose(); router.push('/app/guide') }}
+            className="w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
+          >
+            <span className="text-base">📖</span>
+            차트 해석 가이드
+          </button>
         </nav>
 
         <div className="px-5 py-4 border-t border-gray-100">

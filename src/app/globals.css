@@ -14,6 +14,20 @@ body {
 * {
   scrollbar-width: none;
 }
+.show-scrollbar::-webkit-scrollbar {
+  height: 4px;
+}
+.show-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+.show-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.show-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
 
 @keyframes slideInRight {
   from { transform: translateX(100%); }

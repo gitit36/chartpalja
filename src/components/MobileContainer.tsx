@@ -3,7 +3,7 @@
 export function MobileContainer({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-[446px] min-h-screen bg-white shadow-sm overflow-x-hidden">
+      <div className="mx-auto max-w-[446px] min-h-screen bg-white shadow-sm" style={{ overflowX: 'clip' }}>
         {children}
       </div>
     </div>
