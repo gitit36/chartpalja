@@ -52,7 +52,7 @@ const CHART_ITEMS: GuideItem[] = [
       <ul className="space-y-1">
         <Bullet>세로축 0~100점 총운 점수임.</Bullet>
         <Bullet><Tag color="bg-gray-100 text-gray-600">50점</Tag>이 중립 기준선. 이상이면 좋은 흐름, 이하면 주의 시기.</Bullet>
-        <Bullet>용신 적합도, 12운성, 합·충·형 관계, 오행 균형, 삼합, 신살 등을 종합 산출함.</Bullet>
+        <Bullet>용신, 12운성, 합·충·형 관계, 오행 균형, 삼합, 신살 등을 종합 산출함.</Bullet>
       </ul>
     ),
   },

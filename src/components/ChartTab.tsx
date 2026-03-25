@@ -9,6 +9,7 @@ import {
 } from 'recharts'
 import type { SajuReportJson } from '@/types/saju-report'
 import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
+import { BottomSheet } from '@/components/BottomSheet'
 import type { ChartPayload, ScoreBreakdown } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import type { ChartDatum, SeasonBand } from '@/lib/saju/life-chart-data'
@@ -132,7 +133,7 @@ function CandleShape(props: Record<string, unknown>) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ThisYearMarker(props: any) {
-  const { formattedGraphicalItems, xAxisMap, yAxisMap, period, hoverYear, isMonthly } = props
+  const { formattedGraphicalItems, xAxisMap, yAxisMap, period, markerYear, selection, rangeMode, isMonthly } = props
   if (!formattedGraphicalItems?.length || !xAxisMap || !yAxisMap) return null
   const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
   const yAxis = Object.values(yAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
@@ -158,12 +159,33 @@ function ThisYearMarker(props: any) {
       )
     }
   }
-  if (hoverYear != null) {
-    const isCurrentMarker = isMonthly ? hoverYear === THIS_MONTH : (period === 'all' && hoverYear === THIS_YEAR)
+  if (rangeMode && selection) {
+    const { startYear, endYear } = selection as { startYear: number; endYear: number }
+    const sx = xAxis.scale(startYear)
+    if (typeof sx === 'number' && !isNaN(sx)) {
+      elements.push(
+        <line key="sel-s-line" x1={sx} y1={yTop} x2={sx} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
+        <text key="sel-s-text" x={sx} y={labelY} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#7c3aed">{isMonthly ? `${startYear}월` : startYear}</text>
+      )
+    }
+    if (endYear !== startYear) {
+      const ex = xAxis.scale(endYear)
+      if (typeof ex === 'number' && !isNaN(ex)) {
+        elements.push(
+          <line key="sel-e-line" x1={ex} y1={yTop} x2={ex} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
+          <text key="sel-e-text" x={ex} y={labelY} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#7c3aed">{isMonthly ? `${endYear}월` : endYear}</text>
+        )
+      }
+    }
+  } else if (markerYear != null) {
+    const isCurrentMarker = isMonthly ? markerYear === THIS_MONTH : (period === 'all' && markerYear === THIS_YEAR)
     if (!isCurrentMarker) {
-      const hx = xAxis.scale(hoverYear)
+      const hx = xAxis.scale(markerYear)
       if (typeof hx === 'number' && !isNaN(hx)) {
-        elements.push(<text key="hover-yr" x={hx} y={labelY} textAnchor="middle" fontSize={8} fill="#6b7280">{isMonthly ? `${hoverYear}월` : hoverYear}</text>)
+        elements.push(
+          <line key="marker-line" x1={hx} y1={yTop} x2={hx} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
+          <text key="marker-text" x={hx} y={labelY} textAnchor="middle" fontSize={8} fill="#6b7280">{isMonthly ? `${markerYear}월` : markerYear}</text>
+        )
       }
     }
   }
@@ -276,6 +298,12 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
   const chartRef = React.useRef<HTMLDivElement>(null)
   const lastHapticYear = React.useRef<number | null>(null)
   const hasAnimated = React.useRef(false)
+  const isTouchRef = React.useRef(false)
+  useEffect(() => {
+    const onTouch = () => { isTouchRef.current = true }
+    window.addEventListener('touchstart', onTouch, { once: true, passive: true })
+    return () => window.removeEventListener('touchstart', onTouch)
+  }, [])
 
   useEffect(() => {
     const t = setTimeout(() => { hasAnimated.current = true }, 2500)
@@ -395,18 +423,20 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
     return d ? Math.round(d.score) : null
   }, [mergedData, isMonthly])
 
+  const markerYear = hoverYear ?? clickedYear
+
   const selectedData = useMemo(() => {
-    const yr = hoverYear ?? clickedYear ?? selection?.startYear
+    const yr = markerYear ?? selection?.startYear
     return yr ? mergedData.find(d => d.year === yr) ?? null : null
-  }, [hoverYear, clickedYear, selection, mergedData])
+  }, [markerYear, selection, mergedData])
 
   const selectedOverlayData = useMemo(() => {
     if (!overlayActive) return null
-    const yr = hoverYear ?? clickedYear ?? selection?.startYear
+    const yr = markerYear ?? selection?.startYear
     if (!yr) return null
     const ovSrc = isMonthly ? overlayChartData!.monthlyData : overlayChartData!.data
     return ovSrc?.find(d => d.year === yr) ?? null
-  }, [hoverYear, clickedYear, selection, overlayActive, overlayChartData, isMonthly])
+  }, [markerYear, selection, overlayActive, overlayChartData, isMonthly])
 
   const hasEngineData = !!(chartPayload?.['연도별_타임라인']?.length)
   const seasonBands = fullChartData?.seasonBands ?? []
@@ -474,6 +504,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
       didDrag.current = true
       setSelection({ startYear: Math.min(startYr, endYr), endYear: Math.max(startYr, endYr) })
       rangeFirst.current = null
+      setClickedYear(null)
     }
   }, [mergedData, rangeMode])
 
@@ -493,8 +524,10 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
       setSelection({ startYear: yr, endYear: yr })
     } else {
       const a = rangeFirst.current, b = yr
-      setSelection({ startYear: Math.min(a, b), endYear: Math.max(a, b) })
+      const sel = { startYear: Math.min(a, b), endYear: Math.max(a, b) }
+      setSelection(sel)
       rangeFirst.current = null
+      setClickedYear(null)
     }
   }, [mergedData, rangeMode])
 
@@ -547,15 +580,18 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
                     if (yr && yr !== lastHapticYear.current) { lastHapticYear.current = yr; if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(3) }
                   }
                 }}
-                onMouseLeave={() => { setHoverYear(null); lastHapticYear.current = null; dragStartYear.current = null }}>
+                onMouseLeave={() => {
+                  setHoverYear(null); lastHapticYear.current = null; dragStartYear.current = null
+                  if (!isTouchRef.current) setClickedYear(null)
+                }}>
               <XAxis dataKey="year" type="number" domain={xDomain} tick={{ fontSize: 8 }} angle={isMonthly ? 0 : -45} textAnchor={isMonthly ? 'middle' : 'end'} height={40}
                     ticks={isMonthly ? [1,2,3,4,5,6,7,8,9,10,11,12] : period === '10y' ? filteredData.map(d => d.year) : undefined}
                     tickCount={period === 'all' ? 10 : undefined}
                     tickFormatter={isMonthly ? (v: number) => MONTH_LABELS[v - 1] ?? '' : undefined}
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName}/>} cursor={{ stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' }}/>}
-              {rangeMode && <Tooltip content={() => null} cursor={{ stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' }}/>}
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName}/>} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
+              {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#e0e0e0" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#aaa', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && seasonBands.map((b: SeasonBand, i: number) => (
                 <ReferenceArea key={i} x1={b.startYear} x2={b.endYear} fill={SEASON_COLORS[b.tag] ?? 'rgba(0,0,0,0.03)'} fillOpacity={1}/>
@@ -566,7 +602,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
               {overlayActive && mainOverlays.daewoon && <Line type="stepAfter" dataKey="trendOv" stroke="#fda4af" strokeWidth={2} dot={false} name="대운(비교)" strokeDasharray="6 3" isAnimationActive={false} connectNulls={false}/>}
               {overlayActive && <Line type="monotone" dataKey="scoreOv" stroke="#fb7185" strokeWidth={1.5} dot={false} name={isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>}
               {mainOverlays.candle && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
-              <Customized component={(p: any) => <ThisYearMarker {...p} period={period} hoverYear={hoverYear} isMonthly={isMonthly}/>}/>
+              <Customized component={(p: any) => <ThisYearMarker {...p} period={period} markerYear={markerYear} selection={selection} rangeMode={rangeMode} isMonthly={isMonthly}/>}/>
             </ComposedChart>
           </ResponsiveContainer>
         </div>
@@ -622,12 +658,12 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
 
       {/* Selection card — only in range mode */}
       {rangeMode && selection && !yearSummary && !yearSummaryLoading && (
-        <div className="mx-4 mt-3 mb-1">
-          <div className="relative bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
-            <button onClick={() => setSelection(null)}
-              className="absolute top-3 right-3 w-5 h-5 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 text-xs leading-none transition-colors">&times;</button>
-            <div className="flex items-center gap-2 mb-3">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-purple-50 text-purple-600">
+        <div className="mx-3 sm:mx-4 mt-3 mb-1">
+          <div className="relative bg-white rounded-2xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
+            <button onClick={() => { setSelection(null); rangeFirst.current = null }}
+              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 text-xs leading-none transition-colors">&times;</button>
+            <div className="flex items-center gap-2 mb-3 pr-6">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-purple-50 text-purple-600 whitespace-nowrap flex-shrink-0">
                 {isMonthly
                   ? (selection.startYear === selection.endYear ? `${selection.startYear}월` : `${selection.startYear}~${selection.endYear}월`)
                   : (selection.startYear === selection.endYear ? `${selection.startYear}년` : `${selection.startYear}~${selection.endYear}년`)}
@@ -636,11 +672,11 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
                 const yds = mergedData.filter(d => d.year >= selection.startYear && d.year <= selection.endYear)
                 if (!yds.length) return null
                 const avg = Math.round(yds.reduce((a, b) => a + b.score, 0) / yds.length)
-                return <span className="text-[11px] text-gray-400">평균 {avg}점</span>
+                return <span className="text-[11px] text-gray-400 truncate">평균 {avg}점</span>
               })()}
             </div>
             <button onClick={() => fetchSummary(selection.startYear, selection.endYear, isMonthly)}
-              className="w-full py-2.5 rounded-xl text-sm font-semibold bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors">
+              className="w-full py-2.5 rounded-xl text-[13px] sm:text-sm font-semibold bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors truncate">
               {isMonthly
                 ? (selection.startYear === selection.endYear ? `${selection.startYear}월 해설 보기` : `${selection.startYear}~${selection.endYear}월 해설 보기`)
                 : (selection.startYear === selection.endYear ? `${selection.startYear}년 해설 보기` : `${selection.startYear}~${selection.endYear}년 해설 보기`)}
@@ -650,10 +686,10 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
       )}
 
       {rangeMode && (yearSummaryLoading || yearSummary) && (
-        <div className="mx-4 mt-3 mb-1">
-          <div className="relative bg-white rounded-2xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
-            <button onClick={() => { setYearSummary(null); setYearSummaryLoading(false); setSelection(null) }}
-              className="absolute top-3 right-3 w-5 h-5 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 text-xs leading-none transition-colors">&times;</button>
+        <div className="mx-3 sm:mx-4 mt-3 mb-1">
+          <div className="relative bg-white rounded-2xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
+            <button onClick={() => { setYearSummary(null); setYearSummaryLoading(false); setSelection(null); rangeFirst.current = null }}
+              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 text-xs leading-none transition-colors">&times;</button>
             {yearSummaryLoading ? (
               <div className="flex items-center gap-2 py-1">
                 <div className="w-4 h-4 rounded-full border-2 border-purple-200 border-t-purple-500 animate-spin" />
@@ -661,8 +697,8 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
               </div>
             ) : yearSummary ? (
               <>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-purple-50 text-purple-600">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 pr-6">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-purple-50 text-purple-600 whitespace-nowrap flex-shrink-0">
                     {isMonthly
                       ? (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}월` : `${yearSummary.startYear}~${yearSummary.endYear}월`)
                       : (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}년` : `${yearSummary.startYear}~${yearSummary.endYear}년`)}
@@ -679,10 +715,10 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
                     )
                     const avg = Math.round(yds.reduce((a, b) => a + b.score, 0) / yds.length)
                     const peak = yds.reduce((a, b) => a.score > b.score ? a : b)
-                    return <span className="text-[11px] text-gray-400">평균 {avg}점 · 최고 {peak.year}년({Math.round(peak.score)}점)</span>
+                    return <span className="text-[10px] sm:text-[11px] text-gray-400 truncate">평균 {avg}점 · 최고 {peak.year}년({Math.round(peak.score)}점)</span>
                   })()}
                 </div>
-                <p className="text-[13px] text-gray-600 leading-relaxed pr-4">{cleanFortuneText(yearSummary.text)}</p>
+                <p className="text-[13px] text-gray-600 leading-relaxed pr-2">{cleanFortuneText(yearSummary.text)}</p>
                 {yearSummary.compatText && (
                   <div className="mt-3 pt-3 border-t border-purple-100">
                     <div className="flex items-center gap-1.5 mb-1.5">
@@ -847,31 +883,27 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
 
       {/* Compare bottom sheet */}
       {compareSheetOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={() => setCompareSheetOpen(false)}>
-          <div className="absolute inset-0 bg-black/30" />
-          <div className="relative w-full max-w-[446px] bg-white rounded-t-2xl p-5 pb-8 max-h-[60vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
-            <h3 className="font-bold text-gray-900 mb-4">누구와 비교할까요?</h3>
-            {otherEntries.length === 0 ? (
-              <p className="text-sm text-gray-400 text-center py-6">비교할 다른 사주가 없습니다</p>
-            ) : (
-              <div className="space-y-1">
-                {otherEntries.map(e => (
-                  <button key={e.id} onClick={() => { setOverlayEntryId(e.id); setOverlayName(e.name); setCompareSheetOpen(false); setSelection(null); setYearSummary(null) }}
-                    className="w-full text-left p-3.5 rounded-xl hover:bg-purple-50 flex items-center gap-3 transition-colors">
-                    <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-gray-900 text-sm">{e.name}</div>
-                      <div className="text-xs text-gray-400">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-            <button onClick={() => setCompareSheetOpen(false)}
-              className="w-full py-3 mt-4 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">닫기</button>
-          </div>
-        </div>
+        <BottomSheet onClose={() => setCompareSheetOpen(false)}>
+          <h3 className="font-bold text-gray-900 mb-4">누구와 비교할까요?</h3>
+          {otherEntries.length === 0 ? (
+            <p className="text-sm text-gray-400 text-center py-6">비교할 다른 사주가 없습니다</p>
+          ) : (
+            <div className="space-y-1">
+              {otherEntries.map(e => (
+                <button key={e.id} onClick={() => { setOverlayEntryId(e.id); setOverlayName(e.name); setCompareSheetOpen(false); setSelection(null); setYearSummary(null) }}
+                  className="w-full text-left p-3.5 rounded-xl hover:bg-purple-50 flex items-center gap-3 transition-colors">
+                  <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-gray-900 text-sm">{e.name}</div>
+                    <div className="text-xs text-gray-400">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          <button onClick={() => setCompareSheetOpen(false)}
+            className="w-full py-3 mt-4 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">닫기</button>
+        </BottomSheet>
       )}
     </div>
   )
@@ -1104,8 +1136,8 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
   }, [items])
 
   const isLoading = aiLoading && !items.length
-  const NEW_CATEGORIES = ['한 줄 사주', '인생의 큰 그림']
-  const isNewFormat = items.length >= 2 && NEW_CATEGORIES.includes(items[0]?.category)
+  const TOP_CATEGORIES = ['당신의 기본 성향', '한 줄 사주', '인생의 큰 그림']
+  const isNewFormat = items.length >= 2 && TOP_CATEGORIES.includes(items[0]?.category)
   const topCards = isNewFormat ? items.slice(0, 2) : []
   const accordionItems = isNewFormat ? items.slice(2) : items
   const accordionOffset = isNewFormat ? 2 : 0
@@ -1139,14 +1171,16 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
         <div className="text-center text-gray-400 text-sm py-6">운세 해설을 불러오는 중...</div>
       ) : (
         <div className="space-y-2">
-          {topCards.map((card, i) => (
-            <div key={`card-${i}`} data-capture={i === 0 ? '03_한줄사주' : '04_인생의큰그림'}
+          {topCards.map((card, i) => {
+            const displayCategory = card.category === '한 줄 사주' ? '당신의 기본 성향' : card.category
+            return (
+            <div key={`card-${i}`} data-capture={i === 0 ? '03_기본성향' : '04_인생의큰그림'}
               className={`rounded-2xl p-4 ${i === 0 ? 'bg-purple-50 border border-purple-100' : 'bg-indigo-50 border border-indigo-100'}`}>
-              <p className={`text-xs font-medium mb-1 ${i === 0 ? 'text-purple-500' : 'text-indigo-500'}`}>{card.category}</p>
+              <p className={`text-xs font-medium mb-1 ${i === 0 ? 'text-purple-500' : 'text-indigo-500'}`}>{displayCategory}</p>
               <p className="text-base font-bold text-gray-900 leading-snug mb-2">{card.title}</p>
               <div className="text-sm text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(card.content) }} />
             </div>
-          ))}
+          )})}
           {accordionItems.map((item, i) => {
             const realIdx = i + accordionOffset
             return (
