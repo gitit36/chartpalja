@@ -256,7 +256,7 @@ export default function PersonalSajuPage() {
   const [switchSheetOpen, setSwitchSheetOpen] = useState(false)
   const [imageSaving, setImageSaving] = useState(false)
   const [regenerating, setRegenerating] = useState(false)
-  const [regenModal, setRegenModal] = useState<'confirm' | 'no-credit' | null>(null)
+  const [regenModal, setRegenModal] = useState<'confirm' | 'no-credit' | 'failed' | null>(null)
   const chartAreaRef = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
   const [toolbarVisible, setToolbarVisible] = useState(true)
@@ -327,9 +327,13 @@ export default function PersonalSajuPage() {
         const err = await res.json().catch(() => ({}))
         if (err.error?.includes('이용권')) {
           setRegenModal('no-credit')
+        } else {
+          setRegenModal('failed')
         }
       }
-    } catch { /* ignore */ }
+    } catch {
+      setRegenModal('failed')
+    }
     setRegenerating(false)
   }, [id])
 
@@ -573,6 +577,21 @@ export default function PersonalSajuPage() {
                   <button onClick={() => setRegenModal(null)}
                     className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
                     나중에
+                  </button>
+                  <button onClick={handleRegenerateConfirm}
+                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
+                    다시 생성
+                  </button>
+                </div>
+              </>
+            ) : regenModal === 'failed' ? (
+              <>
+                <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">재생성에 실패했습니다.</p>
+                <p className="text-sm text-gray-500 text-center mb-5">이용권은 차감되지 않았습니다.</p>
+                <div className="flex gap-3">
+                  <button onClick={() => setRegenModal(null)}
+                    className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+                    나가기
                   </button>
                   <button onClick={handleRegenerateConfirm}
                     className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">

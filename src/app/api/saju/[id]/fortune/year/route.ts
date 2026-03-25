@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
-import { consumeCredit } from '@/lib/payment/entitlement'
+import { consumeCredit, getBalance } from '@/lib/payment/entitlement'
 import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt, buildCompatibilitySummaryPrompt } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { YearChartData } from '@/lib/ai/fortune-prompt'
@@ -136,8 +136,8 @@ export async function GET(
       }
 
       if (user) {
-        const consumed = await consumeCredit(user.id, 'period')
-        if (!consumed) {
+        const balance = await getBalance(user.id)
+        if (balance.periodCredits <= 0) {
           return NextResponse.json({ error: '기간 해설 이용권이 부족합니다.' }, { status: 402 })
         }
       }
@@ -184,6 +184,11 @@ export async function GET(
         where: { id },
         data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
       })
+
+      if (user) {
+        await consumeCredit(user.id, 'period')
+      }
+
       return NextResponse.json({ month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, summary })
     }
 
@@ -199,8 +204,8 @@ export async function GET(
     }
 
     if (user) {
-      const consumed = await consumeCredit(user.id, 'period')
-      if (!consumed) {
+      const balance = await getBalance(user.id)
+      if (balance.periodCredits <= 0) {
         return NextResponse.json({ error: '기간 해설 이용권이 부족합니다.' }, { status: 402 })
       }
     }
@@ -226,6 +231,10 @@ export async function GET(
       where: { id },
       data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
     })
+
+    if (user) {
+      await consumeCredit(user.id, 'period')
+    }
 
     const overlayId = request.nextUrl.searchParams.get('overlayId')
     let compatSummary: string | undefined
