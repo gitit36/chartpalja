@@ -576,7 +576,7 @@ function CoreInfoCard({ report }: { report: SajuReportJson }) {
 
   const rows: { label: string; value: string; highlight?: boolean }[] = [
     { label: "격국", value: geokguk },
-    { label: "신강/신약", value: ssVal },
+    { label: "신강신약", value: ssVal },
     { label: "용신", value: yongStr, highlight: yongStr !== "-" },
     { label: "희신", value: heuiStr },
     { label: "기신", value: gisinStr },
@@ -702,7 +702,7 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
 
   if (!pairs.length) return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">사주 관계</h3>
+      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 기운의 관계<InfoTip text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."} /></h3>
       <div className="bg-gray-50 rounded-xl px-3.5 py-4 text-center">
         <span className="text-xs text-gray-400">원국 내 특별한 충·합·형·파·해 관계가 없어요</span>
       </div>
@@ -714,7 +714,7 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
 
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">사주 관계</h3>
+      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 기운의 관계<InfoTip text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."} /></h3>
       <div className="flex gap-1 mb-2 overflow-x-auto">
         {pairs.map((pair, i) => (
           <button key={i} onClick={() => { setActiveTab(i); setTooltipIdx(null) }}
@@ -811,7 +811,7 @@ function ShinsalBadges({ report }: { report: SajuReportJson }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <h3 className="font-bold text-gray-900 text-sm">신살 · 길성</h3>
+        <h3 className="font-bold text-gray-900 text-sm">타고난 복과 걸림돌<InfoTip text={"사주에 타고난 특별한 기운들이에요.\n길성(복) = 도움이 되는 좋은 기운\n흉살(걸림돌) = 주의해야 할 기운\n같은 신살이라도 위치(년/월/일/시)에 따라\n작용하는 의미가 달라요."} /></h3>
         <div className="flex items-center gap-2">
           {PILLAR_DOT_COLORS.map(d => (
             <div key={d.key} className="flex items-center gap-0.5">

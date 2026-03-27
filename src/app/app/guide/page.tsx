@@ -291,10 +291,11 @@ const CONCEPT_ITEMS: GuideItem[] = [
     icon: '💪',
     body: (
       <ul className="space-y-1">
-        <Bullet>일간(나)의 힘이 강한지 약한지를 나타냄.</Bullet>
-        <Bullet><Tag color="bg-red-50 text-red-700">신강</Tag> 에너지 넘침 → 설기(표현·재물)가 용신 되는 경우 많음.</Bullet>
-        <Bullet><Tag color="bg-blue-50 text-blue-700">신약</Tag> 에너지 부족 → 인성·비겁(도움·지지)이 용신 되는 경우 많음.</Bullet>
-        <Bullet>신강/신약에 따라 용신이 달라지므로 점수 해석의 기본 틀임.</Bullet>
+        <Bullet>일간(나)의 힘이 강한지 약한지를 8단계로 세분화해 판정.</Bullet>
+        <Bullet><Tag color="bg-red-50 text-red-700">극왕</Tag> <Tag color="bg-red-50 text-red-600">태강</Tag> <Tag color="bg-red-50 text-red-500">신강</Tag> 에너지가 넘침 → 설기(표현·재물)가 용신 되는 경우 많음.</Bullet>
+        <Bullet><Tag color="bg-gray-50 text-gray-600">중화신강</Tag> <Tag color="bg-gray-50 text-gray-600">중화신약</Tag> 균형에 가까움 → 격국 유지 우선.</Bullet>
+        <Bullet><Tag color="bg-blue-50 text-blue-500">신약</Tag> <Tag color="bg-blue-50 text-blue-600">태약</Tag> <Tag color="bg-blue-50 text-blue-700">극약</Tag> 에너지 부족 → 인성·비겁(도움·지지)이 용신 되는 경우 많음.</Bullet>
+        <Bullet>판정에 따라 용신이 달라지므로 점수 해석의 기본 틀임.</Bullet>
       </ul>
     ),
   },

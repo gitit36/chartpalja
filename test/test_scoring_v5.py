@@ -5,7 +5,7 @@ saju_engine v5 scoring tests — C1~C6 coverage.
 T8:  12운성 감쇠승수 0~1 범위 + 신강 과잉penalty 검증
 T9:  BRANCH_JIJANGGAN ↔ BRANCH_HIDDEN_STEMS 본기 일치 + 가중치 합 검증
 T9b: 지장간 역할별 용신부합 정확도 (순서 의존 제거 확인)
-T10: 스냅샷 회귀 — 극신약 사주, 나쁜 해 월운 변동폭 ≥ 15pt
+T10: 스냅샷 회귀 — 극약/태약/신약 사주, 나쁜 해 월운 변동폭 ≥ 15pt
 T11: 스냅샷 회귀 — 신강 사주, 長生 대운 시기 월운 안정성
 T1:  C2 — 용신 충/파 손상 시 neg 증가
 T2:  C2 — 기신 충/파 제거 시 pos 증가
@@ -84,8 +84,8 @@ class TestT8UnseongDamping:
 
     def test_jongyeok_always_mult_one(self):
         """종격은 항상 mult=1.0, penalty=0"""
-        assert se._unseong_mult("제왕", "극신강", "종격") == 1.0
-        assert se._singang_excess_pen("제왕", "극신강", "종격") == 0.0
+        assert se._unseong_mult("제왕", "극왕", "종격") == 1.0
+        assert se._singang_excess_pen("제왕", "극왕", "종격") == 0.0
 
     def test_sinyang_uses_full_mult(self):
         """신약은 승수 1.0 (감쇠 없음)"""
@@ -272,7 +272,7 @@ class TestT9cBoundaryAndMeta:
 
 
 # ─────────────────────────────────────────────────
-# T10: 스냅샷 회귀 — 극신약 사주, 나쁜 해 월운 변동
+# T10: 스냅샷 회귀 — 극약/태약/신약 사주, 나쁜 해 월운 변동
 # ─────────────────────────────────────────────────
 
 class TestT10SinyangMonthlySnapshot:
@@ -283,8 +283,8 @@ class TestT10SinyangMonthlySnapshot:
 
     def _run_pipeline(self):
         r = se.enrich_saju(self.INPUT)
-        assert r["신강신약"]["판정"] in ("신약", "극신약"), (
-            f"Fixture should be 신약/극신약, got {r['신강신약']['판정']}"
+        assert r["신강신약"]["판정"] in ("신약", "태약", "극약"), (
+            f"Fixture should be 신약/태약/극약, got {r['신강신약']['판정']}"
         )
         dw = se.build_daewoon_detail(r)
         worst_dw = min(dw, key=lambda d: d["종합운점수"])
@@ -339,8 +339,8 @@ class TestT11SingangMonthlySnapshot:
 
     def _run_pipeline(self):
         r = se.enrich_saju(self.INPUT)
-        assert r["신강신약"]["판정"] in ("신강", "극신강"), (
-            f"Fixture should be 신강/극신강, got {r['신강신약']['판정']}"
+        assert r["신강신약"]["판정"] in ("신강", "태강", "극왕"), (
+            f"Fixture should be 신강/태강/극왕, got {r['신강신약']['판정']}"
         )
         dw = se.build_daewoon_detail(r)
         target_dw = next(

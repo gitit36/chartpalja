@@ -294,6 +294,8 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
   const [rangeMode, setRangeMode] = useState(false)
   const rangeFirst = React.useRef<number | null>(null)
   const [noCreditPeriod, setNoCreditPeriod] = useState(false)
+  const [settingsBadge, setSettingsBadge] = useState(false)
+  const [chartHint, setChartHint] = useState(false)
   const [summaryCache] = useState<Map<string, { text: string; compatText?: string }>>(() => new Map())
   const chartRef = React.useRef<HTMLDivElement>(null)
   const lastHapticYear = React.useRef<number | null>(null)
@@ -309,6 +311,25 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
     const t = setTimeout(() => { hasAnimated.current = true }, 2500)
     return () => clearTimeout(t)
   }, [])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !localStorage.getItem('chartpalja_opened_settings')) {
+      setSettingsBadge(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('chartpalja_chart_touched')) return
+    const t = setTimeout(() => setChartHint(true), 2000)
+    return () => clearTimeout(t)
+  }, [])
+
+  const dismissChartHint = useCallback(() => {
+    if (chartHint) {
+      setChartHint(false)
+      localStorage.setItem('chartpalja_chart_touched', '1')
+    }
+  }, [chartHint])
 
   // Overlay (comparison) state
   const [overlayEntryId, setOverlayEntryId] = useState<string | null>(null)
@@ -547,12 +568,19 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
       {/* Chart area */}
       <div className="relative px-2 pt-3" data-capture="01_메인차트">
         {/* Settings gear — top-right of chart area */}
-        <button onClick={() => setPanelOpen(true)}
+        <button onClick={() => {
+          setPanelOpen(true)
+          if (settingsBadge) {
+            setSettingsBadge(false)
+            localStorage.setItem('chartpalja_opened_settings', '1')
+          }
+        }}
           className="absolute top-3 right-3 z-10 flex items-center justify-center w-7 h-7 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm">
           <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
+          {settingsBadge && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />}
         </button>
 
         {/* Overlay legend — fixed height to prevent layout shift */}
@@ -568,7 +596,14 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
         </div>
 
         {/* Main chart */}
-        <div className="w-full h-[420px]">
+        <div className="w-full h-[420px] relative" onPointerDown={dismissChartHint}>
+          {chartHint && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none animate-fade-in">
+              <span className="bg-white/90 backdrop-blur-sm text-gray-500 text-xs px-3 py-1.5 rounded-full shadow-sm border border-gray-100">
+                👆 차트를 터치해서 시기별 흐름을 확인해보세요
+              </span>
+            </div>
+          )}
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={mergedData} syncId="lc" margin={MARGIN}
                 onClick={handleChartClick}
@@ -638,21 +673,19 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
               </button>
             )
           )}
-          {!isMonthly && (
-            <button onClick={() => {
-              const next = !rangeMode
-              setRangeMode(next)
-              if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
-              else { setSelection(null); rangeFirst.current = null }
-            }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
-                rangeMode
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 shadow-sm text-gray-400 hover:text-purple-500'
-              }`}>
-              🗓️ 구간
-            </button>
-          )}
+          <button onClick={() => {
+            const next = !rangeMode
+            setRangeMode(next)
+            if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
+            else { setSelection(null); rangeFirst.current = null }
+          }}
+            className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
+              rangeMode
+                ? 'bg-purple-600 text-white'
+                : 'bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 shadow-sm text-gray-400 hover:text-purple-500'
+            }`}>
+            🗓️ 구간
+          </button>
         </div>
       </div>
 
@@ -718,15 +751,16 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
                     return <span className="text-[10px] sm:text-[11px] text-gray-400 truncate">평균 {avg}점 · 최고 {peak.year}년({Math.round(peak.score)}점)</span>
                   })()}
                 </div>
-                <p className="text-[13px] text-gray-600 leading-relaxed pr-2">{cleanFortuneText(yearSummary.text)}</p>
-                {yearSummary.compatText && (
-                  <div className="mt-3 pt-3 border-t border-purple-100">
+                {yearSummary.compatText ? (
+                  <div>
                     <div className="flex items-center gap-1.5 mb-1.5">
                       <span className="text-[10px] font-bold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded">👥 궁합 해설</span>
                       <span className="text-[10px] text-gray-400">{currentName} & {overlayName}</span>
                     </div>
                     <p className="text-[13px] text-gray-600 leading-relaxed">{cleanFortuneText(yearSummary.compatText)}</p>
                   </div>
+                ) : (
+                  <p className="text-[13px] text-gray-600 leading-relaxed pr-2">{cleanFortuneText(yearSummary.text)}</p>
                 )}
               </>
             ) : null}
@@ -742,6 +776,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             <div className="h-[80px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-1,1]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip monthly={isMonthly}/>}/><ReferenceLine y={0} stroke="#666"/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Area dataKey="yongshinPower" stroke="#9b59b6" fill="#9b59b6" fillOpacity={0.2} dot={false}/>
               {overlayActive && <Area dataKey="yongshinPowerOv" stroke="#fb7185" fill="#fb7185" fillOpacity={0.15} dot={false} strokeDasharray="4 2"/>}
             </AreaChart></ResponsiveContainer></div></div>
@@ -757,6 +792,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,8]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip decimals={1} monthly={isMonthly}/>}/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Bar dataKey="energyTotal" isAnimationActive={false}>{mergedData.map((d,i) => <Cell key={i} fill={d.energyDirection>=0?'#27ae60':'#e74c3c'} fillOpacity={0.7}/>)}</Bar>
             </BarChart></ResponsiveContainer></div></div>
           )}
@@ -765,6 +801,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-15,15]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip decimals={0} monthly={isMonthly}/>}/><ReferenceLine y={0} stroke="#666"/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Bar dataKey="noblePower" isAnimationActive={false}>{mergedData.map((d,i) => <Cell key={i} fill={d.noblePower>=0?'#f39c12':'#8e44ad'} fillOpacity={0.7}/>)}</Bar>
             </BarChart></ResponsiveContainer></div></div>
           )}
@@ -773,6 +810,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><LineChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,1]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip monthly={isMonthly}/>}/><ReferenceLine y={0.5} stroke="#999" strokeDasharray="3 3"/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Line dataKey="ohangBalance" stroke="#3498db" dot={false} strokeWidth={1.5}/>
               {overlayActive && <Line dataKey="ohangBalanceOv" stroke="#fb7185" dot={false} strokeWidth={1.5} strokeDasharray="4 2"/>}
             </LineChart></ResponsiveContainer></div></div>

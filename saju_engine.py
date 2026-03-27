@@ -504,19 +504,32 @@ def strength_score(day_stem: str, month_branch: str,stems: List[str], branches: 
         uns = twelve_unseong(day_stem, b)
         sc += _UNSEONG_STRENGTH.get(uns, 0.0) * w
 
-    # ── 판정 ─────────────────────────────────
-    if sc >= 12.0:
-        verdict = "극신강"
-    elif sc >= 8.0:
+    # ── 판정 (8단계) ─────────────────────────
+    if sc >= 15.0:
+        verdict = "극왕"
+    elif sc >= 12.0:
+        verdict = "태강"
+    elif sc >= 9.0:
         verdict = "신강"
-    elif sc >= 5.0:
-        verdict = "중화"
-    elif sc >= 3.0:
+    elif sc >= 6.5:
+        verdict = "중화신강"
+    elif sc >= 4.0:
+        verdict = "중화신약"
+    elif sc >= 2.0:
         verdict = "신약"
+    elif sc >= 0.0:
+        verdict = "태약"
     else:
-        verdict = "극신약"
+        verdict = "극약"
 
     return round(sc, 1), verdict
+
+# 8단계 판정 → 기존 로직 호환용 그룹핑 상수
+_STRONG_VERDICTS = frozenset({"극왕", "태강", "신강"})
+_VERY_STRONG_VERDICTS = frozenset({"극왕", "태강"})
+_NEUTRAL_VERDICTS = frozenset({"중화신강", "중화신약"})
+_WEAK_VERDICTS = frozenset({"신약", "태약", "극약"})
+_VERY_WEAK_VERDICTS = frozenset({"태약", "극약"})
 
 # ══════════════════════════════════════════════
 # SECTION 9 : 격국 / 용신 / 희신 / 기신 (v3.3 대폭 개선)
@@ -540,12 +553,12 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
     2) 월지 본기 → 비겁이면 중기·여기로 이동
     3) 투출 확인 (지장간 중 천간에 드러난 것 우선)
     4) 잡기격(辰戌丑未) 세부 판별
-    5) 종격(극신강/극신약 시) 체크
+    5) 종격(극왕/극약 시) 체크
     """
     ds_elem = STEM_ELEMENT[day_stem]
 
-    # ── 종격 체크 (극신강/극신약) ─────────────
-    if verdict == "극신약":
+    # ── 종격 체크 (극왕/극약·태약) ─────────────
+    if verdict in _VERY_WEAK_VERDICTS:
         # 종재격/종살격/종아격 판별 — [v5] get_jijanggan 기반 (순서 의존 제거)
         cnt = {"비겁": 0.0, "식상": 0.0, "재성": 0.0, "관살": 0.0, "인성": 0.0}
         _jj_dw = {"본기": 1.0, "중기": 0.6, "여기": 0.3}
@@ -561,13 +574,13 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
                 if cat: cnt[cat] += dw
         dominant = max(cnt, key=cnt.get)
         if dominant == "재성" and cnt["재성"] >= 3.0:
-            return {"격국": "종재격", "격국_십성": "재성", "월지_본기": None, "격국유형": "종격", "비고": f"극신약+재성 압도({cnt['재성']:.1f})→종재격"}
+            return {"격국": "종재격", "격국_십성": "재성", "월지_본기": None, "격국유형": "종격", "비고": f"{verdict}+재성 압도({cnt['재성']:.1f})→종재격"}
         if dominant == "관살" and cnt["관살"] >= 3.0:
-            return {"격국": "종살격", "격국_십성": "관살", "월지_본기": None, "격국유형": "종격", "비고": f"극신약+관살 압도({cnt['관살']:.1f})→종살격"}
+            return {"격국": "종살격", "격국_십성": "관살", "월지_본기": None, "격국유형": "종격", "비고": f"{verdict}+관살 압도({cnt['관살']:.1f})→종살격"}
         if dominant == "식상" and cnt["식상"] >= 3.0:
-            return {"격국": "종아격", "격국_십성": "식상", "월지_본기": None, "격국유형": "종격", "비고": f"극신약+식상 압도({cnt['식상']:.1f})→종아격"}
+            return {"격국": "종아격", "격국_십성": "식상", "월지_본기": None, "격국유형": "종격", "비고": f"{verdict}+식상 압도({cnt['식상']:.1f})→종아격"}
 
-    if verdict == "극신강":
+    if verdict in _VERY_STRONG_VERDICTS:
         # 원국에 재성/관살/식상이 거의 없으면 종왕격 — [v5] get_jijanggan 기반
         cnt = {"재성": 0.0, "관살": 0.0, "식상": 0.0}
         _jj_dw2 = {"본기": 1.0, "중기": 0.6, "여기": 0.3}
@@ -582,7 +595,7 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
                 cat = _TENGO_CATEGORY.get(tg)
                 if cat in cnt: cnt[cat] += dw
         if sum(cnt.values()) <= 1.5:
-            return {"격국": "종왕격", "격국_십성": "비겁", "월지_본기": None, "격국유형": "종격", "비고": f"극신강+제극 요소 미약({sum(cnt.values()):.1f})→종왕격"}
+            return {"격국": "종왕격", "격국_십성": "비겁", "월지_본기": None, "격국유형": "종격", "비고": f"{verdict}+제극 요소 미약({sum(cnt.values()):.1f})→종왕격"}
 
     # ── 화격(化格) 체크 ─────────────────────
     # 명리학 원칙: 화격 성립 조건이 매우 엄격함
@@ -592,7 +605,7 @@ def classify_geokguk(day_stem: str, month_branch: str, stems: List[str], branche
     # 4) 합화 오행을 극하는 오행이 천간에 없어야 함 (충극이 있으면 합화 파괴)
     mb_elem = BRANCH_ELEMENT_MAIN.get(month_branch, "")
     day_idx = 2  # stems[2] = 일간
-    if verdict not in ("신강", "극신강"):  # 신강이면 화격 불성립
+    if verdict not in _STRONG_VERDICTS:  # 신강 이상이면 화격 불성립
         for i, s in enumerate(stems):
             if i == day_idx:
                 continue
@@ -965,7 +978,11 @@ def _diagnose_disease(
     johu_urgency = min(1.0, round(johu_urgency, 2))
 
     # ── 억부 시급도 ──────────────────────
-    _VERDICT_URGENCY = {"극신강": 0.9, "신강": 0.5, "중화": 0.1, "신약": 0.5, "극신약": 0.9}
+    _VERDICT_URGENCY = {
+        "극왕": 1.0, "태강": 0.8, "신강": 0.5,
+        "중화신강": 0.15, "중화신약": 0.15,
+        "신약": 0.5, "태약": 0.8, "극약": 1.0,
+    }
     eokbu_urgency = _VERDICT_URGENCY.get(verdict, 0.3)
 
     # ── 십성 과다/부족 병인 탐색 ───────────
@@ -985,24 +1002,24 @@ def _diagnose_disease(
                              "유형": "과다", "시급도": round(0.3 + (val - 2.5) * 0.2, 2)})
 
     # 관살 과다 → 일간 피극이 핵심 병인
-    if cat_cnt["관살"] >= 2.0 and verdict in ("신약", "극신약"):
+    if cat_cnt["관살"] >= 2.0 and verdict in _WEAK_VERDICTS:
         urg = 0.6 + (cat_cnt["관살"] - 2.0) * 0.2
         diseases.append({"병인": "관살과다+신약", "병인_오행": tmap["관살"],
                          "유형": "극전쟁", "시급도": round(min(1.0, urg), 2)})
 
     # 인성 과다 → 일간 과보호/설기 부족
-    if cat_cnt["인성"] >= 2.5 and verdict in ("신강", "극신강"):
+    if cat_cnt["인성"] >= 2.5 and verdict in _STRONG_VERDICTS:
         urg = 0.5 + (cat_cnt["인성"] - 2.5) * 0.2
         diseases.append({"병인": "인성과다+신강", "병인_오행": tmap["인성"],
                          "유형": "과다", "시급도": round(min(1.0, urg), 2)})
 
     # 비겁 과다 (신강인데 비겁이 많으면 식상/재성으로 빼야)
-    # 극신강은 비겁 임계값을 낮춤 (이미 세력이 과도하다고 판정됨)
-    bigyeop_threshold = 2.0 if verdict == "극신강" else 3.0
-    if cat_cnt["비겁"] >= bigyeop_threshold and verdict in ("신강", "극신강"):
+    # 극왕/태강은 비겁 임계값을 낮춤 (이미 세력이 과도하다고 판정됨)
+    bigyeop_threshold = 2.0 if verdict in _VERY_STRONG_VERDICTS else 3.0
+    if cat_cnt["비겁"] >= bigyeop_threshold and verdict in _STRONG_VERDICTS:
         urg = 0.4 + (cat_cnt["비겁"] - bigyeop_threshold) * 0.2
-        if verdict == "극신강":
-            urg = max(urg, 0.6)  # 극신강은 최소 시급도 0.6
+        if verdict in _VERY_STRONG_VERDICTS:
+            urg = max(urg, 0.6)
         diseases.append({"병인": "비겁과다", "병인_오행": de,
                          "유형": "과다", "시급도": round(min(1.0, urg), 2)})
 
@@ -1359,16 +1376,15 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         "건록격": {"용신": "비겁", "희신": ["인성"], "기신": ["관살"]},
         "양인격": {"용신": "관살", "희신": ["인성"], "기신": ["비겁"]},
     }
-    if verdict in ("중화",):
+    if verdict in _NEUTRAL_VERDICTS:
         neutral_row = NEUTRAL_TABLE.get(geok, {"용신": "비겁", "희신": ["인성"], "기신": ["관살"]})
         eokbu = {
             "용신_cat": "균형", "용신_오행": "전체",
             "희신_cat": [], "기신_cat": [],
             "비고": "신강신약 균형→격국 유지 우선",
-            # fallback: 조후 미적용 시 격국 기반 용신
             "_neutral_row": neutral_row,
         }
-    elif verdict in ("신강", "극신강"):
+    elif verdict in _STRONG_VERDICTS:
         row = STRONG_TABLE.get(geok, {"용신": "식상", "희신": ["재성"], "기신": ["인성"]})
         eokbu = {"용신_cat": row["용신"], "용신_오행": tmap.get(row["용신"], "?"), "희신_cat": row["희신"], "기신_cat": row["기신"], "비고": f"억부법: {verdict}×{geok}"}
     else:
@@ -1808,8 +1824,8 @@ def domain_score(geok:str,shinsal_hits:List[str],ten_gods_all:Dict[str,str],verd
     for tg in ten_gods_all.values():
         for d,w in _TG_DOM.get(tg,{}).items(): dom[d]+=w
     for d,w in _GEOK_DOM.get(geok,{}).items(): dom[d]+=w
-    if verdict=="신강": dom["직업"]+=0.3; dom["건강"]+=0.2
-    elif verdict=="신약": dom["건강"]-=0.3
+    if verdict in _STRONG_VERDICTS: dom["직업"]+=0.3; dom["건강"]+=0.2
+    elif verdict in _WEAK_VERDICTS: dom["건강"]-=0.3
     for name in shinsal_hits:
         for k,bmap in _SHINSAL_DOM.items():
             if k.split("(")[0] in name or name.split("(")[0] in k:
@@ -3176,28 +3192,28 @@ _UNSEONG_SCORE = {
 # 신강+제왕: 양 효과 거의 소멸(0.05) + 별도 과잉 penalty로 처리.
 # 신강+사/절: 원래 음의 부호 유지, 감쇠만 적용(절대 양으로 전환 안 함).
 _UNSEONG_VERDICT_MULT = {
-    #                  신약/중  신강   극신강
-    "장생":           (1.0,    0.25,  0.1),
-    "목욕":           (1.0,    0.8,   0.7),
-    "관대":           (1.0,    0.35,  0.15),
-    "건록":           (1.0,    0.15,  0.05),
-    "제왕":           (1.0,    0.05,  0.0),
-    "쇠":             (1.0,    0.5,   0.35),
-    "병":             (1.0,    0.3,   0.2),
-    "사":             (1.0,    0.15,  0.1),
-    "묘":             (1.0,    0.2,   0.1),
-    "절":             (1.0,    0.1,   0.05),
-    "태":             (1.0,    1.0,   1.0),
-    "양":             (1.0,    0.65,  0.45),
+    #                  약/중화  신강   태강   극왕
+    "장생":           (1.0,    0.25,  0.15,  0.1),
+    "목욕":           (1.0,    0.8,   0.75,  0.7),
+    "관대":           (1.0,    0.35,  0.2,   0.15),
+    "건록":           (1.0,    0.15,  0.08,  0.05),
+    "제왕":           (1.0,    0.05,  0.02,  0.0),
+    "쇠":             (1.0,    0.5,   0.4,   0.35),
+    "병":             (1.0,    0.3,   0.25,  0.2),
+    "사":             (1.0,    0.15,  0.12,  0.1),
+    "묘":             (1.0,    0.2,   0.15,  0.1),
+    "절":             (1.0,    0.1,   0.07,  0.05),
+    "태":             (1.0,    1.0,   1.0,   1.0),
+    "양":             (1.0,    0.65,  0.55,  0.45),
 }
 
 # 신강에서 양의 운성이 올 때 별도 고정 감점 (과잉 부담)
 _SINGANG_EXCESS_PENALTY = {
-    #               신강    극신강
-    "제왕":        (-2.0,  -4.0),
-    "건록":        (-1.0,  -2.5),
-    "장생":        (-0.5,  -1.0),
-    "관대":        (-0.5,  -1.0),
+    #               신강    태강    극왕
+    "제왕":        (-2.0,  -3.0,  -4.0),
+    "건록":        (-1.0,  -1.8,  -2.5),
+    "장생":        (-0.5,  -0.8,  -1.0),
+    "관대":        (-0.5,  -0.8,  -1.0),
 }
 
 
@@ -3205,8 +3221,10 @@ def _unseong_mult(unseong: str, verdict: str, geok_type: str) -> float:
     """12운성 감쇠 승수 반환. 항상 0.0~1.0 — 부호를 절대 뒤집지 않는다."""
     if geok_type in ("종격", "화격") or geok_type.startswith("외격"):
         return 1.0
-    tup = _UNSEONG_VERDICT_MULT.get(unseong, (1.0, 1.0, 1.0))
-    if verdict == "극신강":
+    tup = _UNSEONG_VERDICT_MULT.get(unseong, (1.0, 1.0, 1.0, 1.0))
+    if verdict == "극왕":
+        return tup[3]
+    if verdict == "태강":
         return tup[2]
     if verdict == "신강":
         return tup[1]
@@ -3214,13 +3232,15 @@ def _unseong_mult(unseong: str, verdict: str, geok_type: str) -> float:
 
 
 def _singang_excess_pen(unseong: str, verdict: str, geok_type: str) -> float:
-    """신강 과잉 penalty (항상 ≤ 0). 승수와 독립된 고정 감점 항."""
+    """신강 이상 과잉 penalty (항상 ≤ 0). 승수와 독립된 고정 감점 항."""
     if geok_type in ("종격", "화격") or geok_type.startswith("외격"):
         return 0.0
     tup = _SINGANG_EXCESS_PENALTY.get(unseong)
     if not tup:
         return 0.0
-    if verdict == "극신강":
+    if verdict == "극왕":
+        return tup[2]
+    if verdict == "태강":
         return tup[1]
     if verdict == "신강":
         return tup[0]
@@ -3664,11 +3684,11 @@ def _haegong_check(incoming_branch: str,
 # 명리학 원칙: 도화/양인/역마 등은 신강/신약·격국에 따라 길흉이 달라짐.
 # 예) 양인은 신약이면 비겁보강(+), 신강이면 과잉(-). 보정은 ±0~3 범위.
 _SHINSAL_CONTEXT_RULES = {
-    "양인": {"신약":  +2, "극신약":  +3, "신강":  -2, "극신강":  -3},
-    "도화": {"신약":  +1, "신강":   -1, "종격":   0},
-    "역마": {"신약":  +1, "신강":   +1, "극신강":  0},
-    "겁살": {"신약":  +1, "극신약":  +2, "신강":  -1, "극신강":  -2},
-    "화개": {"신강":  +1, "극신강":  +1, "신약":   0},
+    "양인": {"신약": +2, "태약": +2, "극약": +3, "신강": -2, "태강": -3, "극왕": -3},
+    "도화": {"신약": +1, "태약": +1, "극약": +1, "신강": -1, "태강": -1, "극왕": -1, "종격": 0},
+    "역마": {"신약": +1, "태약": +1, "극약": +1, "신강": +1, "태강": 0, "극왕": 0},
+    "겁살": {"신약": +1, "태약": +1, "극약": +2, "신강": -1, "태강": -2, "극왕": -2},
+    "화개": {"신강": +1, "태강": +1, "극왕": +1, "신약": 0, "태약": 0, "극약": 0},
 }
 
 def _contextual_shinsal_adj(
