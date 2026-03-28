@@ -252,8 +252,8 @@ class TestT9cBoundaryAndMeta:
         comp = se._composite_score(
             50, yfit, "태", 0, 0.0, 0.5, gm=gm
         )
-        # v6.1: 12 * 0.7 = 8.4 (계수 15→12)
-        assert abs(comp["breakdown"]["yongshin_fit"] - 8.4) < 0.01, comp["breakdown"]
+        # v6.3: 10 * 0.7 = 7.0 (계수 12→10)
+        assert abs(comp["breakdown"]["yongshin_fit"] - 7.0) < 0.01, comp["breakdown"]
 
     def test_tonggwan_is_applied_as_aux_heeshin(self):
         """통관 오행이 용신/희신에 반영되어야 함 (용신이면 통관적용=True)."""

@@ -120,7 +120,7 @@ const CHART_ITEMS: GuideItem[] = [
 
 const AUX_ITEMS: GuideItem[] = [
   {
-    title: '유리한 흐름',
+    title: '필요한 기운',
     icon: '💜',
     body: (
       <ul className="space-y-1">

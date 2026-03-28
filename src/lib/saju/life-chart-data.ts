@@ -9,6 +9,22 @@ import { pillarToHangul } from './hanja-hangul'
 
 const NUM_YEARS = 100
 
+function cleanShinsalName(n: string): string {
+  return n.replace(/\(.*\)/, '').trim()
+}
+
+function deriveShinsalTags(src: Record<string, unknown>, dwSrc?: Record<string, unknown>): string[] {
+  const tags = src['shinsal_tags'] as string[] | undefined
+  if (tags && tags.length > 0) return tags
+  const swGil = (src['세운_신살_길신'] ?? src['신살_길신'] ?? []) as string[]
+  const swHyung = (src['세운_신살_흉살'] ?? src['신살_흉살'] ?? []) as string[]
+  const dwGil = (dwSrc?.['신살_길신'] ?? []) as string[]
+  const dwHyung = (dwSrc?.['신살_흉살'] ?? []) as string[]
+  const raw = [...swGil, ...swHyung, ...dwGil, ...dwHyung]
+  if (!raw.length) return []
+  return [...new Set(raw.map(cleanShinsalName))]
+}
+
 // ── ChartDatum (캔들 + 보조지표 8종) ──
 
 export type ChartDatum = {
@@ -62,6 +78,7 @@ export type ChartDatum = {
   gongmangFactors?: GongmangFactors
   haegong?: HaegongInfo
   shinsalContextAdj?: Record<string, number>
+  shinsalTags?: string[]
 }
 
 export type DaewoonLabel = {
@@ -148,6 +165,7 @@ function buildMonthlyData(monthly: MonthlyDatum[], daewoonPillarFallback: string
       gongmangFactors: md.gongmang_factors,
       haegong: md.haegong,
       shinsalContextAdj: md.shinsal_context_adj,
+      shinsalTags: deriveShinsalTags(md as unknown as Record<string, unknown>),
     }
   })
 }
@@ -239,6 +257,7 @@ function buildFromChartPayload(chartPayload: ChartPayload): LifeChartData {
         gongmangFactors: yd.gongmang_factors,
         haegong: yd.haegong,
         shinsalContextAdj: yd.shinsal_context_adj,
+        shinsalTags: deriveShinsalTags(yd as unknown as Record<string, unknown>, dw as unknown as Record<string, unknown>),
       })
     } else {
       data.push(emptyDatum(year, i, trend))

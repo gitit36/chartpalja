@@ -61,7 +61,7 @@ const MAIN_OVERLAYS = [
 ] as const
 
 const AUX_PANELS = [
-  { key: 'yongshin', label: '유리한 흐름', color: '#9b59b6' },
+  { key: 'yongshin', label: '필요한 기운', color: '#9b59b6' },
   { key: 'energy', label: '변화의 파도', color: '#95a5a6' },
   { key: 'noble', label: '귀인의 도움', color: '#f39c12' },
   { key: 'ohang', label: '오행 균형도', color: '#3498db' },
@@ -74,14 +74,22 @@ type MainOverlayKey = (typeof MAIN_OVERLAYS)[number]['key']
 type AuxKey = (typeof AUX_PANELS)[number]['key']
 
 const BD_LABEL_POS: Record<string, string> = {
-  yongshin_fit: '유리한 흐름', unseong: '생애 리듬', unseong_context: '시기 조합',
-  relations: '조화', trine: '에너지 합류', balance: '균형도', shinsal: '특수 영향',
-  disease_resolution: '체질 보완', haegong: '공망 해소',
+  yongshin_fit: '필요한 기운 충만', unseong: '좋은 시기', unseong_context: '대운과 시너지',
+  relations: '좋은 인연·합', trine: '삼합·방합 길운', balance: '기운 균형 개선', shinsal: '길성 발동',
+  disease_resolution: '약점 보완됨', haegong: '공망 해소', structural_adj: '구조적 호재',
 }
 const BD_LABEL_NEG: Record<string, string> = {
-  yongshin_fit: '불리한 흐름', unseong: '생애 리듬', unseong_context: '시기 조합',
-  relations: '충돌', trine: '에너지 합류', balance: '균형도', shinsal: '특수 영향',
-  disease_resolution: '체질 보완', haegong: '공망 해소',
+  yongshin_fit: '필요한 기운 부족', unseong: '어려운 시기', unseong_context: '대운과 엇박자',
+  relations: '갈등·충돌', trine: '에너지 분산', balance: '기운 편중 심화', shinsal: '흉살 작용',
+  disease_resolution: '약점 노출됨', haegong: '공망 해소', structural_adj: '구조적 악재',
+}
+
+function intensityWord(v: number): string {
+  const a = Math.abs(v)
+  if (a >= 8) return '매우 강'
+  if (a >= 5) return '강'
+  if (a >= 2) return '보통'
+  return '약'
 }
 
 function breakdownFactors(bd: ScoreBreakdown | undefined): { up: string[]; down: string[] } {
@@ -95,9 +103,18 @@ function breakdownFactors(bd: ScoreBreakdown | undefined): { up: string[]; down:
   for (const [k, v] of entries) {
     if (Math.abs(v) < 0.3) continue
     const label = v >= 0 ? (BD_LABEL_POS[k] ?? k) : (BD_LABEL_NEG[k] ?? k)
-    ;(v >= 0 ? up : down).push(`${label} ${v >= 0 ? '+' : ''}${v.toFixed(1)}`)
+    ;(v >= 0 ? up : down).push(`${label} (${intensityWord(v)})`)
   }
   return { up: up.slice(0, 2), down: down.slice(0, 2) }
+}
+
+function getShinsalTags(tags?: string[], adj?: Record<string, number>): string[] {
+  if (tags && tags.length > 0) {
+    const unique = [...new Set(tags)]
+    return unique.slice(0, 6)
+  }
+  if (!adj) return []
+  return Object.keys(adj).map(k => k.replace(/\(.*\)/, '').trim()).slice(0, 6)
 }
 
 function fmtPillar(pillar: string | undefined): string {
@@ -237,6 +254,11 @@ function MainTooltip({ active, payload, overlays, monthly, overlayActive, overla
             {down.length > 0 && <div className="text-red-500">▼ {down.join(', ')}</div>}
           </div>
         )
+      })()}
+      {(() => {
+        const tags = getShinsalTags(d.shinsalTags, d.shinsalContextAdj)
+        if (!tags.length) return null
+        return <div className="mt-0.5 pt-0.5 border-t border-gray-100 text-gray-400">🏷️ {tags.join(' · ')}</div>
       })()}
     </div>
   )
@@ -576,10 +598,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
           }
         }}
           className="absolute top-3 right-3 z-10 flex items-center justify-center w-7 h-7 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm">
-          <svg className="w-3.5 h-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
+          <span className="text-sm leading-none">📊</span>
           {settingsBadge && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />}
         </button>
 
@@ -772,7 +791,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
       {anyAux && hasEngineData && (
         <div className="px-2 mt-2 space-y-3" data-capture="02_보조지표">
           {auxPanels.yongshin && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">유리한 흐름<InfoTip text={"용신(내게 가장 필요한 기운)이 얼마나 들어오는지 보여줘요.\n양수 → 좋은 기운이 충분한 시기\n음수 → 기운이 부족한 시기"} /></div>
+            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">필요한 기운<InfoTip text={"내게 가장 필요한 기운(용신)이 얼마나 들어오는지 보여줘요.\n양수 → 좋은 기운이 충분한 시기\n음수 → 기운이 부족한 시기"} /></div>
             <div className="h-[80px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-1,1]} hide={true} width={0}/>
               <Tooltip content={<SubTooltip monthly={isMonthly}/>}/><ReferenceLine y={0} stroke="#666"/>

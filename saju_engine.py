@@ -1627,6 +1627,18 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
                 or tonggwan_elem in current_hee
             )
 
+    # 조후 보조용신 → 희신 편입 (관살이어도 조후적으로 필요한 오행)
+    # 명리학 원칙: 조후 보조용신은 용신을 생(生)하는 오행으로, 관살이더라도
+    # 기후 조절에 필요하므로 희신으로 인정한다 (기신과 충돌하지 않는 한).
+    if johu_sub_elem and johu_sub_elem != result.get("용신_오행"):
+        _cur_hee = list(result.get("희신_오행", []))
+        _cur_gi = set(result.get("기신_오행", []))
+        if johu_sub_elem not in _cur_hee and johu_sub_elem not in _cur_gi:
+            result["희신_오행"] = _cur_hee + [johu_sub_elem]
+            _sub_cat = _elem_to_cat(johu_sub_elem)
+            _sub_label = _cat_label(_sub_cat) if _sub_cat else f"조후보조({johu_sub_elem})"
+            result.setdefault("희신", []).append(_sub_label)
+
     result.update({
         "억부용신": eokbu,
         "조후용신": johu,
@@ -3184,36 +3196,38 @@ except NameError:
 # ── 12운성 점수 매핑 ───────────────────────────
 _UNSEONG_SCORE = {
     "장생": 10, "목욕": 2, "관대": 8, "건록": 10, "제왕": 12,
-    "쇠": -2, "병": -6, "사": -10, "묘": -8, "절": -12, "태": 0, "양": 4,
+    "쇠": -2, "병": -6, "사": -10, "묘": -8, "절": -10, "태": 0, "양": 4,
 }
 
-# ── [v5] 12운성 신강/신약별 감쇠 승수 (0.0~1.0만 허용, 부호 반전 금지) ──
+# ── [v5→v6.2] 12운성 신강/신약별 감쇠 승수 (0.0~1.0만 허용, 부호 반전 금지) ──
 # 명리학 원칙: 신강이면 왕성한 운성의 *양적 효과*가 줄어들 뿐, 부호가 뒤집히지 않는다.
 # 신강+제왕: 양 효과 거의 소멸(0.05) + 별도 과잉 penalty로 처리.
 # 신강+사/절: 원래 음의 부호 유지, 감쇠만 적용(절대 양으로 전환 안 함).
+# v6.2: 중화신강/중화신약에 중간 감쇠 적용 — 약/중화(1.0)↔신강 사이 절벽 해소.
 _UNSEONG_VERDICT_MULT = {
-    #                  약/중화  신강   태강   극왕
-    "장생":           (1.0,    0.25,  0.15,  0.1),
-    "목욕":           (1.0,    0.8,   0.75,  0.7),
-    "관대":           (1.0,    0.35,  0.2,   0.15),
-    "건록":           (1.0,    0.15,  0.08,  0.05),
-    "제왕":           (1.0,    0.05,  0.02,  0.0),
-    "쇠":             (1.0,    0.5,   0.4,   0.35),
-    "병":             (1.0,    0.3,   0.25,  0.2),
-    "사":             (1.0,    0.15,  0.12,  0.1),
-    "묘":             (1.0,    0.2,   0.15,  0.1),
-    "절":             (1.0,    0.1,   0.07,  0.05),
-    "태":             (1.0,    1.0,   1.0,   1.0),
-    "양":             (1.0,    0.65,  0.55,  0.45),
+    #                  신약이하  중화    중화신강  신강   태강   극왕
+    "장생":           (1.0,     1.0,    0.55,    0.25,  0.15,  0.1),
+    "목욕":           (1.0,     1.0,    0.9,     0.8,   0.75,  0.7),
+    "관대":           (1.0,     1.0,    0.6,     0.35,  0.2,   0.15),
+    "건록":           (1.0,     1.0,    0.5,     0.15,  0.08,  0.05),
+    "제왕":           (1.0,     1.0,    0.4,     0.05,  0.02,  0.0),
+    "쇠":             (1.0,     1.0,    0.7,     0.5,   0.4,   0.35),
+    "병":             (1.0,     1.0,    0.6,     0.3,   0.25,  0.2),
+    "사":             (1.0,     1.0,    0.5,     0.15,  0.12,  0.1),
+    "묘":             (1.0,     1.0,    0.55,    0.2,   0.15,  0.1),
+    "절":             (1.0,     1.0,    0.45,    0.1,   0.07,  0.05),
+    "태":             (1.0,     1.0,    1.0,     1.0,   1.0,   1.0),
+    "양":             (1.0,     1.0,    0.8,     0.65,  0.55,  0.45),
 }
 
 # 신강에서 양의 운성이 올 때 별도 고정 감점 (과잉 부담)
+# v6.2: 중화신강 추가 (신강의 약 40% 수준)
 _SINGANG_EXCESS_PENALTY = {
-    #               신강    태강    극왕
-    "제왕":        (-2.0,  -3.0,  -4.0),
-    "건록":        (-1.0,  -1.8,  -2.5),
-    "장생":        (-0.5,  -0.8,  -1.0),
-    "관대":        (-0.5,  -0.8,  -1.0),
+    #               중화신강  신강    태강    극왕
+    "제왕":        (-0.8,   -2.0,  -3.0,  -4.0),
+    "건록":        (-0.4,   -1.0,  -1.8,  -2.5),
+    "장생":        (-0.2,   -0.5,  -0.8,  -1.0),
+    "관대":        (-0.2,   -0.5,  -0.8,  -1.0),
 }
 
 
@@ -3221,12 +3235,16 @@ def _unseong_mult(unseong: str, verdict: str, geok_type: str) -> float:
     """12운성 감쇠 승수 반환. 항상 0.0~1.0 — 부호를 절대 뒤집지 않는다."""
     if geok_type in ("종격", "화격") or geok_type.startswith("외격"):
         return 1.0
-    tup = _UNSEONG_VERDICT_MULT.get(unseong, (1.0, 1.0, 1.0, 1.0))
+    tup = _UNSEONG_VERDICT_MULT.get(unseong, (1.0, 1.0, 1.0, 1.0, 1.0, 1.0))
     if verdict == "극왕":
-        return tup[3]
+        return tup[5]
     if verdict == "태강":
-        return tup[2]
+        return tup[4]
     if verdict == "신강":
+        return tup[3]
+    if verdict == "중화신강":
+        return tup[2]
+    if verdict == "중화신약":
         return tup[1]
     return tup[0]
 
@@ -3239,10 +3257,12 @@ def _singang_excess_pen(unseong: str, verdict: str, geok_type: str) -> float:
     if not tup:
         return 0.0
     if verdict == "극왕":
-        return tup[2]
+        return tup[3]
     if verdict == "태강":
-        return tup[1]
+        return tup[2]
     if verdict == "신강":
+        return tup[1]
+    if verdict == "중화신강":
         return tup[0]
     return 0.0
 
@@ -3787,6 +3807,135 @@ def _disease_resolution_score(
     return round(max(-8.0, min(8.0, sc)), 2)
 
 
+# ── [v6.4] 구조적 보정 3요소 ──────────────────────
+# 명리학 원칙:
+#   1) 과다 오행 누적 → 편고가 심화되면 비선형으로 불리
+#   2) 용신 활성화 → 단순 존재가 아니라 원국 병을 실제로 해소하면 추가 길
+#   3) 기신 구조 파괴 → 단순 존재가 아니라 용신 오행을 극하면 추가 흉
+# 이중 카운트 방지: disease_resolution/relations와 겹치는 부분은 제외하고 잔여분만 가산.
+
+def _ohang_excess_penalty(
+    inc_stem: str, inc_branch: str,
+    natal_ohang: Optional[Dict[str, float]],
+    yong_info: dict,
+) -> float:
+    """기신/구신 오행이 원국에 이미 과다(2.5+)할 때 비선형 추가 감점."""
+    if not natal_ohang:
+        return 0.0
+    gi_es = set(yong_info.get("기신_오행", [])) | set(yong_info.get("구신_오행", []))
+    if not gi_es:
+        return 0.0
+    pen = 0.0
+    for elem in (STEM_ELEMENT.get(inc_stem, ""), BRANCH_ELEMENT_MAIN.get(inc_branch, "")):
+        if not elem or elem not in gi_es:
+            continue
+        cnt = natal_ohang.get(elem, 0)
+        if cnt >= 3.0:
+            pen -= 0.8 * (cnt - 2.0)
+        elif cnt >= 2.5:
+            pen -= 0.4 * (cnt - 2.0)
+        elif cnt >= 2.0:
+            pen -= 0.15
+    return round(max(-5.0, pen), 2)
+
+
+def _yongshin_activation_bonus(
+    inc_stem: str, inc_branch: str,
+    yong_info: dict,
+    natal_ohang: Optional[Dict[str, float]],
+    trine_hits: Optional[List] = None,
+    disease_res_sc: float = 0.0,
+) -> float:
+    """용신이 원국의 병목을 실제로 완화할 때 추가 보너스.
+    yfit(용신 존재)와 역할 분리: 여기는 '구조적 완화 효과'만 봄.
+    disease_resolution과의 이중 카운트 방지: disease_res가 이미 준 만큼 차감."""
+    yong_e = yong_info.get("용신_오행", "")
+    if not yong_e:
+        return 0.0
+    inc_s_e = STEM_ELEMENT.get(inc_stem, "")
+    inc_b_e = BRANCH_ELEMENT_MAIN.get(inc_branch, "")
+    if inc_s_e != yong_e and inc_b_e != yong_e:
+        return 0.0
+
+    gi_es = set(yong_info.get("기신_오행", []))
+    raw = 0.0
+
+    # (A) 용신 오행이 원국에서 부족할 때 채워지는 효과
+    yong_cnt = (natal_ohang or {}).get(yong_e, 0)
+    if yong_cnt < 1.0:
+        raw += 1.5
+    elif yong_cnt < 1.5:
+        raw += 0.8
+
+    # (B) 용신이 기신 오행을 극(克)하는 관계
+    for gi_e in gi_es:
+        if KE_MAP.get(yong_e) == gi_e:
+            gi_cnt = (natal_ohang or {}).get(gi_e, 0)
+            raw += 1.5 + min(1.5, max(0, gi_cnt - 2.0) * 0.5)
+
+    # (C) 용신이 과다 오행을 설기(泄)하는 관계
+    for gi_e in gi_es:
+        if GEN_MAP.get(gi_e) == yong_e:
+            gi_cnt = (natal_ohang or {}).get(gi_e, 0)
+            if gi_cnt >= 2.5:
+                raw += min(1.5, (gi_cnt - 2.0) * 0.4)
+
+    # (D) 용신 방향 삼합/방합 완성 (기존 trine +2.5 외 추가분)
+    for hit in (trine_hits or []):
+        if hit.get("element") == yong_e:
+            raw += 1.0
+
+    # disease_resolution이 이미 반영한 부분만큼 차감 (중복 제거)
+    bonus = max(0.0, raw - max(0.0, disease_res_sc * 0.4))
+    return round(min(6.0, bonus), 2)
+
+
+def _gishin_disruption_penalty(
+    inc_stem: str, inc_branch: str,
+    yong_info: dict,
+    natal_ohang: Optional[Dict[str, float]],
+    disease_res_sc: float = 0.0,
+) -> float:
+    """기신이 용신 오행을 직접 극(克)하거나 과다 오행을 증폭시킬 때 추가 감점.
+    relations(합충 기반)과는 별개 — 이 함수는 오행 상극 관계만 봄.
+    mixed 간지(천간 기신+지지 용신 또는 반대)는 50% 감쇠."""
+    gi_es = set(yong_info.get("기신_오행", []))
+    yong_e = yong_info.get("용신_오행", "")
+    hee_es = set(yong_info.get("희신_오행", []))
+    if not gi_es or not yong_e:
+        return 0.0
+    inc_s_e = STEM_ELEMENT.get(inc_stem, "")
+    inc_b_e = BRANCH_ELEMENT_MAIN.get(inc_branch, "")
+    if inc_s_e not in gi_es and inc_b_e not in gi_es:
+        return 0.0
+
+    good_es = {yong_e} | hee_es
+    mixed = ((inc_s_e in gi_es and inc_b_e in good_es)
+             or (inc_b_e in gi_es and inc_s_e in good_es))
+
+    pen = 0.0
+
+    # 기신 오행이 용신 오행을 직접 극
+    for elem in (inc_s_e, inc_b_e):
+        if elem and elem in gi_es and KE_MAP.get(elem) == yong_e:
+            pen -= 2.5
+
+    # 기신 오행이 희신을 극
+    for elem in (inc_s_e, inc_b_e):
+        if elem and elem in gi_es:
+            for hee_e in hee_es:
+                if KE_MAP.get(elem) == hee_e:
+                    pen -= 1.0
+                    break
+
+    if mixed:
+        pen *= 0.5
+
+    # disease_resolution이 이미 반영한 악화분만큼 차감 (중복 제거)
+    pen = min(0.0, pen - min(0.0, disease_res_sc * 0.3))
+    return round(max(-6.0, pen), 2)
+
+
 # ── 종합운점수 산출 ────────────────────────────
 def _composite_score(
     base: float,
@@ -3806,8 +3955,13 @@ def _composite_score(
     disease_resolution: float = 0.0,
     natal_balance: float = 0.5,
     haegong_bonus: float = 0.0,
+    inc_stem: str = "",
+    inc_branch: str = "",
+    yong_info: Optional[dict] = None,
+    disease_info: Optional[dict] = None,
+    trine_hits: Optional[list] = None,
 ) -> Dict[str, Any]:
-    """0~100 종합운점수 + breakdown (v6.2 full — 해공 포함)."""
+    """0~100 종합운점수 + breakdown (v6.4 — 구조적 보정 3요소 추가)."""
     if gm is None:
         gm = {"unseong": 1.0, "rel": 1.0, "yfit_branch": 1.0}
 
@@ -3826,10 +3980,10 @@ def _composite_score(
     hf = _fit_with_gongmang("희신부합")
     gf = _fit_with_gongmang("기신부합")
     uf = _fit_with_gongmang("구신부합")
-    # 용신 적합도: 12/7 계수 (v6.1 — 다른 축이 살아나도록 진폭 축소)
-    yfit_sc = (yf * 12 + hf * 7 - gf * 12 - uf * 7)
+    # 용신 적합도: 10/5 계수 (v6.3 — 관계/12운성/균형이 살아나도록 진폭 축소)
+    yfit_sc = (yf * 10 + hf * 5 - gf * 10 - uf * 5)
     if yf > 0 and gf > 0:
-        yfit_sc -= 2.5 * min(yf, gf)
+        yfit_sc -= 2.0 * min(yf, gf)
 
     # unseong component
     uns_raw = _UNSEONG_SCORE.get(unseong, 0)
@@ -3845,9 +3999,9 @@ def _composite_score(
     # trine — 공망 시 별도 감쇠 적용 (v6.1)
     tri_sc = (trine_pos - trine_neg) * gm.get("trine", gm["rel"])
 
-    # balance — 원국 대비 개선도 (v6.1: delta 기반)
+    # balance — 원국 대비 개선도 (v6.3: 배율 확대로 균형 기여도 강화)
     balance_delta = balance - natal_balance
-    bal_sc = max(-5.0, min(5.0, balance_delta * 15))
+    bal_sc = max(-6.0, min(6.0, balance_delta * 20))
     if geok_type in ("종격", "화격") or geok_type.startswith("외격"):
         bal_sc = -bal_sc
 
@@ -3860,7 +4014,19 @@ def _composite_score(
     # 해공 보너스 (운이 원국 공망 지지를 충/합으로 활성화)
     haeg_sc = haegong_bonus
 
-    sc = base + yfit_sc + uns_sc + uns_ctx + rel_sc + tri_sc + bal_sc + shin_sc + dis_sc + haeg_sc
+    # [v6.4] 구조적 보정 3요소 (과다패널티 + 용신활성화 + 기신파괴)
+    natal_ohang = (disease_info or {}).get("오행분포_raw")
+    excess_sc = _ohang_excess_penalty(inc_stem, inc_branch, natal_ohang, yong_info or {})
+    activ_sc = _yongshin_activation_bonus(
+        inc_stem, inc_branch, yong_info or {}, natal_ohang,
+        trine_hits=trine_hits, disease_res_sc=dis_sc)
+    disrupt_sc = _gishin_disruption_penalty(
+        inc_stem, inc_branch, yong_info or {}, natal_ohang,
+        disease_res_sc=dis_sc)
+    structural_adj = max(-8.0, min(8.0, excess_sc + activ_sc + disrupt_sc))
+
+    sc = (base + yfit_sc + uns_sc + uns_ctx + rel_sc + tri_sc
+          + bal_sc + shin_sc + dis_sc + haeg_sc + structural_adj)
     clamped = max(0, min(100, round(sc)))
 
     return {
@@ -3876,8 +4042,86 @@ def _composite_score(
             "shinsal": round(shin_sc, 2),
             "disease_resolution": round(dis_sc, 2),
             "haegong": round(haeg_sc, 2),
+            "structural_adj": round(structural_adj, 2),
         },
     }
+
+
+def _dw_sw_synergy(dw_sw_rels: List[str], yong_info: dict,
+                   dw_stem: str, dw_branch: str,
+                   sw_stem: str, sw_branch: str) -> float:
+    """대운-세운 간 직접 관계(합/충/형 등)에 기반한 시너지.
+    명리학 원칙: 대운과 세운 간지가 합/충하면 단순 점수 합산과 다른 구조적 변화가 발생.
+    용/희신 관련 기둥이 합거·충파되면 흉, 기신 관련이면 길.
+    Returns float clamped to [-5, +5].
+    """
+    if not dw_sw_rels:
+        return 0.0
+
+    syn = 0.0
+    yong_e = yong_info.get("용신_오행", "")
+    hee_es = set(yong_info.get("희신_오행", []))
+    gi_es = set(yong_info.get("기신_오행", []))
+    good_es = {yong_e} | hee_es - {""}
+    bad_es = gi_es - {""}
+
+    dw_stem_e = STEM_ELEMENT.get(dw_stem, "")
+    dw_branch_e = BRANCH_ELEMENT_MAIN.get(dw_branch, "")
+    sw_stem_e = STEM_ELEMENT.get(sw_stem, "")
+    sw_branch_e = BRANCH_ELEMENT_MAIN.get(sw_branch, "")
+
+    for rel in dw_sw_rels:
+        if "천간합" in rel:
+            if dw_stem_e in bad_es or sw_stem_e in bad_es:
+                syn += 1.5
+            elif dw_stem_e in good_es or sw_stem_e in good_es:
+                syn -= 1.0
+            else:
+                syn += 0.3
+
+        elif "천간충" in rel:
+            attacker_good = sw_stem_e in good_es
+            target_bad = dw_stem_e in bad_es
+            if attacker_good and target_bad:
+                syn += 1.0
+            elif sw_stem_e in bad_es and dw_stem_e in good_es:
+                syn -= 1.0
+
+        elif "지지충" in rel:
+            if dw_branch_e in bad_es and sw_branch_e in good_es:
+                syn += 2.0
+            elif dw_branch_e in good_es and sw_branch_e in bad_es:
+                syn -= 2.0
+            elif dw_branch_e in bad_es or sw_branch_e in bad_es:
+                syn += 0.5
+            else:
+                syn -= 0.5
+
+        elif "지지합" in rel:
+            if dw_branch_e in bad_es or sw_branch_e in bad_es:
+                syn += 1.0
+            elif dw_branch_e in good_es or sw_branch_e in good_es:
+                syn -= 0.5
+
+        elif "지지형" in rel:
+            syn -= 1.0
+
+        elif "반합" in rel:
+            if yong_e and yong_e + "반합" in rel:
+                syn += 0.8
+            elif any(g + "반합" in rel for g in bad_es):
+                syn -= 0.8
+
+        elif "지지파" in rel:
+            syn -= 0.3
+
+        elif "지지해" in rel:
+            syn -= 0.3
+
+        elif "원진" in rel:
+            syn -= 0.5
+
+    return max(-5.0, min(5.0, round(syn, 2)))
 
 
 def _calc_sewoon_independent_score(
@@ -3925,6 +4169,9 @@ def _calc_sewoon_independent_score(
         disease_resolution=sw_dis_res,
         natal_balance=natal_balance,
         haegong_bonus=sw_haegong["bonus"],
+        inc_stem=sw_stem, inc_branch=sw_branch,
+        yong_info=yong, disease_info=disease_info,
+        trine_hits=sw_trine,
     )
 
 
@@ -4033,6 +4280,9 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
             disease_resolution=dw_dis_res,
             natal_balance=natal_bal,
             haegong_bonus=dw_haegong["bonus"],
+            inc_stem=stem, inc_branch=branch,
+            yong_info=yong, disease_info=disease_info,
+            trine_hits=dw_trine,
         )
         composite = _comp_result["score"]
         composite_breakdown = _comp_result["breakdown"]
@@ -4105,6 +4355,7 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
             "gongmang_factors": dw_gm,
             "haegong": dw_haegong,
             "shinsal_context_adj": _shinsal_adj_detail(gil, hyung, verdict, geok_type),
+            "shinsal_tags": [n.split("(")[0] for n in (gil + hyung)],
             "시즌태그": dw_season,
             "이벤트확률": dw_events,
         })
@@ -4238,13 +4489,14 @@ def build_yearly_timeline(
             dw["신살_길신"] + sw_gil, dw["신살_흉살"] + sw_hyung, verdict, geok_type
         )
 
+        # v6.3: 관계 기반 시너지 (대운-세운 간 합/충/형 반영)
+        rel_syn = _dw_sw_synergy(sw_rels_dw, yong, dw["stem"], dw["branch"], sw_stem, sw_branch)
         dw_dev = float(dw_trend) - 50
         sw_dev = sw_sc - 50
-        avg_dir = (dw_dev + sw_dev) / 100.0
-        strength = abs(dw_dev / 50.0) * abs(sw_dev / 50.0)
-        # v6.1: 시너지 cap ±5 (과도한 방향 증폭 억제)
-        synergy = max(-5, min(5, avg_dir * strength * 12))
+        score_syn = max(-3, min(3, (dw_dev + sw_dev) / 100.0 * abs(dw_dev / 50.0) * abs(sw_dev / 50.0) * 8))
+        synergy = max(-5, min(5, rel_syn * 0.7 + score_syn * 0.3))
         score = max(0, min(100, round(float(dw_trend) * 0.6 + sw_sc * 0.4 + synergy)))
+        sw_breakdown["synergy"] = round(synergy, 2)
 
         # ── 캔들 OHLC ───────────────────────
         sw_noble_pos = _calc_noble_power(sw_gil, [])
@@ -4324,6 +4576,7 @@ def build_yearly_timeline(
             "gongmang_factors": sw_gm_factors,
             "haegong": sw_haegong,
             "shinsal_context_adj": sw_shinsal_detail,
+            "shinsal_tags": list(dict.fromkeys(n.split("(")[0] for n in (sw_gil + sw_hyung + dw["신살_길신"] + dw["신살_흉살"]))),
             "indicators": {
                 "용신력": ypower,
                 "에너지장": energy,
@@ -4410,10 +4663,10 @@ def _build_monthly_fortune(year: int, day_stem: str, day_branch: str, year_branc
             m_rels.append(f"월지합일지({m_branch}합{day_branch})")
 
         score_adj = 0
-        score_adj += float(m_yfit["용신부합"]) * 8
-        score_adj += float(m_yfit["희신부합"]) * 4
-        score_adj -= float(m_yfit["기신부합"]) * 8
-        score_adj -= float(m_yfit.get("구신부합", 0)) * 4
+        score_adj += float(m_yfit["용신부합"]) * 6
+        score_adj += float(m_yfit["희신부합"]) * 3
+        score_adj -= float(m_yfit["기신부합"]) * 6
+        score_adj -= float(m_yfit.get("구신부합", 0)) * 3
         score_adj += _UNSEONG_SCORE.get(m_unseong, 0) * 0.5 * _unseong_mult(m_unseong, verdict, geok_type)
 
         months.append({
@@ -4504,12 +4757,13 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     )
     sw_ind = _sw_ind_result["score"]
     dw_t = float(dw["종합운점수"])
+    # v6.3: 관계 기반 시너지
+    sw_rels_dw_mt = _calc_two_pillar_relations(sw_s, sw_b, dw["stem"], dw["branch"])
+    rel_syn_mt = _dw_sw_synergy(sw_rels_dw_mt, yong, dw["stem"], dw["branch"], sw_s, sw_b)
     dw_dev = dw_t - 50
     sw_dev = sw_ind - 50
-    avg_dir = (dw_dev + sw_dev) / 100.0
-    strength = abs(dw_dev / 50.0) * abs(sw_dev / 50.0)
-    # v6.1: 시너지 cap ±5
-    synergy = max(-5, min(5, avg_dir * strength * 12))
+    score_syn_mt = max(-3, min(3, (dw_dev + sw_dev) / 100.0 * abs(dw_dev / 50.0) * abs(sw_dev / 50.0) * 8))
+    synergy = max(-5, min(5, rel_syn_mt * 0.7 + score_syn_mt * 0.3))
     sw_base_score = max(0, min(100, round(dw_t * 0.6 + sw_ind * 0.4 + synergy)))
 
     # 연간 기준 월간 산출
@@ -4619,6 +4873,9 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
             disease_resolution=m_dis_res,
             natal_balance=natal_bal,
             haegong_bonus=m_haegong["bonus"],
+            inc_stem=m_stem, inc_branch=m_branch,
+            yong_info=yong, disease_info=disease_info_mt,
+            trine_hits=m_trine,
         )
         m_ind = _m_comp["score"]
         m_breakdown = _m_comp["breakdown"]
@@ -4736,6 +4993,7 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
             "gongmang_factors": m_gm,
             "haegong": m_haegong,
             "shinsal_context_adj": m_shinsal_detail,
+            "shinsal_tags": [n.split("(")[0] for n in (m_gil + m_hyung)],
             "indicators": {
                 "용신력": m_ypower,
                 "에너지장": m_energy,
@@ -4814,6 +5072,7 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
     # 점수 산출
     d_geok_type = r.get("격국", {}).get("격국유형", "")
     d_verdict = r.get("신강신약", {}).get("판정", "")
+    disease_info = yong.get("병인진단")
     d_day_gz = ds + db
 
     d_tg_s = ten_god(ds, d_stem)
@@ -4837,6 +5096,9 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
         trine_pos=d_t_pos, trine_neg=d_t_neg, gm=d_gm,
         shinsal_adj=d_shinsal_adj,
         haegong_bonus=d_haegong["bonus"],
+        inc_stem=d_stem, inc_branch=d_branch,
+        yong_info=yong, disease_info=disease_info,
+        trine_hits=d_trine,
     )
     score = _d_comp["score"]
     d_breakdown = _d_comp["breakdown"]

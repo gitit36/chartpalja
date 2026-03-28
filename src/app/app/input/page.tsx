@@ -89,16 +89,16 @@ const LOADING_SLIDES = [
     title: '인생 흐름을 보는 차트예요',
     desc: '터치하면 시기별 점수를 볼 수 있어요',
     visual: (
-      <div className="w-48 h-28 mx-auto mb-4 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
+      <div className="w-64 h-36 mx-auto mb-5 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
         <svg viewBox="0 0 200 100" className="w-full h-full">
           <path d="M10,70 Q40,30 70,50 T130,35 T190,45" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round"/>
           <line x1="100" y1="20" x2="100" y2="80" stroke="#a78bfa" strokeWidth="1" strokeDasharray="3 2" opacity="0.5"/>
           <circle cx="100" cy="42" r="3" fill="#a78bfa"/>
           <text x="100" y="16" textAnchor="middle" fontSize="8" fill="#d8b4fe">2026</text>
         </svg>
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-0.5">
-          <span className="text-[8px] text-white/50">👆</span>
-          <span className="text-[7px] text-white/40">터치</span>
+        <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1">
+          <span className="text-sm text-white/50">👆</span>
+          <span className="text-[9px] text-white/40">터치</span>
         </div>
       </div>
     ),
@@ -108,13 +108,13 @@ const LOADING_SLIDES = [
     title: '지표를 켜서 더 자세히 분석해요',
     desc: '대운선, 시즌 배경, 보조지표를 켤 수 있어요',
     visual: (
-      <div className="w-48 mx-auto mb-4 rounded-xl bg-white/10 border border-white/20 p-3 space-y-2">
-        {['대운 흐름선', '시즌 배경색', '유리한 흐름'].map((label, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <div className={`w-3.5 h-3.5 rounded border ${i < 2 ? 'bg-purple-400/80 border-purple-300' : 'border-white/30'}`}>
+      <div className="w-64 mx-auto mb-5 rounded-xl bg-white/10 border border-white/20 p-4 space-y-3">
+        {['대운 흐름선', '시즌 배경색', '보조지표'].map((label, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div className={`w-4.5 h-4.5 rounded border ${i < 2 ? 'bg-purple-400/80 border-purple-300' : 'border-white/30'}`}>
               {i < 2 && <svg viewBox="0 0 14 14" className="w-full h-full"><path d="M3 7l3 3 5-5" fill="none" stroke="white" strokeWidth="2"/></svg>}
             </div>
-            <span className="text-[11px] text-white/70">{label}</span>
+            <span className="text-sm text-white/70">{label}</span>
           </div>
         ))}
       </div>
@@ -125,14 +125,14 @@ const LOADING_SLIDES = [
     title: '궁금한 기간만 골라 해설을 봐요',
     desc: 'AI가 선택한 기간의 운세를 해석해드려요',
     visual: (
-      <div className="w-48 h-28 mx-auto mb-4 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
+      <div className="w-64 h-36 mx-auto mb-5 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
         <svg viewBox="0 0 200 100" className="w-full h-full">
           <path d="M10,60 Q50,30 90,50 T190,40" fill="none" stroke="#82ca9d" strokeWidth="2" opacity="0.4"/>
           <rect x="60" y="15" width="80" height="70" rx="4" fill="#a78bfa" fillOpacity="0.15" stroke="#a78bfa" strokeWidth="1" strokeOpacity="0.4"/>
           <text x="100" y="92" textAnchor="middle" fontSize="8" fill="#d8b4fe">2030~2035년</text>
         </svg>
-        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-purple-500/80 rounded-full px-2.5 py-0.5">
-          <span className="text-[7px] text-white font-medium">해설 보기</span>
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-purple-500/80 rounded-full px-3 py-1">
+          <span className="text-[9px] text-white font-medium">해설 보기</span>
         </div>
       </div>
     ),
@@ -142,14 +142,14 @@ const LOADING_SLIDES = [
     title: '다른 사람과 비교해보세요',
     desc: '궁합 흐름을 차트 위에서 비교할 수 있어요',
     visual: (
-      <div className="w-48 h-28 mx-auto mb-4 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
+      <div className="w-64 h-36 mx-auto mb-5 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
         <svg viewBox="0 0 200 100" className="w-full h-full">
           <path d="M10,55 Q50,25 90,45 T190,35" fill="none" stroke="#82ca9d" strokeWidth="2"/>
           <path d="M10,65 Q50,45 90,60 T190,50" fill="none" stroke="#fb7185" strokeWidth="2" strokeDasharray="4 2"/>
         </svg>
-        <div className="absolute top-2 right-3 flex items-center gap-2">
-          <span className="flex items-center gap-0.5 text-[7px] text-white/60"><span className="w-3 h-0.5 bg-emerald-400 rounded inline-block"/>나</span>
-          <span className="flex items-center gap-0.5 text-[7px] text-white/60"><span className="w-3 h-0.5 bg-rose-400 rounded inline-block"/>상대</span>
+        <div className="absolute top-3 right-4 flex items-center gap-3">
+          <span className="flex items-center gap-1 text-[9px] text-white/60"><span className="w-4 h-0.5 bg-emerald-400 rounded inline-block"/>나</span>
+          <span className="flex items-center gap-1 text-[9px] text-white/60"><span className="w-4 h-0.5 bg-rose-400 rounded inline-block"/>상대</span>
         </div>
       </div>
     ),
@@ -159,15 +159,15 @@ const LOADING_SLIDES = [
     title: '타고난 기운과 상세 해석을 봐요',
     desc: '사주원국, 관계, 신살 등 상세 분석이 있어요',
     visual: (
-      <div className="w-48 mx-auto mb-4 rounded-xl bg-white/10 border border-white/20 p-3">
-        <div className="flex gap-1 mb-2">
-          <div className="flex-1 py-1 text-center rounded bg-white/5 text-[9px] text-white/40">총운 차트</div>
-          <div className="flex-1 py-1 text-center rounded bg-purple-500/30 border border-purple-400/40 text-[9px] text-purple-200 font-medium">사주 정보</div>
+      <div className="w-64 mx-auto mb-5 rounded-xl bg-white/10 border border-white/20 p-4">
+        <div className="flex gap-1.5 mb-3">
+          <div className="flex-1 py-1.5 text-center rounded bg-white/5 text-xs text-white/40">총운 차트</div>
+          <div className="flex-1 py-1.5 text-center rounded bg-purple-500/30 border border-purple-400/40 text-xs text-purple-200 font-medium">사주 정보</div>
         </div>
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {['사주원국', '타고난 기운의 관계', '타고난 복과 걸림돌'].map((label, i) => (
-            <div key={i} className="flex items-center gap-1.5 bg-white/5 rounded px-2 py-1">
-              <span className="text-[10px] text-white/60">{label}</span>
+            <div key={i} className="flex items-center gap-2 bg-white/5 rounded px-3 py-1.5">
+              <span className="text-xs text-white/60">{label}</span>
             </div>
           ))}
         </div>
@@ -331,8 +331,8 @@ function InputPageInner() {
     const slide = LOADING_SLIDES[loadingStep % LOADING_SLIDES.length]
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-900 flex flex-col items-center justify-center px-6">
-        <div className="w-full max-w-xs">
-          <div className="relative mb-6">
+        <div className="w-full max-w-sm">
+          <div className="relative mb-4">
             <div className="absolute -top-10 left-1/2 -translate-x-1/2">
               <div className="w-16 h-16 rounded-full border-2 border-purple-400/30 border-t-purple-400 animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center">
@@ -341,25 +341,25 @@ function InputPageInner() {
             </div>
           </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-white/50 text-xs mb-6">알고 가면 더 재미있는 TIP</p>
+          <div className="mt-10 text-center">
+            <p className="text-white/50 text-sm mb-5">알고 가면 더 재미있는 TIP</p>
           </div>
 
           <div key={loadingStep} className="animate-fade-in text-center">
             {slide.visual}
-            <p className="text-white/90 text-base font-semibold mb-1">{slide.title}</p>
-            <p className="text-white/60 text-sm">{slide.desc}</p>
+            <p className="text-white/90 text-lg font-semibold mb-1.5">{slide.title}</p>
+            <p className="text-white/60 text-base">{slide.desc}</p>
           </div>
 
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-2.5 mt-8">
             {LOADING_SLIDES.map((_, i) => (
-              <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${
-                i === loadingStep % LOADING_SLIDES.length ? 'w-6 bg-purple-400' : 'w-1.5 bg-white/20'
+              <div key={i} className={`h-2 rounded-full transition-all duration-500 ${
+                i === loadingStep % LOADING_SLIDES.length ? 'w-7 bg-purple-400' : 'w-2 bg-white/20'
               }`} />
             ))}
           </div>
 
-          <p className="text-white/30 text-[11px] text-center mt-6">사주를 분석하고 있어요...</p>
+          <p className="text-white/30 text-xs text-center mt-6">사주를 분석하고 있어요...</p>
         </div>
       </div>
     )

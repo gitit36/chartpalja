@@ -55,6 +55,7 @@ export interface MonthlyDatum {
   gongmang_factors?: GongmangFactors
   haegong?: HaegongInfo
   shinsal_context_adj?: Record<string, number>
+  shinsal_tags?: string[]
   indicators: {
     용신력: number
     에너지장: EnergyField
@@ -183,6 +184,7 @@ export interface DaewoonBlock {
   gongmang_factors?: GongmangFactors
   haegong?: HaegongInfo
   shinsal_context_adj?: Record<string, number>
+  shinsal_tags?: string[]
   시즌태그: SeasonTag
   이벤트확률: EventProbabilities
 }
@@ -232,6 +234,7 @@ export interface YearlyDatum {
   gongmang_factors?: GongmangFactors
   haegong?: HaegongInfo
   shinsal_context_adj?: Record<string, number>
+  shinsal_tags?: string[]
   indicators: {
     용신력: number
     에너지장: EnergyField
