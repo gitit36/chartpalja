@@ -29,7 +29,7 @@ export default function TermsPage() {
       <Ol>
         <li>&lsquo;서비스&rsquo;란 회사가 운영하는 사주 분석 차트 및 운세 해설 서비스를 말합니다.</li>
         <li>&lsquo;회원&rsquo;이란 본 약관에 동의하고 서비스에 가입한 자를 말합니다.</li>
-        <li>&lsquo;이용권&rsquo;이란 유료 결제로 운세 해설 또는 기간 해설을 이용할 수 있는 회수권을 말합니다.</li>
+        <li>&lsquo;이용권&rsquo;이란 유료 결제로 운세 해설 또는 구간 해설을 이용할 수 있는 회수권을 말합니다.</li>
       </Ol>
 
       <H2>제3조 (약관의 효력 및 변경)</H2>

@@ -51,7 +51,7 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
               </p>
             </div>
             <div className="bg-indigo-50 rounded-lg px-3 py-2 text-center">
-              <p className="text-[10px] text-indigo-600 font-medium">기간 해설</p>
+              <p className="text-[10px] text-indigo-600 font-medium">구간 해설</p>
               <p className="text-lg font-bold text-indigo-700">
                 {balance ? balance.periodCredits : <span className="text-gray-300">-</span>}
                 <span className="text-xs ml-0.5">회</span>

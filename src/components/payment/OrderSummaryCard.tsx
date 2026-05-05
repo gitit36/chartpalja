@@ -22,7 +22,7 @@ export function OrderSummaryCard({ chartProduct, periodProduct, totalPrice }: Pr
             <div>
               <p className="text-sm font-semibold text-gray-900">{chartProduct.name}</p>
               {freePeriod > 0 && (
-                <p className="text-xs text-purple-600 mt-0.5">+ 기간 해설 {freePeriod}회 무료 포함</p>
+                <p className="text-xs text-purple-600 mt-0.5">+ 구간 해설 {freePeriod}회 무료 포함</p>
               )}
             </div>
             <p className="text-sm font-semibold text-gray-700">{formatPrice(chartProduct.price)}원</p>

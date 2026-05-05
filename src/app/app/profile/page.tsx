@@ -101,7 +101,7 @@ export default function ProfilePage() {
                   <p className="text-2xl font-bold text-purple-700">{balance?.chartCredits ?? 0}<span className="text-sm font-medium ml-0.5">회</span></p>
                 </div>
                 <div className="bg-indigo-50 rounded-xl p-4 text-center">
-                  <p className="text-xs text-indigo-600 font-medium mb-1">기간 해설</p>
+                  <p className="text-xs text-indigo-600 font-medium mb-1">구간 해설</p>
                   <p className="text-2xl font-bold text-indigo-700">{balance?.periodCredits ?? 0}<span className="text-sm font-medium ml-0.5">회</span></p>
                 </div>
               </div>

@@ -74,7 +74,7 @@ export function ProductSelector({ selectedChart, selectedPeriod, onSelectChart, 
         <div className="mt-3 ml-1 flex items-start gap-1.5">
           <span className="text-purple-500 text-xs mt-0.5">*</span>
           <p className="text-xs text-purple-600 leading-relaxed">
-            운세 해설 1회당 기간 해설 {FREE_PERIOD_PER_CHART}회 무료 제공
+            운세 해설 1회당 구간 해설 {FREE_PERIOD_PER_CHART}회 무료 제공
           </p>
         </div>
       </div>
@@ -82,9 +82,9 @@ export function ProductSelector({ selectedChart, selectedPeriod, onSelectChart, 
       <div>
         <div className="flex items-center gap-2 mb-1">
           <div className="w-1 h-4 bg-indigo-500 rounded-full" />
-          <h3 className="text-sm font-bold text-gray-800">기간 해설 추가</h3>
+          <h3 className="text-sm font-bold text-gray-800">구간 해설 추가</h3>
         </div>
-        <p className="text-xs text-gray-400 ml-3 mb-3">운세 해설 구매 시 기간 해설 무료 3회 포함</p>
+        <p className="text-xs text-gray-400 ml-3 mb-3">운세 해설 구매 시 구간 해설 무료 3회 포함</p>
         <div className="space-y-2">
           {PERIOD_PRODUCTS.map(p => (
             <ProductCard

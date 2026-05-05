@@ -138,7 +138,7 @@ export async function GET(
       if (user) {
         const balance = await getBalance(user.id)
         if (balance.periodCredits <= 0) {
-          return NextResponse.json({ error: '기간 해설 이용권이 부족합니다.' }, { status: 402 })
+          return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
         }
       }
 
@@ -206,7 +206,7 @@ export async function GET(
     if (user) {
       const balance = await getBalance(user.id)
       if (balance.periodCredits <= 0) {
-        return NextResponse.json({ error: '기간 해설 이용권이 부족합니다.' }, { status: 402 })
+        return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
       }
     }
 

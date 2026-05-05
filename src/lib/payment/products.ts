@@ -14,9 +14,9 @@ export const PRODUCTS: Record<string, Product> = {
   chart_3:   { code: 'chart_3',   type: 'chart',  name: '운세 해설 3회',  description: '운세 해설 3회를 이용할 수 있어요',  quantity: 3,  price: 2900 },
   chart_5:   { code: 'chart_5',   type: 'chart',  name: '운세 해설 5회',  description: '운세 해설 5회를 이용할 수 있어요',  quantity: 5,  price: 4700 },
   chart_10:  { code: 'chart_10',  type: 'chart',  name: '운세 해설 10회', description: '운세 해설 10회를 이용할 수 있어요', quantity: 10, price: 9200 },
-  period_1:  { code: 'period_1',  type: 'period', name: '기간 해설 1회',  description: '기간 해설 1회를 이용할 수 있어요',  quantity: 1,  price: 190 },
-  period_5:  { code: 'period_5',  type: 'period', name: '기간 해설 5회',  description: '기간 해설 5회를 이용할 수 있어요',  quantity: 5,  price: 900 },
-  period_15: { code: 'period_15', type: 'period', name: '기간 해설 15회', description: '기간 해설 15회를 이용할 수 있어요', quantity: 15, price: 2600 },
+  period_1:  { code: 'period_1',  type: 'period', name: '구간 해설 1회',  description: '구간 해설 1회를 이용할 수 있어요',  quantity: 1,  price: 190 },
+  period_5:  { code: 'period_5',  type: 'period', name: '구간 해설 5회',  description: '구간 해설 5회를 이용할 수 있어요',  quantity: 5,  price: 900 },
+  period_15: { code: 'period_15', type: 'period', name: '구간 해설 15회', description: '구간 해설 15회를 이용할 수 있어요', quantity: 15, price: 2600 },
 } as const
 
 export type ProductCode = keyof typeof PRODUCTS

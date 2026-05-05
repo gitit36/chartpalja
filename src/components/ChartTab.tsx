@@ -1110,10 +1110,10 @@ function FortuneQuoteLoader() {
 }
 
 function NoCreditModal({ type, onClose }: { type: 'chart' | 'period'; onClose: () => void }) {
-  const title = type === 'chart' ? '운세 해설 이용권이 부족해요' : '기간 해설 이용권이 부족해요'
+  const title = type === 'chart' ? '운세 해설 이용권이 부족해요' : '구간 해설 이용권이 부족해요'
   const desc = type === 'chart'
     ? '운세 해설을 보려면 이용권이 필요해요.'
-    : '연도/월별 해설을 보려면 기간 해설 이용권이 필요해요.'
+    : '연도/월별 해설을 보려면 구간 해설 이용권이 필요해요.'
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />

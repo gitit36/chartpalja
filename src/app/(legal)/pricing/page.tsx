@@ -22,7 +22,7 @@ export default function PricingPage() {
           <section className="mb-7">
             <h2 className="text-lg font-bold text-gray-900 mb-1.5">차트팔자 이용권</h2>
             <p className="text-sm text-gray-500 leading-relaxed">
-              사주 분석 차트는 무료로 생성되며, 종합 운세 해설과 기간 해설은 이용권으로 이용하실 수 있어요.
+              사주 분석 차트는 무료로 생성되며, 종합 운세 해설과 구간 해설은 이용권으로 이용하실 수 있어요.
             </p>
           </section>
 
@@ -53,14 +53,14 @@ export default function PricingPage() {
             <div className="mt-3 ml-1 flex items-start gap-1.5">
               <span className="text-purple-500 text-xs mt-0.5">*</span>
               <p className="text-xs text-purple-600 leading-relaxed">
-                운세 해설 1회당 기간 해설 {FREE_PERIOD_PER_CHART}회를 무료로 함께 드려요
+                운세 해설 1회당 구간 해설 {FREE_PERIOD_PER_CHART}회를 무료로 함께 드려요
               </p>
             </div>
           </section>
 
           <section className="mb-7">
             <div className="flex items-baseline justify-between mb-3">
-              <h3 className="text-base font-bold text-gray-900">기간 해설 이용권</h3>
+              <h3 className="text-base font-bold text-gray-900">구간 해설 이용권</h3>
               <span className="text-[11px] text-gray-400">VAT 포함</span>
             </div>
             <p className="text-xs text-gray-500 mb-4">
