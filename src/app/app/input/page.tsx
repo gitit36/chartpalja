@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { MobileContainer } from '@/components/MobileContainer'
+import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 
 interface FormData {
   name: string
@@ -109,12 +110,16 @@ const LOADING_SLIDES = [
     desc: '대운선, 시즌 배경, 보조지표를 켤 수 있어요',
     visual: (
       <div className="w-64 mx-auto mb-5 rounded-xl bg-white/10 border border-white/20 p-4 space-y-3">
-        {['대운 흐름선', '시즌 배경색', '보조지표'].map((label, i) => (
+        {[
+          { label: '대운 흐름선', on: true },
+          { label: '시즌 배경색', on: true },
+          { label: '📊 보조지표', on: false },
+        ].map((item, i) => (
           <div key={i} className="flex items-center gap-3">
-            <div className={`w-4.5 h-4.5 rounded border ${i < 2 ? 'bg-purple-400/80 border-purple-300' : 'border-white/30'}`}>
-              {i < 2 && <svg viewBox="0 0 14 14" className="w-full h-full"><path d="M3 7l3 3 5-5" fill="none" stroke="white" strokeWidth="2"/></svg>}
+            <div className={`w-5 h-5 rounded border flex items-center justify-center ${item.on ? 'bg-purple-400/80 border-purple-300' : 'border-white/30'}`}>
+              {item.on && <svg viewBox="0 0 14 14" className="w-3.5 h-3.5"><path d="M3 7l3 3 5-5" fill="none" stroke="white" strokeWidth="2"/></svg>}
             </div>
-            <span className="text-sm text-white/70">{label}</span>
+            <span className="text-sm text-white/70">{item.label}</span>
           </div>
         ))}
       </div>
@@ -123,17 +128,18 @@ const LOADING_SLIDES = [
   {
     icon: '🗓️',
     title: '궁금한 기간만 골라 해설을 봐요',
-    desc: 'AI가 선택한 기간의 운세를 해석해드려요',
+    desc: '사주엔진이 선택한 기간의 운세를 해석해드려요',
     visual: (
-      <div className="w-64 h-36 mx-auto mb-5 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
+      <div className="w-64 h-40 mx-auto mb-5 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
+        <div className="absolute top-2.5 right-3 bg-white/10 border border-white/20 rounded-full px-2.5 py-1 flex items-center gap-1">
+          <span className="text-[10px]">🗓️</span>
+          <span className="text-[9px] text-white/70 font-medium">구간</span>
+        </div>
         <svg viewBox="0 0 200 100" className="w-full h-full">
           <path d="M10,60 Q50,30 90,50 T190,40" fill="none" stroke="#82ca9d" strokeWidth="2" opacity="0.4"/>
-          <rect x="60" y="15" width="80" height="70" rx="4" fill="#a78bfa" fillOpacity="0.15" stroke="#a78bfa" strokeWidth="1" strokeOpacity="0.4"/>
-          <text x="100" y="92" textAnchor="middle" fontSize="8" fill="#d8b4fe">2030~2035년</text>
+          <rect x="60" y="15" width="80" height="60" rx="4" fill="#a78bfa" fillOpacity="0.15" stroke="#a78bfa" strokeWidth="1" strokeOpacity="0.4"/>
+          <text x="100" y="88" textAnchor="middle" fontSize="8" fill="#d8b4fe">2030~2035년</text>
         </svg>
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-purple-500/80 rounded-full px-3 py-1">
-          <span className="text-[9px] text-white font-medium">해설 보기</span>
-        </div>
       </div>
     ),
   },
@@ -142,12 +148,16 @@ const LOADING_SLIDES = [
     title: '다른 사람과 비교해보세요',
     desc: '궁합 흐름을 차트 위에서 비교할 수 있어요',
     visual: (
-      <div className="w-64 h-36 mx-auto mb-5 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
+      <div className="w-64 h-40 mx-auto mb-5 relative rounded-xl bg-white/10 border border-white/20 overflow-hidden">
+        <div className="absolute top-2.5 right-3 bg-white/10 border border-white/20 rounded-full px-2.5 py-1 flex items-center gap-1">
+          <span className="text-[10px]">👥</span>
+          <span className="text-[9px] text-white/70 font-medium">비교</span>
+        </div>
         <svg viewBox="0 0 200 100" className="w-full h-full">
           <path d="M10,55 Q50,25 90,45 T190,35" fill="none" stroke="#82ca9d" strokeWidth="2"/>
           <path d="M10,65 Q50,45 90,60 T190,50" fill="none" stroke="#fb7185" strokeWidth="2" strokeDasharray="4 2"/>
         </svg>
-        <div className="absolute top-3 right-4 flex items-center gap-3">
+        <div className="absolute top-3 left-4 flex items-center gap-3">
           <span className="flex items-center gap-1 text-[9px] text-white/60"><span className="w-4 h-0.5 bg-emerald-400 rounded inline-block"/>나</span>
           <span className="flex items-center gap-1 text-[9px] text-white/60"><span className="w-4 h-0.5 bg-rose-400 rounded inline-block"/>상대</span>
         </div>
@@ -189,6 +199,7 @@ function InputPageInner() {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
   const [prefilling, setPrefilling] = useState(!!editId)
+  const [showNoCreditModal, setShowNoCreditModal] = useState(false)
   const loadingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
@@ -262,6 +273,20 @@ function InputPageInner() {
 
   const handleSubmit = async () => {
     if (!canSubmit) return
+
+    if (!editId) {
+      try {
+        const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
+        if (balRes.ok) {
+          const bal = await balRes.json()
+          if ((bal.chartCredits ?? 0) <= 0) {
+            setShowNoCreditModal(true)
+            return
+          }
+        }
+      } catch { /* proceed on network error */ }
+    }
+
     setIsLoading(true)
     setLoadingStep(0)
     loadingInterval.current = setInterval(() => {
@@ -342,7 +367,7 @@ function InputPageInner() {
           </div>
 
           <div className="mt-10 text-center">
-            <p className="text-white/50 text-sm mb-5">알고 가면 더 재미있는 TIP</p>
+            <p className="text-white/50 text-sm mb-5">사주를 분석하는 동안 사용법을 확인해보세요</p>
           </div>
 
           <div key={loadingStep} className="animate-fade-in text-center">
@@ -359,7 +384,7 @@ function InputPageInner() {
             ))}
           </div>
 
-          <p className="text-white/30 text-xs text-center mt-6">사주를 분석하고 있어요...</p>
+          <div className="mt-6" />
         </div>
       </div>
     )
@@ -511,6 +536,28 @@ function InputPageInner() {
           {editId ? '수정 완료' : '내 운세 차트 보기'}
         </button>
       </div>
+
+      <MinimalLegalFooter />
+
+      {showNoCreditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setShowNoCreditModal(false)}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative bg-white rounded-2xl p-6 mx-6 max-w-sm w-full shadow-xl" onClick={e => e.stopPropagation()}>
+            <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">운세 해설 이용권이 부족해요</p>
+            <p className="text-sm text-gray-500 text-center mb-5">운세 해설을 보려면 이용권이 필요해요.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowNoCreditModal(false)}
+                className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+                나중에
+              </button>
+              <button onClick={() => { setShowNoCreditModal(false); window.location.href = `/app/checkout?returnUrl=${encodeURIComponent('/app/input')}` }}
+                className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
+                이용권 구매
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </MobileContainer>
   )
 }

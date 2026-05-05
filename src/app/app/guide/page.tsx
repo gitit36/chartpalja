@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
+import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 
 interface GuideItem { title: string; icon: string; body: React.ReactNode }
 
@@ -325,13 +326,15 @@ export default function GuidePage() {
         </div>
       </div>
 
-      <div className="px-4 py-4 space-y-6 pb-20">
+      <div className="px-4 py-4 space-y-6">
 
         <SectionGroup label="메인 차트 오버레이" items={CHART_ITEMS} />
         <SectionGroup label="보조 지표" items={AUX_ITEMS} />
         <SectionGroup label="기능" items={FEATURE_ITEMS} />
         <SectionGroup label="사주 개념" items={CONCEPT_ITEMS} />
       </div>
+
+      <MinimalLegalFooter className="mt-4" />
     </MobileContainer>
   )
 }

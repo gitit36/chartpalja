@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react'
 import Image from 'next/image'
+import { LegalFooter } from '@/components/LegalFooter'
 
 function AbstractCurve() {
   return (
@@ -28,37 +29,40 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col relative overflow-hidden">
       <AbstractCurve />
 
-      <div className="max-w-[400px] w-full text-center relative z-10">
-        <div className="mb-10">
-          <Image
-            src="/svc_logo_with_slogan_vertical.png"
-            alt="차트8자 — 사주팔자, 차트로 읽다."
-            width={180}
-            height={206}
-            className="mx-auto drop-shadow-lg"
-            priority
-          />
+      <div className="flex-1 flex flex-col items-center justify-center px-6">
+        <div className="max-w-[400px] w-full text-center relative z-10">
+          <div className="mb-10">
+            <Image
+              src="/svc_logo_with_slogan_vertical.png"
+              alt="차트8자 — 사주팔자, 차트로 읽다."
+              width={180}
+              height={206}
+              className="mx-auto drop-shadow-lg"
+              priority
+            />
+          </div>
+
+          <p className="text-white/50 text-xs mb-10 tracking-wide">
+            100년의 흐름을 하나의 차트로
+          </p>
+
+          <div className="space-y-3">
+            <button
+              onClick={handleKakaoLogin}
+              className="w-full py-4 rounded-2xl text-base font-bold bg-[#FEE500] text-[#3C1E1E] shadow-lg hover:brightness-95 active:scale-[0.98] transition-all"
+            >
+              카카오로 시작하기
+            </button>
+          </div>
+
         </div>
+      </div>
 
-        <p className="text-white/50 text-xs mb-10 tracking-wide">
-          100년의 흐름을 하나의 차트로
-        </p>
-
-        <div className="space-y-3">
-          <button
-            onClick={handleKakaoLogin}
-            className="w-full py-4 rounded-2xl text-base font-bold bg-[#FEE500] text-[#3C1E1E] shadow-lg hover:brightness-95 active:scale-[0.98] transition-all"
-          >
-            카카오로 시작하기
-          </button>
-        </div>
-
-        <p className="text-white/30 text-[11px] mt-10">
-          본 서비스는 참고용 분석 도구이며, 의료·법률·투자 자문이 아닙니다.
-        </p>
+      <div className="relative z-10 max-w-[446px] w-full mx-auto">
+        <LegalFooter variant="dark" />
       </div>
     </div>
   )

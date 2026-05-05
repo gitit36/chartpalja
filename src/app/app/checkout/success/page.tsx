@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
+import { LegalFooter } from '@/components/LegalFooter'
 
 interface OrderInfo {
   productName: string
@@ -30,7 +31,8 @@ function SuccessContent() {
 
   return (
     <MobileContainer>
-      <div className="px-4 pt-16 pb-8 min-h-screen flex flex-col items-center justify-center text-center">
+      <div className="min-h-screen flex flex-col">
+      <div className="flex-1 px-4 pt-16 pb-8 flex flex-col items-center justify-center text-center">
         <div className="text-5xl mb-6">🎉</div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">결제가 완료되었어요!</h1>
         <p className="text-gray-500 text-sm mb-8">이용권이 바로 지급되었어요.</p>
@@ -60,6 +62,8 @@ function SuccessContent() {
         >
           {returnUrl ? '돌아가기' : '서비스 이용하러 가기'}
         </button>
+      </div>
+        <LegalFooter />
       </div>
     </MobileContainer>
   )

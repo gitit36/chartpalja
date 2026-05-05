@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { MobileContainer } from '@/components/MobileContainer'
 import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
 import { HamburgerMenu } from '@/components/HamburgerMenu'
+import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 
 interface SajuCard {
   id: string
@@ -71,6 +72,7 @@ export default function SajuListPage() {
 
   return (
     <MobileContainer>
+      <div className="min-h-screen flex flex-col">
       {/* Sticky header */}
       <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
         <div className="flex items-center px-4 py-3">
@@ -83,7 +85,7 @@ export default function SajuListPage() {
         </div>
       </div>
 
-      <div className="px-4 pt-4 pb-24 min-h-screen">
+      <div className="flex-1 px-4 pt-4 pb-24">
         {loading ? (
           <div className="text-center text-gray-400 py-16">불러오는 중...</div>
         ) : entries.length === 0 ? (
@@ -153,6 +155,9 @@ export default function SajuListPage() {
             ))}
           </div>
         )}
+      </div>
+
+        <MinimalLegalFooter />
       </div>
 
       {/* Sticky bottom CTA */}

@@ -1,11 +1,13 @@
 'use client'
 
 import { Suspense, useState, useCallback, useMemo } from 'react'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
 import { ProductSelector } from '@/components/payment/ProductSelector'
 import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelector'
 import { OrderSummaryCard } from '@/components/payment/OrderSummaryCard'
+import { LegalFooter } from '@/components/LegalFooter'
 import { formatPrice, getProduct } from '@/lib/payment/products'
 import type { CreateOrderResponse, PaymentMethod } from '@/lib/payment/types'
 
@@ -233,12 +235,25 @@ function CheckoutContent() {
                 <span className="text-xs text-gray-400">디지털 콘텐츠 특성상 이용 시작 후 환불이 제한될 수 있습니다.</span>
               </span>
             </label>
+            <div className="mt-2.5 ml-8 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-gray-500">
+              <Link href="/terms" target="_blank" className="underline hover:text-gray-700">
+                이용약관
+              </Link>
+              <Link href="/privacy" target="_blank" className="underline hover:text-gray-700">
+                개인정보처리방침
+              </Link>
+              <Link href="/refund" target="_blank" className="underline hover:text-gray-700">
+                환불정책
+              </Link>
+            </div>
           </section>
         )}
 
         {error && (
           <div className="mb-4 p-3 bg-red-50 rounded-xl text-sm text-red-600">{error}</div>
         )}
+
+        <LegalFooter className="-mx-4 mt-8" />
       </div>
 
       {hasSelection && (

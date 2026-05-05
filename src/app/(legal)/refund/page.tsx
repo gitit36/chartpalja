@@ -1,0 +1,50 @@
+import type { Metadata } from 'next'
+import { LegalPageLayout } from '@/components/LegalPageLayout'
+import { BUSINESS_INFO as B } from '@/lib/legal/business-info'
+
+export const metadata: Metadata = {
+  title: '환불정책 | 차트팔자',
+  description: '차트팔자 이용권 환불정책',
+}
+
+function H2({ children }: { children: React.ReactNode }) {
+  return <h2 className="text-base font-bold text-gray-900 mt-7 mb-2">{children}</h2>
+}
+function P({ children }: { children: React.ReactNode }) {
+  return <p className="text-sm text-gray-700 leading-relaxed">{children}</p>
+}
+function Ul({ children }: { children: React.ReactNode }) {
+  return <ul className="list-disc pl-5 space-y-1.5 text-sm text-gray-700 leading-relaxed">{children}</ul>
+}
+
+export default function RefundPage() {
+  return (
+    <LegalPageLayout title="환불정책" effectiveDate={B.refundEffectiveDate}>
+      <H2>1. 환불 가능 조건</H2>
+      <Ul>
+        <li>1회도 사용하지 않은 이용권은 결제일로부터 7일 이내 100% 환불됩니다.</li>
+      </Ul>
+
+      <H2>2. 환불 불가 사유</H2>
+      <Ul>
+        <li>1회라도 사용한 이용권 (디지털 콘텐츠의 특성상 환불 불가)</li>
+        <li>유효기간({B.ticketValidityMonths}개월)이 경과하여 자동 소멸된 이용권</li>
+      </Ul>
+
+      <H2>3. 환불 신청 방법</H2>
+      <P>
+        고객센터({B.email} / {B.phone})로 결제일, 결제수단, 회원 정보(카카오 닉네임 또는 이메일)를 알려주시면 영업일 기준 3~5일 이내에 처리됩니다.
+      </P>
+
+      <H2>4. 회사 귀책 사유로 인한 환불</H2>
+      <P>
+        시스템 장애, 서비스 종료 등 회사의 귀책 사유로 이용권을 정상적으로 이용할 수 없는 경우, 사용 여부와 관계없이 잔여 이용권에 상응하는 금액을 환불합니다.
+      </P>
+
+      <H2>5. 분쟁 해결</H2>
+      <P>
+        환불 관련 분쟁은 한국소비자원의 분쟁조정 절차 및 「전자상거래 등에서의 소비자보호에 관한 법률」을 따릅니다.
+      </P>
+    </LegalPageLayout>
+  )
+}

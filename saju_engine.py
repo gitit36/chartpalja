@@ -451,47 +451,62 @@ SEASON_SUPPORT = {
 }
 
 def strength_score(day_stem: str, month_branch: str,stems: List[str], branches: List[str]) -> Tuple[float, str]:
-    """v3.3: 근묘화실 가중치 + 득령 세분화"""
+    """v6.5: 근묘화실 가중치 + 득령 + 관살/재성/식상 감산 + 충 감쇠"""
     de = STEM_ELEMENT[day_stem]
     inv_gen = {v: k for k, v in GEN_MAP.items()}
     insung_elem = inv_gen.get(de, "")
+    _KE_INV = {v: k for k, v in KE_MAP.items()}
+    gwansal_elem = _KE_INV.get(de, "")  # 나를 극하는 오행 = 관살
+    jaesung_elem = KE_MAP.get(de, "")  # 내가 극하는 오행 = 재성
+    siksang_elem = GEN_MAP.get(de, "")  # 내가 생하는 오행 = 식상
     sc = 0.0
 
     # ── 득령(월지 계절) — 왕상휴수사 5단계 ──
     se = SEASON_SUPPORT.get(month_branch, "")
-    jaesung_elem = KE_MAP.get(de, "")  # 내가 극하는 오행 = 재성
     if se == de:
         sc += 5.0   # 旺(왕): 월지 = 일간 오행
     elif se == insung_elem:
-        sc += 3.0   # 相(상): 월지 = 인성(나를 생하는 오행)
+        sc += 3.0   # 相(상): 월지 = 인성
     elif GEN_MAP.get(de) == se:
-        sc += 1.0   # 休(휴): 월지 = 식상(내가 생하는 오행)
+        sc += 1.0   # 休(휴): 월지 = 식상
     elif KE_MAP.get(se, "") == de:
-        sc -= 2.0   # 囚(수): 월지 = 관살(나를 극하는 오행)
+        sc -= 2.0   # 囚(수): 월지 = 관살
     elif se == jaesung_elem:
-        sc -= 1.0   # 사(死): 월지 = 재성(내가 극하는 오행)
+        sc -= 1.0   # 사(死): 월지 = 재성
 
-    # ── 천간 통기(투간) ──────────────────────
+    # ── 천간 통기(투간) — v6.5: 관살/재성 감산 추가 ──
     stem_labels = ["연간", "월간", "일간", "시간"]
     for i, s in enumerate(stems):
-        if i == 2: continue # 일간 자신 제외
+        if i == 2: continue
         w = _POSITION_WEIGHT_STEM.get(stem_labels[i], 1.0)
-        if STEM_ELEMENT[s] == de:
-            sc += 2.0 * w # 비겁 투간
-        elif STEM_ELEMENT[s] == insung_elem:
-            sc += 1.5 * w # 인성 투간
+        s_elem = STEM_ELEMENT[s]
+        if s_elem == de:
+            sc += 2.0 * w   # 비겁 투간
+        elif s_elem == insung_elem:
+            sc += 1.5 * w   # 인성 투간
+        elif s_elem == gwansal_elem:
+            sc -= 0.4 * w   # 관살 투간 (일간을 극)
+        elif s_elem == jaesung_elem:
+            sc -= 0.25 * w  # 재성 투간 (일간의 기운을 설기)
+        elif s_elem == siksang_elem:
+            sc -= 0.15 * w  # 식상 투간 (일간의 기운을 설기)
 
-    # ── 지지 통근(지장간) — [v5] get_jijanggan 기반 (순서 의존 제거) ──
+    # ── 지지 통근(지장간) — v6.5: 관살/재성 감산 추가 ──
     branch_labels = ["연지", "월지", "일지", "시지"]
     _JJ_DEPTH = {"본기": 1.0, "중기": 0.6, "여기": 0.3}
     for i, b in enumerate(branches):
         w = _POSITION_WEIGHT_BRANCH.get(branch_labels[i], 1.0)
         for h, role, _jw in get_jijanggan(b):
             depth_w = _JJ_DEPTH.get(role, 0.2)
-            if STEM_ELEMENT[h] == de:
-                sc += 2.0 * w * depth_w
-            elif STEM_ELEMENT[h] == insung_elem:
-                sc += 1.0 * w * depth_w
+            h_elem = STEM_ELEMENT[h]
+            if h_elem == de:
+                sc += 2.0 * w * depth_w    # 비겁 통근
+            elif h_elem == insung_elem:
+                sc += 1.0 * w * depth_w    # 인성 통근
+            elif h_elem == gwansal_elem:
+                sc -= 0.35 * w * depth_w   # 관살 통근
+            elif h_elem == jaesung_elem:
+                sc -= 0.15 * w * depth_w   # 재성 통근
 
     # ── 12운성 보정 ────────────────────────
     _UNSEONG_STRENGTH = {
@@ -504,7 +519,34 @@ def strength_score(day_stem: str, month_branch: str,stems: List[str], branches: 
         uns = twelve_unseong(day_stem, b)
         sc += _UNSEONG_STRENGTH.get(uns, 0.0) * w
 
-    # ── 판정 (8단계) ─────────────────────────
+    # ── 왕지충(子午·卯酉) 감쇠: 비겁/인성 통근 지지가 왕지충 당하면 기여 감소 ──
+    # 명리학 원칙: 왕지충은 가장 강한 충으로 통근을 크게 약화시킴.
+    # 단, 천간에 인성/비겁 생조가 충분하면(≥2) 감쇠가 완화됨.
+    _WANGJI_CLASH = {("子","午"),("午","子"),("卯","酉"),("酉","卯")}
+    _CLASH_DAMP_BASE = 0.5
+    stem_support_count = sum(
+        1 for idx, s in enumerate(stems)
+        if idx != 2 and STEM_ELEMENT[s] in (de, insung_elem)
+    )
+    clash_damp = _CLASH_DAMP_BASE * (0.5 if stem_support_count >= 2 else 1.0)
+    for i, bi in enumerate(branches):
+        bi_support = 0.0
+        for h, role, _jw in get_jijanggan(bi):
+            depth_w = _JJ_DEPTH.get(role, 0.2)
+            h_elem = STEM_ELEMENT[h]
+            if h_elem == de:
+                bi_support += 2.0 * _POSITION_WEIGHT_BRANCH.get(branch_labels[i], 1.0) * depth_w
+            elif h_elem == insung_elem:
+                bi_support += 1.0 * _POSITION_WEIGHT_BRANCH.get(branch_labels[i], 1.0) * depth_w
+        if bi_support <= 0:
+            continue
+        for j, bj in enumerate(branches):
+            if i != j and (bi, bj) in _WANGJI_CLASH:
+                sc -= bi_support * clash_damp
+                break
+
+    # ── 판정 (8단계) — 반올림 후 판정하여 표시값과 verdict 일치 보장 ──
+    sc = round(sc, 1)
     if sc >= 15.0:
         verdict = "극왕"
     elif sc >= 12.0:
@@ -522,7 +564,7 @@ def strength_score(day_stem: str, month_branch: str,stems: List[str], branches: 
     else:
         verdict = "극약"
 
-    return round(sc, 1), verdict
+    return sc, verdict
 
 # 8단계 판정 → 기존 로직 호환용 그룹핑 상수
 _STRONG_VERDICTS = frozenset({"극왕", "태강", "신강"})

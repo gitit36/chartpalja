@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
+import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { ChartTab } from '@/components/ChartTab'
 import { InfoTab } from '@/components/InfoTab'
 import type { SajuReportJson } from '@/types/saju-report'
@@ -429,7 +430,7 @@ export default function PersonalSajuPage() {
 
   return (
     <MobileContainer>
-      <div>
+      <div className="min-h-screen flex flex-col">
         {/* Sticky Header + Tabs */}
         <div className="sticky top-0 z-30 bg-white border-b border-gray-100">
           <div className="px-4 pt-3 pb-2 flex items-center">
@@ -478,7 +479,7 @@ export default function PersonalSajuPage() {
           <SummaryLine stockLine={stockLine} isUp={isUp} scrolled={false} />
         )}
 
-        <div className="pb-16">
+        <div className="flex-1 pb-16">
           <div className={tab === 'chart' ? '' : 'hidden'} ref={chartAreaRef}>
             <ChartTab report={report} birthYear={birthYear} fortuneJson={entry.fortuneJson} entryId={entry.id} currentName={entry.name} currentGender={entry.gender} overlayEntries={overlayEntries} />
           </div>
@@ -486,6 +487,8 @@ export default function PersonalSajuPage() {
             <InfoTab report={report} />
           </div>
         </div>
+
+        <MinimalLegalFooter />
 
         <div className={`fixed bottom-0 left-0 right-0 z-20 transition-transform duration-300 ${toolbarVisible ? 'translate-y-0' : 'translate-y-full'}`}>
           <div className="mx-auto max-w-[446px] flex gap-2 px-4 py-2 bg-white/95 backdrop-blur-sm border-t border-gray-100">

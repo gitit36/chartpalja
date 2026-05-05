@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
+import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { formatPrice } from '@/lib/payment/products'
 import { PRODUCTS } from '@/lib/payment/products'
 
@@ -158,6 +159,8 @@ export default function ProfilePage() {
             </section>
           </div>
         )}
+
+        <MinimalLegalFooter className="mt-8" />
       </div>
     </MobileContainer>
   )

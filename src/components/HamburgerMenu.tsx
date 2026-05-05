@@ -1,13 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
-
-interface Balance {
-  chartCredits: number
-  periodCredits: number
-}
+import Link from 'next/link'
+import { useBalance, prefetchBalance } from '@/lib/hooks/useBalance'
 
 function getHeaders(): Record<string, string> {
   const h: Record<string, string> = {}
@@ -19,14 +16,7 @@ function getHeaders(): Record<string, string> {
 }
 
 function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnType<typeof useRouter> }) {
-  const [balance, setBalance] = useState<Balance | null>(null)
-
-  useEffect(() => {
-    fetch('/api/user/balance', { headers: getHeaders() })
-      .then(r => r.ok ? r.json() : null)
-      .then(b => { if (b) setBalance(b) })
-      .catch(() => {})
-  }, [])
+  const balance = useBalance()
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -52,21 +42,25 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
           </div>
 
-          {balance && (
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-purple-50 rounded-lg px-3 py-2 text-center">
-                <p className="text-[10px] text-purple-600 font-medium">운세 해설</p>
-                <p className="text-lg font-bold text-purple-700">{balance.chartCredits}<span className="text-xs ml-0.5">회</span></p>
-              </div>
-              <div className="bg-indigo-50 rounded-lg px-3 py-2 text-center">
-                <p className="text-[10px] text-indigo-600 font-medium">기간 해설</p>
-                <p className="text-lg font-bold text-indigo-700">{balance.periodCredits}<span className="text-xs ml-0.5">회</span></p>
-              </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-purple-50 rounded-lg px-3 py-2 text-center">
+              <p className="text-[10px] text-purple-600 font-medium">운세 해설</p>
+              <p className="text-lg font-bold text-purple-700">
+                {balance ? balance.chartCredits : <span className="text-gray-300">-</span>}
+                <span className="text-xs ml-0.5">회</span>
+              </p>
             </div>
-          )}
+            <div className="bg-indigo-50 rounded-lg px-3 py-2 text-center">
+              <p className="text-[10px] text-indigo-600 font-medium">기간 해설</p>
+              <p className="text-lg font-bold text-indigo-700">
+                {balance ? balance.periodCredits : <span className="text-gray-300">-</span>}
+                <span className="text-xs ml-0.5">회</span>
+              </p>
+            </div>
+          </div>
         </div>
 
-        <nav className="flex-1 py-3">
+        <nav className="flex-1 py-3 overflow-y-auto">
           <button
             onClick={() => { onClose(); router.push('/app/profile') }}
             className="w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
@@ -82,13 +76,6 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
             이용권 구매
           </button>
           <button
-            onClick={() => { onClose(); router.push('/app/profile') }}
-            className="w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
-          >
-            <span className="text-base">📋</span>
-            이용 내역
-          </button>
-          <button
             onClick={() => { onClose(); router.push('/app/guide') }}
             className="w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
           >
@@ -97,7 +84,17 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
           </button>
         </nav>
 
-        <div className="px-5 py-4 border-t border-gray-100">
+        <div className="px-5 py-4 border-t border-gray-100 space-y-3">
+          <div className="flex items-center justify-center gap-x-1 text-[10px] text-gray-300 whitespace-nowrap tracking-tight">
+            <Link href="/terms" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">이용약관</Link>
+            <span className="text-gray-200">·</span>
+            <Link href="/privacy" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">개인정보처리방침</Link>
+            <span className="text-gray-200">·</span>
+            <Link href="/refund" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">환불정책</Link>
+            <span className="text-gray-200">·</span>
+            <Link href="/business" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">사업자정보</Link>
+          </div>
+
           <button
             onClick={handleLogout}
             className="w-full py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
@@ -115,14 +112,23 @@ export function HamburgerMenu() {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => {
+    setMounted(true)
+    prefetchBalance()
+  }, [])
 
   const close = useCallback(() => setOpen(false), [])
+
+  const handleOpen = useCallback(() => {
+    prefetchBalance()
+    setOpen(true)
+  }, [])
 
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
+        onMouseEnter={prefetchBalance}
         className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors"
         aria-label="메뉴"
       >
