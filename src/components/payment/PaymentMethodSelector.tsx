@@ -11,6 +11,7 @@ const METHODS: { key: PaymentMethod; label: string; icon: string; desc: string }
   { key: 'kakaopay', label: '카카오페이', icon: '💛', desc: '카카오페이로 간편결제' },
   { key: 'tosspay',  label: '토스페이',   icon: '💙', desc: '토스페이로 간편결제' },
   { key: 'card',     label: '국내카드',   icon: '💳', desc: '신용/체크카드 결제' },
+  { key: 'transfer', label: '계좌이체',   icon: '🏦', desc: '실시간 계좌이체' },
   { key: 'paddle',   label: '해외카드',   icon: '🌍', desc: 'Visa/Master 해외카드' },
 ]
 

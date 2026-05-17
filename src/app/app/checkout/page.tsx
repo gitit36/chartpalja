@@ -82,8 +82,16 @@ async function createAndPay(
   if (!storeId || !channelKey) {
     return { success: false, orderId, error: '결제 설정이 완료되지 않았습니다. 잠시 후 다시 시도해 주세요.' }
   }
-  const payMethodMap: Record<string, string> = { kakaopay: 'EASY_PAY', tosspay: 'EASY_PAY', card: 'CARD' }
-  const easyPayMap: Record<string, Record<string, string>> = { kakaopay: { provider: 'KAKAOPAY' }, tosspay: { provider: 'TOSSPAY' } }
+  const payMethodMap: Record<string, string> = {
+    kakaopay: 'EASY_PAY',
+    tosspay: 'EASY_PAY',
+    card: 'CARD',
+    transfer: 'TRANSFER',
+  }
+  const easyPayMap: Record<string, Record<string, string>> = {
+    kakaopay: { easyPayProvider: 'EASY_PAY_PROVIDER_KAKAOPAY' },
+    tosspay:  { easyPayProvider: 'EASY_PAY_PROVIDER_TOSSPAY'  },
+  }
 
   const params: Record<string, unknown> = {
     storeId,
@@ -91,7 +99,7 @@ async function createAndPay(
     paymentId: `payment_${orderId}_${Date.now()}`,
     orderName: product.name,
     totalAmount: amount,
-    currency: 'CURRENCY_KRW',
+    currency: 'KRW',
     payMethod: payMethodMap[paymentMethod] ?? 'CARD',
     customData: JSON.stringify({ orderId }),
   }
