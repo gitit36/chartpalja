@@ -40,11 +40,22 @@ export async function getPayment(paymentId: string) {
     return await client.payment.getPayment({ paymentId })
   } catch (e) {
     if (e instanceof PortOne.PortOneError) {
+      // GetPaymentError 등은 e.data.{type,message} 에 진짜 원인이 있다.
+      // (ForbiddenError | InvalidRequestError | PaymentNotFoundError | UnauthorizedError | Unrecognized)
+      const data = (e as unknown as { data?: { type?: string; message?: string } }).data
       console.error('[portone.getPayment] PortOneError:', {
         paymentId,
         mode: getPaymentMode(),
+        storeIdEnv: process.env.PORTONE_STORE_ID ? `${process.env.PORTONE_STORE_ID.slice(0, 12)}…` : '(unset)',
+        secretSet: Boolean(
+          getPaymentMode() === 'live'
+            ? process.env.PORTONE_V2_API_SECRET_LIVE
+            : process.env.PORTONE_V2_API_SECRET_TEST,
+        ),
         name: e.name,
         message: e.message,
+        dataType: data?.type,
+        dataMessage: data?.message,
       })
       return null
     }
