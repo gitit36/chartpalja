@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState, useCallback, useMemo } from 'react'
+import { Suspense, useState, useCallback, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
@@ -8,7 +8,7 @@ import { ProductSelector } from '@/components/payment/ProductSelector'
 import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelector'
 import { OrderSummaryCard } from '@/components/payment/OrderSummaryCard'
 import { LegalFooter } from '@/components/LegalFooter'
-import { formatPrice, getProduct } from '@/lib/payment/products'
+import { canPayOverseas, formatPrice, getProduct } from '@/lib/payment/products'
 import type { CreateOrderResponse, PaymentMethod } from '@/lib/payment/types'
 
 declare global {
@@ -33,10 +33,17 @@ function getHeaders(): Record<string, string> {
   return h
 }
 
+interface SessionUserInfo {
+  id: string
+  email: string | null
+  nickname: string | null
+}
+
 async function createAndPay(
   productCode: string,
   paymentMethod: PaymentMethod,
   router: ReturnType<typeof useRouter>,
+  user: SessionUserInfo | null,
 ): Promise<{ success: boolean; orderId?: string; error?: string }> {
   const product = getProduct(productCode)
   if (!product) return { success: false, error: '상품 정보 오류' }
@@ -51,7 +58,7 @@ async function createAndPay(
     return { success: false, error: err.error || '주문 생성 실패' }
   }
   const orderData = await orderRes.json() as CreateOrderResponse
-  const { orderId, amount, paymentConfig } = orderData
+  const { orderId, amount, currency, paymentConfig } = orderData
 
   const isMock = process.env.NEXT_PUBLIC_PAYMENT_MOCK === 'true'
   if (isMock) {
@@ -87,6 +94,7 @@ async function createAndPay(
     tosspay: 'EASY_PAY',
     card: 'CARD',
     transfer: 'TRANSFER',
+    overseas: 'CARD',
   }
   const easyPayMap: Record<string, Record<string, string>> = {
     kakaopay: { easyPayProvider: 'EASY_PAY_PROVIDER_KAKAOPAY' },
@@ -99,13 +107,30 @@ async function createAndPay(
     paymentId: `payment_${orderId}_${Date.now()}`,
     orderName: product.name,
     totalAmount: amount,
-    currency: 'KRW',
+    currency: currency || 'KRW',
     payMethod: payMethodMap[paymentMethod] ?? 'CARD',
     customData: JSON.stringify({ orderId }),
   }
   if (easyPayMap[paymentMethod]) params.easyPay = easyPayMap[paymentMethod]
 
-  const response = await window.PortOne.requestPayment(params)
+  // 해외카드(Eximbay)는 고객 이름/이메일이 필수
+  if (paymentMethod === 'overseas') {
+    const fullName = user?.nickname?.trim() || '고객'
+    const email = user?.email?.trim() || `kakao_${user?.id ?? 'guest'}@chartpalja.com`
+    params.customer = { fullName, email }
+  }
+
+  console.log('[checkout] PortOne.requestPayment params:', params)
+
+  let response: { code?: string; paymentId?: string; message?: string }
+  try {
+    response = await window.PortOne.requestPayment(params)
+  } catch (err) {
+    console.error('[checkout] PortOne.requestPayment threw:', err)
+    return { success: false, orderId, error: err instanceof Error ? err.message : '결제 모듈 호출 실패' }
+  }
+
+  console.log('[checkout] PortOne.requestPayment response:', response)
 
   if (response.code) {
     if (response.code === 'FAILURE_TYPE_PG' || response.message?.includes('cancel')) {
@@ -145,6 +170,7 @@ function CheckoutContent() {
   const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [sessionUser, setSessionUser] = useState<SessionUserInfo | null>(null)
 
   const chartProduct = chartCode ? getProduct(chartCode) : null
   const periodProduct = periodCode ? getProduct(periodCode) : null
@@ -159,6 +185,48 @@ function CheckoutContent() {
     return parts.join(' + ')
   }, [chartProduct, periodProduct])
 
+  // 선택된 상품 중 하나라도 해외카드(USD) 결제 불가면 'overseas' 비활성화
+  const overseasDisabledReason = useMemo<string | null>(() => {
+    const selectedProducts = [chartProduct, periodProduct].filter((p): p is NonNullable<typeof p> => p !== null)
+    if (selectedProducts.length === 0) return null
+    const unsupported = selectedProducts.filter((p) => !canPayOverseas(p))
+    if (unsupported.length === 0) return null
+    return `${unsupported.map((p) => p.name).join(', ')} 상품은 해외카드 결제 미지원 ($1 미만)`
+  }, [chartProduct, periodProduct])
+
+  const disabledMethods = useMemo(() => {
+    return overseasDisabledReason
+      ? { overseas: overseasDisabledReason } as Record<PaymentMethod, string>
+      : ({} as Record<PaymentMethod, string>)
+  }, [overseasDisabledReason])
+
+  // 선택된 결제수단이 비활성화되면 자동 해제
+  useEffect(() => {
+    if (paymentMethod && disabledMethods[paymentMethod]) {
+      setPaymentMethod(null)
+    }
+  }, [paymentMethod, disabledMethods])
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return
+        if (data?.user) {
+          setSessionUser({
+            id: data.user.id,
+            email: data.user.email ?? null,
+            nickname: data.user.nickname ?? null,
+          })
+        }
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const handlePay = useCallback(async () => {
     if (!hasSelection || !paymentMethod) return
     setLoading(true)
@@ -172,7 +240,7 @@ function CheckoutContent() {
       let lastOrderId: string | undefined
 
       for (const code of codes) {
-        const result = await createAndPay(code, paymentMethod, router)
+        const result = await createAndPay(code, paymentMethod, router, sessionUser)
         lastOrderId = result.orderId
 
         if (!result.success) {
@@ -192,7 +260,7 @@ function CheckoutContent() {
     } finally {
       setLoading(false)
     }
-  }, [hasSelection, paymentMethod, chartCode, periodCode, router])
+  }, [hasSelection, paymentMethod, chartCode, periodCode, router, sessionUser, returnUrl])
 
   return (
     <MobileContainer>
@@ -224,7 +292,11 @@ function CheckoutContent() {
         {hasSelection && (
           <section className="mb-6">
             <h2 className="text-sm font-semibold text-gray-700 mb-3">결제수단 선택</h2>
-            <PaymentMethodSelector selected={paymentMethod} onSelect={setPaymentMethod} />
+            <PaymentMethodSelector
+              selected={paymentMethod}
+              onSelect={setPaymentMethod}
+              disabledMethods={disabledMethods}
+            />
           </section>
         )}
 

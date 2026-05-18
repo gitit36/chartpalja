@@ -1,4 +1,4 @@
-export type PaymentMethod = 'kakaopay' | 'tosspay' | 'card' | 'transfer' | 'paddle'
+export type PaymentMethod = 'kakaopay' | 'tosspay' | 'card' | 'transfer' | 'overseas' | 'paddle'
 export type PaymentProvider = 'portone' | 'paddle' | 'mock'
 export type OrderStatus = 'pending' | 'paid' | 'failed' | 'canceled' | 'refunded'
 
@@ -10,6 +10,8 @@ export interface CreateOrderRequest {
 export interface CreateOrderResponse {
   orderId: string
   amount: number
+  /** 결제 통화 (KRW 또는 USD). 해외카드는 USD, 그 외는 KRW */
+  currency: string
   productCode: string
   productName: string
   paymentConfig?: {
@@ -62,6 +64,10 @@ export function getPortOneChannelKey(method: PaymentMethod): string {
 
   switch (method) {
     case 'kakaopay':
+      return pick(
+        process.env[`PORTONE_CHANNEL_KEY_KAKAOPAY_${upper}`],
+        process.env[`NEXT_PUBLIC_PORTONE_CHANNEL_KEY_KAKAOPAY_${upper}`],
+      )
     case 'tosspay':
       return pick(
         process.env[`PORTONE_CHANNEL_KEY_TOSSPAY_${upper}`],
@@ -76,6 +82,11 @@ export function getPortOneChannelKey(method: PaymentMethod): string {
       return pick(
         process.env[`PORTONE_CHANNEL_KEY_TRANSFER_${upper}`],
         process.env[`NEXT_PUBLIC_PORTONE_CHANNEL_KEY_TRANSFER_${upper}`],
+      )
+    case 'overseas':
+      return pick(
+        process.env[`PORTONE_CHANNEL_KEY_OVERSEAS_${upper}`],
+        process.env[`NEXT_PUBLIC_PORTONE_CHANNEL_KEY_OVERSEAS_${upper}`],
       )
     default:
       return ''

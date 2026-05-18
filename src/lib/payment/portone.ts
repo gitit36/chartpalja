@@ -39,7 +39,16 @@ export async function getPayment(paymentId: string) {
   try {
     return await client.payment.getPayment({ paymentId })
   } catch (e) {
-    if (e instanceof PortOne.PortOneError) return null
+    if (e instanceof PortOne.PortOneError) {
+      console.error('[portone.getPayment] PortOneError:', {
+        paymentId,
+        mode: getPaymentMode(),
+        name: e.name,
+        message: e.message,
+      })
+      return null
+    }
+    console.error('[portone.getPayment] unknown error:', { paymentId, error: e })
     throw e
   }
 }

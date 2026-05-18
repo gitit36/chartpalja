@@ -42,7 +42,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, orderId })
     }
 
+    console.log('[confirm] sync 시작:', { orderId, paymentId })
     const result = await syncPaymentByPaymentId(paymentId)
+    console.log('[confirm] sync 결과:', result)
 
     if (!result.ok) {
       const msgMap: Record<string, string> = {
