@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db/prisma'
 import { requireUser } from '@/lib/auth/session'
 import {
@@ -94,7 +95,9 @@ export async function POST(request: NextRequest) {
         productCode: primary.code,
         productType: primary.type,
         quantity: primary.quantity,
-        extraItems: extraItems.length > 0 ? extraItems : undefined,
+        extraItems: extraItems.length > 0
+          ? (extraItems as unknown as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
         amount: orderAmount,
         currency: orderCurrency,
         status: 'pending',

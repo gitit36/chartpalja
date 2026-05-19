@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import type SMTPTransport from 'nodemailer/lib/smtp-transport'
 
 interface EmailField {
   label: string
@@ -28,7 +29,9 @@ function getTransporter(): nodemailer.Transporter | null {
   const secure = (process.env.SMTP_SECURE ?? 'true') === 'true'
   const debug = process.env.SMTP_DEBUG === 'true'
 
-  _transporter = nodemailer.createTransport({
+  // `family` 는 SMTPTransport.Options 타입에 명시되어 있지 않지만 nodemailer 내부의
+  // net.connect 로 그대로 전달되어 동작한다. (Railway 등 IPv6 outbound 차단 환경 회피용)
+  const options = {
     host,
     port: Number(port),
     secure,
@@ -38,11 +41,11 @@ function getTransporter(): nodemailer.Transporter | null {
     greetingTimeout: 10_000,
     socketTimeout: 10_000,
     tls: { servername: host, rejectUnauthorized: true },
-    // Railway 등 일부 클라우드는 IPv6 outbound 가 막혀 ETIMEDOUT 발생 → IPv4 강제
     family: 4,
     logger: debug,
     debug,
-  })
+  } as SMTPTransport.Options & { family?: number }
+  _transporter = nodemailer.createTransport(options)
   return _transporter
 }
 
