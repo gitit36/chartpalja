@@ -158,17 +158,44 @@ export default function CheckoutPage() {
   )
 }
 
+const VALID_PAYMENT_METHODS: PaymentMethod[] = ['kakaopay', 'tosspay', 'card', 'transfer', 'overseas', 'paddle']
+
 function CheckoutContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const returnUrl = searchParams.get('returnUrl')
-  const [chartCode, setChartCode] = useState<string | null>(null)
-  const [periodCode, setPeriodCode] = useState<string | null>(null)
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null)
+
+  // URL 쿼리에서 초기값 복원 (약관 페이지에서 뒤로 돌아왔을 때 선택 상태 유지)
+  const initialChart = searchParams.get('chart')
+  const initialPeriod = searchParams.get('period')
+  const initialMethodParam = searchParams.get('method')
+  const initialMethod: PaymentMethod | null =
+    initialMethodParam && (VALID_PAYMENT_METHODS as string[]).includes(initialMethodParam)
+      ? (initialMethodParam as PaymentMethod)
+      : null
+
+  const [chartCode, setChartCode] = useState<string | null>(initialChart && getProduct(initialChart) ? initialChart : null)
+  const [periodCode, setPeriodCode] = useState<string | null>(initialPeriod && getProduct(initialPeriod) ? initialPeriod : null)
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(initialMethod)
   const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sessionUser, setSessionUser] = useState<SessionUserInfo | null>(null)
+
+  // 선택 상태가 바뀌면 URL 쿼리에 반영 (replace로 히스토리는 늘리지 않음)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    if (chartCode) params.set('chart', chartCode); else params.delete('chart')
+    if (periodCode) params.set('period', periodCode); else params.delete('period')
+    if (paymentMethod) params.set('method', paymentMethod); else params.delete('method')
+    const qs = params.toString()
+    const next = qs ? `/app/checkout?${qs}` : '/app/checkout'
+    const current = window.location.pathname + window.location.search
+    if (current !== next) {
+      router.replace(next, { scroll: false })
+    }
+  }, [chartCode, periodCode, paymentMethod, router])
 
   const chartProduct = chartCode ? getProduct(chartCode) : null
   const periodProduct = periodCode ? getProduct(periodCode) : null
@@ -260,7 +287,11 @@ function CheckoutContent() {
 
       <div className="px-4 pt-4 pb-32 min-h-screen">
         <div className="flex items-center gap-3 mb-5">
-          <button onClick={() => router.back()} className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg">
+          <button
+            onClick={() => router.push(returnUrl || '/app/list')}
+            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg"
+            aria-label="뒤로가기"
+          >
             &larr;
           </button>
           <h1 className="text-lg font-bold text-gray-900">이용권 구매</h1>
@@ -302,11 +333,11 @@ function CheckoutContent() {
                 className="w-4 h-4 rounded border-gray-300 text-gray-700 focus:ring-gray-300"
               />
               <span className="text-[13px] text-gray-700">
-                <Link href="/terms" target="_blank" className="underline decoration-gray-300 hover:text-gray-900">이용약관</Link>
+                <Link href="/terms" className="underline decoration-gray-300 hover:text-gray-900">이용약관</Link>
                 {' · '}
-                <Link href="/privacy" target="_blank" className="underline decoration-gray-300 hover:text-gray-900">개인정보처리방침</Link>
+                <Link href="/privacy" className="underline decoration-gray-300 hover:text-gray-900">개인정보처리방침</Link>
                 {' · '}
-                <Link href="/refund" target="_blank" className="underline decoration-gray-300 hover:text-gray-900">환불정책</Link>
+                <Link href="/refund" className="underline decoration-gray-300 hover:text-gray-900">환불정책</Link>
                 <span className="text-gray-500">에 동의합니다.</span>
               </span>
             </label>

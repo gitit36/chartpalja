@@ -19,7 +19,8 @@ export function BackButton({ fallback = '/', className = '' }: Props) {
       try {
         target = sessionStorage.getItem('lastNonLegalPath')
       } catch {}
-      if (target && !isLegalPath(target)) {
+      const targetPath = target ? target.split('?')[0] : ''
+      if (target && targetPath && !isLegalPath(targetPath)) {
         router.push(target)
         return
       }
