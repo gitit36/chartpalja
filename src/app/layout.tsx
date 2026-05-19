@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { Suspense } from 'react'
 import { PathTracker } from '@/components/PathTracker'
 import './globals.css'
 
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <PathTracker />
+        <Suspense fallback={null}>
+          <PathTracker />
+        </Suspense>
         {children}
         <Script
           src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
