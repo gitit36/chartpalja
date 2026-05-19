@@ -3,8 +3,19 @@ export type PaymentProvider = 'portone' | 'paddle' | 'mock'
 export type OrderStatus = 'pending' | 'paid' | 'failed' | 'canceled' | 'refunded'
 
 export interface CreateOrderRequest {
-  productCode: string
+  /** 단일 상품 결제 — 하위 호환용. productCodes 가 있으면 무시된다. */
+  productCode?: string
+  /** 묶음 결제용 상품 코드 배열. 1개 이상이어야 함. */
+  productCodes?: string[]
   paymentMethod: PaymentMethod
+}
+
+export interface OrderItemInfo {
+  code: string
+  type: 'chart' | 'period'
+  quantity: number
+  amount: number
+  currency: string
 }
 
 export interface CreateOrderResponse {

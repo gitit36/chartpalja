@@ -1,39 +1,83 @@
 import { prisma } from '@/lib/db/prisma'
-import { getProduct } from './products'
+import { FREE_PERIOD_PER_CHART, getProduct } from './products'
 
-export async function grantCredits(userId: string, orderId: string, productCode: string) {
-  const product = getProduct(productCode)
-  if (!product) throw new Error(`Unknown product: ${productCode}`)
+interface OrderItemLike {
+  code: string
+  type?: string
+  quantity?: number
+}
 
-  const creditType = product.type
-  const delta = product.quantity
+/** PaymentOrder.extraItems(JSON)를 안전하게 OrderItemLike[] 로 파싱 */
+function parseExtraItems(raw: unknown): OrderItemLike[] {
+  if (!Array.isArray(raw)) return []
+  const out: OrderItemLike[] = []
+  for (const it of raw) {
+    if (it && typeof it === 'object' && 'code' in it && typeof (it as { code: unknown }).code === 'string') {
+      out.push(it as OrderItemLike)
+    }
+  }
+  return out
+}
+
+/** 주문의 모든 상품 코드(primary + extra) 목록 */
+function collectOrderItemCodes(orderProductCode: string, extraItemsRaw: unknown): string[] {
+  return [orderProductCode, ...parseExtraItems(extraItemsRaw).map((it) => it.code)]
+}
+
+/**
+ * 묶음 결제(주문 1건에 chart + period 등 여러 상품 포함) 대응 크레딧 지급.
+ * - 주문의 primary productCode + extraItems 모두를 합산하여 chart/period 크레딧을 한 번에 증가.
+ * - chart 구매분은 FREE_PERIOD_PER_CHART × quantity 만큼 period 보너스를 함께 부여.
+ */
+export async function grantCredits(userId: string, orderId: string, _primaryProductCode: string) {
+  const order = await prisma.paymentOrder.findUnique({ where: { id: orderId } })
+  if (!order) throw new Error(`Order not found: ${orderId}`)
+
+  const codes = collectOrderItemCodes(order.productCode, order.extraItems)
+  let chartQty = 0
+  let periodQty = 0
+  for (const code of codes) {
+    const p = getProduct(code)
+    if (!p) continue
+    if (p.type === 'chart') chartQty += p.quantity
+    else periodQty += p.quantity
+  }
+  const bonusPeriod = chartQty * FREE_PERIOD_PER_CHART
+  const totalPeriod = periodQty + bonusPeriod
 
   await prisma.$transaction(async (tx) => {
-    await tx.entitlementLedger.create({
-      data: {
-        userId,
-        orderId,
-        creditType,
-        delta,
-        reason: 'purchase',
-      },
-    })
+    if (chartQty > 0) {
+      await tx.entitlementLedger.create({
+        data: { userId, orderId, creditType: 'chart', delta: chartQty, reason: 'purchase' },
+      })
+    }
+    if (periodQty > 0) {
+      await tx.entitlementLedger.create({
+        data: { userId, orderId, creditType: 'period', delta: periodQty, reason: 'purchase' },
+      })
+    }
+    if (bonusPeriod > 0) {
+      await tx.entitlementLedger.create({
+        data: { userId, orderId, creditType: 'period', delta: bonusPeriod, reason: 'purchase_bonus' },
+      })
+    }
 
     const existing = await tx.userBalance.findUnique({ where: { userId } })
-
     if (existing) {
       await tx.userBalance.update({
         where: { userId },
-        data: creditType === 'chart'
-          ? { chartCredits: { increment: delta } }
-          : { periodCredits: { increment: delta } },
+        data: {
+          chartCredits: { increment: chartQty },
+          periodCredits: { increment: totalPeriod },
+        },
       })
     } else {
+      // 첫 결제. 신규가입자 체험용 기본 periodCredits=3 + 구매분.
       await tx.userBalance.create({
         data: {
           userId,
-          chartCredits: creditType === 'chart' ? delta : 0,
-          periodCredits: creditType === 'period' ? 3 + delta : 3,
+          chartCredits: chartQty,
+          periodCredits: 3 + totalPeriod,
         },
       })
     }
@@ -50,12 +94,25 @@ export async function getBalance(userId: string) {
   return balance
 }
 
-export async function revokeCredits(userId: string, orderId: string, productCode: string) {
-  const product = getProduct(productCode)
-  if (!product) throw new Error(`Unknown product: ${productCode}`)
+/**
+ * 환불 시 크레딧 차감. 묶음 결제(extraItems)도 함께 회수.
+ * - 주문에 포함된 모든 chart/period 구매분 차감 + chart 보너스 period 도 함께 회수.
+ */
+export async function revokeCredits(userId: string, orderId: string, _primaryProductCode: string) {
+  const order = await prisma.paymentOrder.findUnique({ where: { id: orderId } })
+  if (!order) throw new Error(`Order not found: ${orderId}`)
 
-  const creditType = product.type
-  const delta = product.quantity
+  const codes = collectOrderItemCodes(order.productCode, order.extraItems)
+  let chartQty = 0
+  let periodQty = 0
+  for (const code of codes) {
+    const p = getProduct(code)
+    if (!p) continue
+    if (p.type === 'chart') chartQty += p.quantity
+    else periodQty += p.quantity
+  }
+  const bonusPeriod = chartQty * FREE_PERIOD_PER_CHART
+  const totalPeriod = periodQty + bonusPeriod
 
   await prisma.$transaction(async (tx) => {
     const already = await tx.entitlementLedger.findFirst({
@@ -63,24 +120,31 @@ export async function revokeCredits(userId: string, orderId: string, productCode
     })
     if (already) return
 
-    await tx.entitlementLedger.create({
-      data: {
-        userId,
-        orderId,
-        creditType,
-        delta: -delta,
-        reason: 'refund',
-      },
-    })
+    if (chartQty > 0) {
+      await tx.entitlementLedger.create({
+        data: { userId, orderId, creditType: 'chart', delta: -chartQty, reason: 'refund' },
+      })
+    }
+    if (periodQty > 0) {
+      await tx.entitlementLedger.create({
+        data: { userId, orderId, creditType: 'period', delta: -periodQty, reason: 'refund' },
+      })
+    }
+    if (bonusPeriod > 0) {
+      await tx.entitlementLedger.create({
+        data: { userId, orderId, creditType: 'period', delta: -bonusPeriod, reason: 'refund_bonus' },
+      })
+    }
 
     const balance = await tx.userBalance.findUnique({ where: { userId } })
     if (!balance) return
 
     await tx.userBalance.update({
       where: { userId },
-      data: creditType === 'chart'
-        ? { chartCredits: { decrement: delta } }
-        : { periodCredits: { decrement: delta } },
+      data: {
+        chartCredits: { decrement: chartQty },
+        periodCredits: { decrement: totalPeriod },
+      },
     })
   })
 }
@@ -98,9 +162,6 @@ export async function canRefundOrder(orderId: string): Promise<{
   if (!order) return { ok: false, reason: 'order_not_found' }
   if (order.status !== 'paid') return { ok: false, reason: 'not_paid' }
 
-  const product = getProduct(order.productCode)
-  if (!product) return { ok: false, reason: 'unknown_product' }
-
   if (order.paidAt) {
     const sevenDaysMs = 7 * 24 * 60 * 60 * 1000
     if (Date.now() - order.paidAt.getTime() > sevenDaysMs) {
@@ -108,12 +169,25 @@ export async function canRefundOrder(orderId: string): Promise<{
     }
   }
 
-  const balance = await prisma.userBalance.findUnique({ where: { userId: order.userId } })
-  const available = balance
-    ? (product.type === 'chart' ? balance.chartCredits : balance.periodCredits)
-    : 0
+  // 묶음 결제(extraItems) 까지 합산하여 잔액이 충분히 남아 있는지 확인
+  const codes = collectOrderItemCodes(order.productCode, order.extraItems)
+  let chartQty = 0
+  let periodQty = 0
+  for (const code of codes) {
+    const p = getProduct(code)
+    if (!p) return { ok: false, reason: 'unknown_product' }
+    if (p.type === 'chart') chartQty += p.quantity
+    else periodQty += p.quantity
+  }
+  const bonusPeriod = chartQty * FREE_PERIOD_PER_CHART
+  const periodNeeded = periodQty + bonusPeriod
 
-  if (available < product.quantity) return { ok: false, reason: 'already_used' }
+  const balance = await prisma.userBalance.findUnique({ where: { userId: order.userId } })
+  const chartAvailable = balance?.chartCredits ?? 0
+  const periodAvailable = balance?.periodCredits ?? 0
+
+  if (chartAvailable < chartQty) return { ok: false, reason: 'already_used' }
+  if (periodAvailable < periodNeeded) return { ok: false, reason: 'already_used' }
 
   return { ok: true }
 }

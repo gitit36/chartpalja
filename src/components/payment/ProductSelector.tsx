@@ -14,16 +14,16 @@ function ProductCard({ product, isSelected, onToggle, badge }: { product: Produc
   return (
     <button
       onClick={onToggle}
-      className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
+      className={`w-full text-left p-4 rounded-xl border transition-all ${
         isSelected
-          ? 'border-purple-500 bg-purple-50/70 shadow-md ring-1 ring-purple-200'
-          : 'border-gray-100 bg-white hover:border-gray-200 hover:shadow-sm'
+          ? 'border-purple-400 bg-purple-50/60'
+          : 'border-gray-200 bg-white hover:border-gray-300'
       }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
-            isSelected ? 'border-purple-500 bg-purple-500' : 'border-gray-300'
+          <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all ${
+            isSelected ? 'border-purple-500 bg-purple-500' : 'border-gray-300 bg-white'
           }`}>
             {isSelected && (
               <svg className="w-3 h-3 text-white" viewBox="0 0 12 12" fill="none">
@@ -34,11 +34,11 @@ function ProductCard({ product, isSelected, onToggle, badge }: { product: Produc
           <div className="flex items-center gap-2">
             <p className="font-semibold text-gray-900">{product.name}</p>
             {badge && (
-              <span className="text-[10px] font-bold text-white bg-gradient-to-r from-purple-500 to-indigo-500 px-2 py-0.5 rounded-full">{badge}</span>
+              <span className="text-[10px] font-semibold text-purple-600 bg-purple-100 px-1.5 py-0.5 rounded-md">{badge}</span>
             )}
           </div>
         </div>
-        <p className={`text-lg font-bold ${isSelected ? 'text-purple-700' : 'text-gray-900'}`}>{formatPrice(product.price)}원</p>
+        <p className={`text-base font-bold ${isSelected ? 'text-gray-900' : 'text-gray-800'}`}>{formatPrice(product.price)}원</p>
       </div>
     </button>
   )
@@ -56,9 +56,11 @@ export function ProductSelector({ selectedChart, selectedPeriod, onSelectChart, 
   return (
     <div className="space-y-8">
       <div>
-        <div className="flex items-center gap-2 mb-3">
-          <div className="w-1 h-4 bg-purple-500 rounded-full" />
-          <h3 className="text-sm font-bold text-gray-800">운세 해설</h3>
+        <div className="flex items-baseline justify-between gap-2 mb-3">
+          <h3 className="text-[15px] font-semibold text-gray-900">운세 해설</h3>
+          <span className="text-[11px] text-gray-400">
+            운세 해설 1회당 구간 해설 {FREE_PERIOD_PER_CHART}회 무료 제공
+          </span>
         </div>
         <div className="space-y-2">
           {CHART_PRODUCTS.map(p => (
@@ -71,20 +73,10 @@ export function ProductSelector({ selectedChart, selectedPeriod, onSelectChart, 
             />
           ))}
         </div>
-        <div className="mt-3 ml-1 flex items-start gap-1.5">
-          <span className="text-purple-500 text-xs mt-0.5">*</span>
-          <p className="text-xs text-purple-600 leading-relaxed">
-            운세 해설 1회당 구간 해설 {FREE_PERIOD_PER_CHART}회 무료 제공
-          </p>
-        </div>
       </div>
 
       <div>
-        <div className="flex items-center gap-2 mb-1">
-          <div className="w-1 h-4 bg-indigo-500 rounded-full" />
-          <h3 className="text-sm font-bold text-gray-800">구간 해설 추가</h3>
-        </div>
-        <p className="text-xs text-gray-400 ml-3 mb-3">운세 해설 구매 시 구간 해설 무료 3회 포함</p>
+        <h3 className="text-[15px] font-semibold text-gray-900 mb-3">구간 해설</h3>
         <div className="space-y-2">
           {PERIOD_PRODUCTS.map(p => (
             <ProductCard

@@ -22,12 +22,13 @@ export default function RefundPage() {
     <LegalPageLayout title="환불정책" effectiveDate={B.refundEffectiveDate}>
       <H2>1. 환불 가능 조건</H2>
       <Ul>
-        <li>1회도 사용하지 않은 이용권은 결제일로부터 7일 이내 100% 환불됩니다.</li>
+        <li>사용하지 않은 이용권에 대해 결제일로부터 7일 이내 환불을 요청하시면, 유료 구입분에 한해 결제 금액을 환불해 드립니다.</li>
       </Ul>
 
       <H2>2. 환불 불가 사유</H2>
       <Ul>
-        <li>1회라도 사용한 이용권 (디지털 콘텐츠의 특성상 환불 불가)</li>
+        <li>이미 해설 사용에 1회 이상 사용한 이용권 (디지털 콘텐츠 특성상 환불 불가)</li>
+        <li>무료 적립·이벤트·프로모션 등으로 제공된, 유료 구입분이 아닌 이용권</li>
         <li>유효기간({B.ticketValidityMonths}개월)이 경과하여 자동 소멸된 이용권</li>
       </Ul>
 

@@ -7,8 +7,9 @@ import { MobileContainer } from '@/components/MobileContainer'
 import { ProductSelector } from '@/components/payment/ProductSelector'
 import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelector'
 import { OrderSummaryCard } from '@/components/payment/OrderSummaryCard'
-import { LegalFooter } from '@/components/LegalFooter'
-import { canPayOverseas, formatPrice, getProduct } from '@/lib/payment/products'
+import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
+import { canPayOverseasBundle, formatPrice, getProduct } from '@/lib/payment/products'
+import type { Product } from '@/lib/payment/products'
 import type { CreateOrderResponse, PaymentMethod } from '@/lib/payment/types'
 
 declare global {
@@ -40,18 +41,18 @@ interface SessionUserInfo {
 }
 
 async function createAndPay(
-  productCode: string,
+  productCodes: string[],
   paymentMethod: PaymentMethod,
-  router: ReturnType<typeof useRouter>,
+  _router: ReturnType<typeof useRouter>,
   user: SessionUserInfo | null,
 ): Promise<{ success: boolean; orderId?: string; error?: string }> {
-  const product = getProduct(productCode)
-  if (!product) return { success: false, error: '상품 정보 오류' }
+  const products = productCodes.map(getProduct).filter((p): p is Product => p !== null)
+  if (products.length === 0) return { success: false, error: '상품 정보 오류' }
 
   const orderRes = await fetch('/api/orders/create', {
     method: 'POST',
     headers: getHeaders(),
-    body: JSON.stringify({ productCode, paymentMethod }),
+    body: JSON.stringify({ productCodes, paymentMethod }),
   })
   if (!orderRes.ok) {
     const err = await orderRes.json().catch(() => ({}))
@@ -75,7 +76,7 @@ async function createAndPay(
     if (!window.Paddle) return { success: false, error: 'Paddle SDK 미로드' }
     window.Paddle.Checkout.open({
       settings: { displayMode: 'overlay' },
-      items: [{ priceId: `pri_${product.code}`, quantity: 1 }],
+      items: products.map((p) => ({ priceId: `pri_${p.code}`, quantity: 1 })),
       customData: { orderId },
       successUrl: `${window.location.origin}/app/checkout/success?orderId=${orderId}`,
     })
@@ -101,11 +102,13 @@ async function createAndPay(
     tosspay:  { easyPayProvider: 'EASY_PAY_PROVIDER_TOSSPAY'  },
   }
 
+  const orderName = products.map((p) => p.name).join(' + ')
+
   const params: Record<string, unknown> = {
     storeId,
     channelKey,
     paymentId: `payment_${orderId}_${Date.now()}`,
-    orderName: product.name,
+    orderName,
     totalAmount: amount,
     currency: currency || 'KRW',
     payMethod: payMethodMap[paymentMethod] ?? 'CARD',
@@ -113,14 +116,11 @@ async function createAndPay(
   }
   if (easyPayMap[paymentMethod]) params.easyPay = easyPayMap[paymentMethod]
 
-  // 해외카드(Eximbay)는 고객 이름/이메일이 필수
   if (paymentMethod === 'overseas') {
     const fullName = user?.nickname?.trim() || '고객'
     const email = user?.email?.trim() || `kakao_${user?.id ?? 'guest'}@chartpalja.com`
     params.customer = { fullName, email }
   }
-
-  console.log('[checkout] PortOne.requestPayment params:', params)
 
   let response: { code?: string; paymentId?: string; message?: string }
   try {
@@ -129,8 +129,6 @@ async function createAndPay(
     console.error('[checkout] PortOne.requestPayment threw:', err)
     return { success: false, orderId, error: err instanceof Error ? err.message : '결제 모듈 호출 실패' }
   }
-
-  console.log('[checkout] PortOne.requestPayment response:', response)
 
   if (response.code) {
     if (response.code === 'FAILURE_TYPE_PG' || response.message?.includes('cancel')) {
@@ -185,13 +183,12 @@ function CheckoutContent() {
     return parts.join(' + ')
   }, [chartProduct, periodProduct])
 
-  // 선택된 상품 중 하나라도 해외카드(USD) 결제 불가면 'overseas' 비활성화
+  // 해외카드는 선택 상품의 USD 합계가 $1 이상이어야 결제 가능 (Eximbay 최소 결제 금액)
   const overseasDisabledReason = useMemo<string | null>(() => {
     const selectedProducts = [chartProduct, periodProduct].filter((p): p is NonNullable<typeof p> => p !== null)
     if (selectedProducts.length === 0) return null
-    const unsupported = selectedProducts.filter((p) => !canPayOverseas(p))
-    if (unsupported.length === 0) return null
-    return `${unsupported.map((p) => p.name).join(', ')} 상품은 해외카드 결제 미지원 ($1 미만)`
+    if (canPayOverseasBundle(selectedProducts)) return null
+    return '해외카드 결제는 합계 $1.00 이상부터 가능해요'
   }, [chartProduct, periodProduct])
 
   const disabledMethods = useMemo(() => {
@@ -237,23 +234,18 @@ function CheckoutContent() {
       if (chartCode) codes.push(chartCode)
       if (periodCode) codes.push(periodCode)
 
-      let lastOrderId: string | undefined
+      const result = await createAndPay(codes, paymentMethod, router, sessionUser)
 
-      for (const code of codes) {
-        const result = await createAndPay(code, paymentMethod, router, sessionUser)
-        lastOrderId = result.orderId
-
-        if (!result.success) {
-          if (result.error === 'cancel') {
-            router.push(`/app/checkout/cancel?orderId=${result.orderId}`)
-            return
-          }
-          router.push(`/app/checkout/fail?orderId=${result.orderId}&message=${encodeURIComponent(result.error || '')}`)
+      if (!result.success) {
+        if (result.error === 'cancel') {
+          router.push(`/app/checkout/cancel?orderId=${result.orderId}`)
           return
         }
+        router.push(`/app/checkout/fail?orderId=${result.orderId}&message=${encodeURIComponent(result.error || '')}`)
+        return
       }
 
-      const successUrl = `/app/checkout/success?orderId=${lastOrderId}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ''}`
+      const successUrl = `/app/checkout/success?orderId=${result.orderId}${returnUrl ? `&returnUrl=${encodeURIComponent(returnUrl)}` : ''}`
       router.push(successUrl)
     } catch (err) {
       setError(err instanceof Error ? err.message : '결제 중 오류가 발생했습니다.')
@@ -291,7 +283,7 @@ function CheckoutContent() {
 
         {hasSelection && (
           <section className="mb-6">
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">결제수단 선택</h2>
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">결제수단</h3>
             <PaymentMethodSelector
               selected={paymentMethod}
               onSelect={setPaymentMethod}
@@ -302,30 +294,22 @@ function CheckoutContent() {
 
         {hasSelection && paymentMethod && (
           <section className="mb-6">
-            <label className="flex items-start gap-3 cursor-pointer">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={agreed}
-                onChange={e => setAgreed(e.target.checked)}
-                className="mt-1 w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                onChange={(e) => setAgreed(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-gray-700 focus:ring-gray-300"
               />
-              <span className="text-sm text-gray-600 leading-relaxed">
-                구매 조건을 확인했으며, 결제에 동의합니다.
-                <br />
-                <span className="text-xs text-gray-400">디지털 콘텐츠 특성상 이용 시작 후 환불이 제한될 수 있습니다.</span>
+              <span className="text-[13px] text-gray-700">
+                <Link href="/terms" target="_blank" className="underline decoration-gray-300 hover:text-gray-900">이용약관</Link>
+                {' · '}
+                <Link href="/privacy" target="_blank" className="underline decoration-gray-300 hover:text-gray-900">개인정보처리방침</Link>
+                {' · '}
+                <Link href="/refund" target="_blank" className="underline decoration-gray-300 hover:text-gray-900">환불정책</Link>
+                <span className="text-gray-500">에 동의합니다.</span>
               </span>
             </label>
-            <div className="mt-2.5 ml-8 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-gray-500">
-              <Link href="/terms" target="_blank" className="underline hover:text-gray-700">
-                이용약관
-              </Link>
-              <Link href="/privacy" target="_blank" className="underline hover:text-gray-700">
-                개인정보처리방침
-              </Link>
-              <Link href="/refund" target="_blank" className="underline hover:text-gray-700">
-                환불정책
-              </Link>
-            </div>
           </section>
         )}
 
@@ -333,7 +317,7 @@ function CheckoutContent() {
           <div className="mb-4 p-3 bg-red-50 rounded-xl text-sm text-red-600">{error}</div>
         )}
 
-        <LegalFooter className="-mx-4 mt-8" />
+        <MinimalLegalFooter className="mt-8" />
       </div>
 
       {hasSelection && (

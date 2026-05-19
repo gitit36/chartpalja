@@ -25,11 +25,23 @@ function getTransporter(): nodemailer.Transporter | null {
 
   if (!host || !port || !user || !pass) return null
 
+  const secure = (process.env.SMTP_SECURE ?? 'true') === 'true'
+  const debug = process.env.SMTP_DEBUG === 'true'
+
   _transporter = nodemailer.createTransport({
     host,
     port: Number(port),
-    secure: (process.env.SMTP_SECURE ?? 'true') === 'true',
+    secure,
+    requireTLS: !secure,
     auth: { user, pass },
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 10_000,
+    tls: { servername: host, rejectUnauthorized: true },
+    // Railway 등 일부 클라우드는 IPv6 outbound 가 막혀 ETIMEDOUT 발생 → IPv4 강제
+    family: 4,
+    logger: debug,
+    debug,
   })
   return _transporter
 }
@@ -110,6 +122,15 @@ export async function sendAlertEmail(payload: EmailPayload): Promise<void> {
       html: renderHtml(payload),
     })
   } catch (err) {
-    console.error('[email] sendMail failed:', err)
+    const e = err as { code?: string; command?: string; message?: string }
+    console.error('[email] sendMail failed:', {
+      code: e?.code,
+      command: e?.command,
+      message: e?.message,
+      hint:
+        e?.code === 'ETIMEDOUT' || e?.code === 'ESOCKET'
+          ? 'SMTP outbound 연결 실패. SMTP_PORT=587, SMTP_SECURE=false 로 전환하거나, Railway가 외부 SMTP 를 차단하면 Resend 등 HTTP API 이메일로 전환 고려.'
+          : undefined,
+    })
   }
 }

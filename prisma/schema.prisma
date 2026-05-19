@@ -90,10 +90,13 @@ model PaymentOrder {
   id              String    @id @default(cuid())
   userId          String
   user            User      @relation(fields: [userId], references: [id])
-  productCode     String
-  productType     String
-  quantity        Int
-  amount          Int
+  productCode     String                       // 주 상품 코드 (보통 chart_*)
+  productType     String                       // 주 상품 타입 (chart | period)
+  quantity        Int                          // 주 상품 수량
+  /// 묶음 결제 시 추가로 포함된 부 상품들. JSON 배열: [{code, type, quantity, amount, currency}]
+  /// 단일 상품 결제면 null/[].
+  extraItems      Json?
+  amount          Int                          // 총 결제 금액 (KRW 또는 USD cents)
   currency        String    @default("KRW")
   status          String    @default("pending")
   paymentMethod   String?

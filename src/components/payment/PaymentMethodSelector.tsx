@@ -21,7 +21,7 @@ export function PaymentMethodSelector({ selected, onSelect, disabledMethods }: P
   const disabledNotes = Object.values(disabledMethods ?? {}).filter(Boolean) as string[]
   return (
     <div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2.5">
         {METHODS.map((m) => {
           const disabledReason = disabledMethods?.[m.key]
           const isDisabled = Boolean(disabledReason)
@@ -32,24 +32,24 @@ export function PaymentMethodSelector({ selected, onSelect, disabledMethods }: P
               onClick={() => !isDisabled && onSelect(m.key)}
               disabled={isDisabled}
               title={disabledReason}
-              className={`flex flex-col items-center gap-1.5 p-4 rounded-xl border-2 transition-all ${
+              className={`flex flex-col items-center gap-1 p-3.5 rounded-xl border transition-all ${
                 isSelected
-                  ? 'border-purple-500 bg-purple-50 shadow-md'
+                  ? 'border-purple-400 bg-purple-50/60'
                   : isDisabled
                     ? 'border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
+                    : 'border-gray-100 bg-white hover:border-gray-200'
               }`}
             >
-              <span className="text-2xl">{m.icon}</span>
-              <span className="text-sm font-semibold text-gray-900">{m.label}</span>
-              <span className="text-[11px] text-gray-400">{m.desc}</span>
+              <span className="text-xl">{m.icon}</span>
+              <span className="text-[13px] font-medium text-gray-800">{m.label}</span>
+              <span className="text-[10px] text-gray-400">{m.desc}</span>
             </button>
           )
         })}
       </div>
       {disabledNotes.length > 0 && (
-        <p className="mt-2 text-[11px] text-gray-400 leading-relaxed">
-          ※ {disabledNotes.join(' / ')}
+        <p className="mt-2.5 text-[11px] text-gray-400 leading-relaxed">
+          {disabledNotes.join(' · ')}
         </p>
       )}
     </div>

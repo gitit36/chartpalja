@@ -24,7 +24,20 @@ function nowTs(): number {
   return Math.floor(Date.now() / 1000)
 }
 
+/**
+ * 결제 성공/실패/취소 알림 토글.
+ * - true:  성공/실패/취소 알림 발송
+ * - false 또는 미설정: 결제 이벤트 알림은 건너뜀 (웹훅 오류 알림은 항상 발송)
+ *
+ * 운영 중 노이즈가 많아 일단 끈 상태. 나중에 원하면 Railway에서
+ * ALERT_PAYMENT_EVENTS=true 로만 바꾸면 즉시 활성화된다.
+ */
+function paymentEventsEnabled(): boolean {
+  return process.env.ALERT_PAYMENT_EVENTS === 'true'
+}
+
 export async function notifyPaymentPaid(order: OrderLike): Promise<void> {
+  if (!paymentEventsEnabled()) return
   const heading = `${modeBadge()} 결제 성공 💰`
   const fields = [
     { label: '주문ID', value: order.id },
@@ -60,6 +73,7 @@ export async function notifyPaymentFailed(
   order: OrderLike | null,
   reason: string,
 ): Promise<void> {
+  if (!paymentEventsEnabled()) return
   const heading = `${modeBadge()} 결제 실패 ❌`
   const fields = [
     { label: '주문ID', value: order?.id ?? '-' },
@@ -96,6 +110,7 @@ export async function notifyPaymentCancelled(
   reason: string,
   isPartial = false,
 ): Promise<void> {
+  if (!paymentEventsEnabled()) return
   const label = isPartial ? '부분 ' : ''
   const heading = `${modeBadge()} 결제 ${label}취소 ↩️`
   const fields = [

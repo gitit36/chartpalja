@@ -50,12 +50,9 @@ export default function PricingPage() {
                 </div>
               ))}
             </div>
-            <div className="mt-3 ml-1 flex items-start gap-1.5">
-              <span className="text-purple-500 text-xs mt-0.5">*</span>
-              <p className="text-xs text-purple-600 leading-relaxed">
-                운세 해설 1회당 구간 해설 {FREE_PERIOD_PER_CHART}회를 무료로 함께 드려요
-              </p>
-            </div>
+            <p className="mt-3 text-xs text-gray-500 leading-relaxed">
+              운세 해설 1회당 구간 해설 {FREE_PERIOD_PER_CHART}회를 무료로 함께 드려요.
+            </p>
           </section>
 
           <section className="mb-7">
@@ -88,8 +85,8 @@ export default function PricingPage() {
             <h3 className="text-sm font-bold text-gray-900 mb-2">이용 안내</h3>
             <ul className="space-y-1.5 text-xs text-gray-600 leading-relaxed list-disc pl-4">
               <li>이용권 유효기간은 결제일로부터 12개월(1년)입니다.</li>
-              <li>1회도 사용하지 않은 경우 결제일로부터 7일 이내 100% 환불받을 수 있습니다.</li>
-              <li>1회라도 사용한 경우 환불이 제한됩니다.</li>
+              <li>사용하지 않은 이용권은 결제일로부터 7일 이내 환불받을 수 있습니다 (유료 구입분에 한함).</li>
+              <li>이미 해설 사용에 사용했거나 유료 구입분이 아닌 경우 환불이 제한됩니다.</li>
               <li>결제수단: 신용/체크카드, 카카오페이, 토스페이, 해외카드</li>
             </ul>
           </section>
