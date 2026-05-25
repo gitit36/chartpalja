@@ -109,12 +109,21 @@ export async function GET(
     const user = await getUserFromSession().catch(() => null)
     const guestId = getGuestId(request)
 
+    // LLM 비용 보호: 비로그인 게스트는 구간/연도 해설 API를 호출할 수 없다.
+    if (!user) {
+      return NextResponse.json(
+        { error: 'login_required', message: '구간 해설을 보려면 로그인이 필요해요.' },
+        { status: 401 }
+      )
+    }
+
     const entry = await prisma.sajuEntry.findUnique({ where: { id } })
     if (!entry) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    if (user && entry.userId !== user.id && entry.guestId !== guestId) {
-      if (entry.userId || entry.guestId) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
-      }
+    if (entry.userId && entry.userId !== user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+    if (!entry.userId && entry.guestId && entry.guestId !== guestId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     const report = entry.sajuReportJson as SajuReportJson | null
@@ -135,11 +144,9 @@ export async function GET(
         return NextResponse.json({ month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, summary: cached[cacheKey] })
       }
 
-      if (user) {
-        const balance = await getBalance(user.id)
-        if (balance.periodCredits <= 0) {
-          return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
-        }
+      const balance = await getBalance(user.id)
+      if (balance.periodCredits <= 0) {
+        return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
       }
 
       const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
@@ -185,9 +192,7 @@ export async function GET(
         data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
       })
 
-      if (user) {
-        await consumeCredit(user.id, 'period')
-      }
+      await consumeCredit(user.id, 'period')
 
       return NextResponse.json({ month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, summary })
     }
@@ -203,11 +208,9 @@ export async function GET(
       return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary: cached[cacheKey] })
     }
 
-    if (user) {
-      const balance = await getBalance(user.id)
-      if (balance.periodCredits <= 0) {
-        return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
-      }
+    const yearBalance = await getBalance(user.id)
+    if (yearBalance.periodCredits <= 0) {
+      return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
     }
 
     let summary: string
@@ -232,9 +235,7 @@ export async function GET(
       data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
     })
 
-    if (user) {
-      await consumeCredit(user.id, 'period')
-    }
+    await consumeCredit(user.id, 'period')
 
     const overlayId = request.nextUrl.searchParams.get('overlayId')
     let compatSummary: string | undefined

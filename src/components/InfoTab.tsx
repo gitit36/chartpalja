@@ -6,6 +6,7 @@ import {
   STEM_HANGUL, BRANCH_HANGUL, elementToHangul,
   STEM_ELEMENT, BRANCH_ELEMENT, pillarToHangul,
 } from "@/lib/saju/hanja-hangul"
+import { LockedPreview } from "@/components/LockedPreview"
 
 function InfoTip({ text, align = 'left' }: { text: string; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
@@ -418,20 +419,140 @@ function getShinsalTooltip(name: string, pillars?: Set<string>): string | null {
 
 interface InfoTabProps {
   report: SajuReportJson | null
+  isLocked?: boolean
+  onLockedClick?: (feature: string) => void
 }
 
-export function InfoTab({ report }: InfoTabProps) {
+export function InfoTab({ report, isLocked = false, onLockedClick }: InfoTabProps) {
   if (!report) return <div className="py-12 text-center text-gray-400 text-sm">사주 정보가 없습니다.</div>
+
+  const unlock = (feature: string) => onLockedClick?.(feature)
 
   return (
     <div className="px-4 py-4 space-y-5 overflow-x-hidden">
+      {/* 게스트 공개: 사주 원국 / 핵심 정보 / 오행 분포 */}
       <PillarGrid report={report}/>
       <CoreInfoCard report={report}/>
       <OhangInlineBar report={report}/>
-      <RelationsVisual report={report}/>
-      <ShinsalBadges report={report}/>
-      <DaewoonCarousel report={report}/>
+
+      {/* 게스트 잠금: 사주관계 / 신살 / 대운 흐름 */}
+      {isLocked ? (
+        <LockedPreview onUnlock={() => unlock('사주관계')} ariaLabel="사주관계 — 로그인하면 풀려요">
+          <RelationsPlaceholder />
+        </LockedPreview>
+      ) : (
+        <RelationsVisual report={report}/>
+      )}
+
+      {isLocked ? (
+        <LockedPreview
+          onUnlock={() => unlock('신살')}
+          ariaLabel="신살 — 로그인하면 풀려요"
+          showBadge={false}
+        >
+          <ShinsalPlaceholder />
+        </LockedPreview>
+      ) : (
+        <ShinsalBadges report={report}/>
+      )}
+
+      {isLocked ? (
+        <LockedPreview
+          onUnlock={() => unlock('대운 흐름')}
+          ariaLabel="대운 흐름 — 로그인하면 풀려요"
+          showBadge={false}
+        >
+          <DaewoonPlaceholder />
+        </LockedPreview>
+      ) : (
+        <DaewoonCarousel report={report}/>
+      )}
+
+      {/* 세운은 게스트에게도 공개 — 별도 잠금 카드 없음 */}
       <SewoonCarousel report={report}/>
+    </div>
+  )
+}
+
+/* ── 잠금 미리보기용 placeholder들 (실제 데이터에 의존하지 않음) ── */
+
+function RelationsPlaceholder() {
+  const tabs = ['년월', '년일', '월일', '일시']
+  const chips = [
+    { t: '시묘합', cls: 'bg-blue-50 border-blue-200 text-blue-600' },
+    { t: '월일충', cls: 'bg-red-50 border-red-200 text-red-600' },
+    { t: '연월형', cls: 'bg-amber-50 border-amber-200 text-amber-600' },
+    { t: '일시파', cls: 'bg-purple-50 border-purple-200 text-purple-600' },
+  ]
+  return (
+    <div>
+      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 기운의 관계</h3>
+      <div className="flex gap-1 mb-2 overflow-hidden">
+        {tabs.map((t, i) => (
+          <span
+            key={t}
+            className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
+              i === 0 ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500'
+            }`}
+          >
+            {t}<span className="ml-0.5 text-[9px] opacity-70">2</span>
+          </span>
+        ))}
+      </div>
+      <div className="bg-gray-50 rounded-xl px-3.5 py-2.5">
+        <div className="flex flex-wrap gap-1.5">
+          {chips.map(c => (
+            <span key={c.t} className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg border ${c.cls}`}>
+              {c.t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ShinsalPlaceholder() {
+  const items = ['천을귀인', '도화살', '역마살', '문창귀인', '화개살', '양인살', '월덕귀인', '천덕귀인']
+  return (
+    <div>
+      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 복과 걸림돌</h3>
+      <div className="flex flex-wrap gap-1.5">
+        {items.map(n => (
+          <span
+            key={n}
+            className="inline-flex items-center gap-1.5 text-xs bg-purple-50 text-purple-700 border border-purple-200 rounded-lg px-2.5 py-1 font-medium"
+          >
+            {n}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function DaewoonPlaceholder() {
+  const blocks = [
+    { p: '갑인', age: '0~9' },
+    { p: '을묘', age: '10~19' },
+    { p: '병진', age: '20~29' },
+    { p: '정사', age: '30~39' },
+    { p: '무오', age: '40~49' },
+    { p: '기미', age: '50~59' },
+  ]
+  return (
+    <div>
+      <h3 className="font-bold text-gray-900 text-sm mb-2">대운 타임라인</h3>
+      <div className="overflow-hidden pb-2 -mx-4 px-4">
+        <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
+          {blocks.map(b => (
+            <div key={b.age} className="shrink-0 w-[100px] bg-gray-50 border border-gray-100 rounded-xl p-2.5 text-center">
+              <div className="text-base font-bold text-gray-800">{b.p}</div>
+              <div className="text-[10px] text-gray-500 mt-0.5">{b.age}세</div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,0 +1,115 @@
+'use client'
+
+import { useCallback, useEffect, useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { LegalFooter } from '@/components/LegalFooter'
+import { getGuestId } from '@/lib/auth/guest'
+import { LandingHeroCarousel } from './LandingHeroCarousel'
+
+function AbstractCurve() {
+  return (
+    <svg
+      viewBox="0 0 400 120"
+      className="absolute inset-x-0 top-[42%] w-full opacity-[0.06] pointer-events-none select-none"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <path
+        d="M0 80 C40 40, 80 95, 120 55 C160 15, 200 90, 240 50 C280 10, 320 75, 360 35 C380 20, 400 60, 400 60"
+        fill="none"
+        stroke="white"
+        strokeWidth="2.5"
+      >
+        <animate
+          attributeName="d"
+          values="M0 80 C40 40,80 95,120 55 C160 15,200 90,240 50 C280 10,320 75,360 35 C380 20,400 60,400 60;M0 70 C40 50,80 85,120 65 C160 25,200 80,240 40 C280 20,320 85,360 45 C380 30,400 50,400 50;M0 80 C40 40,80 95,120 55 C160 15,200 90,240 50 C280 10,320 75,360 35 C380 20,400 60,400 60"
+          dur="8s"
+          repeatCount="indefinite"
+        />
+      </path>
+      <circle r="4" fill="white" opacity="0.6">
+        <animateMotion
+          dur="8s"
+          repeatCount="indefinite"
+          path="M0 80 C40 40,80 95,120 55 C160 15,200 90,240 50 C280 10,320 75,360 35 C380 20,400 60,400 60"
+        />
+      </circle>
+    </svg>
+  )
+}
+
+export default function LandingClient() {
+  const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    router.prefetch('/app/input')
+  }, [router])
+
+  const handleKakaoLogin = useCallback(() => {
+    const gid = getGuestId()
+    const params = new URLSearchParams()
+    if (gid) params.set('gid', gid)
+    const qs = params.toString()
+    window.location.href = qs ? `/api/auth/kakao/start?${qs}` : '/api/auth/kakao/start'
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col relative overflow-hidden">
+      <AbstractCurve />
+
+      {/* 상단: 작은 로고 (브랜드 인지만 빠르게) */}
+      <header className="pt-6 pb-2 flex justify-center relative z-10">
+        <Image
+          src="/svc_logo_with_slogan_vertical.png"
+          alt="차트8자 — 사주팔자, 차트로 읽다."
+          width={110}
+          height={126}
+          className="drop-shadow-lg"
+          priority
+        />
+      </header>
+
+      {/* 중앙: 카루셀 3장 */}
+      <main className="flex-1 flex flex-col justify-center relative z-10 min-h-0 py-4">
+        <div className="w-full max-w-[360px] mx-auto">
+          <LandingHeroCarousel />
+        </div>
+      </main>
+
+      {/* 하단: 1차 CTA 2개 + 마이크로 카피 (카드 width와 동일) */}
+      <div className="relative z-10 px-6 pt-3 pb-3">
+        <div
+          className={`max-w-[312px] mx-auto space-y-3 transition-opacity duration-200 ${
+            mounted ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <Link
+            href="/app/input"
+            prefetch
+            className="block w-full py-4 rounded-2xl text-base font-bold bg-white/95 text-slate-900 shadow-lg hover:bg-white active:scale-[0.98] transition-all text-center"
+          >
+            차트 먼저 보기
+          </Link>
+          <button
+            type="button"
+            onClick={handleKakaoLogin}
+            className="w-full py-4 rounded-2xl text-base font-bold bg-[#FEE500] text-[#3C1E1E] shadow-lg hover:brightness-95 active:scale-[0.98] transition-all"
+          >
+            카카오로 모두 보기
+          </button>
+          <p className="text-white/45 text-[11px] pt-1 leading-relaxed text-center">
+            카카오로 로그인하면 모든 기능이 열려요
+          </p>
+        </div>
+      </div>
+
+      <div className="relative z-10 max-w-[400px] w-full mx-auto">
+        <LegalFooter variant="dark" />
+      </div>
+    </div>
+  )
+}

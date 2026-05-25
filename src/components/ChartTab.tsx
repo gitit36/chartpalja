@@ -14,6 +14,8 @@ import type { ChartPayload, ScoreBreakdown } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import type { ChartDatum, SeasonBand } from '@/lib/saju/life-chart-data'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
+import { getGuestId } from '@/lib/auth/guest'
+import { LockedPreview } from '@/components/LockedPreview'
 
 const THIS_YEAR = new Date().getFullYear()
 const THIS_MONTH = new Date().getMonth() + 1
@@ -301,9 +303,21 @@ interface ChartTabProps {
   currentName?: string
   currentGender?: string
   overlayEntries?: OverlayEntry[]
+  /**
+   * 비로그인 게스트일 때 true. 기본 세운 라인 외 모든 인터랙션을 잠근다.
+   */
+  isLocked?: boolean
+  /**
+   * 잠금 클릭 시 카카오 로그인을 유도하는 콜백.
+   * 부모(`/app/saju/[id]/page.tsx`)에서 LoginPromptSheet를 띄운다.
+   */
+  onLockedClick?: (feature: string) => void
 }
 
-export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries }: ChartTabProps) {
+export function ChartTab({
+  report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
+  isLocked = false, onLockedClick,
+}: ChartTabProps) {
   const [period, setPeriod] = useState<PeriodKey>('all')
   const [panelOpen, setPanelOpen] = useState(false)
   const [mainOverlays, setMainOverlays] = useState<Record<MainOverlayKey, boolean>>({ daewoon: false, candle: false, season: false })
@@ -366,7 +380,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
     if (!overlayEntryId) { setOverlayReport(null); setOverlayBirthYear(null); overlayFetchedRef.current = null; return }
     if (overlayEntryId === overlayFetchedRef.current) return
     overlayFetchedRef.current = overlayEntryId
-    const gid = typeof window !== 'undefined' ? localStorage.getItem('saju_guest_id') : null
+    const gid = getGuestId()
     const headers: Record<string, string> = {}
     if (gid) headers['x-guest-id'] = gid
     fetch(`/api/saju/${overlayEntryId}`, { headers })
@@ -492,7 +506,7 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
     const cached = summaryCache.get(cacheKey)
     if (cached) { setYearSummary({ startYear, endYear, ...cached }); return }
     setYearSummaryLoading(true); setYearSummary(null)
-    const gid = typeof window !== 'undefined' ? localStorage.getItem('saju_guest_id') : null
+    const gid = getGuestId()
     const headers: Record<string, string> = {}
     if (gid) headers['x-guest-id'] = gid
     let url: string
@@ -576,6 +590,16 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
 
   const toggleMain = (k: MainOverlayKey) => setMainOverlays(p => ({ ...p, [k]: !p[k] }))
   const toggleAux = (k: AuxKey) => setAuxPanels(p => ({ ...p, [k]: !p[k] }))
+
+  /**
+   * 잠금 상태에서 인터랙션이 발생하면 카카오 로그인 시트를 띄우고 true를 반환.
+   * 호출부에서 true를 받으면 본래 액션을 중단해야 한다.
+   */
+  const blockIfLocked = useCallback((feature: string): boolean => {
+    if (!isLocked) return false
+    onLockedClick?.(feature)
+    return true
+  }, [isLocked, onLockedClick])
 
   if (!fullChartData) {
     return <div className="py-12 text-center text-gray-400 text-sm">차트 데이터가 없습니다.</div>
@@ -686,24 +710,34 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
                 👥 {overlayName} <span className="ml-0.5 text-rose-400">&times;</span>
               </button>
             ) : (
-              <button onClick={() => setCompareSheetOpen(true)}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm group">
-                <span className="text-[10px] font-medium text-gray-400 group-hover:text-purple-500 transition-colors">👥 비교</span>
+              <button
+                onClick={() => {
+                  if (blockIfLocked('비교')) return
+                  setCompareSheetOpen(true)
+                }}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm group"
+              >
+                <span className="text-[10px] font-medium text-gray-400 group-hover:text-purple-500 transition-colors">
+                  👥 비교{isLocked ? ' 🔒' : ''}
+                </span>
               </button>
             )
           )}
-          <button onClick={() => {
-            const next = !rangeMode
-            setRangeMode(next)
-            if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
-            else { setSelection(null); rangeFirst.current = null }
-          }}
+          <button
+            onClick={() => {
+              if (blockIfLocked('구간 해설')) return
+              const next = !rangeMode
+              setRangeMode(next)
+              if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
+              else { setSelection(null); rangeFirst.current = null }
+            }}
             className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
               rangeMode
                 ? 'bg-purple-600 text-white'
                 : 'bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 shadow-sm text-gray-400 hover:text-purple-500'
-            }`}>
-            🗓️ 구간
+            }`}
+          >
+            🗓️ 구간{isLocked ? ' 🔒' : ''}
           </button>
         </div>
       </div>
@@ -900,7 +934,12 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
       )}
 
       {/* Fortune Analysis Section */}
-      <FortuneSection fortuneJson={fortuneJson} entryId={entryId} />
+      <FortuneSection
+        fortuneJson={fortuneJson}
+        entryId={entryId}
+        isLocked={isLocked}
+        onLockedClick={onLockedClick}
+      />
 
       {/* Sliding Panel — indicator settings */}
       {panelOpen && (
@@ -911,25 +950,62 @@ export function ChartTab({ report, birthYear, fortuneJson, entryId, currentName,
               <h3 className="font-bold text-gray-900 mb-4">차트 지표 설정</h3>
               <div className="mb-5">
                 <div className="text-xs font-semibold text-gray-500 mb-2">메인 차트 오버레이</div>
-                {MAIN_OVERLAYS.map(o => (
-                  <label key={o.key} className="flex items-center gap-3 py-2 cursor-pointer">
-                    <input type="checkbox" checked={mainOverlays[o.key]} onChange={() => toggleMain(o.key)}
-                      className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"/>
-                    <span className="text-sm text-gray-700">{o.label}</span>
-                  </label>
-                ))}
+                <div className={isLocked ? '' : 'stagger-fade-in'}>
+                  {MAIN_OVERLAYS.map(o => (
+                    <button
+                      key={o.key}
+                      type="button"
+                      onClick={() => {
+                        if (blockIfLocked(o.label)) return
+                        toggleMain(o.key)
+                      }}
+                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-gray-50 transition-colors min-h-[44px] text-left"
+                    >
+                      <span className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={!isLocked && mainOverlays[o.key]}
+                          readOnly
+                          disabled={isLocked}
+                          className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 pointer-events-none"
+                        />
+                        <span className={`text-sm ${isLocked ? 'text-gray-400' : 'text-gray-700'}`}>{o.label}</span>
+                      </span>
+                      {isLocked && <span className="text-gray-300 text-sm leading-none">🔒</span>}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="mb-5">
                 <div className="text-xs font-semibold text-gray-500 mb-2">보조지표 (차트 아래)</div>
-                {AUX_PANELS.map(o => (
-                  <label key={o.key} className="flex items-center gap-3 py-2 cursor-pointer">
-                    <input type="checkbox" checked={auxPanels[o.key]} onChange={() => toggleAux(o.key)}
-                      className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"/>
-                    <span className="text-sm text-gray-700 flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full" style={{backgroundColor: o.color}}/> {o.label}
-                    </span>
-                  </label>
-                ))}
+                <div className={isLocked ? '' : 'stagger-fade-in'}>
+                  {AUX_PANELS.map(o => (
+                    <button
+                      key={o.key}
+                      type="button"
+                      onClick={() => {
+                        if (blockIfLocked(o.label)) return
+                        toggleAux(o.key)
+                      }}
+                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-gray-50 transition-colors min-h-[44px] text-left"
+                    >
+                      <span className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={!isLocked && auxPanels[o.key]}
+                          readOnly
+                          disabled={isLocked}
+                          className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 pointer-events-none"
+                        />
+                        <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-gray-400' : 'text-gray-700'}`}>
+                          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: o.color, opacity: isLocked ? 0.4 : 1 }} />
+                          {o.label}
+                        </span>
+                      </span>
+                      {isLocked && <span className="text-gray-300 text-sm leading-none">🔒</span>}
+                    </button>
+                  ))}
+                </div>
               </div>
               <button onClick={() => setPanelOpen(false)}
                 className="w-full py-3 rounded-xl bg-purple-600 text-white font-semibold text-sm hover:bg-purple-700 transition-colors">적용</button>
@@ -1137,7 +1213,49 @@ function NoCreditModal({ type, onClose }: { type: 'chart' | 'period'; onClose: (
 
 type FortuneItem = { category: string; title: string; content: string }
 
-function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entryId?: string }) {
+/** 잠금 미리보기용 — 실제 LLM 데이터 없이 운세 해설 카드/아코디언 형태만 흉내낸다. */
+function FortunePlaceholder() {
+  return (
+    <div className="space-y-2">
+      <div className="rounded-2xl p-4 bg-purple-50 border border-purple-100">
+        <p className="text-xs font-medium mb-1 text-purple-500">당신의 기본 성향</p>
+        <p className="text-base font-bold text-gray-900 leading-snug mb-2">
+          깊은 사유와 부드러운 결단력을 함께 지닌 사람
+        </p>
+        <p className="text-sm text-gray-700 leading-relaxed">
+          타고난 감수성과 분석력이 균형 잡혀 있어 직관과 논리를 동시에 잘 쓰는 편이에요.
+        </p>
+      </div>
+      <div className="rounded-2xl p-4 bg-indigo-50 border border-indigo-100">
+        <p className="text-xs font-medium mb-1 text-indigo-500">인생의 큰 그림</p>
+        <p className="text-base font-bold text-gray-900 leading-snug mb-2">
+          30대 후반부터 본격적인 도약기가 펼쳐져요
+        </p>
+        <p className="text-sm text-gray-700 leading-relaxed">
+          초년의 시행착오가 단단한 기반이 되어 중년 이후 큰 폭의 성장이 가능해요.
+        </p>
+      </div>
+      {['성격과 잠재력', '직업과 커리어', '재물과 투자'].map(t => (
+        <div key={t} className="border rounded-xl border-gray-100 p-3.5 flex items-start gap-2.5">
+          <span className="text-gray-400 text-sm mt-0.5">▶</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-gray-800 leading-snug">{t} 해설</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">{t}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+interface FortuneSectionProps {
+  fortuneJson?: unknown
+  entryId?: string
+  isLocked?: boolean
+  onLockedClick?: (feature: string) => void
+}
+
+function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick }: FortuneSectionProps) {
   const [items, setItems] = useState<FortuneItem[]>([])
   const [openIds, setOpenIds] = useState<Set<number>>(new Set())
   const [aiLoading, setAiLoading] = useState(false)
@@ -1147,28 +1265,31 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
 
   const getHeaders = useCallback(() => {
     const h: Record<string, string> = {}
-    if (typeof window !== 'undefined') {
-      const gid = localStorage.getItem('saju_guest_id')
-      if (gid) h['x-guest-id'] = gid
-    }
+    const gid = getGuestId()
+    if (gid) h['x-guest-id'] = gid
     return h
   }, [])
 
   const fetchFortune = useCallback((regen = false) => {
     if (!entryId) return
+    if (isLocked) return
     setError(null); setNoCredit(false); setAiLoading(true)
     const url = regen ? `/api/saju/${entryId}/fortune?regenerate=true` : `/api/saju/${entryId}/fortune`
     fetch(url, { headers: getHeaders() })
       .then(async r => {
         const d = await r.json().catch(() => null)
+        if (r.status === 401) { throw new Error('login_required') }
         if (r.status === 402) { setNoCredit(true); throw new Error('이용권 부족') }
         if (!r.ok) throw new Error(d?.error ?? '운세 해설을 불러오지 못했습니다')
         return d
       })
       .then(d => { if (d?.items?.length) { setItems(d.items); fetchedRef.current = true } else setError('운세 해설 데이터가 없습니다') })
-      .catch(e => { if (!e?.message?.includes('이용권')) setError(e?.message ?? '오류가 발생했습니다') })
+      .catch(e => {
+        if (e?.message === 'login_required') return
+        if (!e?.message?.includes('이용권')) setError(e?.message ?? '오류가 발생했습니다')
+      })
       .finally(() => setAiLoading(false))
-  }, [entryId, getHeaders])
+  }, [entryId, getHeaders, isLocked])
 
   useEffect(() => {
     let arr: FortuneItem[] = []
@@ -1180,9 +1301,9 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
       }
     }
     if (arr.length) { setItems(arr); setError(null); fetchedRef.current = true }
-    else if (entryId && !fetchedRef.current) { fetchedRef.current = true; fetchFortune() }
+    else if (entryId && !fetchedRef.current && !isLocked) { fetchedRef.current = true; fetchFortune() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fortuneJson, entryId])
+  }, [fortuneJson, entryId, isLocked])
 
   const toggle = (i: number) => setOpenIds(p => { const n = new Set(p); n.has(i) ? n.delete(i) : n.add(i); return n })
 
@@ -1198,6 +1319,22 @@ function FortuneSection({ fortuneJson, entryId }: { fortuneJson?: unknown; entry
   const topCards = isNewFormat ? items.slice(0, 2) : []
   const accordionItems = isNewFormat ? items.slice(2) : items
   const accordionOffset = isNewFormat ? 2 : 0
+
+  if (isLocked) {
+    return (
+      <div className="px-4 mt-6">
+        <h3 className="font-bold text-gray-900 mb-3">운세 해설</h3>
+        <LockedPreview
+          onUnlock={() => onLockedClick?.('운세 해설')}
+          ariaLabel="운세 해설 — 로그인하면 풀려요"
+          /* 첫 "한 줄 해설" 카드(약 130px) 하단에 배지 하단을 맞춘다(배지 ~36px). */
+          badgeOffsetTop={94}
+        >
+          <FortunePlaceholder />
+        </LockedPreview>
+      </div>
+    )
+  }
 
   return (
     <div className="px-4 mt-6">

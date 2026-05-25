@@ -12,6 +12,11 @@ import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import { HamburgerMenu } from '@/components/HamburgerMenu'
 import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
 import { BottomSheet } from '@/components/BottomSheet'
+import { LoginPromptSheet } from '@/components/LoginPromptSheet'
+import { AlertSheet } from '@/components/AlertSheet'
+import { Toast } from '@/components/Toast'
+import { getGuestId } from '@/lib/auth/guest'
+import { clearBalanceCache } from '@/lib/hooks/useBalance'
 
 declare global {
   interface Window {
@@ -47,10 +52,8 @@ interface OverlayEntryBasic {
 
 function getHeaders(): Record<string, string> {
   const h: Record<string, string> = {}
-  if (typeof window !== 'undefined') {
-    const gid = localStorage.getItem('saju_guest_id')
-    if (gid) h['x-guest-id'] = gid
-  }
+  const gid = getGuestId()
+  if (gid) h['x-guest-id'] = gid
   return h
 }
 
@@ -263,6 +266,12 @@ export default function PersonalSajuPage() {
   const [toolbarVisible, setToolbarVisible] = useState(true)
   const lastScrollY = useRef(0)
   const [overlayEntries, setOverlayEntries] = useState<OverlayEntryBasic[]>([])
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const [loginSheet, setLoginSheet] = useState<{ open: boolean; feature?: string }>({ open: false })
+  const [alertState, setAlertState] = useState<{ open: boolean; title: string; description?: string }>({ open: false, title: '' })
+  const [welcomeToast, setWelcomeToast] = useState(false)
+  const [guestBannerDismissed, setGuestBannerDismissed] = useState(false)
+  const [bannerVisible, setBannerVisible] = useState(true)
 
   useEffect(() => {
     fetch(`/api/saju/${id}`, { headers: getHeaders(), cache: 'no-store' })
@@ -271,6 +280,50 @@ export default function PersonalSajuPage() {
       .catch(() => null)
       .finally(() => setLoading(false))
   }, [id])
+
+  // 로그인 여부 조회 — 차트 잠금 여부 결정.
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/auth/me')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (!cancelled) setIsLoggedIn(!!data?.user) })
+      .catch(() => { if (!cancelled) setIsLoggedIn(false) })
+    return () => { cancelled = true }
+  }, [])
+
+  // 카카오 로그인 직후 진입(?welcome=1)이면 토스트로 잠금 해제 알림 (피크엔드).
+  // 또한 이전 사용자(혹은 게스트)가 같은 브라우저에 남긴 잔액 캐시를 비워서
+  // 다른 사용자의 이용권 수가 노출되는 일이 없도록 보장한다.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const url = new URL(window.location.href)
+    if (url.searchParams.get('welcome') === '1') {
+      setWelcomeToast(true)
+      clearBalanceCache()
+      url.searchParams.delete('welcome')
+      const clean = url.pathname + (url.searchParams.toString() ? `?${url.searchParams}` : '')
+      window.history.replaceState({}, '', clean)
+    }
+  }, [])
+
+  // 게스트 상단 배너: 한 번 닫으면 세션 동안 다시 안 보임 + 스크롤 시 자연스럽게 사라짐.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      if (sessionStorage.getItem('saju_login_banner_dismissed_v1') === '1') {
+        setGuestBannerDismissed(true)
+      }
+    } catch { /* ignore */ }
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (typeof window === 'undefined') return
+      setBannerVisible(window.scrollY < 80)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     fetch('/api/saju', { headers: getHeaders(), cache: 'no-store' })
@@ -296,8 +349,18 @@ export default function PersonalSajuPage() {
   const stockLine = useMemo(() => buildStockLine(report, birthYear), [report, birthYear])
 
   const handleRegenerateClick = useCallback(async () => {
+    // 게스트는 LLM 호출 자체가 막혀 있으므로 모달 fall-through 없이 바로 로그인 시트.
+    if (isLoggedIn !== true) {
+      setLoginSheet({ open: true, feature: '운세 재해석' })
+      return
+    }
     try {
       const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
+      if (balRes.status === 401) {
+        // 세션이 만료된 경우에도 로그인 시트로 유도.
+        setLoginSheet({ open: true, feature: '운세 재해석' })
+        return
+      }
       if (balRes.ok) {
         const bal = await balRes.json()
         if ((bal.chartCredits ?? 0) > 0) {
@@ -311,7 +374,7 @@ export default function PersonalSajuPage() {
     } catch {
       setRegenModal('confirm')
     }
-  }, [])
+  }, [isLoggedIn])
 
   const handleRegenerateConfirm = useCallback(async () => {
     setRegenModal(null)
@@ -341,12 +404,12 @@ export default function PersonalSajuPage() {
   const handleKakaoShare = useCallback(() => {
     if (!entry) return
     const kakao = window.Kakao
-    if (!kakao) { alert('카카오 SDK를 불러오지 못했습니다.'); return }
+    if (!kakao) { setAlertState({ open: true, title: '카카오 SDK를 불러오지 못했어요', description: '잠시 후 다시 시도해 주세요.' }); return }
     const jsKey = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
     if (jsKey && !kakao.isInitialized()) {
       try { kakao.init(jsKey) } catch { /* already initialized */ }
     }
-    if (!kakao.isInitialized()) { alert('카카오 앱키가 설정되지 않았습니다.'); return }
+    if (!kakao.isInitialized()) { setAlertState({ open: true, title: '카카오 공유 설정이 누락되었어요' }); return }
     const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
     const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chartpalja.com'
     try {
@@ -362,7 +425,7 @@ export default function PersonalSajuPage() {
       })
     } catch (err) {
       console.error('Kakao share error:', err)
-      alert('카카오톡 공유에 실패했습니다.')
+      setAlertState({ open: true, title: '카카오톡 공유에 실패했어요', description: '잠시 후 다시 시도해 주세요.' })
     }
     setShareOpen(false)
   }, [entry, stockLine])
@@ -371,7 +434,7 @@ export default function PersonalSajuPage() {
     const url = window.location.href
     try {
       await navigator.clipboard.writeText(url)
-      alert('링크가 복사되었어요!')
+      setAlertState({ open: true, title: '링크가 복사되었어요' })
     } catch {
       const textarea = document.createElement('textarea')
       textarea.value = url
@@ -379,7 +442,7 @@ export default function PersonalSajuPage() {
       textarea.select()
       document.execCommand('copy')
       document.body.removeChild(textarea)
-      alert('링크가 복사되었어요!')
+      setAlertState({ open: true, title: '링크가 복사되었어요' })
     }
     setShareOpen(false)
   }, [])
@@ -392,7 +455,11 @@ export default function PersonalSajuPage() {
 
       const html2canvas = (await import('html2canvas')).default
       const targets = document.querySelectorAll<HTMLElement>('[data-capture]')
-      if (!targets.length) { alert('저장할 콘텐츠가 없습니다.'); setImageSaving(false); return }
+      if (!targets.length) {
+        setAlertState({ open: true, title: '저장할 콘텐츠가 없어요' })
+        setImageSaving(false)
+        return
+      }
 
       const name = entry?.name ?? 'chart'
       const blobs: { url: string; filename: string }[] = []
@@ -413,7 +480,7 @@ export default function PersonalSajuPage() {
         document.body.removeChild(link)
       }
     } catch {
-      alert('이미지 저장에 실패했습니다.')
+      setAlertState({ open: true, title: '이미지 저장에 실패했어요', description: '잠시 후 다시 시도해 주세요.' })
     }
     setImageSaving(false)
     setShareOpen(false)
@@ -448,11 +515,14 @@ export default function PersonalSajuPage() {
             </div>
             <div className="flex items-center gap-1 flex-shrink-0 w-[72px] justify-end">
               <button onClick={handleRegenerateClick} disabled={regenerating}
-                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-purple-600 disabled:opacity-30 transition-colors"
-                title="운세 재분석">
+                className="relative w-8 h-8 flex items-center justify-center text-gray-400 hover:text-purple-600 disabled:opacity-30 transition-colors"
+                title={isLoggedIn === false ? '운세 재분석 (로그인 필요)' : '운세 재분석'}>
                 <svg className={`w-5 h-5 ${regenerating ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h4.586M20 20v-5h-4.586M4.929 9A8 8 0 0119.07 9M19.071 15A8 8 0 014.93 15" />
                 </svg>
+                {isLoggedIn === false && (
+                  <span className="absolute -bottom-0.5 -right-0.5 text-[9px] leading-none" aria-hidden>🔒</span>
+                )}
               </button>
               <HamburgerMenu />
             </div>
@@ -479,12 +549,62 @@ export default function PersonalSajuPage() {
           <SummaryLine stockLine={stockLine} isUp={isUp} scrolled={false} />
         )}
 
+        {/* 상단 슬림 배너 — 통일된 카피, 닫기 가능, 스크롤 시 자연스럽게 사라짐. */}
+        {isLoggedIn === false && !guestBannerDismissed && (
+          <div
+            className={`px-4 mt-2 transition-all duration-200 ${
+              bannerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1 pointer-events-none'
+            }`}
+          >
+            <div className="rounded-xl bg-purple-50/70 border border-purple-100 px-3.5 py-2.5 flex items-center gap-2.5 animate-fade-in">
+              <span className="text-base leading-none" aria-hidden>🔓</span>
+              <p className="text-[12px] text-purple-700/90 leading-snug flex-1">
+                로그인하면 모든 기능이 열려요
+              </p>
+              <button
+                type="button"
+                onClick={() => setLoginSheet({ open: true })}
+                className="text-[12px] font-semibold text-purple-700 px-2.5 py-1.5 rounded-md hover:bg-purple-100 transition-colors min-h-[36px]"
+              >
+                로그인 →
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setGuestBannerDismissed(true)
+                  try { sessionStorage.setItem('saju_login_banner_dismissed_v1', '1') } catch { /* ignore */ }
+                }}
+                aria-label="배너 닫기"
+                className="w-7 h-7 flex items-center justify-center rounded-full text-purple-300 hover:text-purple-600 hover:bg-purple-100 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                  <path d="M2 2L10 10M10 2L2 10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex-1 pb-16">
           <div className={tab === 'chart' ? '' : 'hidden'} ref={chartAreaRef}>
-            <ChartTab report={report} birthYear={birthYear} fortuneJson={entry.fortuneJson} entryId={entry.id} currentName={entry.name} currentGender={entry.gender} overlayEntries={overlayEntries} />
+            <ChartTab
+              report={report}
+              birthYear={birthYear}
+              fortuneJson={entry.fortuneJson}
+              entryId={entry.id}
+              currentName={entry.name}
+              currentGender={entry.gender}
+              overlayEntries={overlayEntries}
+              isLocked={isLoggedIn !== true}
+              onLockedClick={(feature) => setLoginSheet({ open: true, feature })}
+            />
           </div>
           <div className={tab === 'info' ? '' : 'hidden'}>
-            <InfoTab report={report} />
+            <InfoTab
+              report={report}
+              isLocked={isLoggedIn !== true}
+              onLockedClick={(feature) => setLoginSheet({ open: true, feature })}
+            />
           </div>
         </div>
 
@@ -621,6 +741,23 @@ export default function PersonalSajuPage() {
           </div>
         </div>
       )}
+      <LoginPromptSheet
+        open={loginSheet.open}
+        onClose={() => setLoginSheet({ open: false })}
+        feature={loginSheet.feature}
+        returnTo={typeof window !== 'undefined' ? window.location.pathname + window.location.search : undefined}
+      />
+      <AlertSheet
+        open={alertState.open}
+        title={alertState.title}
+        description={alertState.description}
+        onClose={() => setAlertState({ open: false, title: '' })}
+      />
+      <Toast
+        open={welcomeToast}
+        message="모든 잠금이 해제됐어요"
+        onClose={() => setWelcomeToast(false)}
+      />
     </MobileContainer>
   )
 }

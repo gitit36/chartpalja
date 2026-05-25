@@ -76,6 +76,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'name and birthDate required' }, { status: 400 })
     }
 
+    // 게스트가 소유자가 되려면 guestId가 명확히 있어야 한다.
+    if (!user && !guestId) {
+      return NextResponse.json(
+        { error: 'guest_id_missing', message: '게스트 식별자가 누락되었습니다. 페이지를 새로고침 해주세요.' },
+        { status: 400 }
+      )
+    }
+
+    // 게스트 도배 방지: 24시간 내 3개까지만 생성 가능.
+    if (!user && guestId) {
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
+      const recentCount = await prisma.sajuEntry.count({
+        where: { guestId, createdAt: { gt: since } },
+      })
+      if (recentCount >= 3) {
+        return NextResponse.json(
+          {
+            error: 'guest_limit',
+            message: '하루에 게스트로 만들 수 있는 차트는 3개까지예요. 로그인하면 무제한이에요.',
+          },
+          { status: 429 }
+        )
+      }
+    }
+
     const ownerWhere = user ? { userId: user.id } : { guestId: guestId! }
     const existing = await prisma.sajuEntry.findFirst({
       where: {

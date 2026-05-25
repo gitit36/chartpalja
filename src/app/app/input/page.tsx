@@ -5,6 +5,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { MobileContainer } from '@/components/MobileContainer'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
+import { RecentEntryBanner } from '@/components/RecentEntryBanner'
+import { ConfirmSheet } from '@/components/ConfirmSheet'
+import { AlertSheet } from '@/components/AlertSheet'
+import { getOrCreateGuestId, getGuestId } from '@/lib/auth/guest'
 
 interface FormData {
   name: string
@@ -77,10 +81,8 @@ function parseTimeStr(formatted: string): string | null {
 
 function getHeaders(): Record<string, string> {
   const h: Record<string, string> = { 'Content-Type': 'application/json' }
-  if (typeof window !== 'undefined') {
-    const gid = localStorage.getItem('saju_guest_id')
-    if (gid) h['x-guest-id'] = gid
-  }
+  const gid = getGuestId()
+  if (gid) h['x-guest-id'] = gid
   return h
 }
 
@@ -200,20 +202,68 @@ function InputPageInner() {
   const [loadingStep, setLoadingStep] = useState(0)
   const [prefilling, setPrefilling] = useState(!!editId)
   const [showNoCreditModal, setShowNoCreditModal] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const [recentEntry, setRecentEntry] = useState<{ id: string; name: string } | null>(null)
+  const [bannerDismissed, setBannerDismissed] = useState(false)
+  const [duplicateAsk, setDuplicateAsk] = useState<{ open: boolean; message: string; existingId?: string }>({ open: false, message: '' })
+  const [alertState, setAlertState] = useState<{ open: boolean; title: string; description?: string }>({ open: false, title: '' })
   const loadingInterval = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     return () => { if (loadingInterval.current) clearInterval(loadingInterval.current) }
   }, [])
 
+  // 게스트 ID 보장: 입력 페이지 진입 즉시 localStorage에 saju_guest_id를 생성한다.
+  // 백엔드 sajuEntry는 user 또는 guest 둘 중 하나에 소유되어야 한다.
+  useEffect(() => {
+    getOrCreateGuestId()
+  }, [])
+
+  // 로그인 여부 조회 (잔액 체크 분기용 + 알림 띠 분기용).
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/auth/me')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (cancelled) return
+        setIsLoggedIn(!!data?.user)
+      })
+      .catch(() => { if (!cancelled) setIsLoggedIn(false) })
+    return () => { cancelled = true }
+  }, [])
+
+  // 게스트 사용자가 입력 페이지로 다시 들어왔을 때, 이전에 만든 차트가 있으면 알림 띠로 안내.
+  // editId 모드일 땐 노출하지 않는다(이미 특정 차트를 편집 중이므로).
+  useEffect(() => {
+    if (editId) return
+    if (isLoggedIn !== false) return
+    if (typeof window !== 'undefined') {
+      const dismissed = sessionStorage.getItem('chartpalja_dismiss_recent_banner')
+      if (dismissed === '1') {
+        setBannerDismissed(true)
+        return
+      }
+    }
+    let cancelled = false
+    fetch('/api/saju', { headers: getHeaders(), cache: 'no-store' })
+      .then(r => r.ok ? r.json() : { entries: [] })
+      .then((data) => {
+        if (cancelled) return
+        const entries = (data?.entries ?? []) as Array<{ id: string; name: string }>
+        if (entries.length > 0) {
+          setRecentEntry({ id: entries[0].id, name: entries[0].name })
+        }
+      })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [editId, isLoggedIn])
+
   useEffect(() => {
     if (!editId) return
     setPrefilling(true)
     const headers: Record<string, string> = {}
-    if (typeof window !== 'undefined') {
-      const gid = localStorage.getItem('saju_guest_id')
-      if (gid) headers['x-guest-id'] = gid
-    }
+    const gid = getGuestId()
+    if (gid) headers['x-guest-id'] = gid
     fetch(`/api/saju/${editId}`, { headers })
       .then(r => r.ok ? r.json() : null)
       .then(data => {
@@ -274,7 +324,9 @@ function InputPageInner() {
   const handleSubmit = async () => {
     if (!canSubmit) return
 
-    if (!editId) {
+    // 잔액 체크는 로그인 사용자에게만 적용한다.
+    // 비로그인(게스트)은 무료로 차트 생성이 가능하며 백엔드에서 별도 한도(24h/3개)로 제한된다.
+    if (!editId && isLoggedIn === true) {
       try {
         const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
         if (balRes.ok) {
@@ -335,11 +387,20 @@ function InputPageInner() {
           if (err.error === 'duplicate') {
             if (loadingInterval.current) clearInterval(loadingInterval.current)
             setIsLoading(false)
-            const goExisting = confirm(err.message + '\n\n기존 결과를 보시겠습니까?')
-            if (goExisting && err.existingId) router.push('/app/saju/' + err.existingId)
+            setDuplicateAsk({ open: true, message: err.message ?? '이미 동일한 사주 정보가 등록되어 있습니다.', existingId: err.existingId })
             return
           }
-          throw new Error(err.error || '분석 실패')
+          if (err.error === 'guest_limit') {
+            if (loadingInterval.current) clearInterval(loadingInterval.current)
+            setIsLoading(false)
+            setAlertState({
+              open: true,
+              title: '오늘의 게스트 한도를 채웠어요',
+              description: err.message ?? '하루에 게스트로 만들 수 있는 차트는 3개까지예요. 로그인하면 무제한이에요.',
+            })
+            return
+          }
+          throw new Error(err.message || err.error || '분석 실패')
         }
         const { id } = await res.json()
         if (loadingInterval.current) clearInterval(loadingInterval.current)
@@ -348,7 +409,11 @@ function InputPageInner() {
     } catch (error) {
       if (loadingInterval.current) clearInterval(loadingInterval.current)
       setIsLoading(false)
-      alert(error instanceof Error ? error.message : '오류가 발생했습니다')
+      setAlertState({
+        open: true,
+        title: '잠시 후 다시 시도해 주세요',
+        description: error instanceof Error ? error.message : '오류가 발생했습니다',
+      })
     }
   }
 
@@ -401,14 +466,31 @@ function InputPageInner() {
   return (
     <MobileContainer>
       <div className="px-4 pt-6 pb-8">
-        <div className="flex items-center justify-between mb-4">
-          <button onClick={() => router.back()} className="text-gray-400 text-sm hover:text-gray-600">&larr; 뒤로</button>
+        <div className="flex items-center justify-between mb-4 min-h-[44px]">
+          <button
+            onClick={() => router.back()}
+            className="min-h-[44px] -ml-1 px-2 text-gray-400 text-sm hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+            aria-label="뒤로가기"
+          >
+            &larr; 뒤로
+          </button>
           <Image src="/svc_logo.png" alt="차트8자" width={32} height={29} />
         </div>
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">{editId ? '사주 정보 수정' : '사주 정보 입력'}</h1>
           <p className="text-sm text-gray-500">{editId ? '수정할 내용을 변경한 뒤 저장해주세요' : '생년월일을 입력하면 인생 운세 차트를 그려드려요'}</p>
         </div>
+
+        {!editId && recentEntry && !bannerDismissed && (
+          <RecentEntryBanner
+            name={recentEntry.name}
+            onGo={() => router.push(`/app/saju/${recentEntry.id}`)}
+            onDismiss={() => {
+              setBannerDismissed(true)
+              try { sessionStorage.setItem('chartpalja_dismiss_recent_banner', '1') } catch {}
+            }}
+          />
+        )}
 
         <div className="space-y-5">
           <div>
@@ -558,6 +640,25 @@ function InputPageInner() {
           </div>
         </div>
       )}
+      <ConfirmSheet
+        open={duplicateAsk.open}
+        title="동일한 차트가 이미 있어요"
+        description={duplicateAsk.message}
+        confirmLabel="기존 결과 보기"
+        cancelLabel="닫기"
+        onConfirm={() => {
+          const id = duplicateAsk.existingId
+          setDuplicateAsk({ open: false, message: '' })
+          if (id) router.push(`/app/saju/${id}`)
+        }}
+        onCancel={() => setDuplicateAsk({ open: false, message: '' })}
+      />
+      <AlertSheet
+        open={alertState.open}
+        title={alertState.title}
+        description={alertState.description}
+        onClose={() => setAlertState({ open: false, title: '' })}
+      />
     </MobileContainer>
   )
 }

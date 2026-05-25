@@ -136,12 +136,21 @@ export async function GET(
     const user = await getUserFromSession().catch(() => null)
     const guestId = getGuestId(request)
 
+    // LLM 비용 보호: 비로그인 게스트는 운세 해설 API를 호출할 수 없다.
+    if (!user) {
+      return NextResponse.json(
+        { error: 'login_required', message: '운세 해설을 보려면 로그인이 필요해요.' },
+        { status: 401 }
+      )
+    }
+
     const entry = await prisma.sajuEntry.findUnique({ where: { id } })
     if (!entry) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    if (user && entry.userId !== user.id && entry.guestId !== guestId) {
-      if (entry.userId || entry.guestId) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
-      }
+    if (entry.userId && entry.userId !== user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
+    }
+    if (!entry.userId && entry.guestId && entry.guestId !== guestId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
     if (!regenerate && entry.fortuneJson && isValidFortuneFormat(entry.fortuneJson)) {
@@ -151,10 +160,10 @@ export async function GET(
 
     const isFirstGeneration = !entry.fortuneJson || !isValidFortuneFormat(entry.fortuneJson)
     const isRegenWithConsume = regenerate && request.nextUrl.searchParams.get('consumeCredit') === 'true'
-    const shouldConsumeCredit = (isFirstGeneration || isRegenWithConsume) && user
+    const shouldConsumeCredit = isFirstGeneration || isRegenWithConsume
 
     if (shouldConsumeCredit) {
-      const balance = await getBalance(user!.id)
+      const balance = await getBalance(user.id)
       if (balance.chartCredits <= 0) {
         return NextResponse.json({ error: '이용권이 부족합니다.' }, { status: 402 })
       }
@@ -180,7 +189,7 @@ export async function GET(
     })
 
     if (shouldConsumeCredit) {
-      await consumeCredit(user!.id, 'chart')
+      await consumeCredit(user.id, 'chart')
     }
 
     return NextResponse.json({ items })

@@ -11,6 +11,7 @@ import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { canPayOverseasBundle, formatPrice, getProduct } from '@/lib/payment/products'
 import type { Product } from '@/lib/payment/products'
 import type { CreateOrderResponse, PaymentMethod } from '@/lib/payment/types'
+import { getGuestHeaders } from '@/lib/auth/guest'
 
 declare global {
   interface Window {
@@ -26,12 +27,7 @@ declare global {
 }
 
 function getHeaders(): Record<string, string> {
-  const h: Record<string, string> = { 'Content-Type': 'application/json' }
-  if (typeof window !== 'undefined') {
-    const gid = localStorage.getItem('saju_guest_id')
-    if (gid) h['x-guest-id'] = gid
-  }
-  return h
+  return getGuestHeaders()
 }
 
 interface SessionUserInfo {
@@ -289,7 +285,7 @@ function CheckoutContent() {
         <div className="flex items-center gap-3 mb-5">
           <button
             onClick={() => router.push(returnUrl || '/app/list')}
-            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 text-lg"
+            className="w-11 h-11 -ml-2.5 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full text-lg transition-colors"
             aria-label="뒤로가기"
           >
             &larr;

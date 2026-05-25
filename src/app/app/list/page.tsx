@@ -8,6 +8,8 @@ import { MobileContainer } from '@/components/MobileContainer'
 import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
 import { HamburgerMenu } from '@/components/HamburgerMenu'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
+import { Toast } from '@/components/Toast'
+import { getGuestHeaders } from '@/lib/auth/guest'
 
 interface SajuCard {
   id: string
@@ -21,16 +23,8 @@ interface SajuCard {
   dayElement?: string | null
 }
 
-function getGuestId(): string | null {
-  if (typeof window === 'undefined') return null
-  return localStorage.getItem('saju_guest_id')
-}
-
 function getHeaders(): Record<string, string> {
-  const h: Record<string, string> = { 'Content-Type': 'application/json' }
-  const gid = getGuestId()
-  if (gid) h['x-guest-id'] = gid
-  return h
+  return getGuestHeaders()
 }
 
 export default function SajuListPage() {
@@ -40,7 +34,18 @@ export default function SajuListPage() {
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<SajuCard | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [welcomeToast, setWelcomeToast] = useState(false)
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const url = new URL(window.location.href)
+    if (url.searchParams.get('welcome') === '1') {
+      setWelcomeToast(true)
+      url.searchParams.delete('welcome')
+      const clean = url.pathname + (url.searchParams.toString() ? `?${url.searchParams}` : '')
+      window.history.replaceState({}, '', clean)
+    }
+  }, [])
 
   const fetchList = useCallback(async () => {
     try {
@@ -204,6 +209,11 @@ export default function SajuListPage() {
           </div>
         </div>
       )}
+      <Toast
+        open={welcomeToast}
+        message="모든 잠금이 해제됐어요"
+        onClose={() => setWelcomeToast(false)}
+      />
     </MobileContainer>
   )
 }

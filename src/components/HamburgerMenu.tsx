@@ -4,19 +4,26 @@ import { useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useBalance, prefetchBalance } from '@/lib/hooks/useBalance'
+import { useBalance, prefetchBalance, clearBalanceCache } from '@/lib/hooks/useBalance'
+import { clearGuestId, getGuestId } from '@/lib/auth/guest'
 
-function getHeaders(): Record<string, string> {
+function getAuthHeaders(): Record<string, string> {
   const h: Record<string, string> = {}
-  if (typeof window !== 'undefined') {
-    const gid = localStorage.getItem('saju_guest_id')
-    if (gid) h['x-guest-id'] = gid
-  }
+  const gid = getGuestId()
+  if (gid) h['x-guest-id'] = gid
   return h
 }
 
-function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnType<typeof useRouter> }) {
-  const balance = useBalance()
+function MenuDrawer({
+  onClose,
+  router,
+  isLoggedIn,
+}: {
+  onClose: () => void
+  router: ReturnType<typeof useRouter>
+  isLoggedIn: boolean | null
+}) {
+  const balance = useBalance(isLoggedIn)
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -26,10 +33,49 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
 
   const handleLogout = useCallback(async () => {
     if (!confirm('로그아웃 하시겠습니까?')) return
-    await fetch('/api/auth/logout', { method: 'POST', headers: getHeaders() })
-    localStorage.removeItem('saju_guest_id')
+    await fetch('/api/auth/logout', { method: 'POST', headers: getAuthHeaders() })
+    clearBalanceCache()
+    clearGuestId()
     router.push('/')
   }, [router])
+
+  const handleKakaoLogin = useCallback(() => {
+    const gid = getGuestId()
+    const params = new URLSearchParams()
+    if (gid) params.set('gid', gid)
+    if (typeof window !== 'undefined') {
+      params.set('returnTo', window.location.pathname + window.location.search)
+    }
+    const qs = params.toString()
+    window.location.href = qs ? `/api/auth/kakao/start?${qs}` : '/api/auth/kakao/start'
+  }, [])
+
+  // 게스트는 모든 잔액을 0으로 노출 — 다른 사용자의 캐시가 새어들지 않게 보장.
+  const chartCredits = isLoggedIn === false ? 0 : balance?.chartCredits
+  const periodCredits = isLoggedIn === false ? 0 : balance?.periodCredits
+
+  // 로그인 사용자만 실제 라우팅. 게스트는 메뉴 항목 자체가 unclickable.
+  const goPath = useCallback(
+    (path: string) => {
+      onClose()
+      router.push(path)
+    },
+    [onClose, router],
+  )
+
+  const isGuest = isLoggedIn === false
+
+  // 게스트는 클릭/hover/포커스 모두 막힌 상태. 자물쇠만 우측에 표시.
+  const LockBadge = () => (
+    <span className="text-gray-300 text-sm leading-none ml-auto" aria-hidden>🔒</span>
+  )
+
+  const itemClass = (locked: boolean) =>
+    `w-full px-5 py-3 text-left text-sm flex items-center gap-3 min-h-[44px] ${
+      locked
+        ? 'text-gray-400 cursor-not-allowed select-none'
+        : 'text-gray-700 hover:bg-gray-50'
+    }`
 
   return (
     <div className="fixed inset-0 z-[9999] flex justify-end">
@@ -43,17 +89,17 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <div className="bg-purple-50 rounded-lg px-3 py-2 text-center">
-              <p className="text-[10px] text-purple-600 font-medium">운세 해설</p>
-              <p className="text-lg font-bold text-purple-700">
-                {balance ? balance.chartCredits : <span className="text-gray-300">-</span>}
+            <div className={`rounded-lg px-3 py-2 text-center ${isGuest ? 'bg-gray-50' : 'bg-purple-50'}`}>
+              <p className={`text-[10px] font-medium ${isGuest ? 'text-gray-400' : 'text-purple-600'}`}>운세 해설</p>
+              <p className={`text-lg font-bold ${isGuest ? 'text-gray-400' : 'text-purple-700'}`}>
+                {chartCredits != null ? chartCredits : <span className="text-gray-300">-</span>}
                 <span className="text-xs ml-0.5">회</span>
               </p>
             </div>
-            <div className="bg-indigo-50 rounded-lg px-3 py-2 text-center">
-              <p className="text-[10px] text-indigo-600 font-medium">구간 해설</p>
-              <p className="text-lg font-bold text-indigo-700">
-                {balance ? balance.periodCredits : <span className="text-gray-300">-</span>}
+            <div className={`rounded-lg px-3 py-2 text-center ${isGuest ? 'bg-gray-50' : 'bg-indigo-50'}`}>
+              <p className={`text-[10px] font-medium ${isGuest ? 'text-gray-400' : 'text-indigo-600'}`}>구간 해설</p>
+              <p className={`text-lg font-bold ${isGuest ? 'text-gray-400' : 'text-indigo-700'}`}>
+                {periodCredits != null ? periodCredits : <span className="text-gray-300">-</span>}
                 <span className="text-xs ml-0.5">회</span>
               </p>
             </div>
@@ -62,25 +108,37 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
 
         <nav className="flex-1 py-3 overflow-y-auto">
           <button
-            onClick={() => { onClose(); router.push('/app/profile') }}
-            className="w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
+            type="button"
+            disabled={isGuest}
+            aria-disabled={isGuest}
+            onClick={isGuest ? undefined : () => goPath('/app/profile')}
+            className={itemClass(isGuest)}
           >
             <span className="text-base">👤</span>
-            프로필 관리
+            <span>프로필 관리</span>
+            {isGuest && <LockBadge />}
           </button>
           <button
-            onClick={() => { onClose(); router.push('/app/checkout') }}
-            className="w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
+            type="button"
+            disabled={isGuest}
+            aria-disabled={isGuest}
+            onClick={isGuest ? undefined : () => goPath('/app/checkout')}
+            className={itemClass(isGuest)}
           >
             <span className="text-base">🛒</span>
-            이용권 구매
+            <span>이용권 구매</span>
+            {isGuest && <LockBadge />}
           </button>
           <button
-            onClick={() => { onClose(); router.push('/app/guide') }}
-            className="w-full px-5 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3"
+            type="button"
+            disabled={isGuest}
+            aria-disabled={isGuest}
+            onClick={isGuest ? undefined : () => goPath('/app/guide')}
+            className={itemClass(isGuest)}
           >
             <span className="text-base">📖</span>
-            차트 해석 가이드
+            <span>차트 해석 가이드</span>
+            {isGuest && <LockBadge />}
           </button>
         </nav>
 
@@ -95,12 +153,24 @@ function MenuDrawer({ onClose, router }: { onClose: () => void; router: ReturnTy
             <Link href="/business" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">사업자정보</Link>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="w-full py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors"
-          >
-            로그아웃
-          </button>
+          {isLoggedIn === true ? (
+            <button
+              onClick={handleLogout}
+              className="w-full py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors min-h-[44px]"
+            >
+              로그아웃
+            </button>
+          ) : isLoggedIn === false ? (
+            <button
+              onClick={handleKakaoLogin}
+              className="w-full py-3 rounded-xl text-sm font-bold bg-[#FEE500] text-[#3C1E1E] hover:brightness-95 active:scale-[0.98] transition-all min-h-[44px]"
+            >
+              카카오로 로그인
+            </button>
+          ) : (
+            // 로딩 중에는 placeholder로 자리만 유지 (깜빡임 방지).
+            <div className="w-full h-[44px] rounded-xl bg-gray-100/60" aria-hidden />
+          )}
         </div>
       </div>
     </div>
@@ -111,24 +181,35 @@ export function HamburgerMenu() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
 
   useEffect(() => {
     setMounted(true)
-    prefetchBalance()
+    let cancelled = false
+    fetch('/api/auth/me')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (cancelled) return
+        const loggedIn = !!data?.user
+        setIsLoggedIn(loggedIn)
+        if (loggedIn) prefetchBalance()
+      })
+      .catch(() => { if (!cancelled) setIsLoggedIn(false) })
+    return () => { cancelled = true }
   }, [])
 
   const close = useCallback(() => setOpen(false), [])
 
   const handleOpen = useCallback(() => {
-    prefetchBalance()
+    if (isLoggedIn === true) prefetchBalance()
     setOpen(true)
-  }, [])
+  }, [isLoggedIn])
 
   return (
     <>
       <button
         onClick={handleOpen}
-        onMouseEnter={prefetchBalance}
+        onMouseEnter={() => { if (isLoggedIn === true) prefetchBalance() }}
         className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors"
         aria-label="메뉴"
       >
@@ -138,7 +219,7 @@ export function HamburgerMenu() {
       </button>
 
       {open && mounted && createPortal(
-        <MenuDrawer onClose={close} router={router} />,
+        <MenuDrawer onClose={close} router={router} isLoggedIn={isLoggedIn} />,
         document.body,
       )}
     </>

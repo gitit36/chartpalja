@@ -6,6 +6,8 @@ import { MobileContainer } from '@/components/MobileContainer'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { formatPrice } from '@/lib/payment/products'
 import { PRODUCTS } from '@/lib/payment/products'
+import { clearGuestId, getGuestId } from '@/lib/auth/guest'
+import { clearBalanceCache } from '@/lib/hooks/useBalance'
 
 interface Balance {
   chartCredits: number
@@ -26,10 +28,8 @@ interface OrderItem {
 
 function getHeaders(): Record<string, string> {
   const h: Record<string, string> = {}
-  if (typeof window !== 'undefined') {
-    const gid = localStorage.getItem('saju_guest_id')
-    if (gid) h['x-guest-id'] = gid
-  }
+  const gid = getGuestId()
+  if (gid) h['x-guest-id'] = gid
   return h
 }
 
@@ -70,7 +70,8 @@ export default function ProfilePage() {
     setLoggingOut(true)
     try {
       await fetch('/api/auth/logout', { method: 'POST', headers: getHeaders() })
-      localStorage.removeItem('saju_guest_id')
+      clearBalanceCache()
+      clearGuestId()
       router.push('/')
     } catch {
       setLoggingOut(false)
@@ -83,7 +84,13 @@ export default function ProfilePage() {
         {/* Header */}
         <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
           <div className="flex items-center px-4 py-3">
-            <button onClick={() => router.back()} className="text-gray-400 hover:text-gray-600 text-lg mr-3">&larr;</button>
+            <button
+              onClick={() => router.back()}
+              aria-label="뒤로가기"
+              className="w-11 h-11 -ml-2.5 mr-1 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full text-lg transition-colors"
+            >
+              &larr;
+            </button>
             <h1 className="text-lg font-bold text-gray-900">내 프로필</h1>
           </div>
         </div>
