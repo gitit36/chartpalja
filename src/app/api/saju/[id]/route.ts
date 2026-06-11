@@ -47,6 +47,23 @@ export async function PATCH(
       return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
     const body = await request.json()
+
+    // 대표 사주 설정: 같은 소유자(회원/게스트)의 다른 사주는 모두 해제하고 이 사주만 대표로.
+    if (body.setRepresentative === true) {
+      const ownerWhere = entry.userId
+        ? { userId: entry.userId }
+        : entry.guestId
+          ? { guestId: entry.guestId }
+          : null
+      await prisma.$transaction([
+        ...(ownerWhere
+          ? [prisma.sajuEntry.updateMany({ where: ownerWhere, data: { isRepresentative: false } })]
+          : []),
+        prisma.sajuEntry.update({ where: { id }, data: { isRepresentative: true } }),
+      ])
+      return NextResponse.json({ ok: true, id, isRepresentative: true })
+    }
+
     const updates: Record<string, unknown> = {}
     if (body.name !== undefined) updates.name = body.name
     if (body.gender !== undefined) updates.gender = body.gender
@@ -113,6 +130,12 @@ export async function PATCH(
       where: { id },
       data: updates,
     })
+
+    // 출생정보가 바뀌면 일별 운세 점수 캐시는 더 이상 유효하지 않다.
+    if (birthChanged) {
+      await prisma.dailyFortune.deleteMany({ where: { entryId: id } })
+    }
+
     return NextResponse.json(updated)
   } catch (error) {
     console.error('PATCH /api/saju/[id] error:', error)

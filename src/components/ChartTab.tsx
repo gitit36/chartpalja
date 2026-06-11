@@ -71,9 +71,29 @@ const AUX_PANELS = [
   { key: 'event', label: '이벤트 확률', color: '#e74c3c' },
 ] as const
 
+// 메인 차트 위에 겹쳐 그릴 수 있는 5대 생활 도메인 운세 점수 선 (0~100, 높을수록 좋음).
+// 세운 종합점수와 동일한 "운세 점수" 축이다. (이벤트 발생 확률이 아님)
+// 엔진의 domainScore는 0~10 스케일이라 ×10 하여 세운 점수(0~100)와 같은 축에 맞춘다.
+const DOMAIN_SCORE_SCALE = 10
+const DOMAIN_OVERLAYS = [
+  { key: 'job',      label: '직업운', color: '#e67e22', field: 'domainJob' },
+  { key: 'wealth',   label: '재물운', color: '#4caf50', field: 'domainWealth' },
+  { key: 'love',     label: '연애운', color: '#e91e63', field: 'domainLove' },
+  { key: 'health',   label: '건강운', color: '#16a085', field: 'domainHealth' },
+  { key: 'marriage', label: '결혼운', color: '#9c27b0', field: 'domainMarriage' },
+] as const
+
 type PeriodKey = '1y' | '10y' | 'all'
 type MainOverlayKey = (typeof MAIN_OVERLAYS)[number]['key']
 type AuxKey = (typeof AUX_PANELS)[number]['key']
+type DomainOverlayKey = (typeof DOMAIN_OVERLAYS)[number]['key']
+
+/** 데이터 포인트에서 도메인 운세 점수(0~100)를 뽑는다. (엔진 0~10 → ×10) */
+function domainValue(d: Record<string, unknown>, field: string): number | null {
+  const v = d?.[field]
+  if (typeof v !== 'number') return null
+  return Math.max(0, Math.min(100, Math.round(v * DOMAIN_SCORE_SCALE)))
+}
 
 const BD_LABEL_POS: Record<string, string> = {
   yongshin_fit: '필요한 기운 충만', unseong: '좋은 시기', unseong_context: '대운과 시너지',
@@ -212,11 +232,17 @@ function ThisYearMarker(props: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function MainTooltip({ active, payload, overlays, monthly, overlayActive, overlayName, currentName }: any) {
+function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName }: any) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload as (MergedDatum) | undefined
   if (!d) return null
   const ov = overlays as Record<MainOverlayKey, boolean> | undefined
+  const dom = domainOverlays as Record<DomainOverlayKey, boolean> | undefined
+  const activeDomains = dom
+    ? DOMAIN_OVERLAYS.filter(o => dom[o.key])
+        .map(o => ({ label: o.label, color: o.color, val: domainValue(d as unknown as Record<string, unknown>, o.field) }))
+        .filter(x => x.val != null)
+    : []
 
   if (overlayActive && d.scoreOv != null) {
     return (
@@ -247,6 +273,17 @@ function MainTooltip({ active, payload, overlays, monthly, overlayActive, overla
       )}
       {ov?.candle && d.high != null && <div className="text-gray-500">고/저: {d.high?.toFixed(0)}~{d.low?.toFixed(0)}</div>}
       {ov?.season && d.seasonTag && <div className="text-gray-500">시즌: <span className="font-semibold" style={{color: SEASON_TAG_COLORS[d.seasonTag] || '#666'}}>{d.seasonEmoji} {d.seasonTag}</span></div>}
+      {activeDomains.length > 0 && (
+        <div className="mt-0.5 pt-0.5 border-t border-gray-100 grid grid-cols-2 gap-x-2">
+          {activeDomains.map(x => (
+            <div key={x.label} className="flex items-center gap-1">
+              <span className="w-2 h-0.5 rounded inline-block" style={{ backgroundColor: x.color }} />
+              <span className="text-gray-500">{x.label}</span>
+              <span className="font-semibold" style={{ color: x.color }}>{Math.round(x.val as number)}</span>
+            </div>
+          ))}
+        </div>
+      )}
       {(() => {
         const { up, down } = breakdownFactors(d.breakdown)
         if (!up.length && !down.length) return null
@@ -321,6 +358,7 @@ export function ChartTab({
   const [period, setPeriod] = useState<PeriodKey>('all')
   const [panelOpen, setPanelOpen] = useState(false)
   const [mainOverlays, setMainOverlays] = useState<Record<MainOverlayKey, boolean>>({ daewoon: false, candle: false, season: false })
+  const [domainOverlays, setDomainOverlays] = useState<Record<DomainOverlayKey, boolean>>({ job: false, wealth: false, love: false, health: false, marriage: false })
   const [auxPanels, setAuxPanels] = useState<Record<AuxKey, boolean>>({ yongshin: false, energy: false, noble: false, ohang: false, tengo: false, event: false })
   const [hoverYear, setHoverYear] = useState<number | null>(null)
   const [clickedYear, setClickedYear] = useState<number | null>(null)
@@ -590,6 +628,7 @@ export function ChartTab({
 
   const toggleMain = (k: MainOverlayKey) => setMainOverlays(p => ({ ...p, [k]: !p[k] }))
   const toggleAux = (k: AuxKey) => setAuxPanels(p => ({ ...p, [k]: !p[k] }))
+  const toggleDomain = (k: DomainOverlayKey) => setDomainOverlays(p => ({ ...p, [k]: !p[k] }))
 
   /**
    * 잠금 상태에서 인터랙션이 발생하면 카카오 로그인 시트를 띄우고 true를 반환.
@@ -627,7 +666,7 @@ export function ChartTab({
         </button>
 
         {/* Overlay legend — fixed height to prevent layout shift */}
-        <div className="h-4 flex justify-center items-center gap-3">
+        <div className="min-h-4 flex flex-wrap justify-center items-center gap-x-3 gap-y-0.5">
           {overlayActive && (<>
             <span className="flex items-center gap-1 text-[10px] text-gray-500">
               <span className="w-4 h-0.5 bg-emerald-400 rounded inline-block" /> {currentName || '나'}
@@ -636,6 +675,11 @@ export function ChartTab({
               <span className="w-4 h-0.5 bg-rose-400 rounded inline-block" /> {overlayName}
             </span>
           </>)}
+          {DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
+            <span key={o.key} className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: o.color }} /> {o.label}
+            </span>
+          ))}
         </div>
 
         {/* Main chart */}
@@ -668,7 +712,7 @@ export function ChartTab({
                     tickFormatter={isMonthly ? (v: number) => MONTH_LABELS[v - 1] ?? '' : undefined}
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName}/>} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName}/>} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
               {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#e0e0e0" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#aaa', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && seasonBands.map((b: SeasonBand, i: number) => (
@@ -677,6 +721,12 @@ export function ChartTab({
               {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#a78bfa" fillOpacity={0.12} stroke="#a78bfa" strokeOpacity={0.3} strokeWidth={1}/>}
               {mainOverlays.daewoon && <Line type="stepAfter" dataKey="trend" stroke="#ffd700" strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>}
               <Line type="monotone" dataKey="score" stroke="#82ca9d" strokeWidth={1.5} dot={false} name={isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
+              {DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
+                <Line key={o.key} type="monotone"
+                  dataKey={(d: Record<string, unknown>) => domainValue(d, o.field)}
+                  stroke={o.color} strokeWidth={1.5} dot={false} name={o.label}
+                  strokeDasharray="3 2" isAnimationActive={false} connectNulls={false}/>
+              ) : null)}
               {overlayActive && mainOverlays.daewoon && <Line type="stepAfter" dataKey="trendOv" stroke="#fda4af" strokeWidth={2} dot={false} name="대운(비교)" strokeDasharray="6 3" isAnimationActive={false} connectNulls={false}/>}
               {overlayActive && <Line type="monotone" dataKey="scoreOv" stroke="#fb7185" strokeWidth={1.5} dot={false} name={isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>}
               {mainOverlays.candle && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
@@ -970,6 +1020,38 @@ export function ChartTab({
                           className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 pointer-events-none"
                         />
                         <span className={`text-sm ${isLocked ? 'text-gray-400' : 'text-gray-700'}`}>{o.label}</span>
+                      </span>
+                      {isLocked && <span className="text-gray-300 text-sm leading-none">🔒</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-5">
+                <div className="text-xs font-semibold text-gray-500 mb-0.5">도메인 운세 선 (메인 차트)</div>
+                <div className="text-[10px] text-gray-400 mb-2">세운 점수와 같은 운세 점수(0~100) 기준이에요</div>
+                <div className={isLocked ? '' : 'stagger-fade-in'}>
+                  {DOMAIN_OVERLAYS.map(o => (
+                    <button
+                      key={o.key}
+                      type="button"
+                      onClick={() => {
+                        if (blockIfLocked(o.label)) return
+                        toggleDomain(o.key)
+                      }}
+                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-gray-50 transition-colors min-h-[44px] text-left"
+                    >
+                      <span className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={!isLocked && domainOverlays[o.key]}
+                          readOnly
+                          disabled={isLocked}
+                          className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 pointer-events-none"
+                        />
+                        <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-gray-400' : 'text-gray-700'}`}>
+                          <span className="w-3 h-0.5 rounded" style={{ backgroundColor: o.color, opacity: isLocked ? 0.4 : 1 }} />
+                          {o.label}
+                        </span>
                       </span>
                       {isLocked && <span className="text-gray-300 text-sm leading-none">🔒</span>}
                     </button>

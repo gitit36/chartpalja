@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
         isLeapMonth: true,
         createdAt: true,
         dayElement: true,
+        isRepresentative: true,
       },
     })
 

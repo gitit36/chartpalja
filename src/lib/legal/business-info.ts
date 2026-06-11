@@ -7,7 +7,7 @@ export const BUSINESS_INFO = {
   ecommerceNotice: '신고면제 대상',
   ecommerceNoticeDetail: '「전자상거래 등에서의 소비자보호에 관한 법률」 제12조제1항 및 「통신판매업 신고 면제 기준에 대한 고시」 제2조제1항제1호에 따른 신고면제 대상',
   ecommerceShort: '신고 면제 대상',
-  address: '서울특별시 강남구 삼성로 212, 31-215',
+  address: '서울시 강남구 역삼로 512 5층 2480',
   phone: '0502-6802-2728',
   email: 'support@onp0int.com',
   hostingProvider: 'Railway (미국)',

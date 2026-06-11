@@ -1872,6 +1872,41 @@ _RISK_PENALTY = {
     "지망(地網)":       {"직업": 0.8, "건강": 0.5},
 }
 
+# 도메인별 용신부합 민감도 — 그해(그달)의 용신/희신/기신부합은 5개 도메인에 공통으로
+# 더해져 도메인 선들이 종합점수의 단순 평행이동처럼 보이게 만든다. 도메인마다 민감도를
+# 달리해 공통항의 지배력을 깨고 선들이 서로 다른 진폭으로 움직이게 한다.
+_DOMAIN_YFIT_SENS = {"직업": 0.7, "재물": 1.1, "건강": 0.6, "연애": 1.0, "결혼": 0.85}
+
+# 도메인 고유 신호 증폭 계수 (세운 십성의 도메인 기여를 키워 변별력 강화).
+_DOMAIN_TG_AMP = 1.6
+
+def _shinsal_dom_adj(shinsal_list, d: str) -> float:
+    """해당 기간 신살들의 도메인 영향 합. 기간마다 신살이 달라 도메인 변별력의 핵심이 된다.
+    (domain_score의 매칭 규칙과 동일 — 한자 괄호 무시 부분 매칭)"""
+    total = 0.0
+    for name in (shinsal_list or []):
+        for k, bmap in _SHINSAL_DOM.items():
+            if k.split("(")[0] in name or name.split("(")[0] in k:
+                total += bmap.get(d, 0.0)
+    return total
+
+def _domain_anchor(base: float) -> float:
+    """원국/대운 base를 중앙(5)으로 끌어와 상·하단 여유를 만든다.
+    base가 10에 붙어 있으면(예: 직업) 위쪽 변동이 천장에 잘려 수평선이 되므로,
+    압축을 충분히 줘서 기간별 보정(adj)이 보일 헤드룸을 확보한다."""
+    return 5.0 + (base - 5.0) * 0.62
+
+def _domain_soft_clamp(x: float) -> float:
+    """[0,10] 소프트 클램프. 2~8 구간은 거의 선형, 양 끝은 부드럽게 압축해
+    0/10에 달라붙지 않게 한다. 포화로 인한 수평선을 방지하는 핵심 장치."""
+    lo, hi, k = 2.0, 8.0, 2.2
+    if x > hi:
+        return round(hi + k * (1.0 - math.exp(-(x - hi) / k)), 2)
+    if x < lo:
+        return round(lo - k * (1.0 - math.exp(-(lo - x) / k)), 2)
+    return round(x, 2)
+
+
 def domain_score(geok:str,shinsal_hits:List[str],ten_gods_all:Dict[str,str],verdict:str)->Dict[str,Any]:
     dom={"직업":5.0,"재물":5.0,"건강":5.0,"연애":5.0,"결혼":5.0}
     risk={"직업":0.0,"재물":0.0,"건강":0.0,"연애":0.0,"결혼":0.0}
@@ -4335,18 +4370,22 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
 
         for d in ("직업", "재물", "건강", "연애", "결혼"):
             adj = 0.0
-            adj += float(yfit["용신부합"]) * 0.8
-            adj += float(yfit["희신부합"]) * 0.4
-            adj -= float(yfit["기신부합"]) * 0.8
-            adj -= float(yfit.get("구신부합", 0)) * 0.4
+            sens = _DOMAIN_YFIT_SENS.get(d, 1.0)
+            adj += float(yfit["용신부합"]) * 0.8 * sens
+            adj += float(yfit["희신부합"]) * 0.4 * sens
+            adj -= float(yfit["기신부합"]) * 0.8 * sens
+            adj -= float(yfit.get("구신부합", 0)) * 0.4 * sens
 
             for tg in (tg_stem, tg_branch):
-                adj += _TG_DOM.get(tg, {}).get(d, 0.0)
+                adj += _TG_DOM.get(tg, {}).get(d, 0.0) * _DOMAIN_TG_AMP
+
+            # 대운 기간 신살의 도메인 효과 (도메인별 변별력)
+            adj += _shinsal_dom_adj(gil + hyung, d)
 
             # [v5] 도메인에서도 감쇠승수 적용 (과잉 penalty는 종합운에만)
             adj += _UNSEONG_SCORE.get(unseong, 0) * 0.05 * _unseong_mult(unseong, verdict, geok_type)
 
-            dom[d] = max(0.0, min(10.0, round(base_dom[d] + adj, 1)))
+            dom[d] = _domain_soft_clamp(_domain_anchor(base_dom[d]) + adj)
 
         dw_ypower = _calc_yongshin_power(yfit)
         dw_energy = _calc_energy_field(rels_w_orig, yong_info=yong, inc_stem=stem, inc_branch=branch,
@@ -4568,12 +4607,15 @@ def build_yearly_timeline(
         for d in ("직업", "재물", "건강", "연애", "결혼"):
             base = dw["domainScore"].get(d, 5.0)
             adj = 0.0
-            adj += float(sw_yfit["용신부합"]) * 0.5
-            adj += float(sw_yfit["희신부합"]) * 0.3
-            adj -= float(sw_yfit["기신부합"]) * 0.4
+            sens = _DOMAIN_YFIT_SENS.get(d, 1.0)
+            adj += float(sw_yfit["용신부합"]) * 0.5 * sens
+            adj += float(sw_yfit["희신부합"]) * 0.3 * sens
+            adj -= float(sw_yfit["기신부합"]) * 0.4 * sens
             for tg in (sw_tg_stem, sw_tg_branch):
-                adj += _TG_DOM.get(tg, {}).get(d, 0.0)
-            dom[d] = max(0.0, min(10.0, round(base + adj, 1)))
+                adj += _TG_DOM.get(tg, {}).get(d, 0.0) * _DOMAIN_TG_AMP
+            # 세운 기간 신살의 도메인 효과 (연도별 변별력의 핵심)
+            adj += _shinsal_dom_adj(sw_gil + sw_hyung, d)
+            dom[d] = _domain_soft_clamp(_domain_anchor(base) + adj)
 
         timeline.append({
             "year": year,
@@ -4978,16 +5020,16 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
         for d in ("직업", "재물", "건강", "연애", "결혼"):
             base = dw["domainScore"].get(d, 5.0)
             adj = 0.0
-            adj += float(m_yfit["용신부합"]) * 0.4
-            adj += float(m_yfit["희신부합"]) * 0.2
-            adj -= float(m_yfit["기신부합"]) * 0.3
+            sens = _DOMAIN_YFIT_SENS.get(d, 1.0)
+            adj += float(m_yfit["용신부합"]) * 0.4 * sens
+            adj += float(m_yfit["희신부합"]) * 0.2 * sens
+            adj -= float(m_yfit["기신부합"]) * 0.3 * sens
             for tg in (m_tg_stem, m_tg_branch):
-                adj += _TG_DOM.get(tg, {}).get(d, 0.0)
+                adj += _TG_DOM.get(tg, {}).get(d, 0.0) * _DOMAIN_TG_AMP
+            # 월별 신살의 도메인 효과
+            adj += _shinsal_dom_adj(all_gil + all_hyung, d)
 
-            dom[d] = max(
-                0.0,
-                min(10.0, round(base + adj, 1)),
-            )
+            dom[d] = _domain_soft_clamp(_domain_anchor(base) + adj)
 
         timeline.append({
             "month": month_num,
@@ -5154,7 +5196,22 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
     # 시즌 태그
     ypower = 0.3 if yong_match else (-0.2 if gi_match else 0.0)
     season = _calc_season_tag(ypower, d_energy["total"], d_energy["direction"])
-    
+
+    # 6대 생활 도메인 운세 점수 (0~100, 높을수록 좋음).
+    # 엔진의 이벤트 확률(_EVENT_TRIGGERS)을 그날 일진 기준으로 산출한 뒤,
+    # 긍정 이벤트(연애/재물/학업/이직)는 확률을 그대로, 부정 이벤트(건강주의/대인갈등)는
+    # 100-확률로 뒤집어 "운이 좋다=점수가 높다"로 일관되게 정렬한다.
+    _, _, _d_rel_keys = _extract_rel_keys(d_rels_orig, d_unseong)
+    _d_events = _calc_event_probabilities(d_gil + d_hyung, _d_rel_keys, d_unseong, [tg_stem, tg_branch])
+    운세도메인 = {
+        "연애": int(_d_events.get("연애_결혼", 50)),
+        "재물": int(_d_events.get("재물_기회", 50)),
+        "학업": int(_d_events.get("학업_시험", 50)),
+        "직업": int(_d_events.get("이직_전환", 50)),
+        "건강": int(100 - _d_events.get("건강_주의", 50)),
+        "대인": int(100 - _d_events.get("대인_갈등", 50)),
+    }
+
     return {
         "날짜": target_date_str,
         "일진": d_pillar,
@@ -5173,6 +5230,7 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
         "에너지장": d_energy,
         "점수": score,
         "등급": grade,
+        "운세도메인": 운세도메인,
         "breakdown": d_breakdown,
         "trine_hits": [dict(h, applies_to="daily") for h in d_trine],
         "gongmang_factors": d_gm,

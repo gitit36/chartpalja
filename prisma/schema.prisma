@@ -43,13 +43,33 @@ model SajuEntry {
   isLeapMonth    Boolean  @default(false)
   job            String?
   dayElement     String?
+  isRepresentative Boolean @default(false)
   sajuReportJson Json?
   fortuneJson    Json?
   fortuneJsonB   Json?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  dailyFortunes  DailyFortune[]
   @@index([userId])
   @@index([guestId])
+}
+
+// 일별 운세 점수 캐시 — (entry, date)별로 결정적이라 한 번 계산하면 영구 재사용.
+// 점수는 순수 엔진 산출물(LLM 비용 0). 출생정보 수정 시 해당 entry 캐시는 삭제한다.
+model DailyFortune {
+  id             String    @id @default(cuid())
+  entryId        String
+  entry          SajuEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  date           String                       // "YYYY-MM-DD" (KST 기준)
+  score          Int
+  grade          String
+  seasonTag      String?
+  seasonEmoji    String?
+  /// 6대 생활 도메인 운세 점수 (0~100). { 연애, 대인, 재물, 학업, 이직, 건강 }
+  domainsJson    Json?
+  createdAt      DateTime  @default(now())
+  @@unique([entryId, date])
+  @@index([entryId])
 }
 
 model AnalysisSession {

@@ -30,6 +30,13 @@ function getHeaders(): Record<string, string> {
   return getGuestHeaders()
 }
 
+/** 숫자만 들어있는 휴대폰 문자열을 010-1234-5678 형태로 표시한다. */
+function formatKoreanMobile(raw: string): string {
+  if (raw.length <= 3) return raw
+  if (raw.length <= 7) return `${raw.slice(0, 3)}-${raw.slice(3)}`
+  return `${raw.slice(0, 3)}-${raw.slice(3, 7)}-${raw.slice(7, 11)}`
+}
+
 interface SessionUserInfo {
   id: string
   email: string | null
@@ -41,6 +48,7 @@ async function createAndPay(
   paymentMethod: PaymentMethod,
   _router: ReturnType<typeof useRouter>,
   user: SessionUserInfo | null,
+  phoneNumber: string,
 ): Promise<{ success: boolean; orderId?: string; error?: string }> {
   const products = productCodes.map(getProduct).filter((p): p is Product => p !== null)
   if (products.length === 0) return { success: false, error: '상품 정보 오류' }
@@ -103,7 +111,8 @@ async function createAndPay(
   const params: Record<string, unknown> = {
     storeId,
     channelKey,
-    paymentId: `payment_${orderId}_${Date.now()}`,
+    // KG이니시스 oid 한도 40자. cuid(25) + base36 timestamp(~8) = ~35자.
+    paymentId: `p_${orderId}_${Date.now().toString(36)}`,
     orderName,
     totalAmount: amount,
     currency: currency || 'KRW',
@@ -112,10 +121,15 @@ async function createAndPay(
   }
   if (easyPayMap[paymentMethod]) params.easyPay = easyPayMap[paymentMethod]
 
-  if (paymentMethod === 'overseas') {
+  // PortOne 공통 customer 정보. KG이니시스 V2 일반결제(card/transfer) PC는
+  // email/phoneNumber 둘 다 SDK 레벨에서 필수. Eximbay(overseas)는 email 필수.
+  // 다른 PG에서도 무해하므로 항상 전달한다.
+  {
     const fullName = user?.nickname?.trim() || '고객'
     const email = user?.email?.trim() || `kakao_${user?.id ?? 'guest'}@chartpalja.com`
-    params.customer = { fullName, email }
+    const customer: Record<string, string> = { fullName, email }
+    if (phoneNumber) customer.phoneNumber = phoneNumber
+    params.customer = customer
   }
 
   let response: { code?: string; paymentId?: string; message?: string }
@@ -177,6 +191,8 @@ function CheckoutContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sessionUser, setSessionUser] = useState<SessionUserInfo | null>(null)
+  // 휴대폰 번호: 숫자만 저장(예: '01012345678'). KG이니시스 PC 결제 필수.
+  const [phoneRaw, setPhoneRaw] = useState<string>('')
 
   // 선택 상태가 바뀌면 URL 쿼리에 반영 (replace로 히스토리는 늘리지 않음)
   useEffect(() => {
@@ -197,7 +213,20 @@ function CheckoutContent() {
   const periodProduct = periodCode ? getProduct(periodCode) : null
   const hasSelection = chartProduct || periodProduct
   const totalPrice = (chartProduct?.price ?? 0) + (periodProduct?.price ?? 0)
-  const canPay = hasSelection && paymentMethod && agreed && !loading
+
+  // KG이니시스 PC 결제(card/transfer)는 SDK 레벨에서 phoneNumber 필수.
+  const phoneRequired = paymentMethod === 'card' || paymentMethod === 'transfer'
+  const isPhoneValid = /^010\d{8}$/.test(phoneRaw)
+  const phoneOk = !phoneRequired || isPhoneValid
+
+  const canPay = hasSelection && paymentMethod && agreed && phoneOk && !loading
+
+  // sessionStorage에서 이전 입력 휴대폰 번호 복원 (브라우저 세션 동안 자동 채움)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const saved = window.sessionStorage.getItem('checkout_phone')
+    if (saved && /^010\d{8}$/.test(saved)) setPhoneRaw(saved)
+  }, [])
 
   const orderName = useMemo(() => {
     const parts: string[] = []
@@ -257,7 +286,10 @@ function CheckoutContent() {
       if (chartCode) codes.push(chartCode)
       if (periodCode) codes.push(periodCode)
 
-      const result = await createAndPay(codes, paymentMethod, router, sessionUser)
+      if (phoneRequired && isPhoneValid && typeof window !== 'undefined') {
+        window.sessionStorage.setItem('checkout_phone', phoneRaw)
+      }
+      const result = await createAndPay(codes, paymentMethod, router, sessionUser, phoneRaw)
 
       if (!result.success) {
         if (result.error === 'cancel') {
@@ -275,7 +307,7 @@ function CheckoutContent() {
     } finally {
       setLoading(false)
     }
-  }, [hasSelection, paymentMethod, chartCode, periodCode, router, sessionUser, returnUrl])
+  }, [hasSelection, paymentMethod, chartCode, periodCode, router, sessionUser, returnUrl, phoneRaw, phoneRequired, isPhoneValid])
 
   return (
     <MobileContainer>
@@ -316,6 +348,35 @@ function CheckoutContent() {
               onSelect={setPaymentMethod}
               disabledMethods={disabledMethods}
             />
+          </section>
+        )}
+
+        {hasSelection && paymentMethod && phoneRequired && (
+          <section className="mb-5">
+            <label className="block">
+              <span className="text-sm font-semibold text-gray-700 mb-1.5 block">연락처</span>
+              <input
+                type="tel"
+                inputMode="numeric"
+                autoComplete="tel"
+                value={formatKoreanMobile(phoneRaw)}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '').slice(0, 11)
+                  setPhoneRaw(digits)
+                }}
+                placeholder="010-1234-5678"
+                maxLength={13}
+                aria-invalid={phoneRaw.length > 0 && !isPhoneValid}
+                className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-900 placeholder-gray-400 focus:outline-none ${
+                  phoneRaw.length > 0 && !isPhoneValid
+                    ? 'border-red-300 focus:border-red-400'
+                    : 'border-gray-200 focus:border-gray-400'
+                }`}
+              />
+              <span className="text-[11px] text-gray-500 mt-1.5 block">
+                결제 영수증 발송 등 결제 처리에만 사용됩니다.
+              </span>
+            </label>
           </section>
         )}
 

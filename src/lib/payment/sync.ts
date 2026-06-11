@@ -13,6 +13,7 @@ export type SyncResult =
   | { ok: false; reason: 'order_not_found' | 'payment_not_found' | 'invalid_custom_data' | 'amount_mismatch' | 'currency_mismatch' | 'order_name_mismatch' | 'error'; orderId?: string; detail?: string }
 
 function extractOrderId(paymentId: string, customData: unknown): string | null {
+  // primary: requestPayment 시 넘긴 customData (JSON.stringify({ orderId })).
   if (typeof customData === 'string') {
     try {
       const parsed = JSON.parse(customData) as { orderId?: unknown }
@@ -20,11 +21,16 @@ function extractOrderId(paymentId: string, customData: unknown): string | null {
     } catch {
       // ignore
     }
+  } else if (customData && typeof customData === 'object') {
+    // 일부 PG/SDK 버전은 customData를 객체 그대로 돌려준다.
+    const obj = customData as { orderId?: unknown }
+    if (typeof obj.orderId === 'string') return obj.orderId
   }
-  if (paymentId.startsWith('payment_')) {
-    const parts = paymentId.split('_')
-    if (parts.length >= 2 && parts[1]) return parts[1]
-  }
+  // fallback: paymentId 자체에서 추출.
+  //   - 신규: p_<cuid>_<base36>          (KG이니시스 oid 40자 제한 대응)
+  //   - 구버전: payment_<cuid>_<ms>       (~2026-05 까지)
+  const m = paymentId.match(/^(?:payment|p)_([a-z0-9]+)_/i)
+  if (m && m[1]) return m[1]
   return null
 }
 
