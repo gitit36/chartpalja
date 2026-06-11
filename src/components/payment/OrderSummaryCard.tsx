@@ -2,6 +2,7 @@
 
 import { formatPrice, calcFreePeriodCredits } from '@/lib/payment/products'
 import type { Product } from '@/lib/payment/products'
+import { BUSINESS_INFO } from '@/lib/legal/business-info'
 
 interface Props {
   chartProduct: Product | null
@@ -41,6 +42,10 @@ export function OrderSummaryCard({ chartProduct, periodProduct, totalPrice }: Pr
         <span className="text-sm font-semibold text-gray-700">총 결제 금액</span>
         <span className="text-lg font-bold text-gray-900">{formatPrice(totalPrice)}원</span>
       </div>
+
+      <p className="mt-3 text-[11px] text-gray-400 leading-relaxed">
+        서비스 제공 기간: {BUSINESS_INFO.serviceDeliveryPeriod}
+      </p>
     </div>
   )
 }

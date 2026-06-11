@@ -21,4 +21,6 @@ export const BUSINESS_INFO = {
   refundEffectiveDate: '2026년 5월 1일',
   minAge: 14,
   ticketValidityMonths: 12,
+  // 비실물(디지털) 상품 제공 기간 — 결제 즉시 이용권이 자동 충전되어 바로 사용 가능
+  serviceDeliveryPeriod: '결제 완료 후 즉시 이용 가능 (이용권 자동 충전)',
 } as const

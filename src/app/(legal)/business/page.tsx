@@ -42,6 +42,7 @@ export default function BusinessPage() {
           </span>
         </Row>
         <Row label="사업장 소재지">{B.address}</Row>
+        <Row label="서비스 제공 기간">{B.serviceDeliveryPeriod}</Row>
         <Row label="고객센터">
           <a href={`tel:${B.phone}`} className="text-purple-600 underline">{B.phone}</a>
         </Row>
