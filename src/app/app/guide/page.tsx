@@ -195,7 +195,7 @@ const AUX_ITEMS: GuideItem[] = [
     body: (
       <ul className="space-y-1">
         <Bullet>총운 점수와 별개로, 특정 영역 사건 발생 가능성임.</Bullet>
-        <Bullet>이직·연애·건강·재물·학업·대인 6가지 영역별 확률.</Bullet>
+        <Bullet>직업·연애·건강·재물·학업·대인 6가지 영역별 확률.</Bullet>
         <Bullet>높다고 반드시 좋은 건 아님. 예) 건강 확률 높음 = 건강 관련 사건이 생길 확률.</Bullet>
         <Bullet>총운 재물 점수 = 재물운의 좋고 나쁨 / 이벤트 재물 = 큰 돈이 오갈 이벤트 확률.</Bullet>
       </ul>

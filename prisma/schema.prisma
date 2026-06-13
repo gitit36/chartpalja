@@ -65,7 +65,7 @@ model DailyFortune {
   grade          String
   seasonTag      String?
   seasonEmoji    String?
-  /// 6대 생활 도메인 운세 점수 (0~100). { 연애, 대인, 재물, 학업, 이직, 건강 }
+  /// 6대 생활 도메인 운세 점수 (0~100). { 연애, 대인, 재물, 학업, 직업, 건강 }
   domainsJson    Json?
   createdAt      DateTime  @default(now())
   @@unique([entryId, date])

@@ -953,7 +953,7 @@ export function ChartTab({
             <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">이벤트 확률 {selectedData ? `(${selectedData.year}${isMonthly ? '월' : '년'})` : '- 차트 클릭'}<InfoTip text={"총운 점수와는 별개로, 특정 사건이 일어날 가능성을 보여줘요.\n예) 총운의 재물 점수 = 재물운의 좋고 나쁨\n이벤트 재물확률 = 큰 돈이 오갈 이벤트가 생길 확률\n높다고 반드시 좋은 건 아니에요."} /></div>
             {selectedData ? (() => {
               const evData = [
-                {n:'이직', p:selectedData.eventCareer, pO:selectedOverlayData?.eventCareer ?? 0},
+                {n:'직업', p:selectedData.eventCareer, pO:selectedOverlayData?.eventCareer ?? 0},
                 {n:'연애', p:selectedData.eventLove, pO:selectedOverlayData?.eventLove ?? 0},
                 {n:'건강', p:selectedData.eventHealth, pO:selectedOverlayData?.eventHealth ?? 0},
                 {n:'재물', p:selectedData.eventWealth, pO:selectedOverlayData?.eventWealth ?? 0},
