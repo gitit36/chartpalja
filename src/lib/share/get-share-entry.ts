@@ -19,6 +19,41 @@ export interface PublicShareEntry {
   fortuneJson: unknown | null
 }
 
+/** 공유 페이지에서 "비교" 대상으로 노출할 공개 예시 인물(차트팔자에 저장된 공인). */
+const SAMPLE_NAMES = ['리오넬 메시', '전소연', '강호동']
+
+export interface ShareSample {
+  id: string
+  name: string
+  gender: string
+  birthDate: string
+  dayElement: string | null
+}
+
+/**
+ * 공개 비교용 예시 인물 목록. isShared 이고 sajuReportJson 이 있는 항목만,
+ * 이름당 1건씩 SAMPLE_NAMES 순서로 반환한다.
+ */
+export async function getShareSamples(excludeId?: string): Promise<ShareSample[]> {
+  const rows = await prisma.sajuEntry
+    .findMany({
+      where: { name: { in: SAMPLE_NAMES }, isShared: true },
+      select: { id: true, name: true, gender: true, birthDate: true, dayElement: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+    })
+    .catch(() => [] as { id: string; name: string; gender: string; birthDate: string; dayElement: string | null; createdAt: Date }[])
+
+  const seen = new Set<string>()
+  const out: ShareSample[] = []
+  for (const r of rows) {
+    if (excludeId && r.id === excludeId) continue
+    if (seen.has(r.name)) continue
+    seen.add(r.name)
+    out.push({ id: r.id, name: r.name, gender: r.gender, birthDate: r.birthDate, dayElement: r.dayElement ?? null })
+  }
+  return out.sort((a, b) => SAMPLE_NAMES.indexOf(a.name) - SAMPLE_NAMES.indexOf(b.name))
+}
+
 /** 공유 공개된 엔트리만 반환. 비공개거나 없으면 null. */
 export async function getPublicShareEntry(id: string): Promise<PublicShareEntry | null> {
   const entry = await prisma.sajuEntry.findUnique({ where: { id } }).catch(() => null)

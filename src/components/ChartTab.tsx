@@ -428,18 +428,23 @@ export function ChartTab({
     const gid = getGuestId()
     const headers: Record<string, string> = {}
     if (gid) headers['x-guest-id'] = gid
-    fetch(`/api/saju/${overlayEntryId}`, { headers })
+    // 공유 뷰에서는 인증 없이 접근 가능한 공개 엔드포인트를 쓴다.
+    const url = shareMode ? `/api/share/${overlayEntryId}` : `/api/saju/${overlayEntryId}`
+    fetch(url, { headers })
       .then(r => r.ok ? r.json() : null)
       .then(d => {
         if (d?.sajuReportJson) {
           setOverlayReport(d.sajuReportJson)
-          setOverlayBirthYear(parseInt(d.birthDate.slice(0, 4), 10))
+          const by = typeof d.birthYear === 'number'
+            ? d.birthYear
+            : parseInt(String(d.birthDate ?? '').slice(0, 4), 10)
+          setOverlayBirthYear(Number.isFinite(by) ? by : null)
           setOverlayName(d.name || '')
           setOverlayGender(d.gender || '')
         }
       })
       .catch(() => {})
-  }, [overlayEntryId])
+  }, [overlayEntryId, shareMode])
 
   const clearOverlay = useCallback(() => {
     setOverlayEntryId(null); setOverlayReport(null); setOverlayBirthYear(null)
@@ -527,18 +532,22 @@ export function ChartTab({
 
   const markerYear = hoverYear ?? clickedYear
 
+  // 십성 밸런스/이벤트 확률 패널은 "마지막으로 본 연도"를 고정해 둔다.
+  // 커서/손가락을 떼도(=markerYear 가 null 이 되어도) 직전 값이 남도록 한다.
+  const [pinnedYear, setPinnedYear] = useState<number | null>(null)
+  useEffect(() => { if (markerYear != null) setPinnedYear(markerYear) }, [markerYear])
+  // 우선순위: 현재 가리키는 연도 > 선택 구간 시작 > 마지막 고정 연도 > 올해(월)
+  const focusYear = markerYear ?? selection?.startYear ?? pinnedYear ?? (isMonthly ? THIS_MONTH : THIS_YEAR)
+
   const selectedData = useMemo(() => {
-    const yr = markerYear ?? selection?.startYear
-    return yr ? mergedData.find(d => d.year === yr) ?? null : null
-  }, [markerYear, selection, mergedData])
+    return focusYear != null ? mergedData.find(d => d.year === focusYear) ?? null : null
+  }, [focusYear, mergedData])
 
   const selectedOverlayData = useMemo(() => {
-    if (!overlayActive) return null
-    const yr = markerYear ?? selection?.startYear
-    if (!yr) return null
+    if (!overlayActive || focusYear == null) return null
     const ovSrc = isMonthly ? overlayChartData!.monthlyData : overlayChartData!.data
-    return ovSrc?.find(d => d.year === yr) ?? null
-  }, [markerYear, selection, overlayActive, overlayChartData, isMonthly])
+    return ovSrc?.find(d => d.year === focusYear) ?? null
+  }, [focusYear, overlayActive, overlayChartData, isMonthly])
 
   const hasEngineData = !!(chartPayload?.['연도별_타임라인']?.length)
   const seasonBands = fullChartData?.seasonBands ?? []
@@ -758,12 +767,14 @@ export function ChartTab({
         {/* Period selector + function buttons */}
         <div className="flex justify-center items-center gap-1.5 mt-2 mb-1" ref={chartRef}>
           {([['1y', '1년'], ['10y', '10년'], ['all', '전체']] as [PeriodKey, string][]).map(([k, l]) => (
-            <button key={k} onClick={() => { setPeriod(k); setSelection(null); setYearSummary(null); setYearSummaryLoading(false); setRangeMode(false); rangeFirst.current = null }}
+            <button key={k} onClick={() => { setPeriod(k); setSelection(null); setYearSummary(null); setYearSummaryLoading(false); setRangeMode(false); rangeFirst.current = null; setPinnedYear(null) }}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>{l}</button>
           ))}
-          {/* 비교/구간 해설은 소유자 크레딧을 쓰는 기능이라 공유 뷰에서는 숨긴다. */}
-          {!shareMode && (<>
-          <span className="w-px h-4 bg-gray-200 mx-1"/>
+          {/* 구분선 — 비교/구간 버튼 중 하나라도 보일 때만 */}
+          {(otherEntries.length > 0 || !shareMode) && (
+            <span className="w-px h-4 bg-gray-200 mx-1"/>
+          )}
+          {/* 비교: 공유 뷰에서도 예시 인물과 비교 가능 (크레딧 무소모) */}
           {otherEntries.length > 0 && (
             overlayActive ? (
               <button onClick={clearOverlay}
@@ -784,23 +795,25 @@ export function ChartTab({
               </button>
             )
           )}
-          <button
-            onClick={() => {
-              if (blockIfLocked('구간 해설')) return
-              const next = !rangeMode
-              setRangeMode(next)
-              if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
-              else { setSelection(null); rangeFirst.current = null }
-            }}
-            className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
-              rangeMode
-                ? 'bg-purple-600 text-white'
-                : 'bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 shadow-sm text-gray-400 hover:text-purple-500'
-            }`}
-          >
-            🗓️ 구간{isLocked ? ' 🔒' : ''}
-          </button>
-          </>)}
+          {/* 구간 해설은 소유자 크레딧을 쓰는 기능이라 공유 뷰에서는 숨긴다. */}
+          {!shareMode && (
+            <button
+              onClick={() => {
+                if (blockIfLocked('구간 해설')) return
+                const next = !rangeMode
+                setRangeMode(next)
+                if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
+                else { setSelection(null); rangeFirst.current = null }
+              }}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
+                rangeMode
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 shadow-sm text-gray-400 hover:text-purple-500'
+              }`}
+            >
+              🗓️ 구간{isLocked ? ' 🔒' : ''}
+            </button>
+          )}
         </div>
       </div>
 
@@ -1112,7 +1125,11 @@ export function ChartTab({
       {/* Compare bottom sheet */}
       {compareSheetOpen && (
         <BottomSheet onClose={() => setCompareSheetOpen(false)}>
-          <h3 className="font-bold text-gray-900 mb-4">누구와 비교할까요?</h3>
+          <h3 className="font-bold text-gray-900 mb-1">누구와 비교할까요?</h3>
+          {shareMode && (
+            <p className="text-xs text-gray-400 mb-3">차트팔자에 저장된 공인과 비교해볼 수 있어요</p>
+          )}
+          {!shareMode && <div className="mb-4" />}
           {otherEntries.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-6">비교할 다른 사주가 없습니다</p>
           ) : (
