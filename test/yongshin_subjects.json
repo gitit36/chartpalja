@@ -1,20 +1,4087 @@
 [
   {
-    "name": "본인(예시 — 실제 값으로 교체)",
-    "y": 1990,
-    "m": 5,
-    "d": 15,
-    "h": 14,
+    "name": "본인",
     "gender": "male",
-    "good_years": [
-      2014,
-      2015,
-      2021
-    ],
-    "bad_years": [
-      2009,
-      2018
-    ],
-    "yongshin_override": null
+    "birth": {
+      "calendar": "solar",
+      "y": 1997,
+      "m": 3,
+      "d": 6,
+      "h": 3,
+      "min": 25,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1997,
+      "m": 3,
+      "d": 6,
+      "h": 3,
+      "min": 25,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "예시값. 실제 값으로 교체 필요."
+    },
+    "source_quality": "unknown",
+    "source_note": "sample placeholder",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2007,
+          "label": "예시 good year",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2012,
+          "label": "예시 good year",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2016,
+          "label": "예시 good year",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2019,
+          "label": "예시 good year",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2009,
+          "label": "예시 bad year",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2018,
+          "label": "예시 bad year",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Donald Trump",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1946,
+      "m": 6,
+      "d": 14,
+      "h": 23,
+      "min": 54,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1946,
+      "m": 6,
+      "d": 14,
+      "h": 10,
+      "min": 54,
+      "place": "Jamaica Hospital, Queens, New York, USA",
+      "timezone": "America/New_York",
+      "note": "EDT, UTC-4"
+    },
+    "source_quality": "A_birth_record",
+    "source_note": "public birth record / Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1983,
+          "label": "Trump Tower 완공으로 부동산 사업가 이미지 강화",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1987,
+          "label": "The Art of the Deal 출간 및 대중적 인지도 상승",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2004,
+          "label": "The Apprentice 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "미국 대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "제45대 미국 대통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "미국 대통령 재선 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "제47대 미국 대통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1990,
+          "label": "부동산·카지노 사업 부채 위기",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2019,
+          "label": "1차 탄핵소추",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "대선 패배",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "1월 6일 사태 및 2차 탄핵소추",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2023,
+          "label": "형사 기소 리스크 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2024,
+          "label": "형사 유죄 평결 등 사법 리스크",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Barack Obama",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1961,
+      "m": 8,
+      "d": 5,
+      "h": 13,
+      "min": 54,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1961,
+      "m": 8,
+      "d": 4,
+      "h": 19,
+      "min": 24,
+      "place": "Honolulu, Hawaii, USA",
+      "timezone": "Pacific/Honolulu",
+      "note": "HST, UTC-10. 당시 한국은 UTC+8:30."
+    },
+    "source_quality": "A_birth_record",
+    "source_note": "long-form birth certificate",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1996,
+          "label": "일리노이 주 상원의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2004,
+          "label": "민주당 전당대회 연설 및 연방 상원의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "미국 대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2009,
+          "label": "대통령 취임 및 노벨평화상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2011,
+          "label": "오사마 빈라덴 사살 작전 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2012,
+          "label": "대통령 재선",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2000,
+          "label": "연방 하원의원 경선 패배",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2010,
+          "label": "중간선거 대패 및 정치적 타격",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2014,
+          "label": "중간선거 패배로 레임덕 심화",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Michael Jackson",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1958,
+      "m": 8,
+      "d": 30,
+      "h": 10,
+      "min": 3,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1958,
+      "m": 8,
+      "d": 29,
+      "h": 19,
+      "min": 33,
+      "place": "Gary, Indiana, USA",
+      "timezone": "America/Chicago",
+      "note": "CDT, UTC-5. 당시 한국은 DST로 UTC+9:30."
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1969,
+          "label": "Jackson 5 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1982,
+          "label": "Thriller 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1983,
+          "label": "Motown 25 및 문워크 대중화",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1984,
+          "label": "Grammy 대성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1987,
+          "label": "Bad 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1991,
+          "label": "Dangerous 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1995,
+          "label": "HIStory 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1984,
+          "label": "Pepsi 광고 촬영 중 화상 사고",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1993,
+          "label": "성추문 의혹 및 이미지 타격",
+          "weight": 1.0,
+          "confidence": "low"
+        },
+        {
+          "year": 2005,
+          "label": "형사재판 국면 및 무죄 평결",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2009,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Justin Bieber",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1994,
+      "m": 3,
+      "d": 1,
+      "h": 14,
+      "min": 56,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1994,
+      "m": 3,
+      "d": 1,
+      "h": 0,
+      "min": 56,
+      "place": "London, Ontario, Canada",
+      "timezone": "America/Toronto",
+      "note": "EST, UTC-5"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 2009,
+          "label": "데뷔 및 글로벌 주목",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2010,
+          "label": "Baby 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2015,
+          "label": "Purpose 발매 및 커리어 반등",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "글로벌 투어/차트 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "Justice 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2014,
+          "label": "체포 및 대중 이미지 악화",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "건강 문제로 투어 중단",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Chris Brown",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1989,
+      "m": 5,
+      "d": 6,
+      "h": 1,
+      "min": 30,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1989,
+      "m": 5,
+      "d": 5,
+      "h": 12,
+      "min": 30,
+      "place": "Tappahannock, Virginia, USA",
+      "timezone": "America/New_York",
+      "note": "EDT, UTC-4"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 2005,
+          "label": "데뷔 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2006,
+          "label": "상업적 성공 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2011,
+          "label": "F.A.M.E. 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2012,
+          "label": "그래미 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2009,
+          "label": "폭행 사건 및 커리어 타격",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2013,
+          "label": "법적 문제 확대",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2014,
+          "label": "구금/법적 리스크",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Hillary Clinton",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1947,
+      "m": 10,
+      "d": 27,
+      "h": 9,
+      "min": 45,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1947,
+      "m": 10,
+      "d": 26,
+      "h": 18,
+      "min": 45,
+      "place": "Chicago, Illinois, USA",
+      "timezone": "America/Chicago",
+      "note": "CST, UTC-6"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1992,
+          "label": "Bill Clinton 대통령 당선으로 First Lady 예정자 부상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1993,
+          "label": "미국 First Lady 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2000,
+          "label": "뉴욕주 상원의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "민주당 대선 경선 유력 주자",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2009,
+          "label": "미국 국무장관 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2016,
+          "label": "미국 주요 정당 첫 여성 대선후보",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1998,
+          "label": "Lewinsky 스캔들 국면",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "민주당 대선 경선 패배",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2012,
+          "label": "Benghazi 사건 관련 정치적 부담 확대",
+          "weight": 1.0,
+          "confidence": "low"
+        },
+        {
+          "year": 2015,
+          "label": "이메일 서버 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "대선 패배",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Kamala Harris",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1964,
+      "m": 10,
+      "d": 21,
+      "h": 13,
+      "min": 28,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1964,
+      "m": 10,
+      "d": 20,
+      "h": 21,
+      "min": 28,
+      "place": "Oakland, California, USA",
+      "timezone": "America/Los_Angeles",
+      "note": "PDT, UTC-7"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 2003,
+          "label": "San Francisco District Attorney 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2010,
+          "label": "California Attorney General 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2016,
+          "label": "미국 상원의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "미국 부통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "미국 부통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "민주당 대선후보로 선출",
+          "weight": 0.5,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2019,
+          "label": "대선 경선 중도 하차",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "대선 패배",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Al Gore",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1948,
+      "m": 4,
+      "d": 1,
+      "h": 2,
+      "min": 53,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1948,
+      "m": 3,
+      "d": 31,
+      "h": 12,
+      "min": 53,
+      "place": "Washington, DC, USA",
+      "timezone": "America/New_York",
+      "note": "EST, UTC-5"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1976,
+          "label": "미국 하원의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1984,
+          "label": "미국 상원의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1992,
+          "label": "부통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1993,
+          "label": "미국 부통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1996,
+          "label": "부통령 재선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2006,
+          "label": "An Inconvenient Truth 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2007,
+          "label": "노벨평화상 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1988,
+          "label": "민주당 대선 경선 중도 하차",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2000,
+          "label": "미국 대선 패배 및 재검표 분쟁",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Amy Klobuchar",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1960,
+      "m": 5,
+      "d": 25,
+      "h": 15,
+      "min": 26,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1960,
+      "m": 5,
+      "d": 25,
+      "h": 0,
+      "min": 56,
+      "place": "St. Louis Park, Minnesota, USA",
+      "timezone": "America/Chicago",
+      "note": "CDT, UTC-5. 당시 한국은 DST로 UTC+9:30."
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1998,
+          "label": "Hennepin County Attorney 재선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2006,
+          "label": "미국 상원의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2012,
+          "label": "상원의원 재선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2018,
+          "label": "상원의원 재선",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2019,
+          "label": "대선 출마 초반 참모진 대우 논란 보도",
+          "weight": 0.8,
+          "confidence": "low"
+        },
+        {
+          "year": 2020,
+          "label": "대선 경선 중도 하차",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "strict_candidate"
+  },
+  {
+    "name": "Monica Lewinsky",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1973,
+      "m": 7,
+      "d": 24,
+      "h": 4,
+      "min": 21,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1973,
+      "m": 7,
+      "d": 23,
+      "h": 12,
+      "min": 21,
+      "place": "San Francisco, California, USA",
+      "timezone": "America/Los_Angeles",
+      "note": "PDT, UTC-7"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 2014,
+          "label": "공개 활동 재개 및 사회적 발언 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2015,
+          "label": "TED 강연 The Price of Shame로 공개 재평가 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2018,
+          "label": "반사이버불링 활동과 미디어 재평가 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1998,
+          "label": "Clinton-Lewinsky scandal 공개",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1999,
+          "label": "상원 탄핵심판·스캔들 후폭풍 지속",
+          "weight": 1.0,
+          "confidence": "low"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Madonna",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1958,
+      "m": 8,
+      "d": 16,
+      "h": 21,
+      "min": 35,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1958,
+      "m": 8,
+      "d": 16,
+      "h": 7,
+      "min": 5,
+      "place": "Bay City, Michigan, USA",
+      "timezone": "America/Detroit",
+      "note": "EDT, UTC-5. 당시 한국은 DST로 UTC+9:30."
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1984,
+          "label": "Like a Virgin 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1989,
+          "label": "Like a Prayer 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1990,
+          "label": "Vogue 및 Blond Ambition Tour 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1998,
+          "label": "Ray of Light로 음악적 재평가",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2008,
+          "label": "Rock and Roll Hall of Fame 입성",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1992,
+          "label": "Erotica/Sex 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2003,
+          "label": "American Life 상업적 부진",
+          "weight": 1.0,
+          "confidence": "low"
+        },
+        {
+          "year": 2023,
+          "label": "건강 악화로 투어 연기",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Elizabeth Taylor",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1932,
+      "m": 2,
+      "d": 27,
+      "h": 11,
+      "min": 30,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1932,
+      "m": 2,
+      "d": 27,
+      "h": 2,
+      "min": 30,
+      "place": "London, England",
+      "timezone": "Europe/London",
+      "note": "GMT, UTC+0"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1944,
+          "label": "National Velvet 성공",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1959,
+          "label": "Suddenly, Last Summer 등 배우로서 위상 강화",
+          "weight": 0.6,
+          "confidence": "medium"
+        },
+        {
+          "year": 1961,
+          "label": "아카데미 여우주연상 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1963,
+          "label": "Cleopatra로 세계적 화제",
+          "weight": 0.5,
+          "confidence": "medium"
+        },
+        {
+          "year": 1967,
+          "label": "두 번째 아카데미 여우주연상 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1958,
+          "label": "Mike Todd 사망",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1961,
+          "label": "중증 폐렴·기관절개 등 건강 위기",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2011,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "strict_candidate"
+  },
+  {
+    "name": "Drake",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1986,
+      "m": 10,
+      "d": 24,
+      "h": 15,
+      "min": 31,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1986,
+      "m": 10,
+      "d": 24,
+      "h": 2,
+      "min": 31,
+      "place": "Toronto, Ontario, Canada",
+      "timezone": "America/Toronto",
+      "note": "EDT, UTC-4"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 2009,
+          "label": "So Far Gone 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2010,
+          "label": "Thank Me Later 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2011,
+          "label": "Take Care 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2015,
+          "label": "If You're Reading This It's Too Late 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "Views/One Dance 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2018,
+          "label": "Scorpion 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "Certified Lover Boy 상업적 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2015,
+          "label": "ghostwriting 논란 및 Meek Mill 공개 디스전",
+          "weight": 0.8,
+          "confidence": "medium"
+        },
+        {
+          "year": 2018,
+          "label": "Pusha T 디스전 및 사생활 공개 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2024,
+          "label": "Kendrick Lamar와 공개 디스전에서 이미지 타격",
+          "weight": 1.0,
+          "confidence": "low"
+        },
+        {
+          "year": 2025,
+          "label": "Kendrick Lamar 디스전 후폭풍 지속",
+          "weight": 0.7,
+          "confidence": "low"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "strict_candidate"
+  },
+  {
+    "name": "Diana Ross",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1944,
+      "m": 3,
+      "d": 27,
+      "h": 12,
+      "min": 46,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1944,
+      "m": 3,
+      "d": 26,
+      "h": 23,
+      "min": 46,
+      "place": "Detroit, Michigan, USA",
+      "timezone": "America/Detroit",
+      "note": "EWT/war time equivalent, UTC-4"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1964,
+          "label": "The Supremes 대성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1970,
+          "label": "솔로 전환",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1972,
+          "label": "Lady Sings the Blues 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1980,
+          "label": "Upside Down 등 솔로 히트",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2002,
+          "label": "법적/개인적 논란",
+          "weight": 1.0,
+          "confidence": "low"
+        },
+        {
+          "year": 2004,
+          "label": "DUI 유죄 및 48시간 구금 판결",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "strict_candidate"
+  },
+  {
+    "name": "Dennis Rodman",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1961,
+      "m": 5,
+      "d": 13,
+      "h": 12,
+      "min": 40,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1961,
+      "m": 5,
+      "d": 13,
+      "h": 0,
+      "min": 10,
+      "place": "Trenton, New Jersey, USA",
+      "timezone": "America/New_York",
+      "note": "EDT, UTC-4. 당시 한국은 UTC+8:30."
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1989,
+          "label": "NBA 우승",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1990,
+          "label": "NBA 우승 및 수비상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1991,
+          "label": "NBA Defensive Player of the Year 연속 수상",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
+          "year": 1996,
+          "label": "Chicago Bulls 우승",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1997,
+          "label": "Chicago Bulls 우승",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1998,
+          "label": "Chicago Bulls 우승",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2011,
+          "label": "Basketball Hall of Fame 헌액",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1993,
+          "label": "개인적 위기 공개",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1999,
+          "label": "Lakers 방출 및 경기 외 논란 누적 국면",
+          "weight": 0.7,
+          "confidence": "medium"
+        },
+        {
+          "year": 2014,
+          "label": "북한 관련 논란",
+          "weight": 0.7,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Ron Howard",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1954,
+      "m": 3,
+      "d": 2,
+      "h": 0,
+      "min": 3,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1954,
+      "m": 3,
+      "d": 1,
+      "h": 9,
+      "min": 3,
+      "place": "Duncan, Oklahoma, USA",
+      "timezone": "America/Chicago",
+      "note": "CST, UTC-6"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1960,
+          "label": "The Andy Griffith Show로 아역 스타 부상",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1974,
+          "label": "Happy Days 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1995,
+          "label": "Apollo 13 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2002,
+          "label": "A Beautiful Mind 아카데미 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2011,
+          "label": "The Dilemma 혹평·상업적 부진",
+          "weight": 0.5,
+          "confidence": "low"
+        },
+        {
+          "year": 2018,
+          "label": "Solo: A Star Wars Story 흥행 기대치 하회",
+          "weight": 0.7,
+          "confidence": "low"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "strict_candidate"
+  },
+  {
+    "name": "John Ritter",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1948,
+      "m": 9,
+      "d": 17,
+      "h": 23,
+      "min": 59,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1948,
+      "m": 9,
+      "d": 17,
+      "h": 7,
+      "min": 59,
+      "place": "Burbank, California, USA",
+      "timezone": "America/Los_Angeles",
+      "note": "PDT, UTC-7"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1977,
+          "label": "Three's Company 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1984,
+          "label": "Emmy/Golden Globe 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2002,
+          "label": "8 Simple Rules로 TV 복귀",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1985,
+          "label": "Three's a Crowd 조기 종영",
+          "weight": 0.6,
+          "confidence": "medium"
+        },
+        {
+          "year": 2003,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Sean Penn",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1960,
+      "m": 8,
+      "d": 18,
+      "h": 7,
+      "min": 47,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1960,
+      "m": 8,
+      "d": 17,
+      "h": 15,
+      "min": 17,
+      "place": "Burbank, California, USA",
+      "timezone": "America/Los_Angeles",
+      "note": "PDT, UTC-7. 당시 한국은 DST로 UTC+9:30."
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1982,
+          "label": "Fast Times at Ridgemont High로 주목",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2003,
+          "label": "Mystic River 아카데미 남우주연상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "Milk 아카데미 남우주연상",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1987,
+          "label": "폭행 사건 등 법적 문제",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2016,
+          "label": "El Chapo 인터뷰 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Björk",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1965,
+      "m": 11,
+      "d": 21,
+      "h": 18,
+      "min": 10,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1965,
+      "m": 11,
+      "d": 21,
+      "h": 8,
+      "min": 10,
+      "place": "Reykjavík, Iceland",
+      "timezone": "Atlantic/Reykjavik",
+      "note": "UTC-1 historical offset"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1993,
+          "label": "Debut 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1995,
+          "label": "Post 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2000,
+          "label": "Dancer in the Dark 칸 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2001,
+          "label": "Vespertine 발매",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1996,
+          "label": "스토커 사건",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2008,
+          "label": "상하이 공연 Tibet 발언 논란",
+          "weight": 0.8,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "Kylie Jenner",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1997,
+      "m": 8,
+      "d": 11,
+      "h": 9,
+      "min": 25,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1997,
+      "m": 8,
+      "d": 10,
+      "h": 17,
+      "min": 25,
+      "place": "Los Angeles, California, USA",
+      "timezone": "America/Los_Angeles",
+      "note": "PDT, UTC-7"
+    },
+    "source_quality": "A_rodden_AA",
+    "source_note": "Astro-Databank-type source",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 2007,
+          "label": "Keeping Up with the Kardashians 시작",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2015,
+          "label": "Kylie Cosmetics 시작",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2019,
+          "label": "사업가로 대중적 정점",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2018,
+          "label": "Forbes 'self-made billionaire' 표현 관련 여론 반발",
+          "weight": 0.7,
+          "confidence": "low"
+        },
+        {
+          "year": 2020,
+          "label": "Forbes billionaire 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "Astroworld 참사 관련 여론 부담",
+          "weight": 0.5,
+          "confidence": "low"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "strict_candidate"
+  },
+  {
+    "name": "윤석열",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1960,
+      "m": 12,
+      "d": 18,
+      "h": 22,
+      "min": 0,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1960,
+      "m": 12,
+      "d": 18,
+      "h": 22,
+      "min": 0,
+      "place": "서울 연희동",
+      "timezone": "Asia/Seoul",
+      "note": "공개 아카이브에 22시 출생으로 기재"
+    },
+    "source_quality": "A_official",
+    "source_note": "presidential transition / public archive",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 1991,
+          "label": "사법시험 합격",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2016,
+          "label": "박근혜·최순실 특검 수사팀장으로 부상",
+          "weight": 0.8,
+          "confidence": "medium"
+        },
+        {
+          "year": 2017,
+          "label": "서울중앙지검장 임명",
+          "weight": 0.9,
+          "confidence": "medium"
+        },
+        {
+          "year": 2019,
+          "label": "검찰총장 임명",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "국민의힘 대선후보 선출",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "대통령 취임",
+          "weight": 1.1,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2013,
+          "label": "국정원 댓글 수사 외압 폭로 후 인사 불이익 국면",
+          "weight": 0.8,
+          "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "법무부-검찰 갈등 및 징계 국면",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2024,
+          "label": "비상계엄 선포 및 탄핵소추",
+          "weight": 1.2,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "헌법재판소 탄핵 인용 및 파면",
+          "weight": 1.2,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "김부겸",
+    "gender": "male",
+    "birth": {
+      "calendar": "lunar",
+      "y": 1956,
+      "m": 12,
+      "d": 21,
+      "h": null,
+      "min": null,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "lunar",
+      "y": 1956,
+      "m": 12,
+      "d": 21,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "본인 인터뷰성 자료에 '새벽' 언급. 寅시/卯시 논쟁 있음."
+    },
+    "source_quality": "B_interview_or_broadcast",
+    "source_note": "interview-based but exact hour disputed",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2000,
+          "label": "국회의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2016,
+          "label": "대구 수성갑 국회의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "국무총리 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2020,
+          "label": "총선 낙선",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "김어준",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1968,
+      "m": 12,
+      "d": 4,
+      "h": null,
+      "min": null,
+      "branch": "寅",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1968,
+      "m": 12,
+      "d": 4,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "명리 블로그/방송 언급 기반. 1차 출처 확인 필요."
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju blog / compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1998,
+          "label": "딴지일보 창간",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2011,
+          "label": "나는 꼼수다 대중적 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "뉴스공장 진행 시작",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2022,
+          "label": "방송 편향성 논란 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2023,
+          "label": "뉴스공장 하차 이후 전환기",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "박나래",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1985,
+      "m": 10,
+      "d": 25,
+      "h": null,
+      "min": null,
+      "branch": "子",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1985,
+      "m": 10,
+      "d": 25,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "방송에서 자시 언급. 00:30설은 보조자료 수준."
+    },
+    "source_quality": "B_interview_or_broadcast",
+    "source_note": "broadcast mention, branch-level time only",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2006,
+          "label": "KBS 공채 개그맨 데뷔",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2015,
+          "label": "예능 대세로 부상",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2019,
+          "label": "MBC 방송연예대상 대상",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2021,
+          "label": "방송 관련 성희롱 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "박정희",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1917,
+      "m": 11,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1917,
+      "m": 11,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "place": "경북 구미",
+      "timezone": "Asia/Seoul",
+      "note": "寅시설/巳시설 등 상충 자료 존재"
+    },
+    "source_quality": "D_disputed",
+    "source_note": "conflicting saju columns/forums",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1961,
+          "label": "5.16 군사정변으로 권력 장악",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1963,
+          "label": "대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1972,
+          "label": "유신체제 출범으로 권력 재편",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1974,
+          "label": "육영수 여사 피살",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1979,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "오세훈",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1961,
+      "m": 1,
+      "d": 4,
+      "h": null,
+      "min": null,
+      "branch": "子",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1961,
+      "m": 1,
+      "d": 4,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2000,
+          "label": "국회의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2006,
+          "label": "서울시장 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2010,
+          "label": "서울시장 재선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "서울시장 보궐선거 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "서울시장 재선",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2011,
+          "label": "무상급식 주민투표 이후 서울시장 사퇴",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "홍준표",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1953,
+      "m": 11,
+      "d": 20,
+      "h": 2,
+      "min": 40,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1953,
+      "m": 11,
+      "d": 20,
+      "h": 2,
+      "min": 40,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1995,
+          "label": "검사 시절 슬롯머신 사건 수사로 주목",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1996,
+          "label": "국회의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "대선 후보",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2022,
+          "label": "대구시장 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2018,
+          "label": "지방선거 패배 후 당대표 사퇴",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "문재인",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1953,
+      "m": 1,
+      "d": 24,
+      "h": null,
+      "min": null,
+      "branch": "子",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1953,
+      "m": 1,
+      "d": 24,
+      "h": null,
+      "min": null,
+      "place": "거제",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반. branch-only."
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2012,
+          "label": "대선 후보",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2015,
+          "label": "새정치민주연합 대표 선출",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "대통령 당선 및 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2012,
+          "label": "대선 패배",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "정권교체",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "박근혜",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1952,
+      "m": 2,
+      "d": 2,
+      "h": null,
+      "min": null,
+      "branch": "丑",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1952,
+      "m": 2,
+      "d": 2,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "축시생 언급/사주 compilation 기반. 정확 출처 약함."
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation / weak public references",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1998,
+          "label": "국회의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2004,
+          "label": "한나라당 대표 및 총선 국면에서 정치적 부상",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2012,
+          "label": "대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2013,
+          "label": "대통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "특별사면 결정",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1974,
+          "label": "육영수 여사 사망",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1979,
+          "label": "박정희 사망",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2006,
+          "label": "지방선거 유세 중 피습",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "국정농단 사태 및 탄핵소추",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "헌재 파면 및 구속",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2018,
+          "label": "국정농단 사건 1심 실형 선고",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "이건희",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1942,
+      "m": 1,
+      "d": 9,
+      "h": null,
+      "min": null,
+      "branch": "巳",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1942,
+      "m": 1,
+      "d": 9,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1987,
+          "label": "삼성 회장 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1993,
+          "label": "신경영 선언",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2010,
+          "label": "경영 복귀",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2008,
+          "label": "특검 및 퇴진",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2014,
+          "label": "급성 심근경색으로 장기 입원",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "이재용",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1968,
+      "m": 6,
+      "d": 23,
+      "h": null,
+      "min": null,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1968,
+      "m": 6,
+      "d": 23,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "생시는 미확인"
+    },
+    "source_quality": "unknown",
+    "source_note": "date known, birth time unknown",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2012,
+          "label": "삼성전자 부회장 승진",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2014,
+          "label": "이건희 회장 와병 이후 사실상 그룹 리더십 강화",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "가석방",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2022,
+          "label": "복권 및 삼성전자 회장 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "삼성물산-제일모직 합병 관련 1심 무죄",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2025,
+          "label": "대법원 무죄 확정으로 장기 사법 리스크 해소",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2017,
+          "label": "국정농단 관련 구속 및 1심 실형",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "파기환송심 실형 및 재수감",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2024,
+          "label": "검찰 항소로 사법 리스크 지속",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "봉준호",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1969,
+      "m": 9,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1969,
+      "m": 9,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "생시는 미확인"
+    },
+    "source_quality": "unknown",
+    "source_note": "date known, birth time unknown",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2003,
+          "label": "살인의 추억 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2006,
+          "label": "괴물 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2009,
+          "label": "마더로 작품성 인정",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2013,
+          "label": "설국열차로 글로벌 진출 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2017,
+          "label": "옥자 공개 및 글로벌 플랫폼 진출",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2019,
+          "label": "기생충 칸 황금종려상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "기생충 아카데미 4관왕",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2000,
+          "label": "플란다스의 개 상업적 부진",
+          "weight": 1.0,
+          "confidence": "low"
+        },
+        {
+          "year": 2025,
+          "label": "Mickey 17 흥행·평가 혼재로 기대 대비 부담",
+          "weight": 0.5,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "김연아",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1990,
+      "m": 9,
+      "d": 5,
+      "h": null,
+      "min": null,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1990,
+      "m": 9,
+      "d": 5,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "생시는 미확인"
+    },
+    "source_quality": "unknown",
+    "source_note": "date known, birth time unknown",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2006,
+          "label": "시니어 무대 본격 진입",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2009,
+          "label": "세계선수권 우승",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2010,
+          "label": "밴쿠버 올림픽 금메달",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2013,
+          "label": "세계선수권 우승으로 복귀 성공",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2014,
+          "label": "소치 올림픽 은메달",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2006,
+          "label": "부상/성장통 국면",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2014,
+          "label": "소치 판정 논란 및 선수 은퇴",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "손흥민",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1992,
+      "m": 7,
+      "d": 8,
+      "h": null,
+      "min": null,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1992,
+      "m": 7,
+      "d": 8,
+      "h": null,
+      "min": null,
+      "place": "춘천, Korea",
+      "timezone": "Asia/Seoul",
+      "note": "생시는 미확인"
+    },
+    "source_quality": "unknown",
+    "source_note": "date known, birth time unknown",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2015,
+          "label": "토트넘 홋스퍼 이적",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2018,
+          "label": "아시안게임 금메달",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2019,
+          "label": "토트넘 UEFA 챔피언스리그 결승 진출",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "FIFA 푸스카스상 수상",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "아시아 선수 최초 EPL 득점왕",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2023,
+          "label": "프리미어리그 통산 100골 및 토트넘 주장 선임",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2025,
+          "label": "토트넘 UEFA 유로파리그 우승",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2019,
+          "label": "고메스 부상 장면 관련 퇴장·심리적 충격",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2022,
+          "label": "안와골절 부상",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2024,
+          "label": "대표팀 내분 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "장미희",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1958,
+      "m": 1,
+      "d": 27,
+      "h": 12,
+      "min": 0,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1958,
+      "m": 1,
+      "d": 27,
+      "h": 12,
+      "min": 0,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1976,
+          "label": "영화계 데뷔 및 주목",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1979,
+          "label": "충무로 대표 여배우로 부상",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2000,
+          "label": "중견 배우로 재조명",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1990,
+          "label": "학력 위조 논란으로 활동 타격",
+          "weight": 0.8,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "기안84",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1984,
+      "m": 10,
+      "d": 22,
+      "h": 10,
+      "min": 0,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1984,
+      "m": 10,
+      "d": 22,
+      "h": 10,
+      "min": 0,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2008,
+          "label": "웹툰 노병가 연재",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2011,
+          "label": "패션왕 연재로 대중적 인지도 상승",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "나 혼자 산다 출연으로 예능 인지도 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2023,
+          "label": "MBC 방송연예대상 대상",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2018,
+          "label": "웹툰/방송 관련 누적 논란",
+          "weight": 0.5,
+          "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "웹툰 관련 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "박찬호",
+    "gender": "male",
+    "birth": {
+      "calendar": "lunar",
+      "y": 1973,
+      "m": 6,
+      "d": 29,
+      "h": 15,
+      "min": 50,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "lunar",
+      "y": 1973,
+      "m": 6,
+      "d": 29,
+      "h": 15,
+      "min": 50,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "음력 날짜. 사주 compilation 기반. 양력 변환 검증 필요."
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1994,
+          "label": "MLB 진출",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1997,
+          "label": "LA Dodgers 선발투수로 자리잡음",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2001,
+          "label": "FA 대형 계약",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2010,
+          "label": "아시아 투수 MLB 최다승 기록",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2002,
+          "label": "부상/부진 국면",
+          "weight": 1.0,
+          "confidence": "low"
+        },
+        {
+          "year": 2012,
+          "label": "현역 은퇴",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "박세리",
+    "gender": "female",
+    "birth": {
+      "calendar": "lunar",
+      "y": 1977,
+      "m": 8,
+      "d": 16,
+      "h": 20,
+      "min": 0,
+      "branch": null,
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "lunar",
+      "y": 1977,
+      "m": 8,
+      "d": 16,
+      "h": 20,
+      "min": 0,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "음력 날짜. 사주 compilation 기반. 양력 변환 검증 필요."
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1998,
+          "label": "US Women's Open 우승",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2001,
+          "label": "LPGA 메이저 우승 및 전성기",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2007,
+          "label": "LPGA Hall of Fame 입회",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2016,
+          "label": "은퇴",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2024,
+          "label": "부친 관련 채무·법적 논란 공개",
+          "weight": 0.7,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "이명박",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1941,
+      "m": 12,
+      "d": 19,
+      "h": null,
+      "min": null,
+      "branch": "卯",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1941,
+      "m": 12,
+      "d": 19,
+      "h": null,
+      "min": null,
+      "place": "Japan/Korea record context",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반. branch-only."
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1977,
+          "label": "현대건설 사장 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1992,
+          "label": "국회의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2002,
+          "label": "서울시장 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2007,
+          "label": "대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "대통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2018,
+          "label": "구속",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "징역형 확정",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "조용필",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1950,
+      "m": 3,
+      "d": 21,
+      "h": null,
+      "min": null,
+      "branch": "戌",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1950,
+      "m": 3,
+      "d": 21,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1976,
+          "label": "돌아와요 부산항에 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1980,
+          "label": "창밖의 여자 등 대중적 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1985,
+          "label": "가왕 이미지 확립",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2013,
+          "label": "Bounce로 대중적 재조명",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1988,
+          "label": "저작권·음반 계약 관련 장기 부담 국면",
+          "weight": 0.5,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "신성일",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1937,
+      "m": 5,
+      "d": 8,
+      "h": null,
+      "min": null,
+      "branch": "戌",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1937,
+      "m": 5,
+      "d": 8,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1960,
+          "label": "영화 로맨스 빠빠로 데뷔",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1964,
+          "label": "맨발의 청춘 등 스타덤",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2018,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "남진",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1946,
+      "m": 10,
+      "d": 21,
+      "h": null,
+      "min": null,
+      "branch": "酉",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1946,
+      "m": 10,
+      "d": 21,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1967,
+          "label": "가수로 대중적 성공",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1971,
+          "label": "가요계 전성기",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1974,
+          "label": "군 복무 이후 복귀",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": []
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "정몽헌",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1948,
+      "m": 9,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "branch": "申",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1948,
+      "m": 9,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1998,
+          "label": "현대그룹 대북사업 국면",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2000,
+          "label": "남북경협 상징성 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2003,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "정몽구",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1938,
+      "m": 3,
+      "d": 19,
+      "h": null,
+      "min": null,
+      "branch": "巳",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1938,
+      "m": 3,
+      "d": 19,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1999,
+          "label": "현대자동차 회장 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2000,
+          "label": "현대차그룹 출범",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2010,
+          "label": "현대차그룹 글로벌 성장 부각",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2006,
+          "label": "구속/사법 리스크",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "김우중",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1936,
+      "m": 12,
+      "d": 19,
+      "h": null,
+      "min": null,
+      "branch": "卯",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1936,
+      "m": 12,
+      "d": 19,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1967,
+          "label": "대우 창업",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1980,
+          "label": "대우그룹 성장",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1993,
+          "label": "세계경영 구호와 글로벌 확장",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1999,
+          "label": "대우그룹 해체 국면",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2005,
+          "label": "귀국 후 구속",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2019,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "김영삼",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1929,
+      "m": 1,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "branch": "戌",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1929,
+      "m": 1,
+      "d": 14,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1954,
+          "label": "최연소 국회의원 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1990,
+          "label": "3당 합당으로 권력 기반 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1992,
+          "label": "대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1993,
+          "label": "대통령 취임 및 금융실명제",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1979,
+          "label": "국회의원직 제명",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1997,
+          "label": "외환위기",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2015,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "노태우",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1932,
+      "m": 8,
+      "d": 17,
+      "h": null,
+      "min": null,
+      "branch": "丑",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1932,
+      "m": 8,
+      "d": 17,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1987,
+          "label": "대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1988,
+          "label": "대통령 취임 및 서울올림픽",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1990,
+          "label": "북방외교 성과 확대",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1995,
+          "label": "구속",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "전두환",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1931,
+      "m": 3,
+      "d": 6,
+      "h": null,
+      "min": null,
+      "branch": "戌",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1931,
+      "m": 3,
+      "d": 6,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1979,
+          "label": "12.12 군사반란으로 권력 기반 장악",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1980,
+          "label": "권력 장악",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1981,
+          "label": "대통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1980,
+          "label": "5.18 광주민주화운동 유혈진압 책임 논란",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1995,
+          "label": "구속",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1996,
+          "label": "사형 선고",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "정주영",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1915,
+      "m": 11,
+      "d": 25,
+      "h": null,
+      "min": null,
+      "branch": "丑",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1915,
+      "m": 11,
+      "d": 25,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1947,
+          "label": "현대토건 설립",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1972,
+          "label": "현대중공업 설립",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1988,
+          "label": "서울올림픽 유치·경제계 위상 부각",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1998,
+          "label": "소떼 방북",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1992,
+          "label": "대선 패배",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2001,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "이병철",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1910,
+      "m": 2,
+      "d": 12,
+      "h": null,
+      "min": null,
+      "branch": "戌",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1910,
+      "m": 2,
+      "d": 12,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1938,
+          "label": "삼성상회 창업",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1951,
+          "label": "삼성물산 설립",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1969,
+          "label": "삼성전자 설립",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1983,
+          "label": "반도체 사업 진출 선언",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1966,
+          "label": "사카린 밀수 사건으로 경영 일선 후퇴",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1987,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "신해철",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1968,
+      "m": 5,
+      "d": 6,
+      "h": null,
+      "min": null,
+      "branch": "午",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1968,
+      "m": 5,
+      "d": 6,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1988,
+          "label": "대학가요제 대상",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1992,
+          "label": "N.EX.T 결성",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2001,
+          "label": "음악·방송 활동 확장",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2014,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2014,
+          "label": "의료사고 논란 속 사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "서태지",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1972,
+      "m": 3,
+      "d": 2,
+      "h": null,
+      "min": null,
+      "branch": "亥",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1972,
+      "m": 3,
+      "d": 2,
+      "h": null,
+      "min": null,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사주 compilation 기반"
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1992,
+          "label": "서태지와 아이들 데뷔",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1995,
+          "label": "문화적 영향력 정점",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2000,
+          "label": "솔로 복귀",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1996,
+          "label": "은퇴 선언",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2011,
+          "label": "사생활 이슈 공개",
+          "weight": 1.0,
+          "confidence": "medium"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "노무현",
+    "gender": "male",
+    "birth": {
+      "calendar": "lunar",
+      "y": 1946,
+      "m": 8,
+      "d": 6,
+      "h": null,
+      "min": null,
+      "branch": "辰",
+      "timezone_basis": "KST"
+    },
+    "original_birth": {
+      "calendar": "lunar",
+      "y": 1946,
+      "m": 8,
+      "d": 6,
+      "h": null,
+      "min": null,
+      "place": "김해 봉하마을",
+      "timezone": "Asia/Seoul",
+      "note": "음력 날짜. 사주 compilation 기반. 양력 변환 검증 필요."
+    },
+    "source_quality": "C_saju_compilation",
+    "source_note": "saju compilation",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1988,
+          "label": "5공 청문회 스타로 부상",
+          "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2002,
+          "label": "대통령 당선",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2003,
+          "label": "대통령 취임",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2004,
+          "label": "탄핵소추",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2009,
+          "label": "사망",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
   }
 ]

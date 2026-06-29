@@ -9,6 +9,7 @@ import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelecto
 import { OrderSummaryCard } from '@/components/payment/OrderSummaryCard'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { canPayOverseasBundle, formatPrice, getProduct } from '@/lib/payment/products'
+import { getActiveMethodKeys, PAYMENT_METHOD_META, PAYMENT_INACTIVE_NOTE } from '@/lib/payment/methods'
 import type { Product } from '@/lib/payment/products'
 import type { CreateOrderResponse, PaymentMethod } from '@/lib/payment/types'
 import { getGuestHeaders } from '@/lib/auth/guest'
@@ -243,11 +244,21 @@ function CheckoutContent() {
     return '해외카드 결제는 합계 $1.00 이상부터 가능해요'
   }, [chartProduct, periodProduct])
 
+  // 현재 라이브 모드에서 비활성('준비 중')인 결제수단 (테스트 모드면 비어 있음)
+  const inactiveMethods = useMemo(() => {
+    const active = new Set(getActiveMethodKeys())
+    const map: Partial<Record<PaymentMethod, string>> = {}
+    for (const m of PAYMENT_METHOD_META) {
+      if (!active.has(m.key)) map[m.key] = PAYMENT_INACTIVE_NOTE
+    }
+    return map
+  }, [])
+
   const disabledMethods = useMemo(() => {
-    return overseasDisabledReason
-      ? { overseas: overseasDisabledReason } as Record<PaymentMethod, string>
-      : ({} as Record<PaymentMethod, string>)
-  }, [overseasDisabledReason])
+    const map: Partial<Record<PaymentMethod, string>> = { ...inactiveMethods }
+    if (overseasDisabledReason) map.overseas = overseasDisabledReason
+    return map as Record<PaymentMethod, string>
+  }, [inactiveMethods, overseasDisabledReason])
 
   // 선택된 결제수단이 비활성화되면 자동 해제
   useEffect(() => {

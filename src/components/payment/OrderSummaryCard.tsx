@@ -43,9 +43,10 @@ export function OrderSummaryCard({ chartProduct, periodProduct, totalPrice }: Pr
         <span className="text-lg font-bold text-gray-900">{formatPrice(totalPrice)}원</span>
       </div>
 
-      <p className="mt-3 text-[11px] text-gray-400 leading-relaxed">
-        서비스 제공 기간: {BUSINESS_INFO.serviceDeliveryPeriod}
-      </p>
+      <div className="mt-3 space-y-0.5 text-[11px] text-gray-400 leading-relaxed">
+        <p>서비스 제공 기간: {BUSINESS_INFO.serviceDeliveryPeriod}</p>
+        <p>이용처: 차트팔자 내 해설 기능 전용 · 결제 즉시 지급 · 현금 환급/양도/재판매 불가</p>
+      </div>
     </div>
   )
 }

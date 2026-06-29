@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { LegalPageLayout } from '@/components/LegalPageLayout'
 import { BUSINESS_INFO as B } from '@/lib/legal/business-info'
+import { getActiveMethodLabels } from '@/lib/payment/methods'
 
 export const metadata: Metadata = {
   title: '이용약관 | 차트팔자',
@@ -18,6 +19,7 @@ function Ol({ children }: { children: React.ReactNode }) {
 }
 
 export default function TermsPage() {
+  const methodLabels = getActiveMethodLabels().join(', ')
   return (
     <LegalPageLayout title="이용약관" effectiveDate={B.termsEffectiveDate}>
       <H2>제1조 (목적)</H2>
@@ -29,7 +31,7 @@ export default function TermsPage() {
       <Ol>
         <li>&lsquo;서비스&rsquo;란 회사가 운영하는 사주 분석 차트 및 운세 해설 서비스를 말합니다.</li>
         <li>&lsquo;회원&rsquo;이란 본 약관에 동의하고 서비스에 가입한 자를 말합니다.</li>
-        <li>&lsquo;이용권&rsquo;이란 유료 결제로 운세 해설 또는 구간 해설을 이용할 수 있는 회수권을 말합니다.</li>
+        <li>&lsquo;이용권&rsquo;이란 유료 결제로 운세 해설 또는 구간 해설을 이용할 수 있는 회수권을 말하며, 차트팔자 서비스 내 해설 기능 이용에만 사용되고 현금 환급(인출)·양도·재판매가 불가합니다.</li>
       </Ol>
 
       <H2>제3조 (약관의 효력 및 변경)</H2>
@@ -58,9 +60,11 @@ export default function TermsPage() {
 
       <H2>제7조 (이용권 및 결제)</H2>
       <Ol>
-        <li>이용권은 신용/체크카드, 카카오페이, 토스페이, 해외카드 등 회사가 제공하는 방법으로 결제할 수 있습니다.</li>
+        <li>이용권은 {methodLabels} 등 회사가 제공하는 방법으로 결제할 수 있습니다.</li>
         <li>결제는 PG사를 통해 처리되며, 회사는 결제 정보(카드번호 등)를 직접 보관하지 않습니다.</li>
         <li>이용권 유효기간은 결제일로부터 {B.ticketValidityMonths}개월(1년)이며, 유효기간 경과 시 자동 소멸됩니다.</li>
+        <li>이용권은 결제 완료 즉시 회원 계정에 자동 지급되며, {B.ticketUsageScope}</li>
+        <li>{B.ticketRestriction}</li>
       </Ol>
 
       <H2>제8조 (환불)</H2>

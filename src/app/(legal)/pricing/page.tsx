@@ -3,6 +3,8 @@ import { MobileContainer } from '@/components/MobileContainer'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { BackButton } from '@/components/BackButton'
 import { CHART_PRODUCTS, PERIOD_PRODUCTS, FREE_PERIOD_PER_CHART, formatPrice } from '@/lib/payment/products'
+import { getActiveMethodLabels } from '@/lib/payment/methods'
+import { BUSINESS_INFO as B } from '@/lib/legal/business-info'
 
 export const metadata: Metadata = {
   title: '이용권 안내 | 차트팔자',
@@ -10,6 +12,7 @@ export const metadata: Metadata = {
 }
 
 export default function PricingPage() {
+  const methodLabels = getActiveMethodLabels().join(', ')
   return (
     <MobileContainer>
       <div className="min-h-screen flex flex-col">
@@ -22,7 +25,7 @@ export default function PricingPage() {
           <section className="mb-7">
             <h2 className="text-lg font-bold text-gray-900 mb-1.5">차트팔자 이용권</h2>
             <p className="text-sm text-gray-500 leading-relaxed">
-              사주 분석 차트는 무료로 생성되며, 종합 운세 해설과 구간 해설은 이용권으로 이용하실 수 있어요.
+              사주 분석 차트는 무료로 생성되며, 종합 운세 해설과 구간 해설은 차트팔자 서비스 내에서 사용하는 이용권으로 이용하실 수 있어요.
             </p>
           </section>
 
@@ -84,10 +87,13 @@ export default function PricingPage() {
           <section className="bg-gray-50 rounded-xl p-4">
             <h3 className="text-sm font-bold text-gray-900 mb-2">이용 안내</h3>
             <ul className="space-y-1.5 text-xs text-gray-600 leading-relaxed list-disc pl-4">
+              <li>{B.ticketUsageScope}</li>
+              <li>결제 완료 즉시 계정에 자동 지급되어 바로 사용할 수 있어요. (서비스 제공기간: {B.serviceProvisionWindow})</li>
               <li>이용권 유효기간은 결제일로부터 12개월(1년)입니다.</li>
               <li>사용하지 않은 이용권은 결제일로부터 7일 이내 환불받을 수 있습니다 (유료 구입분에 한함).</li>
               <li>이미 해설 사용에 사용했거나 유료 구입분이 아닌 경우 환불이 제한됩니다.</li>
-              <li>결제수단: 신용/체크카드, 카카오페이, 토스페이, 해외카드</li>
+              <li>이용권은 현금 환급(인출)·타인 양도·재판매가 불가합니다.</li>
+              <li>결제수단: {methodLabels}</li>
             </ul>
           </section>
         </main>

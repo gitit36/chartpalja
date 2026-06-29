@@ -1,6 +1,7 @@
 'use client'
 
 import type { PaymentMethod } from '@/lib/payment/types'
+import { PAYMENT_METHOD_META, PAYMENT_INACTIVE_NOTE } from '@/lib/payment/methods'
 
 interface Props {
   selected: PaymentMethod | null
@@ -9,22 +10,17 @@ interface Props {
   disabledMethods?: Partial<Record<PaymentMethod, string>>
 }
 
-const METHODS: { key: PaymentMethod; label: string; icon: string; desc: string }[] = [
-  { key: 'kakaopay', label: '카카오페이', icon: '💛', desc: '카카오페이로 간편결제' },
-  { key: 'tosspay',  label: '토스페이',   icon: '💙', desc: '토스페이로 간편결제' },
-  { key: 'card',     label: '국내카드',   icon: '💳', desc: '신용/체크카드 결제' },
-  { key: 'transfer', label: '계좌이체',   icon: '🏦', desc: '실시간 계좌이체' },
-  { key: 'overseas', label: '해외카드',   icon: '🌍', desc: 'Visa/Master/AMEX (USD)' },
-]
-
 export function PaymentMethodSelector({ selected, onSelect, disabledMethods }: Props) {
-  const disabledNotes = Object.values(disabledMethods ?? {}).filter(Boolean) as string[]
+  // '준비 중'(비활성 수단)은 배지로 표시하므로 하단 안내에서는 제외하고, 그 외 사유만 노출
+  const disabledNotes = Object.values(disabledMethods ?? {})
+    .filter((r): r is string => Boolean(r) && r !== PAYMENT_INACTIVE_NOTE)
   return (
     <div>
       <div className="grid grid-cols-2 gap-2.5">
-        {METHODS.map((m) => {
+        {PAYMENT_METHOD_META.map((m) => {
           const disabledReason = disabledMethods?.[m.key]
           const isDisabled = Boolean(disabledReason)
+          const isInactive = disabledReason === PAYMENT_INACTIVE_NOTE
           const isSelected = selected === m.key
           return (
             <button
@@ -42,7 +38,11 @@ export function PaymentMethodSelector({ selected, onSelect, disabledMethods }: P
             >
               <span className="text-xl">{m.icon}</span>
               <span className="text-[13px] font-medium text-gray-800">{m.label}</span>
-              <span className="text-[10px] text-gray-400">{m.desc}</span>
+              {isInactive ? (
+                <span className="text-[10px] text-gray-400">{PAYMENT_INACTIVE_NOTE}</span>
+              ) : (
+                <span className="text-[10px] text-gray-400">{m.desc}</span>
+              )}
             </button>
           )
         })}

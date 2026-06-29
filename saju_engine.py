@@ -57,7 +57,7 @@ BRANCH_JIJANGGAN = {
     "寅": {"본기": "甲", "중기": "丙",  "여기": "戊"},
     "卯": {"본기": "乙", "중기": "甲",  "여기": None},
     "辰": {"본기": "戊", "중기": "癸",  "여기": "乙"},
-    "巳": {"본기": "丙", "중기": "戊",  "여기": "庚"},
+    "巳": {"본기": "丙", "중기": "庚",  "여기": "戊"},
     "午": {"본기": "丁", "중기": "己",  "여기": "丙"},
     "未": {"본기": "己", "중기": "乙",  "여기": "丁"},
     "申": {"본기": "庚", "중기": "壬",  "여기": "戊"},
@@ -1617,10 +1617,23 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         # v6.1: 중화인데 조후 미적용 → 격국 기반 용신 fallback
         if eokbu["용신_cat"] == "균형" and "_neutral_row" in eokbu:
             nrow = eokbu["_neutral_row"]
+            bigo = f"중화→조후부적합→격국({geok}) 주성 유지"
+            # [정책] 신강 명식에서 인성 용신은 관인상생/조후/병약 등 설명조건이 있을 때만 허용.
+            # 이 분기는 조후·병약이 모두 불발한 fallback이므로, 남은 허용조건은 관인상생(관살 실재)뿐.
+            # 중화신강 + 인격인데 원국에 관살이 없으면 관인상생 불가 → 인성 대신 재성(財損印)으로 전환.
+            if (verdict == "중화신강" and geok in ("편인격", "정인격")
+                    and nrow.get("용신") == "인성"):
+                _gwan_e = tmap["관살"]
+                _gwan_cnt = sum(1 for s in stems if STEM_ELEMENT.get(s) == _gwan_e)
+                _gwan_cnt += sum(1 for b in branches
+                                 for _h, _role, _ in get_jijanggan(b)
+                                 if _role == "본기" and STEM_ELEMENT.get(_h) == _gwan_e)
+                if _gwan_cnt == 0:
+                    nrow = {"용신": "재성", "희신": ["식상"], "기신": ["인성", "비겁"]}
+                    bigo = f"중화신강+{geok}+관살부재→관인상생 불가→재성(財損印)으로 전환"
             final_elem = tmap.get(nrow["용신"], "?")
             yong_label = _cat_label(nrow["용신"])
             confidence = "보통(중화→격국유지)"
-            bigo = f"중화→조후부적합→격국({geok}) 주성 유지"
             result.update({
                 "용신": yong_label, "용신_오행": final_elem,
                 "희신": [_cat_label(h) for h in nrow["희신"]],
@@ -2756,6 +2769,29 @@ def enrich_saju(inp: BirthInput) -> Dict[str, Any]:
         saju["hour_stem"] = new_hs
         saju["hour_branch"] = correct_hb
         saju["hour_pillar"] = new_hs + correct_hb
+
+    # ── 연주(年柱)·월주(月柱) 입춘 경계 보정 ──────────
+    # sajupy의 입춘 근사와 천문 정밀 입춘(ipchun)이 다를 때(주로 입춘 당일 출생) 연주가
+    # 하루 차이로 어긋날 수 있다. 입춘은 연주 경계인 동시에 寅월의 시작이므로,
+    # 연주가 어긋나면 월주(丑↔寅)도 함께 어긋난다. 정밀 ipchun 기준으로 둘 다 재산출한다.
+    try:
+        ey, precise_ygz = _year_gz(bkst)
+        if precise_ygz != saju["year_pillar"]:
+            after_ipchun = (ey == bkst.year)  # True=입춘 이후→寅월, False=입춘 이전→丑월
+            new_mb = "寅" if after_ipchun else "丑"
+            new_mi = 0 if after_ipchun else 11   # MONTH_BRANCHES: 寅=0 … 丑=11
+            new_ms = _month_stem(precise_ygz[0], new_mi)
+            _dbg(f"[SAJU_DEBUG] 연주보정(입춘): 연 {saju['year_pillar']}→{precise_ygz}, "
+                 f"월 {saju['month_pillar']}→{new_ms + new_mb} "
+                 f"(정밀입춘 {ipchun(bkst.year).isoformat()})\n")
+            saju["year_stem"] = precise_ygz[0]
+            saju["year_branch"] = precise_ygz[1]
+            saju["year_pillar"] = precise_ygz
+            saju["month_stem"] = new_ms
+            saju["month_branch"] = new_mb
+            saju["month_pillar"] = new_ms + new_mb
+    except Exception as _e:
+        _dbg(f"[SAJU_DEBUG] 연주보정 실패(무시): {_e}\n")
 
     pillars = {"year": saju["year_pillar"], "month": saju["month_pillar"], "day": saju["day_pillar"], "hour": saju["hour_pillar"]}
     stems = [saju["year_stem"], saju["month_stem"], saju["day_stem"], saju["hour_stem"]]
