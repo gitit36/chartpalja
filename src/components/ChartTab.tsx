@@ -349,11 +349,18 @@ interface ChartTabProps {
    * 부모(`/app/saju/[id]/page.tsx`)에서 LoginPromptSheet를 띄운다.
    */
   onLockedClick?: (feature: string) => void
+  /**
+   * 공유 공개 뷰. 차트 시각화는 모두 보여주되, 소유자 크레딧을 소모하는
+   * 구간 해설/운세 자동 생성과 비교 같은 소유자 전용 인터랙션은 차단한다.
+   */
+  shareMode?: boolean
+  /** shareMode 에서 잠긴 액션을 누르면 호출 — 보통 "내 차트 만들기" CTA. */
+  onShareCta?: () => void
 }
 
 export function ChartTab({
   report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
-  isLocked = false, onLockedClick,
+  isLocked = false, onLockedClick, shareMode = false, onShareCta,
 }: ChartTabProps) {
   const [period, setPeriod] = useState<PeriodKey>('all')
   const [panelOpen, setPanelOpen] = useState(false)
@@ -537,6 +544,8 @@ export function ChartTab({
   const seasonBands = fullChartData?.seasonBands ?? []
 
   const fetchSummary = useCallback((startYear: number, endYear: number, monthly = false) => {
+    // 공유 뷰에서는 소유자 크레딧을 소모하는 구간 해설 생성을 막고 self-CTA 로 유도한다.
+    if (shareMode) { onShareCta?.(); return }
     if (!entryId) return
     const prefix = monthly ? 'm_' : ''
     const ovSuffix = overlayEntryId ? `_ov${overlayEntryId.slice(0, 6)}` : ''
@@ -574,7 +583,7 @@ export function ChartTab({
         if (!e?.message?.includes('이용권')) setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' })
       })
       .finally(() => setYearSummaryLoading(false))
-  }, [entryId, summaryCache, overlayEntryId])
+  }, [entryId, summaryCache, overlayEntryId, shareMode, onShareCta])
 
   const dragStartYear = React.useRef<number | null>(null)
   const didDrag = React.useRef(false)
@@ -752,6 +761,8 @@ export function ChartTab({
             <button key={k} onClick={() => { setPeriod(k); setSelection(null); setYearSummary(null); setYearSummaryLoading(false); setRangeMode(false); rangeFirst.current = null }}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>{l}</button>
           ))}
+          {/* 비교/구간 해설은 소유자 크레딧을 쓰는 기능이라 공유 뷰에서는 숨긴다. */}
+          {!shareMode && (<>
           <span className="w-px h-4 bg-gray-200 mx-1"/>
           {otherEntries.length > 0 && (
             overlayActive ? (
@@ -789,6 +800,7 @@ export function ChartTab({
           >
             🗓️ 구간{isLocked ? ' 🔒' : ''}
           </button>
+          </>)}
         </div>
       </div>
 
@@ -989,6 +1001,7 @@ export function ChartTab({
         entryId={entryId}
         isLocked={isLocked}
         onLockedClick={onLockedClick}
+        shareMode={shareMode}
       />
 
       {/* Sliding Panel — indicator settings */}
@@ -1335,9 +1348,11 @@ interface FortuneSectionProps {
   entryId?: string
   isLocked?: boolean
   onLockedClick?: (feature: string) => void
+  /** 공유 공개 뷰. 이미 생성된 fortuneJson 만 렌더하고, 크레딧을 쓰는 자동 생성은 하지 않는다. */
+  shareMode?: boolean
 }
 
-function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick }: FortuneSectionProps) {
+function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick, shareMode = false }: FortuneSectionProps) {
   const [items, setItems] = useState<FortuneItem[]>([])
   const [openIds, setOpenIds] = useState<Set<number>>(new Set())
   const [aiLoading, setAiLoading] = useState(false)
@@ -1354,7 +1369,7 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick 
 
   const fetchFortune = useCallback((regen = false) => {
     if (!entryId) return
-    if (isLocked) return
+    if (isLocked || shareMode) return
     setError(null); setNoCredit(false); setAiLoading(true)
     const url = regen ? `/api/saju/${entryId}/fortune?regenerate=true` : `/api/saju/${entryId}/fortune`
     fetch(url, { headers: getHeaders() })
@@ -1371,7 +1386,7 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick 
         if (!e?.message?.includes('이용권')) setError(e?.message ?? '오류가 발생했습니다')
       })
       .finally(() => setAiLoading(false))
-  }, [entryId, getHeaders, isLocked])
+  }, [entryId, getHeaders, isLocked, shareMode])
 
   useEffect(() => {
     let arr: FortuneItem[] = []
@@ -1383,9 +1398,9 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick 
       }
     }
     if (arr.length) { setItems(arr); setError(null); fetchedRef.current = true }
-    else if (entryId && !fetchedRef.current && !isLocked) { fetchedRef.current = true; fetchFortune() }
+    else if (entryId && !fetchedRef.current && !isLocked && !shareMode) { fetchedRef.current = true; fetchFortune() }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fortuneJson, entryId, isLocked])
+  }, [fortuneJson, entryId, isLocked, shareMode])
 
   const toggle = (i: number) => setOpenIds(p => { const n = new Set(p); n.has(i) ? n.delete(i) : n.add(i); return n })
 

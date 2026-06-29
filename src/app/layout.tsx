@@ -4,7 +4,10 @@ import { Suspense } from 'react'
 import { PathTracker } from '@/components/PathTracker'
 import './globals.css'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.chartpalja.com'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: '차트팔자 — 내 인생의 리듬',
   description: '100년의 흐름을 하나의 차트로. 사주 기반 인생 운세 시각화 서비스.',
   openGraph: {

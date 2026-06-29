@@ -44,6 +44,8 @@ model SajuEntry {
   job            String?
   dayElement     String?
   isRepresentative Boolean @default(false)
+  /// 공유 링크 공개 동의 플래그. true 면 비로그인 수신자도 /share/[id] 로 결과를 볼 수 있다.
+  isShared       Boolean  @default(false)
   sajuReportJson Json?
   fortuneJson    Json?
   fortuneJsonB   Json?

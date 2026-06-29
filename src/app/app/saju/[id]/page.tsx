@@ -401,7 +401,18 @@ export default function PersonalSajuPage() {
     setRegenerating(false)
   }, [id])
 
-  const handleKakaoShare = useCallback(() => {
+  // 공유 시 비로그인 수신자도 결과를 볼 수 있도록 isShared=true 로 올린다.
+  const ensureShared = useCallback(async () => {
+    try {
+      await fetch(`/api/saju/${id}`, {
+        method: 'PATCH',
+        headers: { ...getHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ share: true }),
+      })
+    } catch { /* 공유 토글 실패해도 링크 자체는 동작 시도 */ }
+  }, [id])
+
+  const handleKakaoShare = useCallback(async () => {
     if (!entry) return
     const kakao = window.Kakao
     if (!kakao) { setAlertState({ open: true, title: '카카오 SDK를 불러오지 못했어요', description: '잠시 후 다시 시도해 주세요.' }); return }
@@ -410,31 +421,35 @@ export default function PersonalSajuPage() {
       try { kakao.init(jsKey) } catch { /* already initialized */ }
     }
     if (!kakao.isInitialized()) { setAlertState({ open: true, title: '카카오 공유 설정이 누락되었어요' }); return }
-    const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
-    const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://chartpalja.com'
+    await ensureShared()
+    const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.chartpalja.com'
+    const shareUrl = `${siteUrl}/share/${id}`
+    const ogImageUrl = `${siteUrl}/share/${id}/opengraph-image`
     try {
       kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title: `${entry.name}님의 인생 차트`,
           description: stockLine ? `올해 운세 ${stockLine.score}점 | ${stockLine.label}` : '100년의 흐름을 하나의 차트로',
-          imageUrl: `${siteUrl}/svc_logo_with_slogan_horizontal.png`,
-          link: { mobileWebUrl: pageUrl, webUrl: pageUrl },
+          imageUrl: ogImageUrl,
+          link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
         },
-        buttons: [{ title: '차트 보기', link: { mobileWebUrl: pageUrl, webUrl: pageUrl } }],
+        buttons: [{ title: '차트 보기', link: { mobileWebUrl: shareUrl, webUrl: shareUrl } }],
       })
     } catch (err) {
       console.error('Kakao share error:', err)
       setAlertState({ open: true, title: '카카오톡 공유에 실패했어요', description: '잠시 후 다시 시도해 주세요.' })
     }
     setShareOpen(false)
-  }, [entry, stockLine])
+  }, [entry, stockLine, id, ensureShared])
 
   const handleCopyLink = useCallback(async () => {
-    const url = window.location.href
+    await ensureShared()
+    const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.chartpalja.com'
+    const url = `${siteUrl}/share/${id}`
     try {
       await navigator.clipboard.writeText(url)
-      setAlertState({ open: true, title: '링크가 복사되었어요' })
+      setAlertState({ open: true, title: '공유 링크가 복사되었어요' })
     } catch {
       const textarea = document.createElement('textarea')
       textarea.value = url
@@ -442,10 +457,10 @@ export default function PersonalSajuPage() {
       textarea.select()
       document.execCommand('copy')
       document.body.removeChild(textarea)
-      setAlertState({ open: true, title: '링크가 복사되었어요' })
+      setAlertState({ open: true, title: '공유 링크가 복사되었어요' })
     }
     setShareOpen(false)
-  }, [])
+  }, [id, ensureShared])
 
   const handleImageSave = useCallback(async () => {
     setImageSaving(true)

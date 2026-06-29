@@ -64,6 +64,16 @@ export async function PATCH(
       return NextResponse.json({ ok: true, id, isRepresentative: true })
     }
 
+    // 공유 공개/비공개 토글: 소유자가 공유하기를 누르면 isShared=true 로 올려
+    // 비로그인 수신자도 /share/[id] 로 볼 수 있게 한다.
+    if (body.share === true || body.share === false) {
+      const updated = await prisma.sajuEntry.update({
+        where: { id },
+        data: { isShared: body.share },
+      })
+      return NextResponse.json({ ok: true, id, isShared: updated.isShared })
+    }
+
     const updates: Record<string, unknown> = {}
     if (body.name !== undefined) updates.name = body.name
     if (body.gender !== undefined) updates.gender = body.gender
