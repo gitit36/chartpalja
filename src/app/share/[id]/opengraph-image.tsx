@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { getPublicShareEntry } from '@/lib/share/get-share-entry'
-import { buildShareCard } from '@/lib/share/share-card'
+import { buildShareCard, buildSparkPath } from '@/lib/share/share-card'
 
 export const runtime = 'nodejs'
 export const alt = '차트팔자 — 인생 차트'
@@ -13,15 +13,15 @@ export const contentType = 'image/png'
 const C = {
   // 배경: 랜딩(slate-900 → indigo-950 → purple-950) 계열 딥 네이비/퍼플
   bg: 'linear-gradient(140deg, #0d1230 0%, #1b1547 52%, #3a1670 100%)',
-  // 우상단 은은한 보라/블루 빛 번짐 (입체감)
-  glow: 'radial-gradient(820px circle at 86% 6%, rgba(120,130,255,0.40) 0%, rgba(120,130,255,0.0) 60%)',
-  glow2: 'radial-gradient(620px circle at 18% 92%, rgba(96,90,220,0.28) 0%, rgba(96,90,220,0.0) 55%)',
+  // 우측(차트 영역) 은은한 블루 빛 번짐 + 좌하단 퍼플 빛으로 입체감
+  glowChart: 'radial-gradient(760px circle at 82% 48%, rgba(95,182,255,0.22) 0%, rgba(95,182,255,0.0) 60%)',
+  glowCorner: 'radial-gradient(620px circle at 14% 92%, rgba(96,90,220,0.28) 0%, rgba(96,90,220,0.0) 55%)',
   score: '#5fb6ff', // electric / sky blue
   white: '#ffffff',
   title: '#e8e9ff',
   sub: '#b7bbe6', // lavender gray
-  barBase: '#7b82ff', // purple-blue
-  barHi: '#5fb6ff',
+  line: '#5fb6ff', // 스파크라인 (점수 블루와 동일 계열)
+  lineFill: 'rgba(95,182,255,0.14)',
   pillBg: 'rgba(255,255,255,0.10)',
   pillBorder: 'rgba(255,255,255,0.24)',
   ctaBg: 'rgba(255,255,255,0.08)',
@@ -31,17 +31,12 @@ const L = {
   padX: 52,
   padTop: 40,
   padBottom: 40,
-  chartH: 360, // 하단 배경 차트 높이
-  bars: 66, // 막대 개수
-}
-
-/** sparkData 를 막대 개수에 맞춰 다운샘플링. */
-function downsample(data: number[], target: number): number[] {
-  if (data.length <= target) return data
-  const step = data.length / target
-  const out: number[] = []
-  for (let i = 0; i < target; i++) out.push(data[Math.floor(i * step)]!)
-  return out
+  textW: 540, // 좌측 텍스트 블록 폭 (차트와 분리)
+  // 우측 스파크라인 (시원하게 크게)
+  sparkW: 560,
+  sparkH: 330,
+  sparkRight: 22,
+  sparkTop: 162,
 }
 
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
@@ -99,16 +94,12 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     )
   }
 
-  // 배경 막대 차트 데이터
-  const bars = downsample(card.sparkData, L.bars)
-  const maxBar = Math.max(...bars, 1)
-  const minBar = Math.min(...bars)
-  const barRange = maxBar - minBar || 1
-  const currentRatio = card.currentIdx >= 0 ? card.currentIdx / Math.max(card.sparkData.length - 1, 1) : -1
-  const currentBarIdx = currentRatio >= 0 ? Math.round(currentRatio * (bars.length - 1)) : -1
+  // 우측 스파크라인 (부드러운 곡선)
+  const spark = buildSparkPath(card.sparkData, L.sparkW, L.sparkH, 18)
+  const curDot =
+    card.currentIdx >= 0 && card.currentIdx < spark.points.length ? spark.points[card.currentIdx] : null
 
-  const downArrow = card.isUp ? '▲' : '▼'
-  const deltaText = `${downArrow} ${Math.abs(card.delta)} (${card.isUp ? '+' : ''}${card.deltaPercent}%)`
+  const deltaText = `${card.isUp ? '▲' : '▼'} ${Math.abs(card.delta)} (${card.isUp ? '+' : ''}${card.deltaPercent}%)`
 
   return new ImageResponse(
     (
@@ -126,60 +117,33 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           position: 'relative',
         }}
       >
-        {/* 빛 번짐 (입체감) */}
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glow }} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glow2 }} />
+        {/* 빛 번짐 (입체감 / 차트가 배경에 녹아들도록) */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glowChart }} />
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glowCorner }} />
 
-        {/* 배경 100년 막대 차트 */}
-        <div
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: L.chartH,
-            display: 'flex',
-            alignItems: 'flex-end',
-            gap: 4,
-            paddingLeft: L.padX,
-            paddingRight: L.padX,
-          }}
+        {/* 우측 대형 스파크라인 — 텍스트보다 뒤(보조)지만 존재감 있게 */}
+        <svg
+          width={L.sparkW}
+          height={L.sparkH}
+          viewBox={`0 0 ${L.sparkW} ${L.sparkH}`}
+          style={{ position: 'absolute', top: L.sparkTop, right: L.sparkRight }}
         >
-          {bars.map((v, i) => {
-            const norm = (v - minBar) / barRange
-            const hpct = 14 + norm * 80
-            const isCur = i === currentBarIdx
-            return (
-              <div
-                key={i}
-                style={{
-                  flex: 1,
-                  height: `${hpct}%`,
-                  borderRadius: 5,
-                  background: isCur ? C.barHi : C.barBase,
-                  // 높을수록(좋은 해일수록) 더 밝게 → 묻히지 않게
-                  opacity: isCur ? 1 : 0.3 + norm * 0.45,
-                }}
-              />
-            )
-          })}
-        </div>
-
-        {/* 텍스트 가독성용 그라데이션 마스크 (차트 상단을 배경색으로 페이드) */}
-        <div
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: L.chartH,
-            display: 'flex',
-            background: 'linear-gradient(180deg, #150f38 0%, rgba(21,15,56,0.72) 32%, rgba(21,15,56,0) 64%)',
-          }}
-        />
+          <path d={spark.area} fill={C.lineFill} />
+          <path
+            d={spark.line}
+            fill="none"
+            stroke={C.line}
+            strokeWidth={6}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {curDot ? (
+            <circle cx={curDot.x} cy={curDot.y} r={11} fill={C.line} stroke="#0d1230" strokeWidth={5} />
+          ) : null}
+        </svg>
 
         {/* 상단 브랜드 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, zIndex: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div
             style={{
               display: 'flex',
@@ -198,8 +162,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           </div>
         </div>
 
-        {/* 본문 (좌측 정렬) */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', zIndex: 2 }}>
+        {/* 본문 (좌측 정렬, 폭 제한으로 차트와 분리) */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: L.textW }}>
           <div style={{ display: 'flex', fontSize: 40, fontWeight: 600, color: C.title, opacity: 0.92 }}>
             {`${entry.name}님의 인생 차트`}
           </div>
@@ -220,22 +184,22 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           </div>
         </div>
 
-        {/* 하단 CTA (우측, 클릭 유도) */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', zIndex: 2 }}>
+        {/* 하단 CTA (우측, 간결) */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <div
             style={{
               display: 'flex',
-              fontSize: 27,
-              fontWeight: 600,
+              fontSize: 26,
+              fontWeight: 700,
               color: C.white,
-              opacity: 0.92,
-              padding: '11px 22px',
+              opacity: 0.9,
+              padding: '10px 22px',
               borderRadius: 999,
               background: C.ctaBg,
               border: `1px solid ${C.ctaBorder}`,
             }}
           >
-            내 사주팔자는 몇 점일까? · chartpalja.com
+            chartpalja.com
           </div>
         </div>
       </div>
