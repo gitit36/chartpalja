@@ -1,11 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
 import { ChartTab } from '@/components/ChartTab'
 import { InfoTab } from '@/components/InfoTab'
 import { BottomSheet } from '@/components/BottomSheet'
+import { SummaryLine } from '@/components/SummaryLine'
 import { buildShareCard } from '@/lib/share/share-card'
 import type { PublicShareEntry, ShareSample } from '@/lib/share/get-share-entry'
 
@@ -23,9 +24,17 @@ export function ShareCardView({
   const router = useRouter()
   const [tab, setTab] = useState<TabKey>('chart')
   const [ctaSheet, setCtaSheet] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   const report = entry.sajuReportJson
   const card = useMemo(() => buildShareCard(report, entry.birthYear), [report, entry.birthYear])
+
+  // 개인 사주 상세와 동일하게: 스크롤하면 요약 바가 시세 헤더 형태로 접힌다.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 120)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const goMakeMine = () => router.push('/app/input')
   const onShareCta = () => setCtaSheet(true)
@@ -58,13 +67,14 @@ export function ShareCardView({
             ))}
           </div>
           {tab === 'chart' && card && (
-            <div className="px-4 h-[36px] flex items-center bg-white">
-              <p className="text-[11px] text-gray-700 text-center font-medium w-full whitespace-nowrap overflow-hidden text-ellipsis">
-                올해 운세 <span className="font-bold">{card.score}점</span> | {card.label}, {card.desc} {card.emoji}
-              </p>
-            </div>
+            <SummaryLine data={card} isUp={card.isUp} scrolled={scrolled} />
           )}
         </div>
+
+        {/* 사주 정보 탭: 요약 바는 스크롤되도록 sticky 밖에 둔다 */}
+        {tab === 'info' && card && (
+          <SummaryLine data={card} isUp={card.isUp} scrolled={false} />
+        )}
 
         {/* 공유 출처 안내 (슬림) */}
         <div className="px-4 pt-2">
@@ -114,7 +124,7 @@ export function ShareCardView({
                 >
                   나도 내 인생 차트 만들기 →
                 </button>
-                <p className="text-center text-[11px] text-gray-400 mt-2">내 사주는 몇 점일까? · 30초면 끝나요</p>
+                <p className="text-center text-[11px] text-gray-400 mt-2">내 사주팔자는 몇 점일까? · 30초면 끝나요</p>
               </>
             )}
           </div>
