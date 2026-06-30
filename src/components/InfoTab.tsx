@@ -7,29 +7,7 @@ import {
   STEM_ELEMENT, BRANCH_ELEMENT, pillarToHangul,
 } from "@/lib/saju/hanja-hangul"
 import { LockedPreview } from "@/components/LockedPreview"
-
-function InfoTip({ text, align = 'left' }: { text: string; align?: 'left' | 'right' }) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLSpanElement>(null)
-  useEffect(() => {
-    if (!open) return
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [open])
-  return (
-    <span ref={ref} className="relative inline-block ml-1">
-      <button onClick={() => setOpen(!open)} className="w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-500 text-[8px] leading-none hover:bg-gray-300 focus:outline-none inline-flex items-center justify-center font-normal" aria-label="정보">i</button>
-      {open && (
-        <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-5 z-50 w-56 p-2.5 rounded-lg bg-white shadow-lg border border-gray-100 text-[10px] text-gray-600 leading-relaxed font-normal`}>
-          {text}
-        </div>
-      )}
-    </span>
-  )
-}
+import { InfoTip } from '@/components/InfoTip'
 
 const PILLAR_KEYS = ["시주", "일주", "월주", "연주"] as const
 const PILLAR_LABELS: Record<string, string> = { "시주": "시주", "일주": "일주(나)", "월주": "월주", "연주": "년주" }

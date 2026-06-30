@@ -73,9 +73,8 @@ export async function POST(request: NextRequest) {
       orderCurrency = 'KRW'
     }
 
-    // 정렬: chart 를 primary 로 (없으면 첫 상품). period 보너스가 chart 에만 붙으므로 의미적으로도 자연스러움.
-    const chartIndex = products.findIndex((p) => p.type === 'chart')
-    const primaryIdx = chartIndex >= 0 ? chartIndex : 0
+    // 단일 주(株) 팩 — 첫 상품을 primary 로 저장
+    const primaryIdx = 0
     const primary = products[primaryIdx]
     const others = products.filter((_, i) => i !== primaryIdx)
 

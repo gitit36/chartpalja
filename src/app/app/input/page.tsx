@@ -9,6 +9,8 @@ import { RecentEntryBanner } from '@/components/RecentEntryBanner'
 import { ConfirmSheet } from '@/components/ConfirmSheet'
 import { AlertSheet } from '@/components/AlertSheet'
 import { getOrCreateGuestId, getGuestId } from '@/lib/auth/guest'
+import { READING_COST } from '@/lib/payment/products'
+import { JuShortageNudge } from '@/components/JuShortageNudge'
 
 interface FormData {
   name: string
@@ -192,6 +194,7 @@ function InputPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const editId = searchParams.get('edit')
+  const compatInvite = searchParams.get('compatInvite')
 
   const [form, setForm] = useState<FormData>(defaultForm)
   const [dateDisplay, setDateDisplay] = useState('')
@@ -201,7 +204,7 @@ function InputPageInner() {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
   const [prefilling, setPrefilling] = useState(!!editId)
-  const [showNoCreditModal, setShowNoCreditModal] = useState(false)
+  const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const [recentEntry, setRecentEntry] = useState<{ id: string; name: string } | null>(null)
   const [bannerDismissed, setBannerDismissed] = useState(false)
@@ -331,8 +334,8 @@ function InputPageInner() {
         const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
         if (balRes.ok) {
           const bal = await balRes.json()
-          if ((bal.chartCredits ?? 0) <= 0) {
-            setShowNoCreditModal(true)
+          if ((bal.ju ?? 0) < READING_COST.fortune) {
+            setJuShortage({ needed: READING_COST.fortune, current: bal.ju ?? 0 })
             return
           }
         }
@@ -404,6 +407,20 @@ function InputPageInner() {
         }
         const { id } = await res.json()
         if (loadingInterval.current) clearInterval(loadingInterval.current)
+        if (compatInvite) {
+          try {
+            const acceptRes = await fetch(`/api/compat/invite/${encodeURIComponent(compatInvite)}/accept`, {
+              method: 'POST',
+              headers: getHeaders(),
+              body: JSON.stringify({ inviteeEntryId: id }),
+            })
+            if (acceptRes.ok) {
+              const acceptData = await acceptRes.json().catch(() => ({}))
+              router.push(acceptData.redirectUrl ?? `/app/saju/${id}`)
+              return
+            }
+          } catch { /* fall through to default redirect */ }
+        }
         router.push(`/app/saju/${id}`)
       }
     } catch (error) {
@@ -478,7 +495,11 @@ function InputPageInner() {
         </div>
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">{editId ? '사주 정보 수정' : '사주 정보 입력'}</h1>
-          <p className="text-sm text-gray-500">{editId ? '수정할 내용을 변경한 뒤 저장해주세요' : '생년월일을 입력하면 인생 운세 차트를 그려드려요'}</p>
+          <p className="text-sm text-gray-500">
+            {compatInvite && !editId
+              ? '입력하면 초대한 친구와 차트를 겹쳐볼 수 있어요'
+              : editId ? '수정할 내용을 변경한 뒤 저장해주세요' : '생년월일을 입력하면 인생 운세 차트를 그려드려요'}
+          </p>
         </div>
 
         {!editId && recentEntry && !bannerDismissed && (
@@ -621,24 +642,12 @@ function InputPageInner() {
 
       <MinimalLegalFooter />
 
-      {showNoCreditModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setShowNoCreditModal(false)}>
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="relative bg-white rounded-2xl p-6 mx-6 max-w-sm w-full shadow-xl" onClick={e => e.stopPropagation()}>
-            <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">운세 해설 이용권이 부족해요</p>
-            <p className="text-sm text-gray-500 text-center mb-5">운세 해설을 보려면 이용권이 필요해요.</p>
-            <div className="flex gap-3">
-              <button onClick={() => setShowNoCreditModal(false)}
-                className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
-                나중에
-              </button>
-              <button onClick={() => { setShowNoCreditModal(false); window.location.href = `/app/checkout?returnUrl=${encodeURIComponent('/app/input')}` }}
-                className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
-                이용권 구매
-              </button>
-            </div>
-          </div>
-        </div>
+      {juShortage && (
+        <JuShortageNudge
+          needed={juShortage.needed}
+          current={juShortage.current}
+          onDismiss={() => setJuShortage(null)}
+        />
       )}
       <ConfirmSheet
         open={duplicateAsk.open}

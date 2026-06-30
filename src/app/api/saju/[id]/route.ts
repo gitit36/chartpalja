@@ -3,6 +3,10 @@ import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import { buildSajuReportViaPython } from '@/lib/saju/saju-report'
 import { resolveYongshin } from '@/lib/ai/yongshin-llm'
+import { canReadSajuEntry, stripSensitiveEntryFields } from '@/lib/compat/access'
+import { compatShareStorageKey } from '@/lib/compat/storage'
+import { compatStorageKey, isRelationshipType } from '@/lib/compat/relationship'
+import type { CompatShareSnapshot } from '@/lib/compat/types'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -11,12 +15,10 @@ function getGuestId(req: NextRequest): string | null {
 async function findEntry(id: string, req: NextRequest) {
   const user = await getUserFromSession().catch(() => null)
   const guestId = getGuestId(req)
-  const entry = await prisma.sajuEntry.findUnique({ where: { id } })
-  if (!entry) return null
-  if (user && entry.userId === user.id) return entry
-  if (guestId && entry.guestId === guestId) return entry
-  if (!entry.userId && !entry.guestId) return entry
-  return null
+  const contextEntryId = req.nextUrl.searchParams.get('contextEntryId')
+  const allowed = await canReadSajuEntry(user?.id ?? null, guestId, id, contextEntryId)
+  if (!allowed) return null
+  return prisma.sajuEntry.findUnique({ where: { id } })
 }
 
 export async function GET(
@@ -29,7 +31,11 @@ export async function GET(
     if (!entry) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
-    return NextResponse.json(entry)
+    const user = await getUserFromSession().catch(() => null)
+    const guestId = getGuestId(request)
+    const isOwner = !!(user && entry.userId === user.id) || !!(guestId && entry.guestId === guestId)
+    const payload = stripSensitiveEntryFields(entry as Record<string, unknown>, isOwner)
+    return NextResponse.json(payload)
   } catch (error) {
     console.error('GET /api/saju/[id] error:', error)
     return NextResponse.json({ error: 'Failed' }, { status: 500 })
@@ -72,6 +78,57 @@ export async function PATCH(
         data: { isShared: body.share },
       })
       return NextResponse.json({ ok: true, id, isShared: updated.isShared })
+    }
+
+    if (body.compatShare && typeof body.compatShare === 'object') {
+      const cs = body.compatShare as Record<string, unknown>
+      const partnerId = typeof cs.partnerId === 'string' ? cs.partnerId : ''
+      const relationship = typeof cs.relationship === 'string' && isRelationshipType(cs.relationship)
+        ? cs.relationship
+        : null
+      const enabled = cs.enabled === true
+      const snapshot = cs.snapshot as CompatShareSnapshot | undefined
+      if (!partnerId || !relationship || !snapshot) {
+        return NextResponse.json({ error: 'compatShare 필드가 올바르지 않습니다.' }, { status: 400 })
+      }
+      const existingFortune = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
+        ? entry.fortuneJson as Record<string, unknown>
+        : {}
+      const shareKey = compatShareStorageKey(partnerId, relationship)
+      const merged = {
+        ...existingFortune,
+        [shareKey]: enabled ? { ...snapshot, enabled: true, sharedAt: new Date().toISOString() } : { enabled: false },
+      }
+      await prisma.sajuEntry.update({
+        where: { id },
+        data: { fortuneJson: merged as object, isShared: enabled ? true : entry.isShared },
+      })
+      return NextResponse.json({ ok: true, shareKey, enabled })
+    }
+
+    if (body.deleteCompat && typeof body.deleteCompat === 'object') {
+      const dc = body.deleteCompat as Record<string, unknown>
+      const partnerId = typeof dc.partnerId === 'string' ? dc.partnerId : ''
+      const relationship = typeof dc.relationship === 'string' && isRelationshipType(dc.relationship)
+        ? dc.relationship
+        : null
+      if (!partnerId || !relationship) {
+        return NextResponse.json({ error: 'deleteCompat 필드가 올바르지 않습니다.' }, { status: 400 })
+      }
+      const existingFortune = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
+        ? { ...(entry.fortuneJson as Record<string, unknown>) }
+        : {}
+      const compatKey = compatStorageKey(partnerId, relationship)
+      const legacyKey = `compat_${partnerId}`
+      const shareKey = compatShareStorageKey(partnerId, relationship)
+      delete existingFortune[compatKey]
+      delete existingFortune[shareKey]
+      if (relationship === 'romance') delete existingFortune[legacyKey]
+      await prisma.sajuEntry.update({
+        where: { id },
+        data: { fortuneJson: existingFortune as object },
+      })
+      return NextResponse.json({ ok: true, fortuneJson: existingFortune })
     }
 
     const updates: Record<string, unknown> = {}

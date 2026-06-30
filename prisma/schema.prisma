@@ -134,12 +134,12 @@ model PaymentOrder {
 }
 
 model UserBalance {
-  id             String   @id @default(cuid())
-  userId         String   @unique
-  user           User     @relation(fields: [userId], references: [id])
-  chartCredits   Int      @default(0)
-  periodCredits  Int      @default(3)
-  updatedAt      DateTime @updatedAt
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  /// 단일 통화 "주(株)" — 구간1 / 운세5 / 궁합5 차감
+  ju        Int      @default(3)
+  updatedAt DateTime @updatedAt
 }
 
 model EntitlementLedger {
@@ -167,4 +167,31 @@ model YongshinCache {
   reasoning     String?            // LLM 판별 근거
   model         String             // 사용 모델: "gemini-2.5-flash"
   createdAt     DateTime @default(now())
+}
+
+model CompatInvite {
+  id             String   @id @default(cuid())
+  token          String   @unique
+  inviterUserId  String
+  inviterEntryId String
+  inviteeUserId  String?
+  inviteeEntryId String?
+  status         String   @default("pending")
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+  @@index([inviterUserId])
+  @@index([token])
+}
+
+model CompatLink {
+  id          String   @id @default(cuid())
+  userId      String
+  entryId     String
+  peerUserId  String
+  peerEntryId String
+  source      String   @default("invite")
+  createdAt   DateTime @default(now())
+  @@unique([userId, entryId, peerEntryId])
+  @@index([userId])
+  @@index([peerEntryId])
 }

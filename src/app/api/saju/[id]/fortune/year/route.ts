@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
-import { consumeCredit, getBalance } from '@/lib/payment/entitlement'
-import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt, buildCompatibilitySummaryPrompt } from '@/lib/ai/fortune-prompt'
+import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
+import { READING_COST } from '@/lib/payment/products'
+import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { YearChartData } from '@/lib/ai/fortune-prompt'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
@@ -145,8 +146,8 @@ export async function GET(
       }
 
       const balance = await getBalance(user.id)
-      if (balance.periodCredits <= 0) {
-        return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
+      if (balance.ju < READING_COST.period) {
+        return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: balance.ju }, { status: 402 })
       }
 
       const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
@@ -192,7 +193,7 @@ export async function GET(
         data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
       })
 
-      await consumeCredit(user.id, 'period')
+      await consumeUnits(user.id, READING_COST.period, 'use:period')
 
       return NextResponse.json({ month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, summary })
     }
@@ -209,8 +210,8 @@ export async function GET(
     }
 
     const yearBalance = await getBalance(user.id)
-    if (yearBalance.periodCredits <= 0) {
-      return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.' }, { status: 402 })
+    if (yearBalance.ju < READING_COST.period) {
+      return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: yearBalance.ju }, { status: 402 })
     }
 
     let summary: string
@@ -235,29 +236,9 @@ export async function GET(
       data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
     })
 
-    await consumeCredit(user.id, 'period')
+    await consumeUnits(user.id, READING_COST.period, 'use:period')
 
-    const overlayId = request.nextUrl.searchParams.get('overlayId')
-    let compatSummary: string | undefined
-    if (overlayId) {
-      try {
-        const overlayEntry = await prisma.sajuEntry.findUnique({ where: { id: overlayId } })
-        if (overlayEntry?.sajuReportJson) {
-          const overlayReport = overlayEntry.sajuReportJson as SajuReportJson
-          const overlayBirthYear = overlayEntry.birthDate ? parseInt(overlayEntry.birthDate.slice(0, 4), 10) : birthYear
-          const compatPrompt = buildCompatibilitySummaryPrompt(
-            report, overlayReport,
-            entry.gender, overlayEntry.gender,
-            entry.name, overlayEntry.name,
-            yearStart, yearEnd,
-            { birthYearA: birthYear, birthYearB: overlayBirthYear }
-          )
-          compatSummary = (await callGemini(compatPrompt)).trim()
-        }
-      } catch (e) { console.error('Compatibility summary error:', e) }
-    }
-
-    return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary, compatSummary })
+    return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary })
   } catch (error) {
     console.error('Year summary error:', error)
     const msg = error instanceof Error ? error.message : 'Failed'

@@ -16,33 +16,23 @@ import type { ChartDatum, SeasonBand } from '@/lib/saju/life-chart-data'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
 import { getGuestId } from '@/lib/auth/guest'
 import { LockedPreview } from '@/components/LockedPreview'
+import { JuShortageNudge } from '@/components/JuShortageNudge'
+import { InfoTip } from '@/components/InfoTip'
+import { READING_COST } from '@/lib/payment/products'
+import { classifyCompat } from '@/lib/compat/classify'
+import { listCompatEntries, getGeneratedRelationships, compatShareStorageKey } from '@/lib/compat/storage'
+import { compatCardKey, RELATIONSHIP_LABELS } from '@/lib/compat/relationship'
+import type { OverlayCompatInfo, CompatGenerationState, CompatReportEntry, RelationshipType, CompatEventKind } from '@/lib/compat/types'
+import {
+  buildRelationshipSeries,
+  buildCompatEventBands,
+  formatCompatDots,
+  getRelationshipPointForYear,
+} from '@/lib/compat/relationship-score'
 
 const THIS_YEAR = new Date().getFullYear()
 const THIS_MONTH = new Date().getMonth() + 1
 const MONTH_LABELS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
-
-function InfoTip({ text }: { text: string }) {
-  const [open, setOpen] = useState(false)
-  const ref = React.useRef<HTMLSpanElement>(null)
-  React.useEffect(() => {
-    if (!open) return
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [open])
-  return (
-    <span ref={ref} className="relative inline-block ml-1">
-      <button onClick={() => setOpen(!open)} className="w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-500 text-[8px] leading-none hover:bg-gray-300 focus:outline-none inline-flex items-center justify-center font-normal" aria-label="정보">i</button>
-      {open && (
-        <div className="absolute right-0 top-5 z-50 w-56 p-2.5 rounded-lg bg-white shadow-lg border border-gray-100 text-[10px] text-gray-600 leading-relaxed font-normal text-left whitespace-pre-line">
-          {text}
-        </div>
-      )}
-    </span>
-  )
-}
 
 const SEASON_COLORS: Record<string, string> = {
   '확장기': 'rgba(46,204,113,0.12)', '안정기': 'rgba(52,152,219,0.08)',
@@ -231,6 +221,43 @@ function ThisYearMarker(props: any) {
   return elements.length ? <g>{elements}</g> : null
 }
 
+const COMPAT_DOT_COLORS: Record<'closer' | 'drift', string> = {
+  closer: '#fb7185',
+  drift: '#9ca3af',
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function CompatEventMarkers(props: any) {
+  const { formattedGraphicalItems, xAxisMap, yAxisMap, compatPoints, fromYear, isMonthly, period } = props
+  if (!compatPoints?.length || isMonthly || period === '1y' || !formattedGraphicalItems?.length || !xAxisMap || !yAxisMap) return null
+  const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) } | undefined
+  const yAxis = Object.values(yAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
+  if (!xAxis?.scale || !yAxis?.scale) return null
+  const yTop = yAxis.scale(yAxis.scale.domain?.()[1] ?? 110) ?? 0
+  const elements: React.ReactElement[] = []
+  const dotKinds: Array<'closer' | 'drift'> = ['closer', 'drift']
+  for (const p of compatPoints as Array<{ year: number; events: CompatEventKind[] }>) {
+    if (p.year < fromYear) continue
+    const cx = xAxis.scale(p.year)
+    if (typeof cx !== 'number' || isNaN(cx)) continue
+    const kind = dotKinds.find(k => p.events.includes(k))
+    if (!kind) continue
+    elements.push(
+      <circle
+        key={`${p.year}-${kind}`}
+        cx={cx}
+        cy={yTop + 10}
+        r={4}
+        fill={COMPAT_DOT_COLORS[kind]}
+        fillOpacity={0.9}
+        stroke="#fff"
+        strokeWidth={1.5}
+      />,
+    )
+  }
+  return elements.length ? <g>{elements}</g> : null
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName }: any) {
   if (!active || !payload?.length) return null
@@ -324,12 +351,14 @@ export interface OverlayEntry {
   gender: string
   birthDate: string
   dayElement?: string | null
+  isLinked?: boolean
 }
 
 type MergedDatum = ChartDatum & {
   scoreOv?: number; trendOv?: number; daewoonPillarOv?: string
   yongshinPowerOv?: number; energyTotalOv?: number; energyDirectionOv?: number
   noblePowerOv?: number; ohangBalanceOv?: number
+  compatFlow?: number
 }
 
 interface ChartTabProps {
@@ -356,11 +385,33 @@ interface ChartTabProps {
   shareMode?: boolean
   /** shareMode 에서 잠긴 액션을 누르면 호출 — 보통 "내 차트 만들기" CTA. */
   onShareCta?: () => void
+  /** 비교 오버레이 활성 시 요약바용 정보 상향 */
+  onOverlayChange?: (info: OverlayCompatInfo | null) => void
+  /** 생성 직후 펼칠 궁합 카드 (partnerId|relationship) */
+  expandCompatCardKey?: string | null
+  /** 궁합 해설 생성 중 — 플레이스홀더 카드 표시 */
+  compatGeneration?: CompatGenerationState | null
+  entryName?: string
+  myGender?: string
+  /** fortuneJson 갱신 콜백 (궁합 생성 후) */
+  onFortuneJsonUpdate?: (fortuneJson: unknown) => void
+  /** URL ?overlay= 등 초기 비교 대상 */
+  initialOverlayId?: string | null
+  /** 궁합 공유 페이지 — 상대 리포트 인라인 (공개 API 없이) */
+  sharePartner?: {
+    id: string
+    name: string
+    gender: string
+    birthYear: number
+    report: SajuReportJson
+  }
 }
 
 export function ChartTab({
   report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
   isLocked = false, onLockedClick, shareMode = false, onShareCta,
+  onOverlayChange, expandCompatCardKey, onFortuneJsonUpdate, compatGeneration,
+  entryName, myGender, initialOverlayId, sharePartner,
 }: ChartTabProps) {
   const [period, setPeriod] = useState<PeriodKey>('all')
   const [panelOpen, setPanelOpen] = useState(false)
@@ -370,14 +421,14 @@ export function ChartTab({
   const [hoverYear, setHoverYear] = useState<number | null>(null)
   const [clickedYear, setClickedYear] = useState<number | null>(null)
   const [selection, setSelection] = useState<{ startYear: number; endYear: number } | null>(null)
-  const [yearSummary, setYearSummary] = useState<{ startYear: number; endYear: number; text: string; compatText?: string } | null>(null)
+  const [yearSummary, setYearSummary] = useState<{ startYear: number; endYear: number; text: string } | null>(null)
   const [yearSummaryLoading, setYearSummaryLoading] = useState(false)
   const [rangeMode, setRangeMode] = useState(false)
   const rangeFirst = React.useRef<number | null>(null)
-  const [noCreditPeriod, setNoCreditPeriod] = useState(false)
+  const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
   const [settingsBadge, setSettingsBadge] = useState(false)
   const [chartHint, setChartHint] = useState(false)
-  const [summaryCache] = useState<Map<string, { text: string; compatText?: string }>>(() => new Map())
+  const [summaryCache] = useState<Map<string, { text: string }>>(() => new Map())
   const chartRef = React.useRef<HTMLDivElement>(null)
   const lastHapticYear = React.useRef<number | null>(null)
   const hasAnimated = React.useRef(false)
@@ -413,23 +464,35 @@ export function ChartTab({
   }, [chartHint])
 
   // Overlay (comparison) state
-  const [overlayEntryId, setOverlayEntryId] = useState<string | null>(null)
+  const [overlayEntryId, setOverlayEntryId] = useState<string | null>(initialOverlayId ?? null)
   const [overlayReport, setOverlayReport] = useState<SajuReportJson | null>(null)
   const [overlayBirthYear, setOverlayBirthYear] = useState<number | null>(null)
   const [overlayName, setOverlayName] = useState('')
   const [overlayGender, setOverlayGender] = useState('')
   const [compareSheetOpen, setCompareSheetOpen] = useState(false)
+  const [inviteBusy, setInviteBusy] = useState(false)
+  const [inviteUrl, setInviteUrl] = useState<string | null>(null)
   const overlayFetchedRef = React.useRef<string | null>(null)
 
   useEffect(() => {
     if (!overlayEntryId) { setOverlayReport(null); setOverlayBirthYear(null); overlayFetchedRef.current = null; return }
+    if (sharePartner && overlayEntryId === sharePartner.id) {
+      setOverlayReport(sharePartner.report)
+      setOverlayBirthYear(sharePartner.birthYear)
+      setOverlayName(sharePartner.name)
+      setOverlayGender(sharePartner.gender)
+      overlayFetchedRef.current = overlayEntryId
+      return
+    }
     if (overlayEntryId === overlayFetchedRef.current) return
     overlayFetchedRef.current = overlayEntryId
     const gid = getGuestId()
     const headers: Record<string, string> = {}
     if (gid) headers['x-guest-id'] = gid
     // 공유 뷰에서는 인증 없이 접근 가능한 공개 엔드포인트를 쓴다.
-    const url = shareMode ? `/api/share/${overlayEntryId}` : `/api/saju/${overlayEntryId}`
+    const url = shareMode
+      ? `/api/share/${overlayEntryId}`
+      : `/api/saju/${overlayEntryId}${entryId ? `?contextEntryId=${encodeURIComponent(entryId)}` : ''}`
     fetch(url, { headers })
       .then(r => r.ok ? r.json() : null)
       .then(d => {
@@ -444,13 +507,45 @@ export function ChartTab({
         }
       })
       .catch(() => {})
-  }, [overlayEntryId, shareMode])
+  }, [overlayEntryId, shareMode, entryId, sharePartner])
+
+  useEffect(() => {
+    if (!initialOverlayId || overlayEntryId) return
+    const match = overlayEntries?.find(e => e.id === initialOverlayId)
+    if (match) {
+      setOverlayEntryId(match.id)
+      setOverlayName(match.name)
+      setOverlayGender(match.gender)
+    }
+  }, [initialOverlayId, overlayEntryId, overlayEntries])
 
   const clearOverlay = useCallback(() => {
     setOverlayEntryId(null); setOverlayReport(null); setOverlayBirthYear(null)
     setOverlayName(''); setOverlayGender('')
     setSelection(null); setYearSummary(null)
-  }, [])
+    onOverlayChange?.(null)
+  }, [onOverlayChange])
+
+  const handleInviteFriend = useCallback(async () => {
+    if (!entryId || shareMode || isLocked) return
+    setInviteBusy(true)
+    setInviteUrl(null)
+    try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+      const gid = getGuestId()
+      if (gid) headers['x-guest-id'] = gid
+      const res = await fetch('/api/compat/invite', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ entryId }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error ?? '초대 링크 생성 실패')
+      setInviteUrl(data.shareUrl as string)
+      if (data.shareUrl) await navigator.clipboard.writeText(data.shareUrl)
+    } catch { /* ignore */ }
+    setInviteBusy(false)
+  }, [entryId, shareMode, isLocked])
 
   const chartPayload: ChartPayload | null | undefined = report?.chartData
   const fullChartData = useMemo(() => {
@@ -465,6 +560,32 @@ export function ChartTab({
   }, [overlayReport, overlayBirthYear])
 
   const overlayActive = !!(overlayEntryId && overlayChartData)
+
+  useEffect(() => {
+    if (!onOverlayChange) return
+    if (!overlayActive || !overlayReport || overlayBirthYear == null || birthYear == null || !report || !overlayEntryId) {
+      if (!overlayEntryId) onOverlayChange(null)
+      return
+    }
+    const type = classifyCompat(report, birthYear, overlayReport, overlayBirthYear)
+    const myDatum = fullChartData?.data.find(d => d.year === THIS_YEAR)
+    const ovDatum = overlayChartData?.data.find(d => d.year === THIS_YEAR)
+    const series = buildRelationshipSeries(report, birthYear, overlayReport, overlayBirthYear)
+    const relPoint = getRelationshipPointForYear(series, THIS_YEAR)
+    onOverlayChange({
+      overlayId: overlayEntryId,
+      overlayName: overlayName || '상대',
+      overlayGender: overlayGender || 'male',
+      myScore: Math.round(myDatum?.score ?? 0),
+      partnerScore: Math.round(ovDatum?.score ?? 0),
+      type,
+      generatedRelationships: getGeneratedRelationships(fortuneJson, overlayEntryId),
+      compatDots: relPoint?.dots,
+    })
+  }, [
+    onOverlayChange, overlayActive, overlayReport, overlayBirthYear, birthYear, report,
+    overlayEntryId, overlayName, overlayGender, fullChartData, overlayChartData, fortuneJson,
+  ])
 
   const { filteredData, xDomain, isMonthly } = useMemo(() => {
     if (!fullChartData) return { filteredData: [], xDomain: [2000, 2080] as [number, number], isMonthly: false }
@@ -497,19 +618,32 @@ export function ChartTab({
     return { filteredData: filtered, xDomain: xd, isMonthly: monthly }
   }, [fullChartData, period, overlayChartData])
 
+  const relationshipSeries = useMemo(() => {
+    if (!overlayActive || !report || !overlayReport || birthYear == null || overlayBirthYear == null) return []
+    return buildRelationshipSeries(report, birthYear, overlayReport, overlayBirthYear)
+  }, [overlayActive, report, overlayReport, birthYear, overlayBirthYear])
+
+  const compatEventBands = useMemo(() => {
+    if (!overlayActive || isMonthly) return []
+    return buildCompatEventBands(relationshipSeries, THIS_YEAR)
+  }, [relationshipSeries, overlayActive, isMonthly])
+
   const mergedData = useMemo<MergedDatum[]>(() => {
+    const relMap = new Map(relationshipSeries.map(p => [p.year, p.score]))
     if (!overlayActive) return filteredData
     const ovSrc = isMonthly ? overlayChartData!.monthlyData : overlayChartData!.data
-    if (!ovSrc?.length) return filteredData
+    if (!ovSrc?.length) return filteredData.map(d => ({ ...d, compatFlow: relMap.get(d.year) }))
     const ovMap = new Map(ovSrc.map(d => [d.year, d]))
     return filteredData.map(d => {
       const ov = ovMap.get(d.year)
-      if (!ov) return d
-      return { ...d, scoreOv: ov.score, trendOv: ov.trend, daewoonPillarOv: ov.daewoonPillar,
-        yongshinPowerOv: ov.yongshinPower, energyTotalOv: ov.energyTotal,
-        energyDirectionOv: ov.energyDirection, noblePowerOv: ov.noblePower, ohangBalanceOv: ov.ohangBalance }
+      const base = ov
+        ? { ...d, scoreOv: ov.score, trendOv: ov.trend, daewoonPillarOv: ov.daewoonPillar,
+          yongshinPowerOv: ov.yongshinPower, energyTotalOv: ov.energyTotal,
+          energyDirectionOv: ov.energyDirection, noblePowerOv: ov.noblePower, ohangBalanceOv: ov.ohangBalance }
+        : d
+      return { ...base, compatFlow: relMap.get(d.year) }
     })
-  }, [filteredData, overlayActive, overlayChartData, isMonthly])
+  }, [filteredData, overlayActive, overlayChartData, isMonthly, relationshipSeries])
 
   const yDomain = useMemo<[number, number]>(() => {
     if (!mergedData.length) return [0, 110]
@@ -522,6 +656,31 @@ export function ChartTab({
     if (!isFinite(lo)) return [0, 110]
     const pad = Math.max(5, (hi - lo) * 0.15)
     return [Math.max(0, Math.floor(lo - pad)), Math.min(120, Math.ceil(hi + pad))]
+  }, [mergedData])
+
+  const compatFlowDomain = useMemo<[number, number]>(() => {
+    if (!mergedData.length) return [0, 100]
+    let lo = Infinity, hi = -Infinity
+    for (const d of mergedData) {
+      const v = d.compatFlow
+      if (typeof v === 'number' && !isNaN(v)) {
+        if (v < lo) lo = v
+        if (v > hi) hi = v
+      }
+    }
+    if (!isFinite(lo)) return [0, 100]
+    const range = hi - lo
+    const minSpan = 40
+    if (range < minSpan) {
+      const mid = (lo + hi) / 2
+      lo = mid - minSpan / 2
+      hi = mid + minSpan / 2
+    } else {
+      const pad = Math.max(18, range * 0.4)
+      lo -= pad
+      hi += pad
+    }
+    return [Math.max(0, Math.floor(lo)), Math.min(100, Math.ceil(hi))]
   }, [mergedData])
 
   const currentYearScore = useMemo(() => {
@@ -579,12 +738,19 @@ export function ChartTab({
     fetch(url, { headers })
       .then(async r => {
         const d = await r.json().catch(() => null)
-        if (r.status === 402) { setNoCreditPeriod(true); throw new Error('이용권 부족') }
+        if (r.status === 402) {
+          const d402 = d as { needed?: number; ju?: number } | null
+          setJuShortage({
+            needed: d402?.needed ?? READING_COST.period,
+            current: d402?.ju ?? 0,
+          })
+          throw new Error('이용권 부족')
+        }
         if (!r.ok) throw new Error(d?.error ?? 'Failed')
         return d
       })
       .then(d => {
-        const result = { text: d?.summary ?? '해석을 불러오지 못했습니다.', compatText: d?.compatSummary }
+        const result = { text: d?.summary ?? '해석을 불러오지 못했습니다.' }
         summaryCache.set(cacheKey, result)
         setYearSummary({ startYear, endYear, ...result })
       })
@@ -667,7 +833,13 @@ export function ChartTab({
 
   return (
     <div>
-      {noCreditPeriod && <NoCreditModal type="period" onClose={() => setNoCreditPeriod(false)} />}
+      {juShortage && (
+        <JuShortageNudge
+          needed={juShortage.needed}
+          current={juShortage.current}
+          onDismiss={() => setJuShortage(null)}
+        />
+      )}
       {/* Chart area */}
       <div className="relative px-2 pt-3" data-capture="01_메인차트">
         {/* Settings gear — top-right of chart area */}
@@ -693,6 +865,22 @@ export function ChartTab({
               <span className="w-4 h-0.5 bg-rose-400 rounded inline-block" /> {overlayName}
             </span>
           </>)}
+          {overlayActive && !isMonthly && (
+            <>
+              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+                <span className="w-3 h-2 rounded-sm bg-emerald-400/35 border border-emerald-400/40 inline-block" /> 좋은 시기
+              </span>
+              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+                <span className="w-3 h-2 rounded-sm bg-amber-400/35 border border-amber-400/40 inline-block" /> 주의 시기
+              </span>
+              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+                <span className="w-2 h-2 rounded-full bg-rose-400 inline-block" /> 가까워짐
+              </span>
+              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+                <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" /> 엇갈림
+              </span>
+            </>
+          )}
           {DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
             <span key={o.key} className="flex items-center gap-1 text-[10px] text-gray-500">
               <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: o.color }} /> {o.label}
@@ -737,6 +925,18 @@ export function ChartTab({
                 <ReferenceArea key={i} x1={b.startYear} x2={b.endYear} fill={SEASON_COLORS[b.tag] ?? 'rgba(0,0,0,0.03)'} fillOpacity={1}/>
               ))}
               {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#a78bfa" fillOpacity={0.12} stroke="#a78bfa" strokeOpacity={0.3} strokeWidth={1}/>}
+              {overlayActive && !isMonthly && compatEventBands.map((b, i) => (
+                <ReferenceArea
+                  key={`compat-band-${i}`}
+                  x1={b.startYear}
+                  x2={b.endYear + 0.95}
+                  fill={b.kind === 'good' ? '#34d399' : '#fbbf24'}
+                  fillOpacity={b.kind === 'good' ? 0.16 : 0.14}
+                  stroke={b.kind === 'good' ? '#34d399' : '#fbbf24'}
+                  strokeOpacity={0.25}
+                  strokeWidth={1}
+                />
+              ))}
               {mainOverlays.daewoon && <Line type="stepAfter" dataKey="trend" stroke="#ffd700" strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>}
               <Line type="monotone" dataKey="score" stroke="#82ca9d" strokeWidth={1.5} dot={false} name={isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
               {DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
@@ -749,6 +949,17 @@ export function ChartTab({
               {overlayActive && <Line type="monotone" dataKey="scoreOv" stroke="#fb7185" strokeWidth={1.5} dot={false} name={isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>}
               {mainOverlays.candle && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
               <Customized component={(p: any) => <ThisYearMarker {...p} period={period} markerYear={markerYear} selection={selection} rangeMode={rangeMode} isMonthly={isMonthly}/>}/>
+              {overlayActive && !isMonthly && (
+                <Customized component={(p: any) => (
+                  <CompatEventMarkers
+                    {...p}
+                    compatPoints={relationshipSeries}
+                    fromYear={THIS_YEAR}
+                    isMonthly={isMonthly}
+                    period={period}
+                  />
+                )}/>
+              )}
             </ComposedChart>
           </ResponsiveContainer>
         </div>
@@ -879,19 +1090,31 @@ export function ChartTab({
                     return <span className="text-[10px] sm:text-[11px] text-gray-400 truncate">평균 {avg}점 · 최고 {peak.year}년({Math.round(peak.score)}점)</span>
                   })()}
                 </div>
-                {yearSummary.compatText ? (
-                  <div>
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <span className="text-[10px] font-bold text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded">👥 궁합 해설</span>
-                      <span className="text-[10px] text-gray-400">{currentName} & {overlayName}</span>
-                    </div>
-                    <p className="text-[13px] text-gray-600 leading-relaxed">{cleanFortuneText(yearSummary.compatText)}</p>
-                  </div>
-                ) : (
-                  <p className="text-[13px] text-gray-600 leading-relaxed pr-2">{cleanFortuneText(yearSummary.text)}</p>
-                )}
+                <p className="text-[13px] text-gray-600 leading-relaxed pr-2">{cleanFortuneText(yearSummary.text)}</p>
               </>
             ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* 궁합 흐름 — 비교 오버레이 활성 시 */}
+      {overlayActive && !isMonthly && relationshipSeries.length > 0 && (
+        <div className="px-2 mt-2" data-capture="02_궁합흐름">
+          <div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">
+            궁합 흐름<InfoTip text={'두 사람 사주를 오행·동기화·상생·충돌 네 가지로 합산한 관계 흐름이에요.\n선이 높을수록 관계가 순조로운 시기, 낮을수록 조율이 필요한 시기예요.'} />
+          </div>
+          <div className="h-[70px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
+                <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{ left: 8, right: 8 }} />
+                <YAxis domain={compatFlowDomain} hide width={0} />
+                <Tooltip content={<SubTooltip decimals={0} monthly={false} />} />
+                {markerYear != null && (
+                  <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5} />
+                )}
+                <Line dataKey="compatFlow" stroke="#e879a9" strokeWidth={1.5} dot={false} connectNulls={false} name="궁합" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}
@@ -1012,9 +1235,15 @@ export function ChartTab({
       <FortuneSection
         fortuneJson={fortuneJson}
         entryId={entryId}
+        entryName={entryName}
+        myGender={myGender}
+        currentName={currentName}
         isLocked={isLocked}
         onLockedClick={onLockedClick}
         shareMode={shareMode}
+        expandCompatCardKey={expandCompatCardKey}
+        compatGeneration={compatGeneration}
+        onFortuneJsonUpdate={onFortuneJsonUpdate}
       />
 
       {/* Sliding Panel — indicator settings */}
@@ -1124,8 +1353,14 @@ export function ChartTab({
 
       {/* Compare bottom sheet */}
       {compareSheetOpen && (
-        <BottomSheet onClose={() => setCompareSheetOpen(false)}>
-          <h3 className="font-bold text-gray-900 mb-1">누구와 비교할까요?</h3>
+        <BottomSheet
+          onClose={() => setCompareSheetOpen(false)}
+          header={<h3 className="font-bold text-gray-900 pt-1 pb-2">누구와 비교할까요?</h3>}
+          footer={(
+            <button onClick={() => setCompareSheetOpen(false)}
+              className="w-full py-3 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">닫기</button>
+          )}
+        >
           {shareMode && (
             <p className="text-xs text-gray-400 mb-3">차트팔자에 저장된 공인과 비교해볼 수 있어요</p>
           )}
@@ -1135,7 +1370,14 @@ export function ChartTab({
           ) : (
             <div className="space-y-1">
               {otherEntries.map(e => (
-                <button key={e.id} onClick={() => { setOverlayEntryId(e.id); setOverlayName(e.name); setCompareSheetOpen(false); setSelection(null); setYearSummary(null) }}
+                <button key={e.id} onClick={() => {
+                  setOverlayEntryId(e.id)
+                  setOverlayName(e.name)
+                  setOverlayGender(e.gender)
+                  setCompareSheetOpen(false)
+                  setSelection(null)
+                  setYearSummary(null)
+                }}
                   className="w-full text-left p-3.5 rounded-xl hover:bg-purple-50 flex items-center gap-3 transition-colors">
                   <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
                   <div className="flex-1 min-w-0">
@@ -1146,8 +1388,22 @@ export function ChartTab({
               ))}
             </div>
           )}
-          <button onClick={() => setCompareSheetOpen(false)}
-            className="w-full py-3 mt-4 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">닫기</button>
+          {!shareMode && entryId && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <p className="text-xs text-gray-500 mb-2">친구가 아직 차트팔자에 없나요?</p>
+              <button
+                type="button"
+                onClick={handleInviteFriend}
+                disabled={inviteBusy || isLocked}
+                className="w-full py-3 rounded-xl text-sm font-semibold text-purple-700 bg-purple-50 border border-purple-200/70 hover:bg-purple-100/80 transition-colors disabled:opacity-50"
+              >
+                {inviteBusy ? '링크 만드는 중…' : '친구 초대하기'}
+              </button>
+              {inviteUrl && (
+                <p className="text-[11px] text-green-600 mt-2 text-center">초대 링크가 복사됐어요</p>
+              )}
+            </div>
+          )}
         </BottomSheet>
       )}
     </div>
@@ -1297,32 +1553,6 @@ function FortuneQuoteLoader() {
   )
 }
 
-function NoCreditModal({ type, onClose }: { type: 'chart' | 'period'; onClose: () => void }) {
-  const title = type === 'chart' ? '운세 해설 이용권이 부족해요' : '구간 해설 이용권이 부족해요'
-  const desc = type === 'chart'
-    ? '운세 해설을 보려면 이용권이 필요해요.'
-    : '연도/월별 해설을 보려면 구간 해설 이용권이 필요해요.'
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative bg-white rounded-2xl p-6 mx-6 max-w-sm w-full shadow-xl" onClick={e => e.stopPropagation()}>
-        <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">{title}</p>
-        <p className="text-sm text-gray-500 text-center mb-5">{desc}</p>
-        <div className="flex gap-3">
-          <button onClick={onClose}
-            className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
-            나중에
-          </button>
-          <button onClick={() => { onClose(); window.location.href = `/app/checkout?returnUrl=${encodeURIComponent(window.location.pathname)}` }}
-            className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
-            이용권 구매
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 type FortuneItem = { category: string; title: string; content: string }
 
 /** 잠금 미리보기용 — 실제 LLM 데이터 없이 운세 해설 카드/아코디언 형태만 흉내낸다. */
@@ -1363,19 +1593,70 @@ function FortunePlaceholder() {
 interface FortuneSectionProps {
   fortuneJson?: unknown
   entryId?: string
+  entryName?: string
+  myGender?: string
+  currentName?: string
   isLocked?: boolean
   onLockedClick?: (feature: string) => void
-  /** 공유 공개 뷰. 이미 생성된 fortuneJson 만 렌더하고, 크레딧을 쓰는 자동 생성은 하지 않는다. */
   shareMode?: boolean
+  expandCompatCardKey?: string | null
+  compatGeneration?: CompatGenerationState | null
+  onFortuneJsonUpdate?: (fortuneJson: unknown) => void
 }
 
-function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick, shareMode = false }: FortuneSectionProps) {
+function CompatSpinner() {
+  return (
+    <span className="inline-flex w-4 h-4 items-center justify-center shrink-0 mt-0.5" aria-hidden>
+      <svg className="animate-spin w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" strokeOpacity={0.2} />
+        <path
+          d="M12 3a9 9 0 0 1 9 9"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+    </span>
+  )
+}
+
+function FortuneSection({
+  fortuneJson, entryId, entryName, myGender, currentName,
+  isLocked = false, onLockedClick, shareMode = false,
+  expandCompatCardKey, compatGeneration, onFortuneJsonUpdate,
+}: FortuneSectionProps) {
+  const [shareBusyKey, setShareBusyKey] = useState<string | null>(null)
+  const [shareCopiedKey, setShareCopiedKey] = useState<string | null>(null)
+  const [menuOpenKey, setMenuOpenKey] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<CompatReportEntry | null>(null)
+  const [deleteBusy, setDeleteBusy] = useState(false)
   const [items, setItems] = useState<FortuneItem[]>([])
   const [openIds, setOpenIds] = useState<Set<number>>(new Set())
+  const [openCompatIds, setOpenCompatIds] = useState<Set<string>>(new Set())
   const [aiLoading, setAiLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [noCredit, setNoCredit] = useState(false)
+  const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
   const fetchedRef = React.useRef(false)
+  const compatSectionRef = React.useRef<HTMLDivElement>(null)
+
+  const compatCards = useMemo(() => {
+    if (shareMode) return [] as Array<{ key: string; entry: CompatReportEntry }>
+    const fromJson = listCompatEntries(fortuneJson)
+    if (!compatGeneration) return fromJson
+    const cardKey = compatCardKey(compatGeneration.partnerId, compatGeneration.relationship)
+    const exists = fromJson.some(c => compatCardKey(c.entry.partnerId, c.entry.relationship) === cardKey)
+    if (exists) return fromJson
+    const placeholder: CompatReportEntry = {
+      partnerId: compatGeneration.partnerId,
+      partnerName: compatGeneration.partnerName,
+      partnerGender: '',
+      relationship: compatGeneration.relationship,
+      type: compatGeneration.type,
+      text: '',
+      createdAt: '',
+    }
+    return [{ key: `pending_${cardKey}`, entry: placeholder }, ...fromJson]
+  }, [fortuneJson, shareMode, compatGeneration])
 
   const getHeaders = useCallback(() => {
     const h: Record<string, string> = {}
@@ -1387,13 +1668,16 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick,
   const fetchFortune = useCallback((regen = false) => {
     if (!entryId) return
     if (isLocked || shareMode) return
-    setError(null); setNoCredit(false); setAiLoading(true)
+    setError(null); setJuShortage(null); setAiLoading(true)
     const url = regen ? `/api/saju/${entryId}/fortune?regenerate=true` : `/api/saju/${entryId}/fortune`
     fetch(url, { headers: getHeaders() })
       .then(async r => {
         const d = await r.json().catch(() => null)
         if (r.status === 401) { throw new Error('login_required') }
-        if (r.status === 402) { setNoCredit(true); throw new Error('이용권 부족') }
+        if (r.status === 402) {
+          setJuShortage({ needed: READING_COST.fortune, current: (d as { ju?: number } | null)?.ju ?? 0 })
+          throw new Error('이용권 부족')
+        }
         if (!r.ok) throw new Error(d?.error ?? '운세 해설을 불러오지 못했습니다')
         return d
       })
@@ -1420,6 +1704,137 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick,
   }, [fortuneJson, entryId, isLocked, shareMode])
 
   const toggle = (i: number) => setOpenIds(p => { const n = new Set(p); n.has(i) ? n.delete(i) : n.add(i); return n })
+  const toggleCompat = (cardKey: string, canToggle: boolean) => {
+    if (!canToggle) return
+    setOpenCompatIds(p => {
+      const n = new Set(p)
+      n.has(cardKey) ? n.delete(cardKey) : n.add(cardKey)
+      return n
+    })
+  }
+
+  const handleCompatShare = useCallback(async (ce: CompatReportEntry, busyKey?: string) => {
+    if (!entryId || !ce.text) return
+    if (busyKey) setShareBusyKey(busyKey)
+    try {
+      const headers = getHeaders()
+      const thisYear = new Date().getFullYear()
+      let myScore = 0
+      let partnerScore = 0
+      const [myRes, partnerRes] = await Promise.all([
+        fetch(`/api/saju/${entryId}`, { headers }),
+        fetch(`/api/saju/${ce.partnerId}?contextEntryId=${encodeURIComponent(entryId)}`, { headers }),
+      ])
+      if (myRes.ok && partnerRes.ok) {
+        const myData = await myRes.json()
+        const partnerData = await partnerRes.json()
+        const byA = parseInt(String(myData.birthDate ?? '').slice(0, 4), 10)
+        const byB = parseInt(String(partnerData.birthDate ?? '').slice(0, 4), 10)
+        const chartA = buildLifeChartData(
+          (myData.sajuReportJson as SajuReportJson)?.chartData as ChartPayload | undefined,
+          myData.sajuReportJson as SajuReportJson,
+          byA,
+        )
+        const chartB = buildLifeChartData(
+          (partnerData.sajuReportJson as SajuReportJson)?.chartData as ChartPayload | undefined,
+          partnerData.sajuReportJson as SajuReportJson,
+          byB,
+        )
+        myScore = Math.round(chartA?.data.find(d => d.year === thisYear)?.score ?? 0)
+        partnerScore = Math.round(chartB?.data.find(d => d.year === thisYear)?.score ?? 0)
+      }
+      const snapshot = {
+        enabled: true,
+        sharedAt: new Date().toISOString(),
+        myScore,
+        partnerScore,
+        type: ce.type,
+        relationship: ce.relationship,
+        partnerName: ce.partnerName,
+      }
+      const patchHeaders = { ...headers, 'Content-Type': 'application/json' }
+      await fetch(`/api/saju/${entryId}`, {
+        method: 'PATCH',
+        headers: patchHeaders,
+        body: JSON.stringify({
+          compatShare: {
+            partnerId: ce.partnerId,
+            relationship: ce.relationship,
+            enabled: true,
+            snapshot,
+          },
+        }),
+      })
+      const shareKey = compatShareStorageKey(ce.partnerId, ce.relationship)
+      const existing = (fortuneJson && typeof fortuneJson === 'object')
+        ? { ...(fortuneJson as Record<string, unknown>) }
+        : {}
+      onFortuneJsonUpdate?.({
+        ...existing,
+        [shareKey]: { ...snapshot, enabled: true, sharedAt: snapshot.sharedAt },
+      })
+      const siteUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const url = `${siteUrl}/share/${entryId}/compat/${ce.partnerId}?rel=${ce.relationship}`
+      await navigator.clipboard.writeText(url)
+    } catch { /* ignore */ }
+    setShareBusyKey(null)
+  }, [entryId, getHeaders, fortuneJson, onFortuneJsonUpdate])
+
+  const handleCompatShareFromMenu = useCallback(async (ce: CompatReportEntry, cardKey: string) => {
+    setShareBusyKey(cardKey)
+    await handleCompatShare(ce, cardKey)
+    setShareCopiedKey(cardKey)
+    window.setTimeout(() => setShareCopiedKey(k => (k === cardKey ? null : k)), 2000)
+  }, [handleCompatShare])
+
+  const handleCompatDelete = useCallback(async () => {
+    if (!entryId || !deleteTarget) return
+    setDeleteBusy(true)
+    try {
+      const headers = { ...getHeaders(), 'Content-Type': 'application/json' }
+      const res = await fetch(`/api/saju/${entryId}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({
+          deleteCompat: {
+            partnerId: deleteTarget.partnerId,
+            relationship: deleteTarget.relationship,
+          },
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        if (data.fortuneJson) onFortuneJsonUpdate?.(data.fortuneJson)
+        const ck = compatCardKey(deleteTarget.partnerId, deleteTarget.relationship)
+        setOpenCompatIds(prev => {
+          const n = new Set(prev)
+          n.delete(ck)
+          return n
+        })
+      }
+    } catch { /* ignore */ }
+    setDeleteBusy(false)
+    setDeleteTarget(null)
+  }, [entryId, deleteTarget, getHeaders, onFortuneJsonUpdate])
+
+  useEffect(() => {
+    if (!compatGeneration) return
+    requestAnimationFrame(() => {
+      compatSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [compatGeneration])
+
+  useEffect(() => {
+    if (!expandCompatCardKey) return
+    const saved = listCompatEntries(fortuneJson).find(
+      c => compatCardKey(c.entry.partnerId, c.entry.relationship) === expandCompatCardKey,
+    )
+    if (!saved?.entry.text) return
+    setOpenCompatIds(prev => new Set(prev).add(expandCompatCardKey))
+    requestAnimationFrame(() => {
+      compatSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [expandCompatCardKey, fortuneJson])
 
   useEffect(() => {
     const handleExpandAll = () => setOpenIds(new Set(items.map((_, i) => i)))
@@ -1433,6 +1848,96 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick,
   const topCards = isNewFormat ? items.slice(0, 2) : []
   const accordionItems = isNewFormat ? items.slice(2) : items
   const accordionOffset = isNewFormat ? 2 : 0
+
+  const compatSection = compatCards.length > 0 ? (
+    <div ref={compatSectionRef} className="space-y-2 mb-3">
+      {compatCards.map(({ key, entry: ce }) => {
+        const cardKey = compatCardKey(ce.partnerId, ce.relationship)
+        const isGenerating = !ce.text && compatGeneration?.partnerId === ce.partnerId
+          && compatGeneration.relationship === ce.relationship
+        const canToggle = !isGenerating && !!ce.text
+        const isOpen = canToggle && openCompatIds.has(cardKey)
+        return (
+          <div
+            key={key}
+            className={`group relative border rounded-xl border-rose-100 bg-rose-50/30 transition-colors ${
+              isGenerating ? 'opacity-95' : ''
+            } ${!isGenerating && canToggle ? (isOpen ? 'bg-rose-50' : 'hover:bg-rose-50/60 active:bg-rose-50/80') : ''}`}
+          >
+            <div className="flex items-center">
+              <button
+                type="button"
+                disabled={isGenerating}
+                onClick={() => toggleCompat(cardKey, canToggle)}
+                className={`flex-1 text-left p-3.5 flex items-center gap-2.5 min-w-0 ${
+                  isGenerating ? 'cursor-default' : 'cursor-pointer'
+                }`}
+              >
+                {isGenerating ? (
+                  <CompatSpinner />
+                ) : (
+                  <span className="text-rose-400 text-sm mt-0.5">{isOpen ? '▼' : '▶'}</span>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-800 leading-snug">{ce.partnerName}님과의 궁합</p>
+                  <p className="text-[11px] text-rose-500 mt-0.5">
+                    {isGenerating
+                      ? '해설을 작성하고 있어요…'
+                      : `${RELATIONSHIP_LABELS[ce.relationship]} · ${ce.type}`}
+                  </p>
+                </div>
+              </button>
+              {ce.text && !shareMode && !isGenerating && (
+                <div className="relative shrink-0 self-center">
+                  <button
+                    type="button"
+                    onClick={ev => { ev.stopPropagation(); setMenuOpenKey(menuOpenKey === cardKey ? null : cardKey) }}
+                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="메뉴"
+                  >
+                    &#x22EE;
+                  </button>
+                  {menuOpenKey === cardKey && (
+                    <>
+                      <div className="fixed inset-0 z-[5]" onClick={() => setMenuOpenKey(null)} />
+                      <div className="absolute top-1/2 -translate-y-1/2 right-9 bg-white border border-gray-200 rounded-lg shadow-lg z-20 overflow-hidden w-[68px]">
+                        <button
+                          type="button"
+                          disabled={shareBusyKey === cardKey && shareCopiedKey !== cardKey}
+                          onClick={() => handleCompatShareFromMenu(ce, cardKey)}
+                          className="block w-full text-center px-2 py-2 text-xs text-gray-700 hover:bg-gray-50"
+                        >
+                          {shareCopiedKey === cardKey ? (
+                            <span className="text-green-600 font-medium">✓</span>
+                          ) : shareBusyKey === cardKey ? (
+                            '...'
+                          ) : (
+                            '공유'
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setMenuOpenKey(null); setDeleteTarget(ce) }}
+                          className="block w-full text-center px-2 py-2 text-xs text-red-600 hover:bg-red-50 border-t border-gray-100"
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+            {isOpen && ce.text && (
+              <div className="px-4 pb-4 pt-1 border-t border-rose-100/80 animate-fade-in">
+                <div className="text-sm text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(ce.text) }} />
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  ) : null
 
   if (isLocked) {
     return (
@@ -1454,18 +1959,22 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick,
     <div className="px-4 mt-6">
       <h3 className="font-bold text-gray-900 mb-3">운세 해설</h3>
 
-      {noCredit && <NoCreditModal type="chart" onClose={() => setNoCredit(false)} />}
+      {juShortage && (
+        <JuShortageNudge
+          needed={juShortage.needed}
+          current={juShortage.current}
+          onDismiss={() => setJuShortage(null)}
+        />
+      )}
+
+      {compatSection}
 
       {isLoading ? (
         <FortuneQuoteLoader />
-      ) : noCredit ? (
+      ) : juShortage ? (
         <div className="rounded-xl border border-purple-200 bg-purple-50 p-4 text-center">
-          <p className="text-sm text-gray-700 font-medium">운세 해설 이용권이 부족해요</p>
-          <p className="text-xs text-gray-500 mt-1">이용권을 구매하면 AI 운세 해설을 볼 수 있어요.</p>
-          <button onClick={() => { window.location.href = `/app/checkout?returnUrl=${encodeURIComponent(window.location.pathname)}` }}
-            className="mt-3 px-5 py-2 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:shadow-lg transition-all active:scale-[0.98]">
-            이용권 구매
-          </button>
+          <p className="text-sm text-gray-700 font-medium">주(株)가 부족해요</p>
+          <p className="text-xs text-gray-500 mt-1">운세 해설은 {READING_COST.fortune}주가 필요해요.</p>
         </div>
       ) : error ? (
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
@@ -1511,6 +2020,51 @@ function FortuneSection({ fortuneJson, entryId, isLocked = false, onLockedClick,
               </div>
             )
           })}
+        </div>
+      )}
+
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6"
+          onClick={() => !deleteBusy && setDeleteTarget(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden"
+            onClick={ev => ev.stopPropagation()}
+          >
+            <div className="px-6 pt-6 pb-4 text-center">
+              <div className="w-12 h-12 mx-auto mb-3 bg-red-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">궁합 해설 삭제</h3>
+              <p className="text-sm text-gray-500">
+                <span className="font-semibold text-gray-700">{deleteTarget.partnerName}</span>
+                {' · '}
+                {RELATIONSHIP_LABELS[deleteTarget.relationship]} 궁합 해설을 삭제할까요?
+              </p>
+              <p className="text-xs text-gray-400 mt-1">삭제된 해설은 복구할 수 없습니다.</p>
+            </div>
+            <div className="grid grid-cols-2 border-t border-gray-100">
+              <button
+                type="button"
+                disabled={deleteBusy}
+                onClick={() => setDeleteTarget(null)}
+                className="py-3.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors border-r border-gray-100"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                disabled={deleteBusy}
+                onClick={handleCompatDelete}
+                className="py-3.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"
+              >
+                {deleteBusy ? '삭제 중...' : '삭제'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

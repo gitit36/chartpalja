@@ -53,6 +53,14 @@ body {
   animation: fadeIn 0.5s ease-out;
 }
 
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
 /* 잠금 해제 stagger: 자식들이 순차로 fade-in.
  * 사용: <div class="stagger-fade-in"><Child/><Child/></div>
  */

@@ -14,21 +14,21 @@ interface Props {
   onCancel: () => void
 }
 
-/**
- * window.confirm 대체 — 모바일 친화 BottomSheet 형태.
- * - 확인은 primary(피츠), 취소는 보조.
- * - 시트는 바깥 탭/드래그로 닫을 수 있어 거절도 부담 없음(피크엔드).
- */
 export function ConfirmSheet({
   open, title, description, confirmLabel = '확인', cancelLabel = '취소',
   destructive = false, onConfirm, onCancel,
 }: Props) {
   if (!open) return null
   return (
-    <BottomSheet onClose={onCancel}>
-      <div className="px-5 pt-2 pb-3 text-center">
-        <h3 className="text-base font-bold text-gray-900 mb-1.5">{title}</h3>
-        {description && <p className="text-sm text-gray-500 leading-relaxed mb-5">{description}</p>}
+    <BottomSheet
+      onClose={onCancel}
+      header={(
+        <div className="pt-1 pb-3 text-center">
+          <h3 className="text-base font-bold text-gray-900 mb-1.5">{title}</h3>
+          {description && <p className="text-sm text-gray-500 leading-relaxed">{description}</p>}
+        </div>
+      )}
+      footer={(
         <div className="flex gap-3">
           <button
             type="button"
@@ -49,7 +49,7 @@ export function ConfirmSheet({
             {confirmLabel}
           </button>
         </div>
-      </div>
-    </BottomSheet>
+      )}
+    />
   )
 }

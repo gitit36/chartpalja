@@ -10,8 +10,7 @@ import { clearGuestId, getGuestId } from '@/lib/auth/guest'
 import { clearBalanceCache } from '@/lib/hooks/useBalance'
 
 interface Balance {
-  chartCredits: number
-  periodCredits: number
+  ju: number
 }
 
 interface OrderItem {
@@ -101,16 +100,11 @@ export default function ProfilePage() {
           <div className="px-4 pt-5 space-y-6">
             {/* Balance */}
             <section>
-              <h2 className="text-sm font-semibold text-gray-500 mb-3">나의 이용권</h2>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-purple-50 rounded-xl p-4 text-center">
-                  <p className="text-xs text-purple-600 font-medium mb-1">운세 해설</p>
-                  <p className="text-2xl font-bold text-purple-700">{balance?.chartCredits ?? 0}<span className="text-sm font-medium ml-0.5">회</span></p>
-                </div>
-                <div className="bg-indigo-50 rounded-xl p-4 text-center">
-                  <p className="text-xs text-indigo-600 font-medium mb-1">구간 해설</p>
-                  <p className="text-2xl font-bold text-indigo-700">{balance?.periodCredits ?? 0}<span className="text-sm font-medium ml-0.5">회</span></p>
-                </div>
+              <h2 className="text-sm font-semibold text-gray-500 mb-3">나의 주(株)</h2>
+              <div className="bg-purple-50 rounded-xl p-4 text-center">
+                <p className="text-xs text-purple-600 font-medium mb-1">보유 주</p>
+                <p className="text-2xl font-bold text-purple-700">{balance?.ju ?? 0}<span className="text-sm font-medium ml-0.5">주</span></p>
+                <p className="text-[11px] text-gray-500 mt-2">구간 1주 · 운세·궁합 5주</p>
               </div>
 
               <button

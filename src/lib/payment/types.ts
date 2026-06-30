@@ -12,7 +12,7 @@ export interface CreateOrderRequest {
 
 export interface OrderItemInfo {
   code: string
-  type: 'chart' | 'period'
+  type: 'ju'
   quantity: number
   amount: number
   currency: string

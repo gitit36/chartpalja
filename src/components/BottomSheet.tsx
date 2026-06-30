@@ -4,13 +4,17 @@ import React, { useRef, useState, useCallback } from 'react'
 
 interface BottomSheetProps {
   onClose: () => void
-  children: React.ReactNode
+  children?: React.ReactNode
+  /** 스크롤 영역 위에 고정 */
+  header?: React.ReactNode
+  /** 스크롤 영역 아래에 고정 */
+  footer?: React.ReactNode
 }
 
 const DISMISS_THRESHOLD = 0.3
 const VELOCITY_THRESHOLD = 600
 
-export function BottomSheet({ onClose, children }: BottomSheetProps) {
+export function BottomSheet({ onClose, children, header, footer }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const dragY = useRef<number | null>(null)
@@ -50,12 +54,14 @@ export function BottomSheet({ onClose, children }: BottomSheetProps) {
     dragY.current = null
   }, [offsetY, dismiss])
 
+  const hasSplit = !!(header || footer)
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={dismiss}>
       <div className={`absolute inset-0 bg-black/30 transition-opacity duration-250 ${closing ? 'opacity-0' : 'opacity-100'}`} />
       <div
         ref={sheetRef}
-        className={`relative w-full max-w-[446px] bg-white rounded-t-2xl p-5 pb-8 transition-transform ${
+        className={`relative w-full max-w-[446px] bg-white rounded-t-2xl flex flex-col max-h-[85vh] transition-transform ${
           closing ? 'duration-250 ease-in' : offsetY > 0 ? 'duration-0' : 'duration-300 ease-out'
         }`}
         style={{ transform: closing ? 'translateY(100%)' : `translateY(${offsetY}px)` }}
@@ -64,10 +70,26 @@ export function BottomSheet({ onClose, children }: BottomSheetProps) {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mb-4 cursor-grab" />
-        <div ref={scrollRef} className="max-h-[55vh] overflow-y-auto overscroll-contain">
-          {children}
+        <div className="shrink-0 pt-3 pb-2 px-5">
+          <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto cursor-grab" />
         </div>
+        {hasSplit ? (
+          <>
+            {header && <div className="shrink-0 px-5">{header}</div>}
+            <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5">
+              {children}
+            </div>
+            {footer && (
+              <div className="shrink-0 px-5 pt-3 pb-6 border-t border-gray-100 bg-white">
+                {footer}
+              </div>
+            )}
+          </>
+        ) : (
+          <div ref={scrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 pb-8">
+            {children}
+          </div>
+        )}
       </div>
     </div>
   )

@@ -177,16 +177,14 @@ function CheckoutContent() {
   const returnUrl = searchParams.get('returnUrl')
 
   // URL 쿼리에서 초기값 복원 (약관 페이지에서 뒤로 돌아왔을 때 선택 상태 유지)
-  const initialChart = searchParams.get('chart')
-  const initialPeriod = searchParams.get('period')
+  const initialJu = searchParams.get('ju') ?? searchParams.get('chart') ?? searchParams.get('period')
   const initialMethodParam = searchParams.get('method')
   const initialMethod: PaymentMethod | null =
     initialMethodParam && (VALID_PAYMENT_METHODS as string[]).includes(initialMethodParam)
       ? (initialMethodParam as PaymentMethod)
       : null
 
-  const [chartCode, setChartCode] = useState<string | null>(initialChart && getProduct(initialChart) ? initialChart : null)
-  const [periodCode, setPeriodCode] = useState<string | null>(initialPeriod && getProduct(initialPeriod) ? initialPeriod : null)
+  const [juCode, setJuCode] = useState<string | null>(initialJu && getProduct(initialJu) ? initialJu : null)
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(initialMethod)
   const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -199,8 +197,9 @@ function CheckoutContent() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     const params = new URLSearchParams(window.location.search)
-    if (chartCode) params.set('chart', chartCode); else params.delete('chart')
-    if (periodCode) params.set('period', periodCode); else params.delete('period')
+    if (juCode) params.set('ju', juCode); else params.delete('ju')
+    params.delete('chart')
+    params.delete('period')
     if (paymentMethod) params.set('method', paymentMethod); else params.delete('method')
     const qs = params.toString()
     const next = qs ? `/app/checkout?${qs}` : '/app/checkout'
@@ -208,12 +207,11 @@ function CheckoutContent() {
     if (current !== next) {
       router.replace(next, { scroll: false })
     }
-  }, [chartCode, periodCode, paymentMethod, router])
+  }, [juCode, paymentMethod, router])
 
-  const chartProduct = chartCode ? getProduct(chartCode) : null
-  const periodProduct = periodCode ? getProduct(periodCode) : null
-  const hasSelection = chartProduct || periodProduct
-  const totalPrice = (chartProduct?.price ?? 0) + (periodProduct?.price ?? 0)
+  const juProduct = juCode ? getProduct(juCode) : null
+  const hasSelection = !!juProduct
+  const totalPrice = juProduct?.price ?? 0
 
   // KG이니시스 PC 결제(card/transfer)는 SDK 레벨에서 phoneNumber 필수.
   const phoneRequired = paymentMethod === 'card' || paymentMethod === 'transfer'
@@ -229,20 +227,13 @@ function CheckoutContent() {
     if (saved && /^010\d{8}$/.test(saved)) setPhoneRaw(saved)
   }, [])
 
-  const orderName = useMemo(() => {
-    const parts: string[] = []
-    if (chartProduct) parts.push(chartProduct.name)
-    if (periodProduct) parts.push(periodProduct.name)
-    return parts.join(' + ')
-  }, [chartProduct, periodProduct])
+  const orderName = useMemo(() => juProduct?.name ? `${juProduct.name} 충전` : '', [juProduct])
 
-  // 해외카드는 선택 상품의 USD 합계가 $1 이상이어야 결제 가능 (Eximbay 최소 결제 금액)
   const overseasDisabledReason = useMemo<string | null>(() => {
-    const selectedProducts = [chartProduct, periodProduct].filter((p): p is NonNullable<typeof p> => p !== null)
-    if (selectedProducts.length === 0) return null
-    if (canPayOverseasBundle(selectedProducts)) return null
+    if (!juProduct) return null
+    if (canPayOverseasBundle([juProduct])) return null
     return '해외카드 결제는 합계 $1.00 이상부터 가능해요'
-  }, [chartProduct, periodProduct])
+  }, [juProduct])
 
   // 현재 라이브 모드에서 비활성('준비 중')인 결제수단 (테스트 모드면 비어 있음)
   const inactiveMethods = useMemo(() => {
@@ -294,8 +285,7 @@ function CheckoutContent() {
 
     try {
       const codes: string[] = []
-      if (chartCode) codes.push(chartCode)
-      if (periodCode) codes.push(periodCode)
+      if (juCode) codes.push(juCode)
 
       if (phoneRequired && isPhoneValid && typeof window !== 'undefined') {
         window.sessionStorage.setItem('checkout_phone', phoneRaw)
@@ -318,7 +308,7 @@ function CheckoutContent() {
     } finally {
       setLoading(false)
     }
-  }, [hasSelection, paymentMethod, chartCode, periodCode, router, sessionUser, returnUrl, phoneRaw, phoneRequired, isPhoneValid])
+  }, [hasSelection, paymentMethod, juCode, router, sessionUser, returnUrl, phoneRaw, phoneRequired, isPhoneValid])
 
   return (
     <MobileContainer>
@@ -338,16 +328,14 @@ function CheckoutContent() {
 
         <section className="mb-6">
           <ProductSelector
-            selectedChart={chartCode}
-            selectedPeriod={periodCode}
-            onSelectChart={setChartCode}
-            onSelectPeriod={setPeriodCode}
+            selectedCode={juCode}
+            onSelect={setJuCode}
           />
         </section>
 
         {hasSelection && (
           <section className="mb-6">
-            <OrderSummaryCard chartProduct={chartProduct} periodProduct={periodProduct} totalPrice={totalPrice} />
+            <OrderSummaryCard product={juProduct} totalPrice={totalPrice} />
           </section>
         )}
 

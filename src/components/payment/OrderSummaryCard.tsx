@@ -1,39 +1,27 @@
 'use client'
 
-import { formatPrice, calcFreePeriodCredits } from '@/lib/payment/products'
+import { formatPrice } from '@/lib/payment/products'
 import type { Product } from '@/lib/payment/products'
 import { BUSINESS_INFO } from '@/lib/legal/business-info'
 
 interface Props {
-  chartProduct: Product | null
-  periodProduct: Product | null
+  product: Product | null
   totalPrice: number
 }
 
-export function OrderSummaryCard({ chartProduct, periodProduct, totalPrice }: Props) {
-  const freePeriod = chartProduct ? calcFreePeriodCredits(chartProduct.quantity) : 0
-
+export function OrderSummaryCard({ product, totalPrice }: Props) {
   return (
     <div className="bg-gray-50/70 rounded-2xl p-5 border border-gray-100">
       <p className="text-xs font-semibold text-gray-500 mb-3">주문 내역</p>
 
       <div className="space-y-3">
-        {chartProduct && (
+        {product && (
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-800">{chartProduct.name}</p>
-              {freePeriod > 0 && (
-                <p className="text-xs text-gray-500 mt-0.5">+ 구간 해설 {freePeriod}회 무료 포함</p>
-              )}
+              <p className="text-sm font-medium text-gray-800">{product.name} 충전</p>
+              <p className="text-xs text-gray-500 mt-0.5">결제 즉시 {product.quantity}주 지급</p>
             </div>
-            <p className="text-sm font-medium text-gray-700">{formatPrice(chartProduct.price)}원</p>
-          </div>
-        )}
-
-        {periodProduct && (
-          <div className="flex items-start justify-between">
-            <p className="text-sm font-medium text-gray-800">{periodProduct.name}</p>
-            <p className="text-sm font-medium text-gray-700">{formatPrice(periodProduct.price)}원</p>
+            <p className="text-sm font-medium text-gray-700">{formatPrice(product.price)}원</p>
           </div>
         )}
       </div>

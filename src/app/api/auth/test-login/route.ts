@@ -9,7 +9,7 @@ export const runtime = 'nodejs'
  *
  * - 카카오 로그인 없이 ID/PW 만으로 심사 담당자가 로그인할 수 있게 한다.
  * - 비실물 상품 특성상 심사 담당자가 실제 결제 없이 서비스/결제창을 확인할 수 있도록,
- *   이 계정에는 운세 해설(chart)·구간 해설(period) 이용권을 각각 30개 보장한다.
+ *   이 계정에는 주(株) 30주를 보장한다.
  * - 기본 활성화. 운영에서 끄려면 환경변수 TEST_LOGIN_ENABLED=0 으로 설정한다.
  * - 자격증명은 환경변수(TEST_LOGIN_ID / TEST_LOGIN_PASSWORD)로 덮어쓸 수 있다.
  */
@@ -17,7 +17,7 @@ export const runtime = 'nodejs'
 const TEST_KAKAO_ID = 'test_reviewer_account'
 const TEST_NICKNAME = '심사용 테스트 계정'
 const TEST_EMAIL = 'review@chartpalja.com'
-const GRANT_EACH = 30
+const GRANT_JU = 30
 
 const DEFAULT_ID = 'testid00!'
 const DEFAULT_PW = 'testpw00!'
@@ -48,35 +48,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'invalid_credentials' }, { status: 401 })
   }
 
-  // 시드 테스트 유저 보장
   const user = await prisma.user.upsert({
     where: { kakaoId: TEST_KAKAO_ID },
     update: { updatedAt: new Date() },
     create: { kakaoId: TEST_KAKAO_ID, email: TEST_EMAIL, nickname: TEST_NICKNAME },
   })
 
-  // 이용권 30/30 보장 (chartCredits=운세 해설, periodCredits=구간 해설)
   const balance = await prisma.userBalance.findUnique({ where: { userId: user.id } })
   if (!balance) {
     await prisma.$transaction([
       prisma.userBalance.create({
-        data: { userId: user.id, chartCredits: GRANT_EACH, periodCredits: GRANT_EACH },
+        data: { userId: user.id, ju: GRANT_JU },
       }),
-      prisma.entitlementLedger.createMany({
-        data: [
-          { userId: user.id, creditType: 'chart', delta: GRANT_EACH, reason: 'test_grant' },
-          { userId: user.id, creditType: 'period', delta: GRANT_EACH, reason: 'test_grant' },
-        ],
+      prisma.entitlementLedger.create({
+        data: { userId: user.id, creditType: 'ju', delta: GRANT_JU, reason: 'test_grant' },
       }),
     ])
-  } else if (balance.chartCredits < GRANT_EACH || balance.periodCredits < GRANT_EACH) {
-    await prisma.userBalance.update({
-      where: { userId: user.id },
-      data: {
-        chartCredits: Math.max(balance.chartCredits, GRANT_EACH),
-        periodCredits: Math.max(balance.periodCredits, GRANT_EACH),
-      },
-    })
+  } else if (balance.ju < GRANT_JU) {
+    const delta = GRANT_JU - balance.ju
+    await prisma.$transaction([
+      prisma.userBalance.update({
+        where: { userId: user.id },
+        data: { ju: GRANT_JU },
+      }),
+      prisma.entitlementLedger.create({
+        data: { userId: user.id, creditType: 'ju', delta, reason: 'test_grant' },
+      }),
+    ])
   }
 
   await setUserSession({

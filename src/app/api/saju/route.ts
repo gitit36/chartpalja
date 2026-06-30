@@ -59,7 +59,41 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({ entries })
+    let allEntries = [...entries]
+
+    if (user) {
+      const links = await prisma.compatLink.findMany({
+        where: { userId: user.id },
+        select: { peerEntryId: true },
+      })
+      const peerIds = [...new Set(links.map(l => l.peerEntryId))].filter(
+        pid => !entries.some(e => e.id === pid),
+      )
+      if (peerIds.length > 0) {
+        const linked = await prisma.sajuEntry.findMany({
+          where: { id: { in: peerIds } },
+          select: {
+            id: true,
+            name: true,
+            gender: true,
+            birthDate: true,
+            birthTime: true,
+            timeUnknown: true,
+            isLunar: true,
+            isLeapMonth: true,
+            createdAt: true,
+            dayElement: true,
+            isRepresentative: true,
+          },
+        })
+        allEntries = [
+          ...allEntries,
+          ...linked.map(e => ({ ...e, isLinked: true as const })),
+        ]
+      }
+    }
+
+    return NextResponse.json({ entries: allEntries })
   } catch (error) {
     console.error('GET /api/saju error:', error)
     return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 })

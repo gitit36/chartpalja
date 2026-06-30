@@ -51,8 +51,7 @@ function MenuDrawer({
   }, [])
 
   // 게스트는 모든 잔액을 0으로 노출 — 다른 사용자의 캐시가 새어들지 않게 보장.
-  const chartCredits = isLoggedIn === false ? 0 : balance?.chartCredits
-  const periodCredits = isLoggedIn === false ? 0 : balance?.periodCredits
+  const ju = isLoggedIn === false ? 0 : balance?.ju
 
   // 로그인 사용자만 실제 라우팅. 게스트는 메뉴 항목 자체가 unclickable.
   const goPath = useCallback(
@@ -88,21 +87,12 @@ function MenuDrawer({
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <div className={`rounded-lg px-3 py-2 text-center ${isGuest ? 'bg-gray-50' : 'bg-purple-50'}`}>
-              <p className={`text-[10px] font-medium ${isGuest ? 'text-gray-400' : 'text-purple-600'}`}>운세 해설</p>
-              <p className={`text-lg font-bold ${isGuest ? 'text-gray-400' : 'text-purple-700'}`}>
-                {chartCredits != null ? chartCredits : <span className="text-gray-300">-</span>}
-                <span className="text-xs ml-0.5">회</span>
-              </p>
-            </div>
-            <div className={`rounded-lg px-3 py-2 text-center ${isGuest ? 'bg-gray-50' : 'bg-indigo-50'}`}>
-              <p className={`text-[10px] font-medium ${isGuest ? 'text-gray-400' : 'text-indigo-600'}`}>구간 해설</p>
-              <p className={`text-lg font-bold ${isGuest ? 'text-gray-400' : 'text-indigo-700'}`}>
-                {periodCredits != null ? periodCredits : <span className="text-gray-300">-</span>}
-                <span className="text-xs ml-0.5">회</span>
-              </p>
-            </div>
+          <div className={`rounded-lg px-3 py-2.5 text-center ${isGuest ? 'bg-gray-50' : 'bg-purple-50'}`}>
+            <p className={`text-[10px] font-medium ${isGuest ? 'text-gray-400' : 'text-purple-600'}`}>보유 주(株)</p>
+            <p className={`text-lg font-bold ${isGuest ? 'text-gray-400' : 'text-purple-700'}`}>
+              {ju != null ? ju : <span className="text-gray-300">-</span>}
+              <span className="text-xs ml-0.5">주</span>
+            </p>
           </div>
         </div>
 

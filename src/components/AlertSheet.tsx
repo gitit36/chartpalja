@@ -10,16 +10,18 @@ interface Props {
   onClose: () => void
 }
 
-/**
- * window.alert 대체 — 정보성 BottomSheet.
- */
 export function AlertSheet({ open, title, description, buttonLabel = '확인', onClose }: Props) {
   if (!open) return null
   return (
-    <BottomSheet onClose={onClose}>
-      <div className="px-5 pt-2 pb-3 text-center">
-        <h3 className="text-base font-bold text-gray-900 mb-1.5">{title}</h3>
-        {description && <p className="text-sm text-gray-500 leading-relaxed mb-5">{description}</p>}
+    <BottomSheet
+      onClose={onClose}
+      header={(
+        <div className="pt-1 pb-3 text-center">
+          <h3 className="text-base font-bold text-gray-900 mb-1.5">{title}</h3>
+          {description && <p className="text-sm text-gray-500 leading-relaxed">{description}</p>}
+        </div>
+      )}
+      footer={(
         <button
           type="button"
           onClick={onClose}
@@ -27,7 +29,7 @@ export function AlertSheet({ open, title, description, buttonLabel = '확인', o
         >
           {buttonLabel}
         </button>
-      </div>
-    </BottomSheet>
+      )}
+    />
   )
 }

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
-import { consumeCredit, getBalance } from '@/lib/payment/entitlement'
+import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
+import { READING_COST } from '@/lib/payment/products'
 import { buildFortunePrompt } from '@/lib/ai/fortune-prompt'
 import type { ChartSummary } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
@@ -164,8 +165,8 @@ export async function GET(
 
     if (shouldConsumeCredit) {
       const balance = await getBalance(user.id)
-      if (balance.chartCredits <= 0) {
-        return NextResponse.json({ error: '이용권이 부족합니다.' }, { status: 402 })
+      if (balance.ju < READING_COST.fortune) {
+        return NextResponse.json({ error: '이용권이 부족합니다.', needed: READING_COST.fortune, ju: balance.ju }, { status: 402 })
       }
     }
 
@@ -183,13 +184,17 @@ export async function GET(
     const raw = await callGemini(prompt)
     const items = parseJsonResponse(raw)
 
+    const existingFortune = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
+      ? entry.fortuneJson as Record<string, unknown>
+      : {}
+
     await prisma.sajuEntry.update({
       where: { id },
-      data: { fortuneJson: { items } as object },
+      data: { fortuneJson: { ...existingFortune, items } as object },
     })
 
     if (shouldConsumeCredit) {
-      await consumeCredit(user.id, 'chart')
+      await consumeUnits(user.id, READING_COST.fortune, 'use:fortune')
     }
 
     return NextResponse.json({ items })

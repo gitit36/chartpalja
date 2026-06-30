@@ -7,10 +7,8 @@ export async function GET() {
     const user = await requireUser()
     const balance = await getBalance(user.id)
     return NextResponse.json({
-      // userId를 함께 내려보내 클라이언트가 캐시를 user 단위로 격리할 수 있게 한다.
       userId: user.id,
-      chartCredits: balance.chartCredits,
-      periodCredits: balance.periodCredits,
+      ju: balance.ju,
     })
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {

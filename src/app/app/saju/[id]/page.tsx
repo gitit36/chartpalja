@@ -1,12 +1,18 @@
 'use client'
 
-import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState, useMemo, useCallback, useRef, Suspense } from 'react'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { ChartTab } from '@/components/ChartTab'
 import { InfoTab } from '@/components/InfoTab'
 import { SummaryLine } from '@/components/SummaryLine'
+import { CompatSummaryBar } from '@/components/CompatSummaryBar'
+import { CompatConfirmSheet } from '@/components/CompatConfirmSheet'
+import { JuShortageNudge } from '@/components/JuShortageNudge'
+import type { OverlayCompatInfo, CompatGenerationState, RelationshipType } from '@/lib/compat/types'
+import { compatCardKey } from '@/lib/compat/relationship'
+import { getGeneratedRelationships } from '@/lib/compat/storage'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { ChartPayload } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
@@ -18,6 +24,7 @@ import { AlertSheet } from '@/components/AlertSheet'
 import { Toast } from '@/components/Toast'
 import { getGuestId } from '@/lib/auth/guest'
 import { clearBalanceCache } from '@/lib/hooks/useBalance'
+import { READING_COST } from '@/lib/payment/products'
 
 declare global {
   interface Window {
@@ -171,10 +178,12 @@ function buildStockLine(report: SajuReportJson | null, birthYear: number | null)
 
 type TabKey = 'chart' | 'info'
 
-export default function PersonalSajuPage() {
+function PersonalSajuPageInner() {
   const params = useParams()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const id = params.id as string
+  const initialOverlayId = searchParams.get('overlay')
   const [entry, setEntry] = useState<SajuEntryData | null>(null)
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<TabKey>('chart')
@@ -194,6 +203,11 @@ export default function PersonalSajuPage() {
   const [welcomeToast, setWelcomeToast] = useState(false)
   const [guestBannerDismissed, setGuestBannerDismissed] = useState(false)
   const [bannerVisible, setBannerVisible] = useState(true)
+  const [activeOverlay, setActiveOverlay] = useState<OverlayCompatInfo | null>(null)
+  const [compatConfirmOpen, setCompatConfirmOpen] = useState(false)
+  const [compatGeneration, setCompatGeneration] = useState<CompatGenerationState | null>(null)
+  const [expandCompatCardKey, setExpandCompatCardKey] = useState<string | null>(null)
+  const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
 
   useEffect(() => {
     fetch(`/api/saju/${id}`, { headers: getHeaders(), cache: 'no-store' })
@@ -285,7 +299,7 @@ export default function PersonalSajuPage() {
       }
       if (balRes.ok) {
         const bal = await balRes.json()
-        if ((bal.chartCredits ?? 0) > 0) {
+        if ((bal.ju ?? 0) >= READING_COST.fortune) {
           setRegenModal('confirm')
         } else {
           setRegenModal('no-credit')
@@ -307,7 +321,13 @@ export default function PersonalSajuPage() {
       if (res.ok) {
         const d = await res.json()
         if (d?.items) {
-          setEntry(prev => prev ? { ...prev, fortuneJson: { items: d.items } } : prev)
+          setEntry(prev => {
+            if (!prev) return prev
+            const existing = (prev.fortuneJson && typeof prev.fortuneJson === 'object')
+              ? prev.fortuneJson as Record<string, unknown>
+              : {}
+            return { ...prev, fortuneJson: { ...existing, items: d.items } }
+          })
         }
       } else {
         const err = await res.json().catch(() => ({}))
@@ -322,6 +342,91 @@ export default function PersonalSajuPage() {
     }
     setRegenerating(false)
   }, [id])
+
+  const handleCompatCta = useCallback(async () => {
+    if (!activeOverlay) return
+    if (isLoggedIn !== true) {
+      setLoginSheet({ open: true, feature: '궁합 해설' })
+      return
+    }
+    try {
+      const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
+      if (balRes.status === 401) {
+        setLoginSheet({ open: true, feature: '궁합 해설' })
+        return
+      }
+      if (balRes.ok) {
+        const bal = await balRes.json()
+        if ((bal.ju ?? 0) < READING_COST.compat) {
+          setJuShortage({ needed: READING_COST.compat, current: bal.ju ?? 0 })
+          return
+        }
+      }
+      setCompatConfirmOpen(true)
+    } catch {
+      setCompatConfirmOpen(true)
+    }
+  }, [activeOverlay, isLoggedIn])
+
+  const handleCompatViewExisting = useCallback((relationship: RelationshipType) => {
+    if (!activeOverlay) return
+    setCompatConfirmOpen(false)
+    setExpandCompatCardKey(compatCardKey(activeOverlay.overlayId, relationship))
+    setTab('chart')
+  }, [activeOverlay])
+
+  const handleCompatConfirm = useCallback(async (relationship: RelationshipType) => {
+    if (!activeOverlay) return
+    setCompatConfirmOpen(false)
+    const overlayId = activeOverlay.overlayId
+    setCompatGeneration({
+      partnerId: overlayId,
+      partnerName: activeOverlay.overlayName,
+      relationship,
+      type: activeOverlay.type,
+    })
+    setTab('chart')
+    try {
+      const res = await fetch(
+        `/api/saju/${id}/compat?overlayId=${encodeURIComponent(overlayId)}&relationship=${relationship}`,
+        { method: 'POST', headers: getHeaders() },
+      )
+      const data = await res.json().catch(() => ({}))
+      if (res.status === 402) {
+        setCompatGeneration(null)
+        setJuShortage({ needed: READING_COST.compat, current: data.ju ?? 0 })
+        return
+      }
+      if (!res.ok) {
+        setCompatGeneration(null)
+        setAlertState({ open: true, title: '궁합 해설 생성 실패', description: data.error ?? '잠시 후 다시 시도해 주세요.' })
+        return
+      }
+      if (data.compat) {
+        const compatKey = `compat_${overlayId}_${relationship}`
+        setEntry(prev => {
+          if (!prev) return prev
+          const existing = (prev.fortuneJson && typeof prev.fortuneJson === 'object')
+            ? prev.fortuneJson as Record<string, unknown>
+            : {}
+          return { ...prev, fortuneJson: { ...existing, [compatKey]: data.compat } }
+        })
+        setActiveOverlay(prev => prev ? {
+          ...prev,
+          generatedRelationships: getGeneratedRelationships(
+            { ...(entry?.fortuneJson as object), [compatKey]: data.compat },
+            overlayId,
+          ),
+        } : prev)
+        setCompatGeneration(null)
+        setExpandCompatCardKey(compatCardKey(overlayId, relationship))
+        clearBalanceCache()
+      }
+    } catch {
+      setCompatGeneration(null)
+      setAlertState({ open: true, title: '궁합 해설 생성 실패', description: '네트워크 오류가 발생했어요.' })
+    }
+  }, [activeOverlay, id, entry?.fortuneJson])
 
   // 공유 시 비로그인 수신자도 결과를 볼 수 있도록 isShared=true 로 올린다.
   const ensureShared = useCallback(async () => {
@@ -476,9 +581,16 @@ export default function PersonalSajuPage() {
           </div>
 
           {/* Summary line: sticky only for chart tab */}
-          {tab === 'chart' && stockLine && (
+          {tab === 'chart' && activeOverlay ? (
+            <CompatSummaryBar
+              info={activeOverlay}
+              myName={entry?.name ?? '나'}
+              scrolled={scrolled}
+              onCta={handleCompatCta}
+            />
+          ) : tab === 'chart' && stockLine ? (
             <SummaryLine data={stockLine} isUp={isUp} scrolled={scrolled} />
-          )}
+          ) : null}
         </div>
 
         {/* Summary line: scrollable for info tab (not inside sticky header) */}
@@ -534,6 +646,18 @@ export default function PersonalSajuPage() {
               overlayEntries={overlayEntries}
               isLocked={isLoggedIn !== true}
               onLockedClick={(feature) => setLoginSheet({ open: true, feature })}
+              onOverlayChange={setActiveOverlay}
+              expandCompatCardKey={expandCompatCardKey}
+              compatGeneration={compatGeneration}
+              entryName={entry.name}
+              myGender={entry.gender}
+              initialOverlayId={initialOverlayId}
+              onFortuneJsonUpdate={(fj) => {
+                setEntry(prev => {
+                  if (!prev) return prev
+                  return { ...prev, fortuneJson: fj }
+                })
+              }}
             />
           </div>
           <div className={tab === 'info' ? '' : 'hidden'}>
@@ -563,8 +687,22 @@ export default function PersonalSajuPage() {
 
       {/* Switch saju bottom sheet */}
       {switchSheetOpen && (
-        <BottomSheet onClose={() => setSwitchSheetOpen(false)}>
-          <h3 className="font-bold text-gray-900 mb-4">다른 사주 보기</h3>
+        <BottomSheet
+          onClose={() => setSwitchSheetOpen(false)}
+          header={<h3 className="font-bold text-gray-900 pt-1 pb-2">다른 사주 보기</h3>}
+          footer={(
+            <div className="flex gap-2">
+              <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/list') }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+                목록으로
+              </button>
+              <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
+                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors">
+                새 사주 등록
+              </button>
+            </div>
+          )}
+        >
           {overlayEntries.filter(e => e.id !== id).length === 0 ? (
             <div className="text-center py-6">
               <p className="text-sm text-gray-400 mb-3">다른 사주가 없습니다</p>
@@ -585,23 +723,21 @@ export default function PersonalSajuPage() {
               ))}
             </div>
           )}
-          <div className="mt-3 pt-3 border-t border-gray-100 flex gap-2">
-            <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/list') }}
-              className="flex-1 py-2.5 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
-              목록으로
-            </button>
-            <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
-              className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors">
-              새 사주 등록
-            </button>
-          </div>
         </BottomSheet>
       )}
       {/* Share bottom sheet */}
       {shareOpen && (
-        <BottomSheet onClose={() => setShareOpen(false)}>
-          <h3 className="font-bold text-gray-900 mb-4 text-center">공유하기</h3>
-          <div className="space-y-2.5">
+        <BottomSheet
+          onClose={() => setShareOpen(false)}
+          header={<h3 className="font-bold text-gray-900 text-center pt-1 pb-2">공유하기</h3>}
+          footer={(
+            <button onClick={() => setShareOpen(false)}
+              className="w-full py-3 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">
+              닫기
+            </button>
+          )}
+        >
+          <div className="space-y-2.5 pb-2">
             <button onClick={handleKakaoShare}
               className="w-full py-3.5 rounded-xl text-sm font-semibold bg-[#FEE500] text-[#3C1E1E] hover:brightness-95 transition-all flex items-center justify-center gap-2">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#3C1E1E"><path d="M12 3C6.48 3 2 6.36 2 10.5c0 2.67 1.78 5.01 4.44 6.35-.15.54-.97 3.5-.99 3.72 0 0-.02.17.09.24.11.06.24.01.24.01.32-.04 3.7-2.44 4.28-2.86.62.09 1.26.14 1.94.14 5.52 0 10-3.36 10-7.5S17.52 3 12 3z"/></svg>
@@ -618,10 +754,6 @@ export default function PersonalSajuPage() {
               {imageSaving ? '저장 중...' : '이미지로 저장'}
             </button>
           </div>
-          <button onClick={() => setShareOpen(false)}
-            className="w-full py-3 mt-3 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">
-            닫기
-          </button>
         </BottomSheet>
       )}
       {/* Regenerate confirmation modal */}
@@ -632,7 +764,7 @@ export default function PersonalSajuPage() {
             {regenModal === 'confirm' ? (
               <>
                 <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">새로운 운세 해설을 받아볼 수 있어요.</p>
-                <p className="text-sm text-gray-500 text-center mb-5">이용권 1회가 사용됩니다. 다시 생성할까요?</p>
+                <p className="text-sm text-gray-500 text-center mb-5">운세 해설 {READING_COST.fortune}주가 차감됩니다. 다시 생성할까요?</p>
                 <div className="flex gap-3">
                   <button onClick={() => setRegenModal(null)}
                     className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
@@ -661,8 +793,8 @@ export default function PersonalSajuPage() {
               </>
             ) : (
               <>
-                <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">이용권이 모두 사용됐어요.</p>
-                <p className="text-sm text-gray-500 text-center mb-5">새로운 해설을 보려면 이용권이 필요해요.</p>
+                <p className="text-base font-semibold text-gray-900 mb-1.5 text-center">주(株)가 부족해요</p>
+                <p className="text-sm text-gray-500 text-center mb-5">운세 해설은 {READING_COST.fortune}주가 필요해요.</p>
                 <div className="flex gap-3">
                   <button onClick={() => setRegenModal(null)}
                     className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
@@ -670,13 +802,30 @@ export default function PersonalSajuPage() {
                   </button>
                   <button onClick={() => { setRegenModal(null); router.push(`/app/checkout?returnUrl=${encodeURIComponent(window.location.pathname)}`) }}
                     className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98]">
-                    이용권 구매
+                    충전하기
                   </button>
                 </div>
               </>
             )}
           </div>
         </div>
+      )}
+      <CompatConfirmSheet
+        open={compatConfirmOpen}
+        partnerName={activeOverlay?.overlayName ?? '상대'}
+        myGender={entry?.gender ?? 'male'}
+        partnerGender={activeOverlay?.overlayGender ?? 'male'}
+        existingRelationships={activeOverlay?.generatedRelationships ?? []}
+        onConfirm={handleCompatConfirm}
+        onViewExisting={handleCompatViewExisting}
+        onCancel={() => setCompatConfirmOpen(false)}
+      />
+      {juShortage && (
+        <JuShortageNudge
+          needed={juShortage.needed}
+          current={juShortage.current}
+          onDismiss={() => setJuShortage(null)}
+        />
       )}
       <LoginPromptSheet
         open={loginSheet.open}
@@ -696,5 +845,13 @@ export default function PersonalSajuPage() {
         onClose={() => setWelcomeToast(false)}
       />
     </MobileContainer>
+  )
+}
+
+export default function PersonalSajuPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-gray-400">불러오는 중...</div>}>
+      <PersonalSajuPageInner />
+    </Suspense>
   )
 }

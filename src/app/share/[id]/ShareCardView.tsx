@@ -7,6 +7,8 @@ import { ChartTab } from '@/components/ChartTab'
 import { InfoTab } from '@/components/InfoTab'
 import { BottomSheet } from '@/components/BottomSheet'
 import { SummaryLine } from '@/components/SummaryLine'
+import { CompatSummaryBar } from '@/components/CompatSummaryBar'
+import type { OverlayCompatInfo } from '@/lib/compat/types'
 import { buildShareCard } from '@/lib/share/share-card'
 import type { PublicShareEntry, ShareSample } from '@/lib/share/get-share-entry'
 
@@ -25,6 +27,7 @@ export function ShareCardView({
   const [tab, setTab] = useState<TabKey>('chart')
   const [ctaSheet, setCtaSheet] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [activeOverlay, setActiveOverlay] = useState<OverlayCompatInfo | null>(null)
 
   const report = entry.sajuReportJson
   const card = useMemo(() => buildShareCard(report, entry.birthYear), [report, entry.birthYear])
@@ -66,9 +69,17 @@ export function ShareCardView({
               </button>
             ))}
           </div>
-          {tab === 'chart' && card && (
+          {tab === 'chart' && activeOverlay ? (
+            <CompatSummaryBar
+              info={activeOverlay}
+              myName={entry.name}
+              scrolled={scrolled}
+              shareMode
+              onCta={onShareCta}
+            />
+          ) : tab === 'chart' && card ? (
             <SummaryLine data={card} isUp={card.isUp} scrolled={scrolled} />
-          )}
+          ) : null}
         </div>
 
         {/* 사주 정보 탭: 요약 바는 스크롤되도록 sticky 밖에 둔다 */}
@@ -99,6 +110,7 @@ export function ShareCardView({
               isLocked={false}
               shareMode
               onShareCta={onShareCta}
+              onOverlayChange={setActiveOverlay}
             />
           </div>
           <div className={tab === 'info' ? '' : 'hidden'}>
@@ -133,8 +145,18 @@ export function ShareCardView({
 
       {/* 잠긴 기능(구간·운세 생성) 탭 시 self-CTA 시트 */}
       {ctaSheet && (
-        <BottomSheet onClose={() => setCtaSheet(false)}>
-          <div className="text-center px-2 pb-1">
+        <BottomSheet
+          onClose={() => setCtaSheet(false)}
+          footer={(
+            <button
+              onClick={() => setCtaSheet(false)}
+              className="w-full py-3 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              그냥 둘러볼래요
+            </button>
+          )}
+        >
+          <div className="text-center px-2 pb-2">
             <div className="text-4xl mb-3">✨</div>
             <h3 className="font-bold text-gray-900 text-base mb-1.5">내 차트를 만들면 열려요</h3>
             <p className="text-sm text-gray-500 leading-relaxed mb-5">
@@ -147,12 +169,6 @@ export function ShareCardView({
               className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
             >
               내 차트 만들기 →
-            </button>
-            <button
-              onClick={() => setCtaSheet(false)}
-              className="w-full py-3 mt-2 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              그냥 둘러볼래요
             </button>
           </div>
         </BottomSheet>

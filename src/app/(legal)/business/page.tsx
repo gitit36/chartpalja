@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LegalPageLayout } from '@/components/LegalPageLayout'
 import { BUSINESS_INFO as B } from '@/lib/legal/business-info'
-import { CHART_PRODUCTS, PERIOD_PRODUCTS, formatPrice } from '@/lib/payment/products'
+import { JU_PRODUCTS, formatPrice } from '@/lib/payment/products'
 
 export const metadata: Metadata = {
   title: '사업자 정보 | 차트팔자',
@@ -57,15 +57,9 @@ export default function BusinessPage() {
 
         <div className="divide-y divide-gray-100">
           <div className="py-2">
-            <p className="text-[11px] text-gray-500 mb-1">운세 해설 이용권</p>
-            {CHART_PRODUCTS.map(p => (
-              <PriceRow key={p.code} name={p.name} price={p.price} />
-            ))}
-          </div>
-          <div className="py-2">
-            <p className="text-[11px] text-gray-500 mb-1">구간 해설 이용권</p>
-            {PERIOD_PRODUCTS.map(p => (
-              <PriceRow key={p.code} name={p.name} price={p.price} />
+            <p className="text-[11px] text-gray-500 mb-1">주(株) 충전</p>
+            {JU_PRODUCTS.map(p => (
+              <PriceRow key={p.code} name={`${p.name} (${p.quantity}주)`} price={p.price} />
             ))}
           </div>
         </div>

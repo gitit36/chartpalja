@@ -1130,3 +1130,68 @@ export function buildCompatibilitySummaryPrompt(
 
 순수 텍스트만 반환:`
 }
+
+export function buildCompatibilityReportPrompt(
+  reportA: SajuReportJson,
+  reportB: SajuReportJson,
+  genderA: string,
+  genderB: string,
+  nameA: string,
+  nameB: string,
+  compatType: string,
+  relationship: 'romance' | 'friend' | 'business',
+  opts?: { birthYearA?: number; birthYearB?: number }
+): string {
+  const a = extractCoreData(reportA, { birthYear: opts?.birthYearA })
+  const b = extractCoreData(reportB, { birthYear: opts?.birthYearB })
+  const focusByRel: Record<typeof relationship, string> = {
+    romance: '연애·결혼·가족 관계에서의 감정 흐름, 친밀감, 장기 안정성',
+    friend: '우정·신뢰·거리감·취향 차이, 오래 가는 친구 관계의 리듬',
+    business: '협업·역할 분담·의사결정·이해관계, 업무·파트너십에서의 시너지와 마찰',
+  }
+  const focusArea = focusByRel[relationship]
+
+  return `너는 사주명리학 전문가이자 궁합 해설가. 엔진 점수는 FACT. 원시 재료로 역추적하여 서사로 풀어라.
+${nameA}와 ${nameB}의 평생 궁합 해설을 작성해줘요. 특정 연도 구간이 아닌, 관계 전체의 큰 흐름을 다뤄요.
+
+## 사전 분류 (톤 가이드)
+무료 분류 결과: 「${compatType}」
+이 라벨의 뉘앙스에 맞게 서사 톤을 맞추되, 라벨을 그대로 반복하지 말 것.
+
+## ${nameA}의 사주
+[년] ${a.yearPillar} / [월] ${a.monthPillar} / [일] ${a.dayPillar} / [시] ${a.hourPillar}
+격국: ${a.geokguk}, 용신: ${a.yongStr}, 기신: ${a.gishinStr}
+신강약: ${a.ssVerdict}, 오행: ${a.ohangStr}
+성별: ${genderA === 'female' ? '여성' : '남성'}
+
+## ${nameB}의 사주
+[년] ${b.yearPillar} / [월] ${b.monthPillar} / [일] ${b.dayPillar} / [시] ${b.hourPillar}
+격국: ${b.geokguk}, 용신: ${b.yongStr}, 기신: ${b.gishinStr}
+신강약: ${b.ssVerdict}, 오행: ${b.ohangStr}
+성별: ${genderB === 'female' ? '여성' : '남성'}
+
+## 궁합 분석 포인트
+- 집중 분야: ${focusArea}
+- 일주 궁합: ${a.dayPillar} vs ${b.dayPillar}
+- 용신·기신 보완: 서로의 약한 기운을 채워주는지, 부딪히는지
+- 오행 균형: 둘이 함께할 때 에너지가 어떻게 섞이는지
+- 세운 곡선: 두 사람의 인생 흐름이 맞물리는 타이밍·주의 시기
+
+## 구성 (3단락, 각 단락 2~4문장)
+1) 시너지 — 잘 맞는 지점, 서로에게 주는 힘
+2) 주의 — 부딪히기 쉬운 패턴, 오해가 생기는 지점
+3) 타이밍 — 관계를 키우기 좋은 흐름, 신경 쓸 시기
+
+## 규칙
+- 카톡톤. 확신있게. 전문용어는 꼭 필요한 경우만, 반드시 일상어 번역 병기. 한자 사용 금지(한글로만 작성).
+- 인사, 자기소개, 역할 선언 없이 바로 해석부터 시작.
+- 감성적·과장된 표현 없이, 담백한 설명형 문체로 작성.
+- 간지 조합에서 구체적으로 읽어줘.
+- 숫자/확률 낭독 금지.
+- special characters 사용 금지 (*, #, $, %, &, ^).
+- 비격식체 높임말(해요체/두루높임)로 작성.
+- 민감한 단정적 서술 금지. "~할 가능성이 높아요", "~경향이 보여요" 정도의 톤.
+- 총 600~900자.
+
+순수 텍스트만 반환:`
+}
