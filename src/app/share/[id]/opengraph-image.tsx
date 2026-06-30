@@ -11,36 +11,43 @@ export const contentType = 'image/png'
 
 /* ── 디자인 상수 (OG 1200×630 기준) ──────────────────────────── */
 const C = {
-  // 배경: 랜딩(slate-900 → indigo-950 → purple-950) 계열 딥 네이비/퍼플
   bg: 'linear-gradient(140deg, #0d1230 0%, #1b1547 52%, #3a1670 100%)',
-  // 우측(차트 영역) 은은한 블루 빛 번짐 + 좌하단 퍼플 빛으로 입체감
-  glowChart: 'radial-gradient(760px circle at 82% 48%, rgba(95,182,255,0.22) 0%, rgba(95,182,255,0.0) 60%)',
-  glowCorner: 'radial-gradient(620px circle at 14% 92%, rgba(96,90,220,0.28) 0%, rgba(96,90,220,0.0) 55%)',
-  score: '#5fb6ff', // electric / sky blue
+  glowChart:
+    'radial-gradient(760px circle at 82% 48%, rgba(95,182,255,0.22) 0%, rgba(95,182,255,0.0) 60%)',
+  glowCorner:
+    'radial-gradient(620px circle at 14% 92%, rgba(96,90,220,0.28) 0%, rgba(96,90,220,0.0) 55%)',
+  score: '#5fb6ff',
   white: '#ffffff',
   title: '#e8e9ff',
-  sub: '#b7bbe6', // lavender gray
-  line: '#5fb6ff', // 스파크라인 (점수 블루와 동일 계열)
-  lineFill: 'rgba(95,182,255,0.14)',
+  sub: '#b7bbe6',
+  line: '#5fb6ff',
+  lineGlow: 'rgba(95,182,255,0.22)',
   pillBg: 'rgba(255,255,255,0.10)',
   pillBorder: 'rgba(255,255,255,0.24)',
-  ctaBg: 'rgba(255,255,255,0.08)',
-  ctaBorder: 'rgba(255,255,255,0.16)',
+  domain: 'rgba(232,233,255,0.72)',
 }
+
 const L = {
   padX: 52,
   padTop: 40,
   padBottom: 40,
-  textW: 540, // 좌측 텍스트 블록 폭 (차트와 분리)
-  // 우측 스파크라인 (시원하게 크게)
+  textW: 540,
+
+  headerTop: 40,
+  bodyTop: 148,
+
   sparkW: 560,
   sparkH: 330,
-  sparkRight: 22,
+  sparkRight: 34,
   sparkTop: 162,
+
+  domainRight: 52,
+  domainBottom: 36,
 }
 
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+
   const [boldFont, semiFont] = await Promise.all([
     readFile(join(process.cwd(), 'public/fonts/Pretendard-Bold.otf')),
     readFile(join(process.cwd(), 'public/fonts/Pretendard-SemiBold.otf')),
@@ -84,8 +91,18 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           >
             차트팔자
           </div>
-          <div style={{ display: 'flex', fontSize: 76, fontWeight: 700, marginTop: 24 }}>내 인생의 리듬</div>
-          <div style={{ display: 'flex', fontSize: 34, fontWeight: 600, color: C.sub, marginTop: 16 }}>
+          <div style={{ display: 'flex', fontSize: 76, fontWeight: 700, marginTop: 24 }}>
+            내 인생의 리듬
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              fontSize: 34,
+              fontWeight: 600,
+              color: C.sub,
+              marginTop: 16,
+            }}
+          >
             사주도 주식처럼 차트로 분석해요
           </div>
         </div>
@@ -94,7 +111,6 @@ export default async function Image({ params }: { params: Promise<{ id: string }
     )
   }
 
-  // 우측 스파크라인 (부드러운 곡선)
   const spark = buildSparkPath(card.sparkData, L.sparkW, L.sparkH, 18)
   const curDot =
     card.currentIdx >= 0 && card.currentIdx < spark.points.length ? spark.points[card.currentIdx] : null
@@ -108,27 +124,40 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           width: '100%',
           height: '100%',
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
           background: C.bg,
           color: C.white,
           fontFamily: 'Pretendard',
-          padding: `${L.padTop}px ${L.padX}px ${L.padBottom}px`,
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        {/* 빛 번짐 (입체감 / 차트가 배경에 녹아들도록) */}
+        {/* 빛 번짐 */}
         <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glowChart }} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glowCorner }} />
 
-        {/* 우측 대형 스파크라인 — 텍스트보다 뒤(보조)지만 존재감 있게 */}
+        {/* 우측 대형 스파크라인 — area fill 제거, 라인 중심으로 가볍게 */}
         <svg
           width={L.sparkW}
           height={L.sparkH}
           viewBox={`0 0 ${L.sparkW} ${L.sparkH}`}
-          style={{ position: 'absolute', top: L.sparkTop, right: L.sparkRight }}
+          style={{
+            position: 'absolute',
+            top: L.sparkTop,
+            right: L.sparkRight,
+            opacity: 0.96,
+          }}
         >
-          <path d={spark.area} fill={C.lineFill} />
+          {/* subtle glow line */}
+          <path
+            d={spark.line}
+            fill="none"
+            stroke={C.lineGlow}
+            strokeWidth={16}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* main line */}
           <path
             d={spark.line}
             fill="none"
@@ -137,13 +166,30 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             strokeLinecap="round"
             strokeLinejoin="round"
           />
+
           {curDot ? (
-            <circle cx={curDot.x} cy={curDot.y} r={11} fill={C.line} stroke="#0d1230" strokeWidth={5} />
+            <circle
+              cx={curDot.x}
+              cy={curDot.y}
+              r={9}
+              fill={C.line}
+              stroke="#0d1230"
+              strokeWidth={4}
+            />
           ) : null}
         </svg>
 
         {/* 상단 브랜드 */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: L.headerTop,
+            left: L.padX,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
           <div
             style={{
               display: 'flex',
@@ -162,45 +208,60 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           </div>
         </div>
 
-        {/* 본문 (좌측 정렬, 폭 제한으로 차트와 분리) */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: L.textW }}>
+        {/* 본문 */}
+        <div
+          style={{
+            position: 'absolute',
+            top: L.bodyTop,
+            left: L.padX,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            width: L.textW,
+          }}
+        >
           <div style={{ display: 'flex', fontSize: 40, fontWeight: 600, color: C.title, opacity: 0.92 }}>
             {`${entry.name}님의 인생 차트`}
           </div>
+
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 30, marginTop: 14 }}>
             <div style={{ display: 'flex', fontSize: 156, fontWeight: 700, lineHeight: 1, color: C.score }}>
               {card.score}
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', marginBottom: 22, gap: 6 }}>
-              <div style={{ display: 'flex', fontSize: 30, fontWeight: 600, color: C.sub }}>올해 운세 점수</div>
-              <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, color: C.sub }}>{deltaText}</div>
+              <div style={{ display: 'flex', fontSize: 30, fontWeight: 600, color: C.sub }}>
+                올해 운세 점수
+              </div>
+              <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, color: C.sub }}>
+                {deltaText}
+              </div>
             </div>
           </div>
+
           <div style={{ display: 'flex', fontSize: 48, fontWeight: 700, color: C.white, marginTop: 26 }}>
             {card.label}
           </div>
+
           <div style={{ display: 'flex', fontSize: 30, fontWeight: 600, color: C.sub, marginTop: 10 }}>
             {card.desc}
           </div>
         </div>
 
-        {/* 하단 CTA (우측, 간결) */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 26,
-              fontWeight: 700,
-              color: C.white,
-              opacity: 0.9,
-              padding: '10px 22px',
-              borderRadius: 999,
-              background: C.ctaBg,
-              border: `1px solid ${C.ctaBorder}`,
-            }}
-          >
-            chartpalja.com
-          </div>
+        {/* 하단 도메인 — CTA pill 제거, 작은 wordmark처럼 처리 */}
+        <div
+          style={{
+            position: 'absolute',
+            right: L.domainRight,
+            bottom: L.domainBottom,
+            display: 'flex',
+            fontSize: 24,
+            fontWeight: 700,
+            color: C.domain,
+            letterSpacing: '-0.2px',
+          }}
+        >
+          chartpalja.com
         </div>
       </div>
     ),
