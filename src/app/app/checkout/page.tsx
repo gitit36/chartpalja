@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
 import { ProductSelector } from '@/components/payment/ProductSelector'
+import { CouponRedeemSection } from '@/components/payment/CouponRedeemSection'
 import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelector'
 import { OrderSummaryCard } from '@/components/payment/OrderSummaryCard'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
@@ -331,6 +332,10 @@ function CheckoutContent() {
             selectedCode={juCode}
             onSelect={setJuCode}
           />
+        </section>
+
+        <section className="mb-6">
+          <CouponRedeemSection isLoggedIn={sessionUser ? true : null} />
         </section>
 
         {hasSelection && (

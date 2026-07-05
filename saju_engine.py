@@ -4072,6 +4072,18 @@ def _gishin_disruption_penalty(
 
 
 # ── 종합운점수 산출 ────────────────────────────
+# 전반적 점수 상향(체감 "너무 짜다" 완화). gamma<1 인 단조 곡선으로
+# 중·저 구간을 끌어올리고 100은 그대로 둔다(순위·상한 보존).
+# 대운/세운/월운 모두 _composite_score 를 base 로 쓰므로 여기 한 곳이면 일관 적용됨.
+# 튜닝: SCORE_UPLIFT_GAMMA 환경변수로 조정(1.0=상향 없음, 낮을수록 강함).
+_SCORE_UPLIFT_GAMMA = float(os.environ.get("SCORE_UPLIFT_GAMMA", "0.78"))
+
+def _uplift_composite(sc: float) -> int:
+    s = max(0.0, min(100.0, float(sc)))
+    lifted = 100.0 * ((s / 100.0) ** _SCORE_UPLIFT_GAMMA)
+    return int(max(0, min(100, round(lifted))))
+
+
 def _composite_score(
     base: float,
     yong_fit: Dict[str, float],
@@ -4162,7 +4174,7 @@ def _composite_score(
 
     sc = (base + yfit_sc + uns_sc + uns_ctx + rel_sc + tri_sc
           + bal_sc + shin_sc + dis_sc + haeg_sc + structural_adj)
-    clamped = max(0, min(100, round(sc)))
+    clamped = _uplift_composite(sc)
 
     return {
         "score": clamped,
@@ -5261,13 +5273,15 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
     # 100-확률로 뒤집어 "운이 좋다=점수가 높다"로 일관되게 정렬한다.
     _, _, _d_rel_keys = _extract_rel_keys(d_rels_orig, d_unseong)
     _d_events = _calc_event_probabilities(d_gil + d_hyung, _d_rel_keys, d_unseong, [tg_stem, tg_branch])
+    # 종합점수(_composite_score)와 동일한 gamma 곡선으로 도메인 점수도 상향(체감 완화).
+    # 중·저 구간을 끌어올리고 100은 보존 → 순위/상한 유지하며 "너무 짜다" 감소.
     운세도메인 = {
-        "연애": int(_d_events.get("연애_결혼", 50)),
-        "재물": int(_d_events.get("재물_기회", 50)),
-        "학업": int(_d_events.get("학업_시험", 50)),
-        "직업": int(_d_events.get("이직_전환", 50)),
-        "건강": int(100 - _d_events.get("건강_주의", 50)),
-        "대인": int(100 - _d_events.get("대인_갈등", 50)),
+        "연애": _uplift_composite(_d_events.get("연애_결혼", 50)),
+        "재물": _uplift_composite(_d_events.get("재물_기회", 50)),
+        "학업": _uplift_composite(_d_events.get("학업_시험", 50)),
+        "직업": _uplift_composite(_d_events.get("이직_전환", 50)),
+        "건강": _uplift_composite(100 - _d_events.get("건강_주의", 50)),
+        "대인": _uplift_composite(100 - _d_events.get("대인_갈등", 50)),
     }
 
     return {

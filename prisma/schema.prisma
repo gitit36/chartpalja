@@ -137,8 +137,8 @@ model UserBalance {
   id        String   @id @default(cuid())
   userId    String   @unique
   user      User     @relation(fields: [userId], references: [id])
-  /// 단일 통화 "주(株)" — 구간1 / 운세5 / 궁합5 차감
-  ju        Int      @default(3)
+  /// 단일 통화 "주(株)" — 구간1 / 운세5 / 궁합5 차감. 신규 가입 기본 5주(=운세 해설 1회).
+  ju        Int      @default(5)
   updatedAt DateTime @updatedAt
 }
 
@@ -181,6 +181,33 @@ model CompatInvite {
   createdAt      DateTime @default(now())
   @@index([inviterUserId])
   @@index([token])
+}
+
+// 쿠폰(프로모션 코드). 공유형(전체 한도) + 1인 1회 지급.
+model Coupon {
+  id             String   @id @default(cuid())
+  code           String   @unique          // 대문자 정규화 저장 (예: EARLY15)
+  ju             Int                        // 지급 주(株) 수
+  maxRedemptions Int?                       // 전체 사용 한도 (null=무제한)
+  redeemedCount  Int      @default(0)
+  expiresAt      DateTime?
+  active         Boolean  @default(true)
+  note           String?                    // 캠페인 메모
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  redemptions    CouponRedemption[]
+}
+
+// 쿠폰 사용 기록. (couponId, userId) 유니크 = 1인 1회 강제.
+model CouponRedemption {
+  id        String   @id @default(cuid())
+  couponId  String
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  userId    String
+  ju        Int
+  createdAt DateTime @default(now())
+  @@unique([couponId, userId])
+  @@index([userId])
 }
 
 // 사용자 문의(1:1 문의). 접수 시 DB 적재 + 운영자 이메일 알림.

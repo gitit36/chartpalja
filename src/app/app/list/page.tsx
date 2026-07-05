@@ -154,7 +154,7 @@ export default function SajuListPage() {
   const [representative, setRepresentative] = useState<DailyRepresentative | null>(() => loadDailyCache()?.representative ?? null)
   const [todayStr, setTodayStr] = useState<string>(() => loadDailyCache()?.today ?? '')
   const [sortByScore, setSortByScore] = useState(false)
-  // "오늘 운 순" 정렬은 토글하는 순간 보유한 점수를 스냅샷해서 고정한다.
+  // "오늘 운세 순" 정렬은 토글하는 순간 보유한 점수를 스냅샷해서 고정한다.
   // 백그라운드 폴링으로 점수가 더 채워져도 순서가 실시간으로 흔들리지 않게 하기 위함.
   const [scoreOrder, setScoreOrder] = useState<Record<string, number> | null>(null)
   const [toastMsg, setToastMsg] = useState<string | null>(null)
@@ -388,7 +388,7 @@ export default function SajuListPage() {
                   onClick={enableScoreSort}
                   className={`px-3 py-1 rounded-full transition-colors ${sortByScore ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400'}`}
                 >
-                  오늘 운 순
+                  오늘 운세 순
                 </button>
               </div>
             </div>

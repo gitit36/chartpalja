@@ -32,8 +32,26 @@ function getHeaders(): Record<string, string> {
   return h
 }
 
+// 레거시 상품코드(chart_5, period_1 등) → 사람이 읽는 라벨.
+const LEGACY_PREFIX_LABEL: Record<string, string> = {
+  chart: '차트 해설',
+  period: '구간 해설',
+  fortune: '운세 해설',
+  compat: '궁합 해설',
+  ju: '주(株) 충전',
+}
+
 function productName(code: string): string {
-  return PRODUCTS[code]?.name ?? code
+  const known = PRODUCTS[code]?.name
+  if (known) return known
+  // 레거시 포맷 "<prefix>_<n>" 디코딩.
+  const [prefix, nStr] = code.split('_')
+  const base = prefix ? LEGACY_PREFIX_LABEL[prefix] : undefined
+  if (base) {
+    const n = parseInt(nStr ?? '', 10)
+    return Number.isFinite(n) && n > 0 ? `${base} ${n}회` : base
+  }
+  return code
 }
 
 function formatDate(d: string | null): string {

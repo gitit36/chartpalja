@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/db/prisma'
 import { getProduct } from './products'
 
+/** 신규 가입 기본 지급 주(株). 5주 = 운세/궁합 해설 1회를 무료로 경험. */
+export const SIGNUP_BONUS_JU = 5
+
 interface OrderItemLike {
   code: string
   type?: string
@@ -58,7 +61,7 @@ export async function grantCredits(userId: string, orderId: string, _primaryProd
       })
     } else {
       await tx.userBalance.create({
-        data: { userId, ju: 3 + juQty },
+        data: { userId, ju: SIGNUP_BONUS_JU + juQty },
       })
     }
   })
@@ -68,7 +71,7 @@ export async function getBalance(userId: string) {
   let balance = await prisma.userBalance.findUnique({ where: { userId } })
   if (!balance) {
     balance = await prisma.userBalance.create({
-      data: { userId, ju: 3 },
+      data: { userId, ju: SIGNUP_BONUS_JU },
     })
   }
   return balance

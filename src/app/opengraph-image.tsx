@@ -11,16 +11,17 @@ export const contentType = 'image/png'
 /* ── 디자인 상수 (share/[id] OG 와 동일 브랜드 톤) ── */
 const C = {
   bg: 'linear-gradient(140deg, #0d1230 0%, #1b1547 52%, #3a1670 100%)',
-  glowChart: 'radial-gradient(760px circle at 82% 46%, rgba(95,182,255,0.22) 0%, rgba(95,182,255,0.0) 60%)',
-  glowCorner: 'radial-gradient(620px circle at 14% 92%, rgba(96,90,220,0.28) 0%, rgba(96,90,220,0.0) 55%)',
+  glowChart: 'radial-gradient(820px circle at 78% 44%, rgba(95,182,255,0.22) 0%, rgba(95,182,255,0.0) 60%)',
+  glowCorner: 'radial-gradient(640px circle at 12% 92%, rgba(96,90,220,0.30) 0%, rgba(96,90,220,0.0) 55%)',
   score: '#5fb6ff',
   white: '#ffffff',
   title: '#e8e9ff',
   sub: '#b7bbe6',
   line: '#5fb6ff',
-  lineGlow: 'rgba(95,182,255,0.22)',
-  pillBg: 'rgba(255,255,255,0.10)',
-  pillBorder: 'rgba(255,255,255,0.24)',
+  grid: 'rgba(255,255,255,0.06)',
+  gridStrong: 'rgba(255,255,255,0.10)',
+  pillBg: 'rgba(255,255,255,0.08)',
+  pillBorder: 'rgba(255,255,255,0.16)',
   domain: 'rgba(232,233,255,0.72)',
 }
 
@@ -30,21 +31,20 @@ const DEMO_CURRENT_IDX = 14
 
 const L = {
   padX: 56,
-  headerTop: 44,
-  bodyTop: 176,
-  textW: 560,
-  sparkW: 600,
-  sparkH: 340,
-  sparkRight: 40,
-  sparkTop: 168,
-  domainRight: 56,
-  domainBottom: 40,
+  headerTop: 42,
+  bodyTop: 196,
+  textW: 566,
+  sparkW: 636,
+  sparkH: 400,
+  sparkRight: 26,
+  sparkTop: 150,
 }
 
 export default async function Image() {
-  const [boldFont, semiFont] = await Promise.all([
+  const [boldFont, semiFont, logoPng] = await Promise.all([
     readFile(join(process.cwd(), 'public/fonts/Pretendard-Bold.otf')),
     readFile(join(process.cwd(), 'public/fonts/Pretendard-SemiBold.otf')),
+    readFile(join(process.cwd(), 'public/svc_logo.png')),
   ])
 
   const fonts = [
@@ -52,9 +52,16 @@ export default async function Image() {
     { name: 'Pretendard', data: semiFont, weight: 600 as const, style: 'normal' as const },
   ]
 
-  const spark = buildSparkPath(DEMO_SPARK, L.sparkW, L.sparkH, 18)
+  const logoSrc = `data:image/png;base64,${logoPng.toString('base64')}`
+
+  const spark = buildSparkPath(DEMO_SPARK, L.sparkW, L.sparkH, 22)
   const curDot =
     DEMO_CURRENT_IDX >= 0 && DEMO_CURRENT_IDX < spark.points.length ? spark.points[DEMO_CURRENT_IDX] : null
+  const curScore = DEMO_SPARK[DEMO_CURRENT_IDX]
+
+  // 차트 SVG 의 화면상 좌상단 좌표 (올해 칩 위치 계산용)
+  const svgLeft = size.width - L.sparkRight - L.sparkW
+  const gridYs = [0.18, 0.42, 0.66, 0.9].map(t => 22 + t * (L.sparkH - 44))
 
   return new ImageResponse(
     (
@@ -74,19 +81,113 @@ export default async function Image() {
         <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glowChart }} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', background: C.glowCorner }} />
 
-        {/* 우측 대형 데모 스파크라인 */}
+        {/* 우측 대형 인생 차트 */}
         <svg
           width={L.sparkW}
           height={L.sparkH}
           viewBox={`0 0 ${L.sparkW} ${L.sparkH}`}
-          style={{ position: 'absolute', top: L.sparkTop, right: L.sparkRight, opacity: 0.96 }}
+          style={{ position: 'absolute', top: L.sparkTop, right: L.sparkRight }}
         >
-          <path d={spark.line} fill="none" stroke={C.lineGlow} strokeWidth={16} strokeLinecap="round" strokeLinejoin="round" />
-          <path d={spark.line} fill="none" stroke={C.line} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
-          {curDot ? <circle cx={curDot.x} cy={curDot.y} r={9} fill={C.line} stroke="#0d1230" strokeWidth={4} /> : null}
+          <defs>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor="#8f7bff" />
+              <stop offset="0.5" stopColor="#5fb6ff" />
+              <stop offset="1" stopColor="#5fe6c8" />
+            </linearGradient>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="rgba(95,182,255,0.30)" />
+              <stop offset="0.55" stopColor="rgba(120,140,255,0.10)" />
+              <stop offset="1" stopColor="rgba(95,182,255,0)" />
+            </linearGradient>
+            <radialGradient id="dotHalo" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stopColor="rgba(95,182,255,0.55)" />
+              <stop offset="1" stopColor="rgba(95,182,255,0)" />
+            </radialGradient>
+          </defs>
+
+          {/* 배경 그리드 */}
+          {gridYs.map((y, i) => (
+            <line
+              key={i}
+              x1={0}
+              y1={y}
+              x2={L.sparkW}
+              y2={y}
+              stroke={C.grid}
+              strokeWidth={1.5}
+              strokeDasharray="2 10"
+              strokeLinecap="round"
+            />
+          ))}
+
+          {/* 면적 채움 */}
+          <path d={spark.area} fill="url(#areaGrad)" stroke="none" />
+
+          {/* 부드러운 글로우 라인 */}
+          <path
+            d={spark.line}
+            fill="none"
+            stroke="rgba(95,182,255,0.22)"
+            strokeWidth={16}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* 메인 라인 (그라디언트) */}
+          <path
+            d={spark.line}
+            fill="none"
+            stroke="url(#lineGrad)"
+            strokeWidth={7}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {curDot ? (
+            <g>
+              {/* 올해 위치 세로 가이드 */}
+              <line
+                x1={curDot.x}
+                y1={curDot.y + 6}
+                x2={curDot.x}
+                y2={L.sparkH - 8}
+                stroke="rgba(95,182,255,0.40)"
+                strokeWidth={2}
+                strokeDasharray="3 7"
+                strokeLinecap="round"
+              />
+              {/* 후광 + 포인트 */}
+              <circle cx={curDot.x} cy={curDot.y} r={26} fill="url(#dotHalo)" />
+              <circle cx={curDot.x} cy={curDot.y} r={11} fill="#ffffff" />
+              <circle cx={curDot.x} cy={curDot.y} r={7} fill={C.line} />
+            </g>
+          ) : null}
         </svg>
 
-        {/* 상단 브랜드 */}
+        {/* 올해 점수 칩 (차트 포인트 위에 떠 있음) */}
+        {curDot ? (
+          <div
+            style={{
+              position: 'absolute',
+              left: svgLeft + curDot.x - 140,
+              top: L.sparkTop + curDot.y - 52,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: '8px 18px',
+              borderRadius: 18,
+              background: 'rgba(13,18,48,0.72)',
+              border: '1px solid rgba(95,182,255,0.45)',
+            }}
+          >
+            <div style={{ display: 'flex', fontSize: 20, fontWeight: 600, color: C.sub }}>올해</div>
+            <div style={{ display: 'flex', fontSize: 40, fontWeight: 700, lineHeight: 1.05, color: C.score }}>
+              {curScore}
+            </div>
+          </div>
+        ) : null}
+
+        {/* 상단 브랜드 (로고 마크 + 워드마크) */}
         <div
           style={{
             position: 'absolute',
@@ -94,23 +195,24 @@ export default async function Image() {
             left: L.padX,
             display: 'flex',
             alignItems: 'center',
-            gap: 16,
+            gap: 18,
           }}
         >
           <div
             style={{
               display: 'flex',
-              fontSize: 28,
-              fontWeight: 700,
-              padding: '9px 22px',
+              alignItems: 'center',
+              gap: 14,
+              padding: '10px 22px 10px 14px',
               borderRadius: 999,
               background: C.pillBg,
               border: `1px solid ${C.pillBorder}`,
             }}
           >
-            차트팔자
+            <img src={logoSrc} width={52} height={47} alt="" />
+            <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, color: C.white }}>차트팔자</div>
           </div>
-          <div style={{ display: 'flex', fontSize: 27, fontWeight: 600, color: C.sub }}>
+          <div style={{ display: 'flex', fontSize: 26, fontWeight: 600, color: C.sub }}>
             사주도 주식처럼 차트로 분석해요
           </div>
         </div>
@@ -143,8 +245,8 @@ export default async function Image() {
         <div
           style={{
             position: 'absolute',
-            right: L.domainRight,
-            bottom: L.domainBottom,
+            right: L.padX,
+            bottom: 40,
             display: 'flex',
             fontSize: 24,
             fontWeight: 700,

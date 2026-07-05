@@ -48,15 +48,18 @@ const L = {
 export default async function Image({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
-  const [boldFont, semiFont] = await Promise.all([
+  const [boldFont, semiFont, logoPng] = await Promise.all([
     readFile(join(process.cwd(), 'public/fonts/Pretendard-Bold.otf')),
     readFile(join(process.cwd(), 'public/fonts/Pretendard-SemiBold.otf')),
+    readFile(join(process.cwd(), 'public/svc_logo.png')),
   ])
 
   const fonts = [
     { name: 'Pretendard', data: boldFont, weight: 700 as const, style: 'normal' as const },
     { name: 'Pretendard', data: semiFont, weight: 600 as const, style: 'normal' as const },
   ]
+
+  const logoSrc = `data:image/png;base64,${logoPng.toString('base64')}`
 
   const entry = await getPublicShareEntry(id).catch(() => null)
   const card = entry ? buildShareCard(entry.sajuReportJson, entry.birthYear) : null
@@ -193,15 +196,16 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           <div
             style={{
               display: 'flex',
-              fontSize: 28,
-              fontWeight: 700,
-              padding: '9px 22px',
+              alignItems: 'center',
+              gap: 14,
+              padding: '10px 22px 10px 14px',
               borderRadius: 999,
               background: C.pillBg,
               border: `1px solid ${C.pillBorder}`,
             }}
           >
-            차트팔자
+            <img src={logoSrc} width={50} height={45} alt="" />
+            <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, color: C.white }}>차트팔자</div>
           </div>
           <div style={{ display: 'flex', fontSize: 27, fontWeight: 600, color: C.sub }}>
             사주도 주식처럼 차트로 분석해요

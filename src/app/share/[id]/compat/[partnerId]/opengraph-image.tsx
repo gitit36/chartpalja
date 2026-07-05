@@ -57,15 +57,18 @@ export default async function Image({
   const { id, partnerId } = await params
   const { rel } = await searchParams
 
-  const [boldFont, semiFont] = await Promise.all([
+  const [boldFont, semiFont, logoPng] = await Promise.all([
     readFile(join(process.cwd(), 'public/fonts/Pretendard-Bold.otf')),
     readFile(join(process.cwd(), 'public/fonts/Pretendard-SemiBold.otf')),
+    readFile(join(process.cwd(), 'public/svc_logo.png')),
   ])
 
   const fonts = [
     { name: 'Pretendard', data: boldFont, weight: 700 as const, style: 'normal' as const },
     { name: 'Pretendard', data: semiFont, weight: 600 as const, style: 'normal' as const },
   ]
+
+  const logoSrc = `data:image/png;base64,${logoPng.toString('base64')}`
 
   const ctx = await getCompatShareContext(id, partnerId, rel ?? null)
 
@@ -131,8 +134,9 @@ export default async function Image({
         </svg>
 
         <div style={{ position: 'absolute', top: 40, left: L.padX, display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ display: 'flex', fontSize: 28, fontWeight: 700, padding: '9px 22px', borderRadius: 999, background: C.pillBg, border: `1px solid ${C.pillBorder}` }}>
-            차트팔자
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 22px 10px 14px', borderRadius: 999, background: C.pillBg, border: `1px solid ${C.pillBorder}` }}>
+            <img src={logoSrc} width={50} height={45} alt="" />
+            <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, color: C.white }}>차트팔자</div>
           </div>
           <div style={{ display: 'flex', fontSize: 24, fontWeight: 600, color: C.sub }}>궁합 차트</div>
         </div>
