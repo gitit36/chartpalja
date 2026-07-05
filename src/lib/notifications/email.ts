@@ -105,12 +105,58 @@ function escapeHtml(s: string): string {
     .replace(/'/g, '&#039;')
 }
 
-export async function sendAlertEmail(payload: EmailPayload): Promise<void> {
-  const transporter = getTransporter()
-  if (!transporter) return
+/**
+ * Resend HTTP API(포트 443)로 발송. Railway 등 아웃바운드 SMTP 를 차단하는
+ * 환경에서 SMTP(465/587) 대신 사용한다. RESEND_API_KEY 가 설정된 경우에만 시도.
+ * @returns 발송 성공 여부 (키 없음/실패 시 false → SMTP 폴백 유도)
+ */
+async function sendViaResend(payload: EmailPayload, to: string): Promise<boolean> {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) return false
 
+  // 도메인 미인증 시 Resend 테스트 발신자(onboarding@resend.dev) 사용 가능.
+  // 단, 테스트 발신자는 Resend 계정 소유 이메일로만 발송된다.
+  const from = process.env.RESEND_FROM
+    ?? process.env.SMTP_FROM
+    ?? '차트팔자 알림 <onboarding@resend.dev>'
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: payload.subject,
+        html: renderHtml(payload),
+        text: renderText(payload),
+      }),
+    })
+    if (!res.ok) {
+      const body = await res.text().catch(() => '')
+      console.error('[email] Resend failed:', { status: res.status, body: body.slice(0, 300) })
+      return false
+    }
+    return true
+  } catch (err) {
+    console.error('[email] Resend request error:', err instanceof Error ? err.message : err)
+    return false
+  }
+}
+
+export async function sendAlertEmail(payload: EmailPayload): Promise<void> {
   const to = process.env.ALERT_EMAIL_TO
   if (!to) return
+
+  // 1순위: Resend(HTTP). 키가 있고 성공하면 여기서 종료.
+  if (await sendViaResend(payload, to)) return
+
+  // 2순위: SMTP (로컬/네트워크 미차단 환경).
+  const transporter = getTransporter()
+  if (!transporter) return
 
   const from = process.env.SMTP_FROM
     ?? (process.env.SMTP_USER ? `chartpalja <${process.env.SMTP_USER}>` : undefined)
@@ -132,7 +178,7 @@ export async function sendAlertEmail(payload: EmailPayload): Promise<void> {
       message: e?.message,
       hint:
         e?.code === 'ETIMEDOUT' || e?.code === 'ESOCKET'
-          ? 'SMTP outbound 연결 실패. SMTP_PORT=587, SMTP_SECURE=false 로 전환하거나, Railway가 외부 SMTP 를 차단하면 Resend 등 HTTP API 이메일로 전환 고려.'
+          ? 'SMTP outbound 연결 실패. Railway 등에서 SMTP 포트가 차단된 경우 RESEND_API_KEY 를 설정해 HTTP API(Resend)로 전환하세요.'
           : undefined,
     })
   }
