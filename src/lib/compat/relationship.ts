@@ -1,11 +1,12 @@
 import type { CompatReportEntry, RelationshipType } from './types'
 
-export const RELATIONSHIP_TYPES = ['romance', 'friend', 'business'] as const
+export const RELATIONSHIP_TYPES = ['friend', 'romance', 'business', 'family'] as const
 
 export const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
   romance: '연애',
   friend: '친구',
   business: '비즈니스',
+  family: '가족',
 }
 
 export function isRelationshipType(v: string): v is RelationshipType {

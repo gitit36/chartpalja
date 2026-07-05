@@ -647,6 +647,7 @@ function PersonalSajuPageInner() {
               isLocked={isLoggedIn !== true}
               onLockedClick={(feature) => setLoginSheet({ open: true, feature })}
               onOverlayChange={setActiveOverlay}
+              onCompatCta={handleCompatCta}
               expandCompatCardKey={expandCompatCardKey}
               compatGeneration={compatGeneration}
               entryName={entry.name}

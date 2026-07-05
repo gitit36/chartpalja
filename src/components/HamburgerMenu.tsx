@@ -130,6 +130,15 @@ function MenuDrawer({
             <span>차트 해석 가이드</span>
             {isGuest && <LockBadge />}
           </button>
+          {/* 문의하기: 게스트 포함 누구나 접근 가능 (지원 채널). */}
+          <button
+            type="button"
+            onClick={() => goPath('/app/inquiry')}
+            className={itemClass(false)}
+          >
+            <span className="text-base">✉️</span>
+            <span>문의하기</span>
+          </button>
         </nav>
 
         <div className="px-5 py-4 border-t border-gray-100 space-y-3">

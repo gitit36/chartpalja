@@ -209,9 +209,9 @@ const FEATURE_ITEMS: GuideItem[] = [
     icon: '👥',
     body: (
       <ul className="space-y-1">
-        <Bullet>다른 사주와 같은 차트 위에 겹쳐서 비교 가능.</Bullet>
+        <Bullet>다른 사주와 같은 차트 위에 겹쳐서 총운 흐름을 비교 가능.</Bullet>
         <Bullet>흐름이 겹치는 구간과 벌어지는 구간을 한눈에 파악함.</Bullet>
-        <Bullet>부부, 가족, 비즈니스 파트너 등과의 운 궁합 확인에 유용.</Bullet>
+        <Bullet>연인·친구·가족·비즈니스 파트너와의 궁합 확인에 유용 (자세한 지표는 아래 <b>궁합(비교)</b> 참고).</Bullet>
       </ul>
     ),
   },
@@ -223,6 +223,77 @@ const FEATURE_ITEMS: GuideItem[] = [
         <Bullet>특정 연도나 범위 선택 후 AI 해설을 받을 수 있음.</Bullet>
         <Bullet>한 번 클릭 = 단일 연도 / 두 번 클릭 또는 드래그 = 범위 선택.</Bullet>
         <Bullet>선택 후 하단 버튼으로 해당 구간 운세 해설 생성.</Bullet>
+      </ul>
+    ),
+  },
+]
+
+const COMPAT_ITEMS: GuideItem[] = [
+  {
+    title: '궁합 점수',
+    icon: '💞',
+    body: (
+      <ul className="space-y-1">
+        <Bullet>두 사람 관계의 <b>전반적인 궁합</b>을 0~100점으로 나타낸 대표 점수임.</Bullet>
+        <Bullet>특정 해가 아니라 관계 자체의 종합 점수라, 카드 상단에 한 번만 표시됨.</Bullet>
+        <Bullet>다른 사람들과 비교했을 때의 상대적 위치를 반영해 산출함.</Bullet>
+      </ul>
+    ),
+  },
+  {
+    title: '관계 케미 (4가지 결)',
+    icon: '🧬',
+    body: (
+      <div className="space-y-2">
+        <p className="text-[13px] text-gray-600">두 사주를 네 방향으로 나눠, 어느 쪽에 가까운지 막대로 보여줌. 좋고 나쁨이 아니라 <b>관계의 성격</b>임.</p>
+        <div className="space-y-1.5">
+          {[
+            { name: '에너지 궁합', l: '닮은 결', r: '보완의 결', desc: '성향이 비슷한지, 부족한 걸 채우는지' },
+            { name: '인생 리듬', l: '따로 리듬', r: '함께 리듬', desc: '좋을 때·힘들 때 타이밍이 겹치는지' },
+            { name: '기대는 방향', l: '서로 받쳐줌', r: '한쪽이 이끎', desc: '힘을 주고받는 균형' },
+            { name: '관계 온도', l: '편안·안정', r: '자극·긴장', desc: '무난하게 편한지, 부딪히며 끌리는지' },
+          ].map((s, i) => (
+            <div key={i} className="rounded-lg bg-gray-50 px-3 py-2">
+              <div className="text-[12px] font-bold text-gray-700">{s.name}</div>
+              <div className="text-[11px] text-gray-400 mt-0.5">{s.l} ↔ {s.r}</div>
+              <div className="text-[11px] text-gray-500 mt-0.5">{s.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: '좋음 · 보통 · 주의 해',
+    icon: '📅',
+    body: (
+      <ul className="space-y-1">
+        <Bullet>연도별 관계 흐름을 3단계로 나눈 것임.</Bullet>
+        <Bullet><Tag color="bg-green-50 text-green-700">좋음</Tag> 흐름이 맞는 해 / <Tag color="bg-gray-100 text-gray-600">보통</Tag> 무난한 해 / <Tag color="bg-red-50 text-red-700">주의</Tag> 어긋나기 쉬운 해</Bullet>
+        <Bullet>절대 점수가 아닌 <b>상대 기준</b>이라, 두 사람 사이에서 상위·하위 시기를 균형 있게 잡아줌.</Bullet>
+      </ul>
+    ),
+  },
+  {
+    title: '궁합 흐름',
+    icon: '📉',
+    body: (
+      <ul className="space-y-1">
+        <Bullet>해가 지날수록 두 사람의 궁합이 어떻게 오르내리는지 보여주는 선임.</Bullet>
+        <Bullet>카드를 펼치면 왼쪽에서 오른쪽으로 그려지며, 각 해의 관계 수준(좋음/보통/주의)과 함께 확인 가능.</Bullet>
+        <Bullet>선이 올라가는 구간 = 서로 맞는 시기, 내려가는 구간 = 신경 써야 할 시기.</Bullet>
+      </ul>
+    ),
+  },
+  {
+    title: '관계 유형 & 궁합 해설',
+    icon: '💬',
+    body: (
+      <ul className="space-y-1">
+        <Bullet>비교를 누르면 카드가 <b>바로</b> 생성되며, 점수·케미·흐름은 관계 유형과 무관하게 고정됨.</Bullet>
+        <Bullet><Tag color="bg-purple-50 text-purple-700">연애</Tag> <Tag color="bg-purple-50 text-purple-700">친구</Tag> <Tag color="bg-purple-50 text-purple-700">비즈니스</Tag> <Tag color="bg-purple-50 text-purple-700">가족</Tag> 중 선택 가능.</Bullet>
+        <Bullet>선택한 관계 유형은 <b>유료 「궁합 해설」 텍스트</b>에만 반영되어, 맥락에 맞는 조언을 제공함.</Bullet>
+        <Bullet>출생정보 기반 이론값이며, 실제 사건을 예측하는 것은 아님.</Bullet>
       </ul>
     ),
   },
@@ -331,6 +402,7 @@ export default function GuidePage() {
         <SectionGroup label="메인 차트 오버레이" items={CHART_ITEMS} />
         <SectionGroup label="보조 지표" items={AUX_ITEMS} />
         <SectionGroup label="기능" items={FEATURE_ITEMS} />
+        <SectionGroup label="궁합 (비교)" items={COMPAT_ITEMS} />
         <SectionGroup label="사주 개념" items={CONCEPT_ITEMS} />
       </div>
 

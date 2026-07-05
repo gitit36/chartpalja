@@ -23,6 +23,7 @@ interface SajuCard {
   createdAt: string
   dayElement?: string | null
   isRepresentative?: boolean
+  isLinked?: boolean
 }
 
 interface DailyEntry {
@@ -65,6 +66,70 @@ interface DailyCacheShape {
 let dailyMemCache: DailyCacheShape | null = null
 let listMemCache: SajuCard[] | null = null
 
+// 새로고침 후에도 즉시 뜨도록 localStorage 로도 영속화한다(메모리 캐시는 SPA 이동만 유지).
+const LIST_KEY = 'saju:list:v1'
+const DAILY_KEY = 'saju:daily:v1'
+
+function kstTodayStr(): string {
+  const now = new Date()
+  const kst = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 3600000)
+  return kst.toISOString().slice(0, 10)
+}
+
+function loadListCache(): SajuCard[] | null {
+  if (listMemCache) return listMemCache
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(LIST_KEY)
+    if (raw) { listMemCache = JSON.parse(raw) as SajuCard[]; return listMemCache }
+  } catch { /* ignore */ }
+  return null
+}
+
+function loadDailyCache(): DailyCacheShape | null {
+  if (dailyMemCache) return dailyMemCache
+  if (typeof window === 'undefined') return null
+  try {
+    const raw = localStorage.getItem(DAILY_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as DailyCacheShape
+      // 날짜가 바뀌면 폐기(점수/시계열이 하루 밀리는 것 방지).
+      if (parsed.today === kstTodayStr()) { dailyMemCache = parsed; return parsed }
+    }
+  } catch { /* ignore */ }
+  return null
+}
+
+function saveListCache(list: SajuCard[]) {
+  listMemCache = list
+  try { localStorage.setItem(LIST_KEY, JSON.stringify(list)) } catch { /* ignore */ }
+}
+
+function saveDailyCache(cache: DailyCacheShape) {
+  dailyMemCache = cache
+  try { localStorage.setItem(DAILY_KEY, JSON.stringify(cache)) } catch { /* ignore */ }
+}
+
+// 대표 사주 식별 — daily 라우트와 동일 규칙(지정 대표 → 없으면 최초 생성). 연동(peer) 제외.
+function deriveRepId(list: SajuCard[]): string | null {
+  const owned = list.filter(e => !e.isLinked)
+  const rep = owned.find(e => e.isRepresentative)
+  if (rep) return rep.id
+  if (!owned.length) return null
+  return [...owned].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())[0]!.id
+}
+
+function Spinner({ size = 16, className = '' }: { size?: number; className?: string }) {
+  return (
+    <span
+      role="status"
+      aria-label="불러오는 중"
+      className={`inline-block animate-spin rounded-full border-2 border-current border-t-transparent ${className}`}
+      style={{ width: size, height: size }}
+    />
+  )
+}
+
 function deltaText(delta: number): string {
   if (delta > 0) return `▲${delta}`
   if (delta < 0) return `▼${Math.abs(delta)}`
@@ -79,15 +144,15 @@ function deltaColor(direction: 'up' | 'down' | 'flat'): string {
 
 export default function SajuListPage() {
   const router = useRouter()
-  const [entries, setEntries] = useState<SajuCard[]>(() => listMemCache ?? [])
-  const [loading, setLoading] = useState(() => listMemCache == null)
+  const [entries, setEntries] = useState<SajuCard[]>(() => loadListCache() ?? [])
+  const [loading, setLoading] = useState(() => loadListCache() == null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<SajuCard | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [welcomeToast, setWelcomeToast] = useState(false)
-  const [daily, setDaily] = useState<Record<string, DailyEntry>>(() => dailyMemCache?.entries ?? {})
-  const [representative, setRepresentative] = useState<DailyRepresentative | null>(() => dailyMemCache?.representative ?? null)
-  const [todayStr, setTodayStr] = useState<string>(() => dailyMemCache?.today ?? '')
+  const [daily, setDaily] = useState<Record<string, DailyEntry>>(() => loadDailyCache()?.entries ?? {})
+  const [representative, setRepresentative] = useState<DailyRepresentative | null>(() => loadDailyCache()?.representative ?? null)
+  const [todayStr, setTodayStr] = useState<string>(() => loadDailyCache()?.today ?? '')
   const [sortByScore, setSortByScore] = useState(false)
   // "오늘 운 순" 정렬은 토글하는 순간 보유한 점수를 스냅샷해서 고정한다.
   // 백그라운드 폴링으로 점수가 더 채워져도 순서가 실시간으로 흔들리지 않게 하기 위함.
@@ -115,15 +180,16 @@ export default function SajuListPage() {
         setDaily(map)
         setRepresentative(data.representative ?? null)
         if (typeof data.today === 'string') setTodayStr(data.today)
-        dailyMemCache = {
+        saveDailyCache({
           entries: map,
           representative: data.representative ?? null,
-          today: typeof data.today === 'string' ? data.today : (dailyMemCache?.today ?? ''),
-        }
+          today: typeof data.today === 'string' ? data.today : (dailyMemCache?.today ?? kstTodayStr()),
+        })
         // 엔트리가 많으면 서버가 일부만 계산하고 pending=true를 준다.
         // 캐시가 다 찰 때까지 이어받아 폴링 (과도한 반복은 방지).
-        if (data.pending && attempt < 12) {
-          setTimeout(() => fetchDaily(attempt + 1), 2500)
+        // 배치가 작아졌으므로(서버 MAX_COMPUTE=4) 간격을 좁혀 더 빨리 채운다.
+        if (data.pending && attempt < 20) {
+          setTimeout(() => fetchDaily(attempt + 1), 1500)
         }
       }
     } catch (e) {
@@ -138,7 +204,7 @@ export default function SajuListPage() {
         const data = await res.json()
         const list = (data.entries || []) as SajuCard[]
         setEntries(list)
-        listMemCache = list
+        saveListCache(list)
       }
     } catch (e) {
       console.error(e)
@@ -158,6 +224,15 @@ export default function SajuListPage() {
     )
   }, [entries, sortByScore, scoreOrder])
 
+  // 대표 카드는 목록 정보만으로 즉시 프레임을 렌더하고, 점수/스파크라인만 daily 로 채운다.
+  // (daily 응답을 기다리며 뒤늦게 카드가 통째로 튀어나오는 현상 제거)
+  const repId = representative?.id ?? deriveRepId(entries)
+  const repEntry = entries.find(e => e.id === repId) ?? null
+  const repName = representative?.name ?? repEntry?.name ?? ''
+  const repReady = representative != null && representative.score != null && representative.id === repId
+  const repSeries = repId ? daily[repId]?.series : undefined
+  const repHasSpark = !!repSeries?.some(v => v != null)
+
   const enableScoreSort = () => {
     const snap: Record<string, number> = {}
     for (const e of entries) snap[e.id] = daily[e.id]?.score ?? -1
@@ -176,7 +251,7 @@ export default function SajuListPage() {
       if (res.ok) {
         setEntries((prev) => {
           const next = prev.map((e) => ({ ...e, isRepresentative: e.id === id }))
-          listMemCache = next
+          saveListCache(next)
           return next
         })
         setToastMsg('대표 사주로 설정했어요.')
@@ -216,8 +291,19 @@ export default function SajuListPage() {
       </div>
 
       <div className="flex-1 px-4 pt-4 pb-24">
-        {loading ? (
-          <div className="text-center text-gray-400 py-16">불러오는 중...</div>
+        {loading && entries.length === 0 ? (
+          <div className="animate-pulse">
+            <div className="mb-4 h-[128px] rounded-2xl bg-gradient-to-br from-indigo-200 to-purple-200" />
+            <div className="flex items-center justify-between mb-2.5">
+              <div className="h-3.5 w-10 bg-gray-100 rounded" />
+              <div className="h-6 w-28 bg-gray-100 rounded-full" />
+            </div>
+            <div className="space-y-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-[80px] rounded-2xl bg-gray-100" />
+              ))}
+            </div>
+          </div>
         ) : entries.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-4xl mb-4">&#x1F52E;</div>
@@ -226,51 +312,65 @@ export default function SajuListPage() {
           </div>
         ) : (
           <>
-            {/* 대표 차트 — 오늘의 나 */}
-            {representative && (
+            {/* 대표 차트 — 오늘의 나 (프레임은 즉시, 숫자/스파크라인만 로딩) */}
+            {repId && repEntry && (
               <Link
-                href={`/app/saju/${representative.id}`}
+                href={`/app/saju/${repId}`}
                 prefetch={true}
                 className="block mb-4 rounded-2xl p-4 bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-md active:scale-[0.99] transition-transform"
               >
-                <div className="flex justify-between gap-3">
-                  {/* 좌측: 타이틀 → 점수 → 좋은/조심할 운 (균일 간격) */}
-                  <div className="flex flex-col gap-2.5 min-w-0">
-                    <span className="text-sm font-semibold text-white/90">{representative.name}님의 오늘 운세</span>
-                    <div className="flex items-baseline gap-2 min-w-0">
-                      <span className="text-4xl font-extrabold leading-none">
-                        {representative.score}<span className="text-lg font-bold ml-0.5">점</span>
-                      </span>
-                      <span className="text-xs text-white/70 truncate">
-                        {representative.delta === 0 ? (
-                          <>· 어제와 비슷해요</>
-                        ) : (
-                          <>· 어제보다 <span className={`font-bold ${representative.direction === 'down' ? 'text-sky-200' : 'text-rose-200'}`}>{deltaText(representative.delta)}</span></>
+                {repReady ? (
+                  <div className="flex justify-between gap-3">
+                    {/* 좌측: 타이틀 → 점수 → 좋은/조심할 운 (균일 간격) */}
+                    <div className="flex flex-col gap-2.5 min-w-0">
+                      <span className="text-sm font-semibold text-white/90">{repName}님의 오늘 운세</span>
+                      <div className="flex items-baseline gap-2 min-w-0">
+                        <span className="text-4xl font-extrabold leading-none">
+                          {representative!.score}<span className="text-lg font-bold ml-0.5">점</span>
+                        </span>
+                        <span className="text-xs text-white/70 truncate">
+                          {representative!.delta === 0 ? (
+                            <>· 어제와 비슷해요</>
+                          ) : (
+                            <>· 어제보다 <span className={`font-bold ${representative!.direction === 'down' ? 'text-sky-200' : 'text-rose-200'}`}>{deltaText(representative!.delta)}</span></>
+                          )}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {representative!.bestDomain && representative!.bestScore != null && (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium">
+                            <span className="text-emerald-200">좋은 운</span>
+                            <span className="font-bold">{representative!.bestDomain} {representative!.bestScore}점</span>
+                          </span>
                         )}
-                      </span>
+                        {representative!.worstDomain && representative!.worstScore != null && representative!.worstDomain !== representative!.bestDomain && (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium">
+                            <span className="text-amber-200">조심할 운</span>
+                            <span className="font-bold">{representative!.worstDomain} {representative!.worstScore}점</span>
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {representative.bestDomain && representative.bestScore != null && (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium">
-                          <span className="text-emerald-200">좋은 운</span>
-                          <span className="font-bold">{representative.bestDomain} {representative.bestScore}점</span>
-                        </span>
-                      )}
-                      {representative.worstDomain && representative.worstScore != null && representative.worstDomain !== representative.bestDomain && (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium">
-                          <span className="text-amber-200">조심할 운</span>
-                          <span className="font-bold">{representative.worstDomain} {representative.worstScore}점</span>
-                        </span>
-                      )}
-                    </div>
-                  </div>
 
-                  {/* 우측: 날짜(상단 고정) → 스파크라인(아래로 채움) */}
-                  <div className="flex flex-col items-end gap-2.5 shrink-0">
-                    <span className="text-xs text-white/60">{todayStr ? todayStr.slice(5).replace('-', '.') : ''}</span>
-                    <Sparkline data={daily[representative.id]?.series ?? []} trend={representative.direction} color="#ffffff" width={120} height={72} />
+                    {/* 우측: 날짜(상단 고정) → 스파크라인(아래로 채움) */}
+                    <div className="flex flex-col items-end gap-2.5 shrink-0">
+                      <span className="text-xs text-white/60">{(todayStr || kstTodayStr()).slice(5).replace('-', '.')}</span>
+                      {repHasSpark ? (
+                        <Sparkline data={repSeries!} trend={representative?.direction ?? 'flat'} color="#ffffff" width={120} height={72} />
+                      ) : (
+                        <div className="w-[120px] h-[72px]" aria-hidden />
+                      )}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  // 로딩 중: 카드 정가운데 스피너 하나만.
+                  <div className="flex flex-col min-h-[112px]">
+                    <span className="text-sm font-semibold text-white/90">{repName}님의 오늘 운세</span>
+                    <div className="flex-1 flex items-center justify-center py-2">
+                      <Spinner size={30} className="text-white/80" />
+                    </div>
+                  </div>
+                )}
               </Link>
             )}
 
@@ -328,22 +428,25 @@ export default function SajuListPage() {
                   </div>
 
                   {/* 일별 점수 블록 (주식 watchlist 느낌) */}
-                  <div className="shrink-0 flex items-center gap-2 pr-5">
-                    {d?.score != null && <Sparkline data={d.series} trend={d.direction} />}
-                    <div className="text-right min-w-[40px]">
-                      {d?.score != null ? (
-                        <>
+                  <div className="shrink-0 flex items-center gap-2 pr-5 min-h-[40px]">
+                    {d?.score != null ? (
+                      <>
+                        <Sparkline data={d.series} trend={d.direction} />
+                        <div className="text-right min-w-[40px]">
                           <div className="flex items-center justify-end">
                             <span className="text-lg font-bold text-gray-900 leading-none">{d.score}</span>
                           </div>
                           <div className={`text-xs font-semibold mt-0.5 ${deltaColor(d.direction)}`}>
                             {deltaText(d.delta)}
                           </div>
-                        </>
-                      ) : (
-                        <div className="text-gray-300 text-sm">··</div>
-                      )}
-                    </div>
+                        </div>
+                      </>
+                    ) : (
+                      // 로딩 중: 스파크라인 자리에만 스피너 하나.
+                      <div className="w-[52px] h-[24px] flex items-center justify-center">
+                        <Spinner size={16} className="text-gray-300" />
+                      </div>
+                    )}
                   </div>
                 </Link>
 

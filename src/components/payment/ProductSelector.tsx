@@ -1,6 +1,6 @@
 'use client'
 
-import { JU_PRODUCTS, formatPrice, juUnitPrice } from '@/lib/payment/products'
+import { JU_PRODUCTS, formatPrice } from '@/lib/payment/products'
 import type { Product } from '@/lib/payment/products'
 
 interface Props {
@@ -9,7 +9,6 @@ interface Props {
 }
 
 function ProductCard({ product, isSelected, onToggle }: { product: Product; isSelected: boolean; onToggle: () => void }) {
-  const unit = juUnitPrice(product)
   return (
     <button
       onClick={onToggle}
@@ -41,7 +40,6 @@ function ProductCard({ product, isSelected, onToggle }: { product: Product; isSe
               )}
             </div>
             <p className="text-[11px] text-gray-500 mt-0.5">{product.description}</p>
-            <p className="text-[10px] text-gray-400 mt-0.5">장당 {formatPrice(unit)}원</p>
           </div>
         </div>
         <p className={`text-base font-bold shrink-0 ${isSelected ? 'text-gray-900' : 'text-gray-800'}`}>{formatPrice(product.price)}원</p>

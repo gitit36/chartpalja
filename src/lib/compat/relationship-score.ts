@@ -8,7 +8,15 @@ import {
   getOhangCounts,
   pearson,
 } from './classify'
-import type { CompatEventBand, CompatEventKind, RelationshipYearPoint } from './types'
+import type {
+  CompatArchetype,
+  CompatCardData,
+  CompatEventBand,
+  CompatEventKind,
+  CompatSpectrum,
+  RelationshipYearPoint,
+  YearCompatLevel,
+} from './types'
 
 const ELEMENTS = ['木', '火', '土', '金', '水'] as const
 type Element = (typeof ELEMENTS)[number]
@@ -28,6 +36,69 @@ export function formatCompatDots(dots: number): string {
 
 function clamp01(v: number): number {
   return Math.max(0, Math.min(1, v))
+}
+
+/**
+ * 관계 점수 성분 가중치 (관계 유형 중립 기본값).
+ * - clash(합·충 조화): 전통 사주 궁합의 핵심 신호 → 가장 크게(0.45).
+ * - ohang(오행 보완) / support(상생): 구조적 궁합 축 → 그다음(각 0.25).
+ * - sync(인생운 동조): "두 사람 개인운이 같은 시점에 오르내렸나"일 뿐 관계의 질과
+ *   상관이 약하고 오히려 서사를 오판(예: 이별 시기를 '좋음'으로)시켜 최소로(0.05).
+ * 연도 점수와 헤드라인이 반드시 같은 가중치를 쓰도록 이 상수를 공유한다.
+ */
+export const RELATIONSHIP_WEIGHTS = { ohang: 0.25, sync: 0.05, support: 0.25, clash: 0.45 } as const
+
+function combineRaw(c: { ohang: number; sync: number; support: number; clash: number }): number {
+  const w = RELATIONSHIP_WEIGHTS
+  return w.ohang * c.ohang + w.sync * c.sync + w.support * c.support + w.clash * c.clash
+}
+
+/**
+ * 원시 가중합(0~1)을 사람이 읽기 좋은 궁합 점수(0~100)로 재매핑한다.
+ * 성분 특성상 raw 는 좁은 구간에 몰려 그대로 ×100 하면 전부 40점대가 된다.
+ * 로지스틱으로 중립(≈모집단 중앙값 0.48)을 ~60점으로 올리고 양끝을 넓게 펴 분포를 살린다.
+ * 단조 증가이므로 연도 간 상대 순위(좋음/주의 백분위)는 보존된다.
+ */
+function calibrateRelScore(raw01: number): number {
+  const k = 8
+  const x0 = 0.42
+  const s = 1 / (1 + Math.exp(-k * (clamp01(raw01) - x0)))
+  return Math.round(clamp01(s) * 100)
+}
+
+/**
+ * 궁합 성분/헤드라인 모집단 분포 (3160 페어 샘플, 2026-07 기준).
+ * 각 축·헤드라인을 "다른 커플 대비 어디쯤인가"의 상대 위치로 펴는 기준값이다.
+ * 원시값은 축마다 평균·폭이 제각각(예: lean 은 0.63에 몰려 std 0.06)이라
+ * 그대로 표시하면 커플 간 차이가 안 보인다 → z-점수로 재중심(평균→0.5)·확대한다.
+ */
+const POP = {
+  energy: { mean: 0.320, std: 0.128 },
+  rhythm: { mean: 0.444, std: 0.106 },
+  lean: { mean: 0.633, std: 0.059 },
+  temp: { mean: 0.520, std: 0.092 },
+  // raw 는 RELATIONSHIP_WEIGHTS(0.25/0.05/0.25/0.45) 기준 3160 페어 샘플 분포.
+  raw: { mean: 0.477, std: 0.056 },
+} as const
+
+// 축 정규화 폭: ±2σ 를 [0,1] 양끝에 매핑(값이 클수록 완만).
+const AXIS_SPREAD = 4
+
+/** 원시 축 값을 모집단 기준 상대 위치(0~1, 평균=0.5)로 재매핑한다. */
+function normAxis(value: number, m: number, s: number): number {
+  return clamp01(0.5 + (value - m) / (s * AXIS_SPREAD))
+}
+
+/**
+ * 커플 평균 원시 궁합값을 모집단 대비 헤드라인 점수(0~100)로 변환.
+ * rawMean 은 커플 간 std 가 0.05 수준으로 촘촘해 그대로 쓰면 전부 60점대에 몰린다.
+ * z-점수를 넓게 펴 사람마다 뚜렷한 차이가 나게 하되, 소비자용 궁합 지표답게
+ * 중심을 넉넉히(모집단 중앙값 → 72점) 잡아 평균 이하인 사람도 기죽지 않게 한다.
+ * (±1σ≈±14점, 대체로 45~95 범위)
+ */
+function headlineScore(rawMean: number): number {
+  const z = (rawMean - POP.raw.mean) / POP.raw.std
+  return Math.round(Math.max(40, Math.min(98, 72 + z * 14)))
 }
 
 function percentile(values: number[], p: number): number {
@@ -229,8 +300,8 @@ export function buildRelationshipSeries(
       row.eventLoveA, row.eventLoveB, row.eventConflictA, row.eventConflictB,
     )
     const clash = yearRelationClashScore(row.yd, natalHarmony, natalClash)
-    const raw = 0.30 * ohang + 0.25 * sync + 0.25 * support + 0.20 * clash
-    const score = Math.round(clamp01(raw) * 100)
+    const raw = combineRaw({ ohang, sync, support, clash })
+    const score = calibrateRelScore(raw)
     return {
       year: row.year,
       score,
@@ -315,4 +386,87 @@ export const COMPAT_EVENT_LABELS: Record<CompatEventKind, string> = {
   drift: '엇갈림',
   synergy: '시너지',
   support: '도움 받음',
+}
+
+export const YEAR_LEVEL_LABELS: Record<YearCompatLevel, string> = {
+  good: '좋음',
+  normal: '보통',
+  caution: '주의',
+}
+
+/**
+ * 연도별 관계 수준 3단계(좋음/보통/주의).
+ * 전체 시리즈 점수 분포 기준의 상대 임계치를 사용해 색이 항상 나타나게 한다.
+ * — 하단 리듬 바 / 툴팁에서 공용으로 사용.
+ */
+export function buildYearLevels(series: RelationshipYearPoint[]): Map<number, YearCompatLevel> {
+  const map = new Map<number, YearCompatLevel>()
+  if (!series.length) return map
+  const scores = series.map(p => p.score)
+  // 순수 백분위: 상위 1/3 = 좋음, 하위 1/3 = 주의, 중간 = 보통.
+  // 커플의 절대 점수대가 낮아도 좋음/주의가 균형 있게 잡히도록 상대 기준만 사용한다.
+  let goodTh = percentile(scores, 0.66)
+  let cautionTh = percentile(scores, 0.34)
+  if (goodTh <= cautionTh) {
+    const mid = percentile(scores, 0.5)
+    goodTh = mid + 4
+    cautionTh = mid - 4
+  }
+  for (const p of series) {
+    const level: YearCompatLevel = p.score >= goodTh ? 'good' : p.score <= cautionTh ? 'caution' : 'normal'
+    map.set(p.year, level)
+  }
+  return map
+}
+
+function pickArchetype(v: { energy: number; rhythm: number; lean: number; temp: number }): CompatArchetype {
+  const { energy, rhythm, lean, temp } = v
+  // 우선순위: 뚜렷한 축부터 라벨을 부여한다.
+  if (lean >= 0.7) return { category: '이끔형', label: '기대는 언덕이 되어주는 사이' }
+  if (temp >= 0.62 && rhythm < 0.45) return { category: '자극형', label: '부딪히며 크는 사이' }
+  if (energy >= 0.6 && rhythm >= 0.55) return { category: '팀형', label: '서로의 빈칸을 채우는 사이' }
+  if (energy >= 0.6 && temp >= 0.55) return { category: '매력형', label: '달라서 끌리는 사이' }
+  if (temp < 0.45 && rhythm >= 0.55) return { category: '동행형', label: '나란히 함께 걷는 사이' }
+  if (temp < 0.45) return { category: '안정형', label: '곁에 있으면 편안한 사이' }
+  if (rhythm >= 0.55) return { category: '동행형', label: '리듬이 잘 맞는 사이' }
+  return { category: '균형형', label: '천천히 맞아가는 사이' }
+}
+
+/**
+ * 관계 케미 카드의 코어 데이터.
+ * 관계 유형(연애/친구/비즈니스/가족)과 무관하게 두 사주만으로 결정된다.
+ * 유형 선택은 유료 해설의 서술 초점에만 반영되고, 이 값들은 바뀌지 않는다.
+ */
+export function buildCompatCard(series: RelationshipYearPoint[]): CompatCardData | null {
+  if (!series.length) return null
+  const mean = (arr: number[]) => (arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : 0)
+
+  // 커플 평균 원시 성분값 → 모집단 대비 상대 위치로 재매핑(축 간 차이가 보이도록).
+  const engRaw = mean(series.map(p => p.components.ohang))
+  const rhyRaw = mean(series.map(p => p.components.sync))
+  const leaRaw = mean(series.map(p => p.components.support))
+  const clashRaw = mean(series.map(p => p.components.clash))
+  const rawMean = combineRaw({ ohang: engRaw, sync: rhyRaw, support: leaRaw, clash: clashRaw })
+
+  const overallScore = headlineScore(rawMean)
+  const energy = normAxis(engRaw, POP.energy.mean, POP.energy.std)
+  const rhythm = normAxis(rhyRaw, POP.rhythm.mean, POP.rhythm.std)
+  const lean = normAxis(leaRaw, POP.lean.mean, POP.lean.std)
+  // components.clash 는 조화(harmony)가 높을수록 큰 값 → 온도(자극도)는 그 반대.
+  const temp = normAxis(1 - clashRaw, POP.temp.mean, POP.temp.std)
+
+  const spectrums: CompatSpectrum[] = [
+    { key: 'energy', title: '에너지 궁합', leftLabel: '닮은 결', rightLabel: '보완의 결', caption: '성향이 비슷한지, 부족한 걸 서로 채우는지', value: energy },
+    { key: 'rhythm', title: '인생 리듬', leftLabel: '따로 리듬', rightLabel: '함께 리듬', caption: '좋을 때·힘들 때 타이밍이 겹치는지', value: rhythm },
+    { key: 'lean', title: '기대는 방향', leftLabel: '서로 받쳐줌', rightLabel: '한쪽이 이끎', caption: '힘을 주고받는 균형', value: lean },
+    { key: 'temp', title: '관계 온도', leftLabel: '편안·안정', rightLabel: '자극·긴장', caption: '무난하게 편한지, 부딪히며 끌리는지', value: temp },
+  ]
+
+  const levels = buildYearLevels(series)
+  const now = new Date().getFullYear()
+  const goodYears = series.filter(p => p.year >= now && levels.get(p.year) === 'good').map(p => p.year)
+  const cautionYears = series.filter(p => p.year >= now && levels.get(p.year) === 'caution').map(p => p.year)
+  const archetype = pickArchetype({ energy, rhythm, lean, temp })
+
+  return { overallScore, archetype, spectrums, goodYears, cautionYears }
 }

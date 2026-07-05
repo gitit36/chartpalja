@@ -9,7 +9,13 @@ export const COMPAT_TYPES = [
 
 export type CompatType = (typeof COMPAT_TYPES)[number]
 
-export type RelationshipType = 'romance' | 'friend' | 'business'
+export type RelationshipType = 'romance' | 'friend' | 'business' | 'family'
+
+/** 궁합 흐름 미니차트용 압축 시계열 (y=연도, s=관계점수) */
+export interface CompatFlowPoint {
+  y: number
+  s: number
+}
 
 export interface CompatReportEntry {
   partnerId: string
@@ -19,6 +25,10 @@ export interface CompatReportEntry {
   type: CompatType
   text: string
   createdAt: string
+  /** 생성 시점에 서버에서 저장한 관계 케미 스냅샷 (추가 fetch 없이 렌더) */
+  card?: CompatCardData
+  /** 관계 흐름 압축 시계열 스냅샷 */
+  flow?: CompatFlowPoint[]
 }
 
 export interface CompatGenerationState {
@@ -39,6 +49,8 @@ export interface OverlayCompatInfo {
   generatedRelationships: RelationshipType[]
   /** 올해 궁합 흐름 도트 (1~5) */
   compatDots?: number
+  /** 두 사람의 전반적인 관계 점수 (0~100) */
+  overallScore?: number
 }
 
 export interface CompatShareSnapshot {
@@ -67,4 +79,33 @@ export interface CompatEventBand {
   startYear: number
   endYear: number
   kind: 'good' | 'caution'
+}
+
+/** 연도별 관계 수준 3단계 (하단 리듬 바 / 툴팁용) */
+export type YearCompatLevel = 'good' | 'normal' | 'caution'
+
+/** 관계 케미 카드 스펙트럼 축 (0=왼쪽 라벨, 1=오른쪽 라벨) */
+export interface CompatSpectrum {
+  key: 'energy' | 'rhythm' | 'lean' | 'temp'
+  title: string
+  leftLabel: string
+  rightLabel: string
+  caption: string
+  /** 0~1 위치값 (오른쪽 라벨에 가까울수록 1) */
+  value: number
+}
+
+/** 4축 조합으로 부여되는 한 단어 캐릭터(아키타입) */
+export interface CompatArchetype {
+  category: string
+  label: string
+}
+
+/** 관계 케미 카드 — 관계 유형과 무관한 결정론적 코어 값 */
+export interface CompatCardData {
+  overallScore: number
+  archetype: CompatArchetype
+  spectrums: CompatSpectrum[]
+  goodYears: number[]
+  cautionYears: number[]
 }

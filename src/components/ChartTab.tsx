@@ -22,12 +22,14 @@ import { READING_COST } from '@/lib/payment/products'
 import { classifyCompat } from '@/lib/compat/classify'
 import { listCompatEntries, getGeneratedRelationships, compatShareStorageKey } from '@/lib/compat/storage'
 import { compatCardKey, RELATIONSHIP_LABELS } from '@/lib/compat/relationship'
-import type { OverlayCompatInfo, CompatGenerationState, CompatReportEntry, RelationshipType, CompatEventKind } from '@/lib/compat/types'
+import type { OverlayCompatInfo, CompatGenerationState, CompatReportEntry, RelationshipType, CompatCardData, CompatFlowPoint, YearCompatLevel } from '@/lib/compat/types'
+import { CompatChemistry } from '@/components/CompatChemistry'
 import {
   buildRelationshipSeries,
-  buildCompatEventBands,
-  formatCompatDots,
+  buildCompatCard,
+  buildYearLevels,
   getRelationshipPointForYear,
+  YEAR_LEVEL_LABELS,
 } from '@/lib/compat/relationship-score'
 
 const THIS_YEAR = new Date().getFullYear()
@@ -221,45 +223,88 @@ function ThisYearMarker(props: any) {
   return elements.length ? <g>{elements}</g> : null
 }
 
-const COMPAT_DOT_COLORS: Record<'closer' | 'drift', string> = {
-  closer: '#fb7185',
-  drift: '#9ca3af',
+const YEAR_LEVEL_COLORS: Record<YearCompatLevel, string> = {
+  good: '#2dd4bf',
+  normal: '#e2e8f0',
+  caution: '#f59e0b',
 }
 
+const YEAR_LEVEL_TEXT: Record<YearCompatLevel, string> = {
+  good: '#0d9488',
+  normal: '#6b7280',
+  caution: '#d97706',
+}
+
+/**
+ * 메인 차트 하단 리듬 바 — X축에 붙어 솟아나는 연도별 관계 수준(좋음/보통/주의) 3단계.
+ * 월(1년) 뷰에서는 12개월 셀로 확장하되, 관계 수준은 연 단위 값이므로 올해 값으로 채운다.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function CompatEventMarkers(props: any) {
-  const { formattedGraphicalItems, xAxisMap, yAxisMap, compatPoints, fromYear, isMonthly, period } = props
-  if (!compatPoints?.length || isMonthly || period === '1y' || !formattedGraphicalItems?.length || !xAxisMap || !yAxisMap) return null
-  const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) } | undefined
+function CompatYearBar(props: any) {
+  const { xAxisMap, yAxisMap, yearLevels, isMonthly, monthLevel } = props
+  if (!xAxisMap || !yAxisMap) return null
+  const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) & { range?: () => number[] } } | undefined
   const yAxis = Object.values(yAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
-  if (!xAxis?.scale || !yAxis?.scale) return null
-  const yTop = yAxis.scale(yAxis.scale.domain?.()[1] ?? 110) ?? 0
-  const elements: React.ReactElement[] = []
-  const dotKinds: Array<'closer' | 'drift'> = ['closer', 'drift']
-  for (const p of compatPoints as Array<{ year: number; events: CompatEventKind[] }>) {
-    if (p.year < fromYear) continue
-    const cx = xAxis.scale(p.year)
-    if (typeof cx !== 'number' || isNaN(cx)) continue
-    const kind = dotKinds.find(k => p.events.includes(k))
-    if (!kind) continue
-    elements.push(
-      <circle
-        key={`${p.year}-${kind}`}
-        cx={cx}
-        cy={yTop + 10}
-        r={4}
-        fill={COMPAT_DOT_COLORS[kind]}
-        fillOpacity={0.9}
-        stroke="#fff"
-        strokeWidth={1.5}
+  const scale = xAxis?.scale
+  const yScale = yAxis?.scale
+  if (!scale || !yScale) return null
+
+  type Cell = { pos: number; level: YearCompatLevel }
+  const cells: Cell[] = []
+  if (isMonthly) {
+    if (!monthLevel) return null
+    for (let m = 1; m <= 12; m++) {
+      const pos = scale(m)
+      if (typeof pos === 'number' && !isNaN(pos)) cells.push({ pos, level: monthLevel as YearCompatLevel })
+    }
+  } else {
+    const levels = yearLevels as Map<number, YearCompatLevel> | undefined
+    if (!levels?.size) return null
+    for (const [year, level] of levels) {
+      const pos = scale(year)
+      if (typeof pos === 'number' && !isNaN(pos)) cells.push({ pos, level })
+    }
+  }
+  if (cells.length < 1) return null
+  cells.sort((a, b) => a.pos - b.pos)
+
+  // 인접 셀 간격의 중앙값을 셀 너비로 사용해 빈틈 없이 이어 붙인다.
+  const gaps: number[] = []
+  for (let i = 1; i < cells.length; i++) gaps.push(cells[i]!.pos - cells[i - 1]!.pos)
+  gaps.sort((a, b) => a - b)
+  const step = gaps.length ? gaps[Math.floor(gaps.length / 2)]! : 40
+  const w = Math.max(2, step)
+
+  const range = scale.range?.() ?? []
+  const left = range.length ? Math.min(range[0]!, range[range.length - 1]!) : cells[0]!.pos
+  const right = range.length ? Math.max(range[0]!, range[range.length - 1]!) : cells[cells.length - 1]!.pos
+  const barH = 5
+  const plotBottom = yScale(yScale.domain?.()[0] ?? 0) ?? 0
+
+  const rects: React.ReactElement[] = []
+  cells.forEach((c, i) => {
+    let x = c.pos - w / 2
+    let cw = w
+    if (x < left) { cw -= (left - x); x = left }
+    if (x + cw > right) cw = right - x
+    if (cw <= 0.5) return
+    rects.push(
+      <rect
+        key={i}
+        x={x}
+        y={plotBottom - barH}
+        width={cw}
+        height={barH}
+        fill={YEAR_LEVEL_COLORS[c.level]}
+        fillOpacity={c.level === 'normal' ? 0.85 : 0.95}
       />,
     )
-  }
-  return elements.length ? <g>{elements}</g> : null
+  })
+  return rects.length ? <g>{rects}</g> : null
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName }: any) {
+function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels }: any) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload as (MergedDatum) | undefined
   if (!d) return null
@@ -272,21 +317,28 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
     : []
 
   if (overlayActive && d.scoreOv != null) {
+    const level = (!monthly && yearLevels?.get?.(d.year)) as YearCompatLevel | undefined
     return (
-      <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-lg shadow-sm text-[10px] leading-tight overflow-hidden min-w-[140px]">
-        <div className="font-bold text-gray-800 px-2.5 py-1">{monthly ? `${d.year}월` : `${d.year}년`}</div>
-        <div className="px-2.5 py-1 bg-emerald-50 border-t border-emerald-100">
-          <div className="font-semibold text-emerald-800">{currentName || '나'} — {monthly ? '월운' : '세운'}: {Math.round(d.score)}점</div>
-          {ov?.daewoon && d.trend != null && (
-            <div className="text-emerald-600 text-[9px]">대운 {Math.round(d.trend)}점{d.daewoonPillar ? ` ${fmtPillar(d.daewoonPillar)}` : ''}</div>
+      <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-lg shadow-sm text-[10px] leading-tight overflow-hidden min-w-[150px]">
+        <div className="font-bold text-gray-800 px-2.5 py-1 flex items-center gap-1.5">
+          <span>{monthly ? `${d.year}월` : `${d.year}년`}</span>
+          {level && (
+            <>
+              <span className="text-gray-300">·</span>
+              <span style={{ color: YEAR_LEVEL_TEXT[level] }}>관계 {YEAR_LEVEL_LABELS[level]}</span>
+            </>
           )}
         </div>
-        <div className="px-2.5 py-1 bg-rose-50 border-t border-rose-100">
-          <div className="font-semibold text-rose-800">{overlayName || '비교'} — {monthly ? '월운' : '세운'}: {Math.round(d.scoreOv)}점</div>
-          {ov?.daewoon && d.trendOv != null && (
-            <div className="text-rose-600 text-[9px]">대운 {Math.round(d.trendOv)}점{d.daewoonPillarOv ? ` ${fmtPillar(d.daewoonPillarOv)}` : ''}</div>
-          )}
+        <div className="px-2.5 py-1 border-t border-gray-100 flex items-center justify-between gap-3">
+          <span className="font-semibold text-emerald-700">{currentName || '나'} {Math.round(d.score)}</span>
+          <span className="font-semibold text-rose-700">{overlayName || '상대'} {Math.round(d.scoreOv)}</span>
         </div>
+        {ov?.daewoon && (d.trend != null || d.trendOv != null) && (
+          <div className="px-2.5 py-1 border-t border-gray-100 flex items-center justify-between gap-3 text-[9px] text-gray-400">
+            <span>{d.trend != null ? `대운 ${Math.round(d.trend)}` : ''}</span>
+            <span>{d.trendOv != null ? `대운 ${Math.round(d.trendOv)}` : ''}</span>
+          </div>
+        )}
       </div>
     )
   }
@@ -387,6 +439,8 @@ interface ChartTabProps {
   onShareCta?: () => void
   /** 비교 오버레이 활성 시 요약바용 정보 상향 */
   onOverlayChange?: (info: OverlayCompatInfo | null) => void
+  /** 관계 케미 카드의 '궁합 해설' CTA — 부모의 handleCompatCta 로 연결 */
+  onCompatCta?: () => void
   /** 생성 직후 펼칠 궁합 카드 (partnerId|relationship) */
   expandCompatCardKey?: string | null
   /** 궁합 해설 생성 중 — 플레이스홀더 카드 표시 */
@@ -410,7 +464,7 @@ interface ChartTabProps {
 export function ChartTab({
   report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
   isLocked = false, onLockedClick, shareMode = false, onShareCta,
-  onOverlayChange, expandCompatCardKey, onFortuneJsonUpdate, compatGeneration,
+  onOverlayChange, onCompatCta, expandCompatCardKey, onFortuneJsonUpdate, compatGeneration,
   entryName, myGender, initialOverlayId, sharePartner,
 }: ChartTabProps) {
   const [period, setPeriod] = useState<PeriodKey>('all')
@@ -572,6 +626,7 @@ export function ChartTab({
     const ovDatum = overlayChartData?.data.find(d => d.year === THIS_YEAR)
     const series = buildRelationshipSeries(report, birthYear, overlayReport, overlayBirthYear)
     const relPoint = getRelationshipPointForYear(series, THIS_YEAR)
+    const card = buildCompatCard(series)
     onOverlayChange({
       overlayId: overlayEntryId,
       overlayName: overlayName || '상대',
@@ -581,6 +636,7 @@ export function ChartTab({
       type,
       generatedRelationships: getGeneratedRelationships(fortuneJson, overlayEntryId),
       compatDots: relPoint?.dots,
+      overallScore: card?.overallScore,
     })
   }, [
     onOverlayChange, overlayActive, overlayReport, overlayBirthYear, birthYear, report,
@@ -623,10 +679,30 @@ export function ChartTab({
     return buildRelationshipSeries(report, birthYear, overlayReport, overlayBirthYear)
   }, [overlayActive, report, overlayReport, birthYear, overlayBirthYear])
 
-  const compatEventBands = useMemo(() => {
-    if (!overlayActive || isMonthly) return []
-    return buildCompatEventBands(relationshipSeries, THIS_YEAR)
-  }, [relationshipSeries, overlayActive, isMonthly])
+  const yearLevels = useMemo(() => {
+    if (!overlayActive) return new Map<number, YearCompatLevel>()
+    return buildYearLevels(relationshipSeries)
+  }, [relationshipSeries, overlayActive])
+
+  const monthLevel = yearLevels.get(THIS_YEAR)
+
+  const compatCard = useMemo<CompatCardData | null>(() => {
+    if (!overlayActive) return null
+    return buildCompatCard(relationshipSeries)
+  }, [relationshipSeries, overlayActive])
+
+  // 현재 비교(오버레이) 중인 상대의 라이브 케미 — 아직 저장 카드가 없을 때
+  // 운세 해설 섹션에서 무료 케미 카드로 보여주기 위해 하향 전달한다.
+  const activeCompat = useMemo(() => {
+    if (!overlayActive || !overlayEntryId || !compatCard) return null
+    return {
+      partnerId: overlayEntryId,
+      partnerName: overlayName || '상대',
+      partnerGender: overlayGender || 'male',
+      card: compatCard,
+      flow: relationshipSeries.map(p => ({ y: p.year, s: p.score })) as CompatFlowPoint[],
+    }
+  }, [overlayActive, overlayEntryId, overlayName, overlayGender, compatCard, relationshipSeries])
 
   const mergedData = useMemo<MergedDatum[]>(() => {
     const relMap = new Map(relationshipSeries.map(p => [p.year, p.score]))
@@ -656,31 +732,6 @@ export function ChartTab({
     if (!isFinite(lo)) return [0, 110]
     const pad = Math.max(5, (hi - lo) * 0.15)
     return [Math.max(0, Math.floor(lo - pad)), Math.min(120, Math.ceil(hi + pad))]
-  }, [mergedData])
-
-  const compatFlowDomain = useMemo<[number, number]>(() => {
-    if (!mergedData.length) return [0, 100]
-    let lo = Infinity, hi = -Infinity
-    for (const d of mergedData) {
-      const v = d.compatFlow
-      if (typeof v === 'number' && !isNaN(v)) {
-        if (v < lo) lo = v
-        if (v > hi) hi = v
-      }
-    }
-    if (!isFinite(lo)) return [0, 100]
-    const range = hi - lo
-    const minSpan = 40
-    if (range < minSpan) {
-      const mid = (lo + hi) / 2
-      lo = mid - minSpan / 2
-      hi = mid + minSpan / 2
-    } else {
-      const pad = Math.max(18, range * 0.4)
-      lo -= pad
-      hi += pad
-    }
-    return [Math.max(0, Math.floor(lo)), Math.min(100, Math.ceil(hi))]
   }, [mergedData])
 
   const currentYearScore = useMemo(() => {
@@ -865,19 +916,16 @@ export function ChartTab({
               <span className="w-4 h-0.5 bg-rose-400 rounded inline-block" /> {overlayName}
             </span>
           </>)}
-          {overlayActive && !isMonthly && (
+          {overlayActive && (
             <>
               <span className="flex items-center gap-1 text-[10px] text-gray-500">
-                <span className="w-3 h-2 rounded-sm bg-emerald-400/35 border border-emerald-400/40 inline-block" /> 좋은 시기
+                <span className="w-3 h-2 rounded-sm inline-block" style={{ backgroundColor: YEAR_LEVEL_COLORS.good }} /> 좋음
               </span>
               <span className="flex items-center gap-1 text-[10px] text-gray-500">
-                <span className="w-3 h-2 rounded-sm bg-amber-400/35 border border-amber-400/40 inline-block" /> 주의 시기
+                <span className="w-3 h-2 rounded-sm inline-block border border-gray-200" style={{ backgroundColor: YEAR_LEVEL_COLORS.normal }} /> 보통
               </span>
               <span className="flex items-center gap-1 text-[10px] text-gray-500">
-                <span className="w-2 h-2 rounded-full bg-rose-400 inline-block" /> 가까워짐
-              </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
-                <span className="w-2 h-2 rounded-full bg-gray-400 inline-block" /> 엇갈림
+                <span className="w-3 h-2 rounded-sm inline-block" style={{ backgroundColor: YEAR_LEVEL_COLORS.caution }} /> 주의
               </span>
             </>
           )}
@@ -918,25 +966,13 @@ export function ChartTab({
                     tickFormatter={isMonthly ? (v: number) => MONTH_LABELS[v - 1] ?? '' : undefined}
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName}/>} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={yearLevels}/>} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
               {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#e0e0e0" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#aaa', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && seasonBands.map((b: SeasonBand, i: number) => (
                 <ReferenceArea key={i} x1={b.startYear} x2={b.endYear} fill={SEASON_COLORS[b.tag] ?? 'rgba(0,0,0,0.03)'} fillOpacity={1}/>
               ))}
               {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#a78bfa" fillOpacity={0.12} stroke="#a78bfa" strokeOpacity={0.3} strokeWidth={1}/>}
-              {overlayActive && !isMonthly && compatEventBands.map((b, i) => (
-                <ReferenceArea
-                  key={`compat-band-${i}`}
-                  x1={b.startYear}
-                  x2={b.endYear + 0.95}
-                  fill={b.kind === 'good' ? '#34d399' : '#fbbf24'}
-                  fillOpacity={b.kind === 'good' ? 0.16 : 0.14}
-                  stroke={b.kind === 'good' ? '#34d399' : '#fbbf24'}
-                  strokeOpacity={0.25}
-                  strokeWidth={1}
-                />
-              ))}
               {mainOverlays.daewoon && <Line type="stepAfter" dataKey="trend" stroke="#ffd700" strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>}
               <Line type="monotone" dataKey="score" stroke="#82ca9d" strokeWidth={1.5} dot={false} name={isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
               {DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
@@ -948,18 +984,12 @@ export function ChartTab({
               {overlayActive && mainOverlays.daewoon && <Line type="stepAfter" dataKey="trendOv" stroke="#fda4af" strokeWidth={2} dot={false} name="대운(비교)" strokeDasharray="6 3" isAnimationActive={false} connectNulls={false}/>}
               {overlayActive && <Line type="monotone" dataKey="scoreOv" stroke="#fb7185" strokeWidth={1.5} dot={false} name={isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>}
               {mainOverlays.candle && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
-              <Customized component={(p: any) => <ThisYearMarker {...p} period={period} markerYear={markerYear} selection={selection} rangeMode={rangeMode} isMonthly={isMonthly}/>}/>
-              {overlayActive && !isMonthly && (
+              {overlayActive && (
                 <Customized component={(p: any) => (
-                  <CompatEventMarkers
-                    {...p}
-                    compatPoints={relationshipSeries}
-                    fromYear={THIS_YEAR}
-                    isMonthly={isMonthly}
-                    period={period}
-                  />
+                  <CompatYearBar {...p} yearLevels={yearLevels} isMonthly={isMonthly} monthLevel={monthLevel} />
                 )}/>
               )}
+              <Customized component={(p: any) => <ThisYearMarker {...p} period={period} markerYear={markerYear} selection={selection} rangeMode={rangeMode} isMonthly={isMonthly}/>}/>
             </ComposedChart>
           </ResponsiveContainer>
         </div>
@@ -1097,28 +1127,6 @@ export function ChartTab({
         </div>
       )}
 
-      {/* 궁합 흐름 — 비교 오버레이 활성 시 */}
-      {overlayActive && !isMonthly && relationshipSeries.length > 0 && (
-        <div className="px-2 mt-2" data-capture="02_궁합흐름">
-          <div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">
-            궁합 흐름<InfoTip align="right" text={'두 사람 사주를 오행·동기화·상생·충돌 네 가지로 합산한 관계 흐름이에요.\n선이 높을수록 관계가 순조로운 시기, 낮을수록 조율이 필요한 시기예요.'} />
-          </div>
-          <div className="h-[70px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
-                <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{ left: 8, right: 8 }} />
-                <YAxis domain={compatFlowDomain} hide width={0} />
-                <Tooltip content={<SubTooltip decimals={0} monthly={false} />} />
-                {markerYear != null && (
-                  <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5} />
-                )}
-                <Line dataKey="compatFlow" stroke="#e879a9" strokeWidth={1.5} dot={false} connectNulls={false} name="궁합" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      )}
-
       {/* Auxiliary charts */}
       {anyAux && hasEngineData && (
         <div className="px-2 mt-2 space-y-3" data-capture="02_보조지표">
@@ -1244,6 +1252,8 @@ export function ChartTab({
         expandCompatCardKey={expandCompatCardKey}
         compatGeneration={compatGeneration}
         onFortuneJsonUpdate={onFortuneJsonUpdate}
+        activeCompat={activeCompat}
+        onCompatCta={onCompatCta}
       />
 
       {/* Sliding Panel — indicator settings */}
@@ -1590,6 +1600,14 @@ function FortunePlaceholder() {
   )
 }
 
+interface ActiveCompat {
+  partnerId: string
+  partnerName: string
+  partnerGender: string
+  card: CompatCardData
+  flow: CompatFlowPoint[]
+}
+
 interface FortuneSectionProps {
   fortuneJson?: unknown
   entryId?: string
@@ -1602,6 +1620,10 @@ interface FortuneSectionProps {
   expandCompatCardKey?: string | null
   compatGeneration?: CompatGenerationState | null
   onFortuneJsonUpdate?: (fortuneJson: unknown) => void
+  /** 현재 비교 중인 상대의 라이브 케미 (저장 카드가 없을 때 무료 카드로 표시) */
+  activeCompat?: ActiveCompat | null
+  /** 궁합 해설 생성 CTA — 부모의 handleCompatCta */
+  onCompatCta?: () => void
 }
 
 function CompatSpinner() {
@@ -1624,6 +1646,7 @@ function FortuneSection({
   fortuneJson, entryId, entryName, myGender, currentName,
   isLocked = false, onLockedClick, shareMode = false,
   expandCompatCardKey, compatGeneration, onFortuneJsonUpdate,
+  activeCompat, onCompatCta,
 }: FortuneSectionProps) {
   const [shareBusyKey, setShareBusyKey] = useState<string | null>(null)
   const [shareCopiedKey, setShareCopiedKey] = useState<string | null>(null)
@@ -1641,22 +1664,44 @@ function FortuneSection({
 
   const compatCards = useMemo(() => {
     if (shareMode) return [] as Array<{ key: string; entry: CompatReportEntry }>
-    const fromJson = listCompatEntries(fortuneJson)
-    if (!compatGeneration) return fromJson
-    const cardKey = compatCardKey(compatGeneration.partnerId, compatGeneration.relationship)
-    const exists = fromJson.some(c => compatCardKey(c.entry.partnerId, c.entry.relationship) === cardKey)
-    if (exists) return fromJson
-    const placeholder: CompatReportEntry = {
-      partnerId: compatGeneration.partnerId,
-      partnerName: compatGeneration.partnerName,
-      partnerGender: '',
-      relationship: compatGeneration.relationship,
-      type: compatGeneration.type,
-      text: '',
-      createdAt: '',
+    let base = listCompatEntries(fortuneJson)
+
+    // 생성 중 플레이스홀더
+    if (compatGeneration) {
+      const cardKey = compatCardKey(compatGeneration.partnerId, compatGeneration.relationship)
+      const exists = base.some(c => compatCardKey(c.entry.partnerId, c.entry.relationship) === cardKey)
+      if (!exists) {
+        const placeholder: CompatReportEntry = {
+          partnerId: compatGeneration.partnerId,
+          partnerName: compatGeneration.partnerName,
+          partnerGender: '',
+          relationship: compatGeneration.relationship,
+          type: compatGeneration.type,
+          text: '',
+          createdAt: '',
+        }
+        base = [{ key: `pending_${cardKey}`, entry: placeholder }, ...base]
+      }
     }
-    return [{ key: `pending_${cardKey}`, entry: placeholder }, ...fromJson]
-  }, [fortuneJson, shareMode, compatGeneration])
+
+    // 현재 비교 중인 상대의 무료 케미 카드 (저장/생성 카드가 없을 때만)
+    if (activeCompat && !base.some(c => c.entry.partnerId === activeCompat.partnerId)) {
+      const synthetic: CompatReportEntry = {
+        partnerId: activeCompat.partnerId,
+        partnerName: activeCompat.partnerName,
+        partnerGender: activeCompat.partnerGender,
+        relationship: 'friend',
+        type: '서로 채워주는 궁합',
+        text: '',
+        createdAt: '',
+        card: activeCompat.card,
+        flow: activeCompat.flow,
+      }
+      base = [{ key: `active_${activeCompat.partnerId}`, entry: synthetic }, ...base]
+    }
+
+    return base
+  }, [fortuneJson, shareMode, compatGeneration, activeCompat])
 
   const getHeaders = useCallback(() => {
     const h: Record<string, string> = {}
@@ -1852,10 +1897,13 @@ function FortuneSection({
   const compatSection = compatCards.length > 0 ? (
     <div ref={compatSectionRef} className="space-y-2 mb-3">
       {compatCards.map(({ key, entry: ce }) => {
-        const cardKey = compatCardKey(ce.partnerId, ce.relationship)
-        const isGenerating = !ce.text && compatGeneration?.partnerId === ce.partnerId
+        const isSynthetic = key.startsWith('active_')
+        const cardKey = isSynthetic ? key : compatCardKey(ce.partnerId, ce.relationship)
+        const isGenerating = !ce.text && !isSynthetic && compatGeneration?.partnerId === ce.partnerId
           && compatGeneration.relationship === ce.relationship
-        const canToggle = !isGenerating && !!ce.text
+        const chem = ce.card ?? (activeCompat?.partnerId === ce.partnerId ? activeCompat.card : null)
+        const flow = ce.flow ?? (activeCompat?.partnerId === ce.partnerId ? activeCompat.flow : undefined)
+        const canToggle = !isGenerating && (!!ce.text || !!chem)
         const isOpen = canToggle && openCompatIds.has(cardKey)
         return (
           <div
@@ -1879,11 +1927,16 @@ function FortuneSection({
                   <span className="text-rose-400 text-sm mt-0.5">{isOpen ? '▼' : '▶'}</span>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-800 leading-snug">{ce.partnerName}님과의 궁합</p>
-                  <p className="text-[11px] text-rose-500 mt-0.5">
+                  <p className="text-sm font-semibold text-gray-800 leading-snug">
+                    {currentName || '나'} <span className="text-rose-300">✕</span> {ce.partnerName}
+                    {chem && <span className="text-rose-500 font-bold"> · 궁합 {chem.overallScore}</span>}
+                  </p>
+                  <p className="text-[11px] text-rose-500 mt-0.5 truncate">
                     {isGenerating
                       ? '해설을 작성하고 있어요…'
-                      : `${RELATIONSHIP_LABELS[ce.relationship]} · ${ce.type}`}
+                      : isSynthetic
+                        ? (chem ? `「${chem.archetype.label}」` : '비교 중')
+                        : `${RELATIONSHIP_LABELS[ce.relationship]}${chem ? ` · 「${chem.archetype.label}」` : ` · ${ce.type}`}`}
                   </p>
                 </div>
               </button>
@@ -1928,9 +1981,20 @@ function FortuneSection({
                 </div>
               )}
             </div>
-            {isOpen && ce.text && (
-              <div className="px-4 pb-4 pt-1 border-t border-rose-100/80 animate-fade-in">
-                <div className="text-sm text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(ce.text) }} />
+            {isOpen && (
+              <div className="px-4 pb-4 pt-1 border-t border-rose-100/80 animate-fade-in space-y-3.5">
+                {chem && <CompatChemistry card={chem} flow={flow} />}
+                {ce.text ? (
+                  <div className="text-sm text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(ce.text) }} />
+                ) : !shareMode && onCompatCta ? (
+                  <button
+                    type="button"
+                    onClick={onCompatCta}
+                    className="w-full py-2.5 rounded-xl bg-rose-500 text-white text-[13px] font-semibold active:scale-[0.99] transition-transform shadow-sm"
+                  >
+                    궁합 해설 보기
+                  </button>
+                ) : null}
               </div>
             )}
           </div>

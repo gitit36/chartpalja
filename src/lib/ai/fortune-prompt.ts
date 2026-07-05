@@ -1139,15 +1139,16 @@ export function buildCompatibilityReportPrompt(
   nameA: string,
   nameB: string,
   compatType: string,
-  relationship: 'romance' | 'friend' | 'business',
+  relationship: 'romance' | 'friend' | 'business' | 'family',
   opts?: { birthYearA?: number; birthYearB?: number }
 ): string {
   const a = extractCoreData(reportA, { birthYear: opts?.birthYearA })
   const b = extractCoreData(reportB, { birthYear: opts?.birthYearB })
   const focusByRel: Record<typeof relationship, string> = {
-    romance: '연애·결혼·가족 관계에서의 감정 흐름, 친밀감, 장기 안정성',
+    romance: '연애·연인 관계에서의 감정 흐름, 끌림과 친밀감, 갈등과 화해, 장기 안정성',
     friend: '우정·신뢰·거리감·취향 차이, 오래 가는 친구 관계의 리듬',
     business: '협업·역할 분담·의사결정·이해관계, 업무·파트너십에서의 시너지와 마찰',
+    family: '가족·혈연 관계에서의 유대와 책임, 세대·성향 차이, 서로에게 기대는 방식과 장기 안정성',
   }
   const focusArea = focusByRel[relationship]
 

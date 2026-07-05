@@ -12,9 +12,10 @@ export const runtime = 'nodejs'
 
 const WINDOW_DAYS = 7
 // 한 요청에서 동기로 계산할 최대 엔트리 수. compute_all이 엔트리당 ~1s라
-// 엔트리가 많으면 첫 로드가 수십 초가 된다. 대표+상단부터 조금씩 채우고
-// 나머지는 pending=true로 알려서 클라이언트가 이어받아 폴링하게 한다.
-const MAX_COMPUTE_PER_REQUEST = 8
+// 이 값이 크면 대표 카드까지 그만큼 늦게 반환된다(첫 페인트 지연).
+// 대표+상단 소수만 빠르게 반환하고 나머지는 pending=true로 클라이언트가 폴링해 채운다.
+// (클라이언트는 미로딩 항목을 스피너로 표시하므로 배치를 작게 두는 편이 체감이 빠르다.)
+const MAX_COMPUTE_PER_REQUEST = 4
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null

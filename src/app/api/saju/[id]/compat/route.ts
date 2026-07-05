@@ -5,6 +5,7 @@ import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
 import { buildCompatibilityReportPrompt } from '@/lib/ai/fortune-prompt'
 import { classifyCompat } from '@/lib/compat/classify'
+import { buildRelationshipSeries, buildCompatCard } from '@/lib/compat/relationship-score'
 import { canAccessPartnerEntry, parseRelationshipParam } from '@/lib/compat/access'
 import { compatStorageKey } from '@/lib/compat/relationship'
 import type { CompatReportEntry, RelationshipType } from '@/lib/compat/types'
@@ -97,6 +98,12 @@ export async function POST(
     )
     const text = (await callGemini(prompt)).trim()
 
+    // 관계 케미 스냅샷 — 두 리포트가 이미 로드된 이 시점에 계산해 저장하면
+    // 이후 카드 렌더 시 추가 fetch/지연이 전혀 없다.
+    const series = buildRelationshipSeries(reportA, birthYearA, reportB, birthYearB)
+    const card = buildCompatCard(series) ?? undefined
+    const flow = series.map(p => ({ y: p.year, s: p.score }))
+
     const compatEntry: CompatReportEntry = {
       partnerId: overlayId,
       partnerName: partner.name ?? '상대',
@@ -105,6 +112,8 @@ export async function POST(
       type: compatType,
       text,
       createdAt: new Date().toISOString(),
+      card,
+      flow,
     }
 
     const mergedFortune = { ...existingFortune, [compatKey]: compatEntry }

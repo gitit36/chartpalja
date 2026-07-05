@@ -183,6 +183,22 @@ model CompatInvite {
   @@index([token])
 }
 
+// 사용자 문의(1:1 문의). 접수 시 DB 적재 + 운영자 이메일 알림.
+model Inquiry {
+  id        String   @id @default(cuid())
+  userId    String?
+  guestId   String?
+  email     String?                       // 회신 받을 이메일(선택)
+  category  String   @default("general")  // general | payment | bug | account | etc
+  message   String
+  page      String?                       // 문의 발생 경로
+  userAgent String?
+  status    String   @default("open")     // open | resolved
+  createdAt DateTime @default(now())
+  @@index([status, createdAt])
+  @@index([userId])
+}
+
 model CompatLink {
   id          String   @id @default(cuid())
   userId      String
