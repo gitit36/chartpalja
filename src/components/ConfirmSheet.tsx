@@ -24,8 +24,8 @@ export function ConfirmSheet({
       onClose={onCancel}
       header={(
         <div className="pt-1 pb-3 text-center">
-          <h3 className="text-base font-bold text-gray-900 mb-1.5">{title}</h3>
-          {description && <p className="text-sm text-gray-500 leading-relaxed">{description}</p>}
+          <h3 className="text-base font-bold text-cp-text mb-1.5">{title}</h3>
+          {description && <p className="text-sm text-cp-muted leading-relaxed">{description}</p>}
         </div>
       )}
       footer={(
@@ -33,7 +33,7 @@ export function ConfirmSheet({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors min-h-[48px]"
+            className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-muted bg-cp-bg border border-cp-border hover:bg-cp-border/40 transition-colors min-h-[48px]"
           >
             {cancelLabel}
           </button>
@@ -42,8 +42,8 @@ export function ConfirmSheet({
             onClick={onConfirm}
             className={
               destructive
-                ? 'flex-1 py-3 rounded-xl text-sm font-bold text-white bg-red-500 hover:bg-red-600 transition-colors min-h-[48px]'
-                : 'flex-1 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg transition-all active:scale-[0.98] min-h-[48px]'
+                ? 'flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-caution hover:brightness-110 transition-colors min-h-[48px]'
+                : 'flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:brightness-110 transition-all active:scale-[0.98] min-h-[48px]'
             }
           >
             {confirmLabel}

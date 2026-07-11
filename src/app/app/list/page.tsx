@@ -10,7 +10,11 @@ import { HamburgerMenu } from '@/components/HamburgerMenu'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { Toast } from '@/components/Toast'
 import { Sparkline } from '@/components/Sparkline'
+import { TodayHeroCard, TodayHeroCardSkeleton } from '@/components/TodayHeroCard'
 import { getGuestHeaders } from '@/lib/auth/guest'
+import type { DailySignal, WeekScoreRange } from '@/lib/saju/daily-util'
+import { buildDailySignals, weekScoreRange } from '@/lib/saju/daily-util'
+import { prefetchSajuEntry } from '@/lib/saju/entry-cache'
 
 interface SajuCard {
   id: string
@@ -50,6 +54,9 @@ interface DailyRepresentative {
   worstDomain: string | null
   worstScore: number | null
   comment: string
+  signals?: DailySignal[]
+  weekRange?: WeekScoreRange | null
+  domains?: Record<string, number> | null
 }
 
 function getHeaders(): Record<string, string> {
@@ -68,7 +75,7 @@ let listMemCache: SajuCard[] | null = null
 
 // 새로고침 후에도 즉시 뜨도록 localStorage 로도 영속화한다(메모리 캐시는 SPA 이동만 유지).
 const LIST_KEY = 'saju:list:v1'
-const DAILY_KEY = 'saju:daily:v1'
+const DAILY_KEY = 'saju:daily:v4'
 
 function kstTodayStr(): string {
   const now = new Date()
@@ -137,9 +144,9 @@ function deltaText(delta: number): string {
 }
 
 function deltaColor(direction: 'up' | 'down' | 'flat'): string {
-  if (direction === 'up') return 'text-red-500'
-  if (direction === 'down') return 'text-blue-500'
-  return 'text-gray-400'
+  if (direction === 'up') return 'text-cp-up'
+  if (direction === 'down') return 'text-cp-down'
+  return 'text-cp-dim'
 }
 
 export default function SajuListPage() {
@@ -230,8 +237,31 @@ export default function SajuListPage() {
   const repEntry = entries.find(e => e.id === repId) ?? null
   const repName = representative?.name ?? repEntry?.name ?? ''
   const repReady = representative != null && representative.score != null && representative.id === repId
+
+  // 대표 사주 상세 JSON 미리 받아 두면 히어로 → 차트 진입이 빨라짐
+  useEffect(() => {
+    if (repId) prefetchSajuEntry(repId, getGuestHeaders())
+  }, [repId])
+
   const repSeries = repId ? daily[repId]?.series : undefined
-  const repHasSpark = !!repSeries?.some(v => v != null)
+  const heroSignals = useMemo(() => {
+    if (!representative) return []
+    if (representative.signals?.length) return representative.signals
+    return buildDailySignals({
+      score: representative.score,
+      delta: representative.delta,
+      bestDomain: representative.bestDomain,
+      bestScore: representative.bestScore,
+      worstDomain: representative.worstDomain,
+      worstScore: representative.worstScore,
+      series: repSeries,
+    })
+  }, [representative, repSeries])
+  const heroWeekRange = useMemo(() => {
+    if (!representative) return null
+    if (representative.weekRange) return representative.weekRange
+    return weekScoreRange(representative.score, repSeries)
+  }, [representative, repSeries])
 
   const enableScoreSort = () => {
     const snap: Record<string, number> = {}
@@ -279,12 +309,12 @@ export default function SajuListPage() {
     <MobileContainer>
       <div className="min-h-screen flex flex-col">
       {/* Sticky header */}
-      <div className="sticky top-0 z-20 bg-white border-b border-gray-100">
+      <div className="sticky top-0 z-20 bg-cp-raised/95 backdrop-blur border-b border-cp-border">
         <div className="flex items-center px-4 py-3">
           <div className="w-8" />
           <div className="flex-1 flex items-center justify-center gap-2.5">
             <Image src="/svc_logo.png" alt="차트8자" width={32} height={29} />
-            <h1 className="text-xl font-bold text-gray-900">내 사주 목록</h1>
+            <h1 className="text-xl font-bold text-cp-text">내 사주 목록</h1>
           </div>
           <HamburgerMenu />
         </div>
@@ -293,100 +323,58 @@ export default function SajuListPage() {
       <div className="flex-1 px-4 pt-4 pb-24">
         {loading && entries.length === 0 ? (
           <div className="animate-pulse">
-            <div className="mb-4 h-[128px] rounded-2xl bg-gradient-to-br from-indigo-200 to-purple-200" />
+            <div className="mb-4 h-[220px] rounded-2xl bg-gradient-to-br from-cp-surface to-cp-border" />
             <div className="flex items-center justify-between mb-2.5">
-              <div className="h-3.5 w-10 bg-gray-100 rounded" />
-              <div className="h-6 w-28 bg-gray-100 rounded-full" />
+              <div className="h-3.5 w-10 bg-cp-surface rounded" />
+              <div className="h-6 w-28 bg-cp-surface rounded-full" />
             </div>
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="h-[80px] rounded-2xl bg-gray-100" />
+                <div key={i} className="h-[80px] rounded-2xl bg-cp-surface" />
               ))}
             </div>
           </div>
         ) : entries.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-4xl mb-4">&#x1F52E;</div>
-            <p className="text-gray-500 text-sm mb-1">아직 등록된 사주가 없어요</p>
-            <p className="text-gray-400 text-xs">아래 버튼을 눌러 사주를 추가해보세요</p>
+            <p className="text-cp-muted text-sm mb-1">아직 등록된 사주가 없어요</p>
+            <p className="text-cp-muted text-xs">아래 버튼을 눌러 사주를 추가해보세요</p>
           </div>
         ) : (
           <>
-            {/* 대표 차트 — 오늘의 나 (프레임은 즉시, 숫자/스파크라인만 로딩) */}
+            {/* 대표 히어로 — 주간 위치 + 소식 (토스식 10초 요약) */}
             {repId && repEntry && (
-              <Link
-                href={`/app/saju/${repId}`}
-                prefetch={true}
-                className="block mb-4 rounded-2xl p-4 bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-md active:scale-[0.99] transition-transform"
-              >
-                {repReady ? (
-                  <div className="flex justify-between gap-3">
-                    {/* 좌측: 타이틀 → 점수 → 좋은/조심할 운 (균일 간격) */}
-                    <div className="flex flex-col gap-2.5 min-w-0">
-                      <span className="text-sm font-semibold text-white/90">{repName}님의 오늘 운세</span>
-                      <div className="flex items-baseline gap-2 min-w-0">
-                        <span className="text-4xl font-extrabold leading-none">
-                          {representative!.score}<span className="text-lg font-bold ml-0.5">점</span>
-                        </span>
-                        <span className="text-xs text-white/70 truncate">
-                          {representative!.delta === 0 ? (
-                            <>· 어제와 비슷해요</>
-                          ) : (
-                            <>· 어제보다 <span className={`font-bold ${representative!.direction === 'down' ? 'text-sky-200' : 'text-rose-200'}`}>{deltaText(representative!.delta)}</span></>
-                          )}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        {representative!.bestDomain && representative!.bestScore != null && (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium">
-                            <span className="text-emerald-200">좋은 운</span>
-                            <span className="font-bold">{representative!.bestDomain} {representative!.bestScore}점</span>
-                          </span>
-                        )}
-                        {representative!.worstDomain && representative!.worstScore != null && representative!.worstDomain !== representative!.bestDomain && (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium">
-                            <span className="text-amber-200">조심할 운</span>
-                            <span className="font-bold">{representative!.worstDomain} {representative!.worstScore}점</span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* 우측: 날짜(상단 고정) → 스파크라인(아래로 채움) */}
-                    <div className="flex flex-col items-end gap-2.5 shrink-0">
-                      <span className="text-xs text-white/60">{(todayStr || kstTodayStr()).slice(5).replace('-', '.')}</span>
-                      {repHasSpark ? (
-                        <Sparkline data={repSeries!} trend={representative?.direction ?? 'flat'} color="#ffffff" width={120} height={72} />
-                      ) : (
-                        <div className="w-[120px] h-[72px]" aria-hidden />
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  // 로딩 중: 카드 정가운데 스피너 하나만.
-                  <div className="flex flex-col min-h-[112px]">
-                    <span className="text-sm font-semibold text-white/90">{repName}님의 오늘 운세</span>
-                    <div className="flex-1 flex items-center justify-center py-2">
-                      <Spinner size={30} className="text-white/80" />
-                    </div>
-                  </div>
-                )}
-              </Link>
+              repReady ? (
+                <TodayHeroCard
+                  href={`/app/saju/${repId}?focus=today`}
+                  name={repName}
+                  dateLabel={(todayStr || kstTodayStr()).slice(5).replace('-', '.')}
+                  score={representative!.score}
+                  delta={representative!.delta}
+                  direction={representative!.direction}
+                  domains={representative!.domains ?? daily[repId!]?.domains ?? null}
+                  signals={heroSignals}
+                  weekRange={heroWeekRange}
+                  series={repSeries}
+                />
+              ) : (
+                <TodayHeroCardSkeleton name={repName} />
+              )
             )}
 
             {/* 정렬 토글 */}
             <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs text-gray-400">{entries.length}개</span>
-              <div className="flex bg-gray-100 rounded-full p-0.5 text-xs font-medium">
+              <span className="text-xs text-cp-muted">{entries.length}개</span>
+              <div className="flex bg-cp-input rounded-full p-0.5 border border-cp-border text-xs font-medium">
                 <button
                   onClick={() => setSortByScore(false)}
-                  className={`px-3 py-1 rounded-full transition-colors ${!sortByScore ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400'}`}
+                  className={`px-3 py-1 rounded-full transition-all ${!sortByScore ? 'bg-cp-surface text-cp-text' : 'text-cp-muted'}`}
                 >
                   등록순
                 </button>
                 <button
                   onClick={enableScoreSort}
-                  className={`px-3 py-1 rounded-full transition-colors ${sortByScore ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-400'}`}
+                  className={`px-3 py-1 rounded-full transition-all ${sortByScore ? 'bg-cp-surface text-cp-text' : 'text-cp-muted'}`}
                 >
                   오늘 운세 순
                 </button>
@@ -399,11 +387,14 @@ export default function SajuListPage() {
               return (
               <div
                 key={e.id}
-                className="relative flex items-center gap-3 bg-white border border-gray-100 rounded-2xl p-4 shadow-sm active:bg-gray-50 transition-colors"
+                className="relative flex items-center gap-3 bg-cp-surface border border-cp-border rounded-2xl p-4 hover:bg-cp-hover active:brightness-95 transition-colors"
               >
                 <Link
                   href={`/app/saju/${e.id}`}
                   prefetch={true}
+                  onMouseEnter={() => prefetchSajuEntry(e.id, getGuestHeaders())}
+                  onFocus={() => prefetchSajuEntry(e.id, getGuestHeaders())}
+                  onTouchStart={() => prefetchSajuEntry(e.id, getGuestHeaders())}
                   className="flex items-center gap-3 cursor-pointer flex-1 min-w-0"
                 >
                   <SajuCharacterAvatar
@@ -414,14 +405,14 @@ export default function SajuListPage() {
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className="font-semibold text-gray-900 truncate">{e.name}</span>
-                      <span className="text-xs text-gray-400">&middot;</span>
-                      <span className="text-sm text-gray-500 shrink-0">{e.gender === 'female' ? '여성' : '남성'}</span>
+                      <span className="font-semibold text-cp-text truncate">{e.name}</span>
+                      <span className="text-xs text-cp-muted">&middot;</span>
+                      <span className="text-sm text-cp-muted shrink-0">{e.gender === 'female' ? '여성' : '남성'}</span>
                       {e.isRepresentative && (
                         <span className="text-amber-400 text-xs leading-none shrink-0" title="대표 사주" aria-label="대표 사주">&#x2B51;</span>
                       )}
                     </div>
-                    <div className="text-sm text-gray-500 truncate">
+                    <div className="text-sm text-cp-muted truncate">
                       {e.isLunar ? '음력' : '양력'} {formatDate(e.birthDate)}
                       {e.timeUnknown ? ' · 시간 모름' : e.birthTime ? ` ${e.birthTime}` : ''}
                     </div>
@@ -434,7 +425,7 @@ export default function SajuListPage() {
                         <Sparkline data={d.series} trend={d.direction} />
                         <div className="text-right min-w-[40px]">
                           <div className="flex items-center justify-end">
-                            <span className="text-lg font-bold text-gray-900 leading-none">{d.score}</span>
+                            <span className="text-lg font-bold text-cp-text leading-none">{d.score}</span>
                           </div>
                           <div className={`text-xs font-semibold mt-0.5 ${deltaColor(d.direction)}`}>
                             {deltaText(d.delta)}
@@ -444,7 +435,7 @@ export default function SajuListPage() {
                     ) : (
                       // 로딩 중: 스파크라인 자리에만 스피너 하나.
                       <div className="w-[52px] h-[24px] flex items-center justify-center">
-                        <Spinner size={16} className="text-gray-300" />
+                        <Spinner size={16} className="text-cp-border" />
                       </div>
                     )}
                   </div>
@@ -452,7 +443,7 @@ export default function SajuListPage() {
 
                 <button
                   onClick={(ev) => { ev.stopPropagation(); setMenuOpen(menuOpen === e.id ? null : e.id) }}
-                  className="absolute top-2 right-1 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400"
+                  className="absolute top-2 right-1 w-8 h-8 flex items-center justify-center rounded-full hover:bg-cp-surface text-cp-muted"
                 >
                   &#x22EE;
                 </button>
@@ -460,11 +451,11 @@ export default function SajuListPage() {
                 {menuOpen === e.id && (
                   <>
                     <div className="fixed inset-0 z-[5]" onClick={() => setMenuOpen(null)}/>
-                    <div className="absolute top-10 right-1 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden w-max">
+                    <div className="absolute top-10 right-1 bg-cp-bg border border-cp-border rounded-xl shadow-lg z-10 overflow-hidden w-max">
                       <button
                         onClick={() => { if (!e.isRepresentative) handleSetRepresentative(e.id) }}
                         disabled={e.isRepresentative}
-                        className={`block w-full text-center px-4 py-2.5 text-base ${e.isRepresentative ? 'text-amber-400 cursor-default' : 'text-gray-400 hover:bg-gray-50'}`}
+                        className={`block w-full text-center px-4 py-2.5 text-base ${e.isRepresentative ? 'text-amber-400 cursor-default' : 'text-cp-muted hover:bg-cp-bg'}`}
                         aria-label={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
                         title={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
                       >
@@ -472,13 +463,13 @@ export default function SajuListPage() {
                       </button>
                       <button
                         onClick={() => { setMenuOpen(null); router.push(`/app/input?edit=${e.id}`) }}
-                        className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                        className="block w-full text-left px-4 py-2.5 text-sm text-cp-text hover:bg-cp-bg"
                       >
                         수정
                       </button>
                       <button
                         onClick={() => { setMenuOpen(null); setDeleteTarget(e) }}
-                        className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
+                        className="block w-full text-left px-4 py-2.5 text-sm text-cp-up hover:bg-cp-line/10"
                       >
                         삭제
                       </button>
@@ -498,11 +489,11 @@ export default function SajuListPage() {
 
       {/* Sticky bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-30">
-        <div className="mx-auto max-w-[446px] p-4 bg-white border-t border-gray-100">
+        <div className="mx-auto max-w-[446px] p-4 bg-cp-raised border-t border-cp-border">
           <Link
             href="/app/input"
             prefetch={true}
-            className="flex w-full items-center justify-center py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
+            className="flex w-full items-center justify-center py-4 rounded-2xl text-base font-bold bg-cp-accent text-white shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
           >
             + 사주 추가하기
           </Link>
@@ -513,27 +504,27 @@ export default function SajuListPage() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6"
           onClick={() => !deleting && setDeleteTarget(null)}>
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden"
+          <div className="bg-cp-bg rounded-2xl shadow-xl w-full max-w-sm overflow-hidden"
             onClick={ev => ev.stopPropagation()}>
             <div className="px-6 pt-6 pb-4 text-center">
               <div className="w-12 h-12 mx-auto mb-3 bg-red-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <svg className="w-6 h-6 text-cp-up" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">사주 삭제</h3>
-              <p className="text-sm text-gray-500">
-                <span className="font-semibold text-gray-700">{deleteTarget.name}</span>의 사주 정보를 정말 삭제하시겠어요?
+              <h3 className="text-lg font-bold text-cp-text mb-1">사주 삭제</h3>
+              <p className="text-sm text-cp-muted">
+                <span className="font-semibold text-cp-text">{deleteTarget.name}</span>의 사주 정보를 정말 삭제하시겠어요?
               </p>
-              <p className="text-xs text-gray-400 mt-1">삭제된 데이터는 복구할 수 없습니다.</p>
+              <p className="text-xs text-cp-muted mt-1">삭제된 데이터는 복구할 수 없습니다.</p>
             </div>
-            <div className="grid grid-cols-2 border-t border-gray-100">
+            <div className="grid grid-cols-2 border-t border-cp-border">
               <button disabled={deleting} onClick={() => setDeleteTarget(null)}
-                className="py-3.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors border-r border-gray-100">
+                className="py-3.5 text-sm font-medium text-cp-muted hover:bg-cp-bg transition-colors border-r border-cp-border">
                 취소
               </button>
               <button disabled={deleting} onClick={handleDeleteConfirm}
-                className="py-3.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors">
+                className="py-3.5 text-sm font-bold text-cp-up hover:bg-cp-line/10 transition-colors">
                 {deleting ? '삭제 중...' : '삭제'}
               </button>
             </div>

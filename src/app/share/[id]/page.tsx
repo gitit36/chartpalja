@@ -46,17 +46,17 @@ export default async function SharePage({
   // 비공개 / 없는 카드 — 부드럽게 안내하고 self-CTA 로 전환 유도
   if (!entry) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-purple-50 to-white px-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-cp-bg to-cp-surface px-6 text-center">
         <div className="text-5xl mb-4">🔒</div>
-        <h1 className="text-xl font-bold text-gray-900 mb-2">비공개 차트예요</h1>
-        <p className="text-sm text-gray-500 mb-8 leading-relaxed">
+        <h1 className="text-xl font-bold text-cp-text mb-2">비공개 차트예요</h1>
+        <p className="text-sm text-cp-muted mb-8 leading-relaxed">
           이 인생 차트는 공유가 해제되었거나 존재하지 않아요.
           <br />
           대신, 내 사주로 100년 인생 차트를 만들어볼까요?
         </p>
         <Link
           href="/app/input"
-          className="px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-lg hover:shadow-xl transition-all"
+          className="px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-lg hover:shadow-xl transition-all"
         >
           내 차트 만들기 →
         </Link>

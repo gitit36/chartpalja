@@ -268,9 +268,9 @@ export function FortuneAnalysisSection({ report }: { report: SajuReportJson | nu
   if (!report || categories.length === 0) return null
 
   return (
-    <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h2 className="text-lg font-semibold mb-1 text-gray-800">운세 해설</h2>
-      <p className="text-xs text-gray-500 mb-4">
+    <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+      <h2 className="text-lg font-semibold mb-1 text-cp-text">운세 해설</h2>
+      <p className="text-xs text-cp-muted mb-4">
         사주 데이터를 기반으로 분석한 맞춤형 해설입니다. 각 항목을 눌러 확인하세요.
       </p>
       <div className="space-y-3">
@@ -279,25 +279,25 @@ export function FortuneAnalysisSection({ report }: { report: SajuReportJson | nu
           return (
             <div
               key={cat.id}
-              className={`rounded-xl border border-gray-100 overflow-hidden transition-all duration-200 ${
+              className={`rounded-xl border border-cp-border overflow-hidden transition-all duration-200 ${
                 isOpen ? 'shadow-sm' : ''
               }`}
             >
               <button
                 onClick={() => toggle(cat.id)}
-                className={`w-full text-left p-4 flex items-start gap-3 hover:bg-gray-50/50 transition-colors ${
+                className={`w-full text-left p-4 flex items-start gap-3 hover:bg-cp-surface/50 transition-colors ${
                   isOpen ? 'bg-gray-50/70' : ''
                 }`}
               >
                 <span className="text-xl flex-shrink-0 mt-0.5">{cat.icon}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-800 leading-snug">
+                  <p className="text-sm font-semibold text-cp-text leading-snug">
                     {cat.title}
                   </p>
-                  <p className="text-xs text-gray-500 mt-0.5">{cat.subtitle}</p>
+                  <p className="text-xs text-cp-muted mt-0.5">{cat.subtitle}</p>
                 </div>
                 <svg
-                  className={`w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5 transition-transform duration-200 ${
+                  className={`w-5 h-5 text-cp-muted flex-shrink-0 mt-0.5 transition-transform duration-200 ${
                     isOpen ? 'rotate-180' : ''
                   }`}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -310,7 +310,7 @@ export function FortuneAnalysisSection({ report }: { report: SajuReportJson | nu
                   {cat.content.split('\n\n').map((paragraph, i) => (
                     <p
                       key={i}
-                      className="text-sm text-gray-700 leading-relaxed mb-2 last:mb-0"
+                      className="text-sm text-cp-text leading-relaxed mb-2 last:mb-0"
                     >
                       {paragraph}
                     </p>

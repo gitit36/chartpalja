@@ -21,23 +21,23 @@ export function CompatSummaryBar({ info, myName, scrolled, shareMode = false, on
   return (
     <div
       className={`px-3 h-[36px] flex items-center gap-2 transition-colors ${
-        scrolled ? 'bg-purple-50/90 border-t border-purple-100' : 'bg-white'
+        scrolled ? 'bg-cp-surface border-t border-cp-border' : 'bg-cp-bg'
       }`}
     >
-      <p className="flex-1 min-w-0 text-[11px] text-gray-700 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
+      <p className="flex-1 min-w-0 text-[11px] text-cp-text font-medium whitespace-nowrap overflow-hidden text-ellipsis">
         <span className="font-bold">{myName}</span>
-        <span className="text-rose-300 mx-1">✕</span>
+        <span className="text-cp-muted mx-1">✕</span>
         <span className="font-bold">{info.overlayName}</span>
-        <span className="text-gray-400 mx-1">·</span>
-        <span className="text-rose-600 font-semibold">궁합 {overall}</span>
+        <span className="text-cp-muted mx-1">·</span>
+        <span className="text-cp-down font-semibold">궁합 {overall}</span>
       </p>
       <button
         type="button"
         onClick={onCta}
         className={`shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all active:scale-[0.98] ${
           shareMode
-            ? 'text-purple-700 bg-purple-50 border border-purple-200/70 hover:bg-purple-100/80'
-            : 'text-rose-700 bg-rose-50 border border-rose-200/70 hover:bg-rose-100/80'
+            ? 'text-cp-line bg-cp-surface border border-cp-border/70 hover:bg-cp-border/80'
+            : 'text-cp-down bg-cp-surface border border-cp-border/70 hover:bg-cp-border/80'
         }`}
       >
         {ctaLabel}

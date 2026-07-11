@@ -6,7 +6,7 @@ import {
   extractYongshinOverride,
   type DailyComputeEntry,
 } from '@/lib/saju/daily-fortune'
-import { kstRecentDates, deltaDirection, buildDailyComment } from '@/lib/saju/daily-util'
+import { kstRecentDates, deltaDirection, buildDailyComment, buildDailySignals, weekScoreRange } from '@/lib/saju/daily-util'
 
 export const runtime = 'nodejs'
 
@@ -41,7 +41,8 @@ function asDomains(v: unknown): DomainScores | null {
   if (!v || typeof v !== 'object') return null
   const out: DomainScores = {}
   for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
-    if (typeof val === 'number') out[k] = val
+    if (k.startsWith('_') || k.startsWith('__')) continue
+    if (typeof val === 'number') out[k as keyof DomainScores] = val
   }
   return Object.keys(out).length ? out : null
 }
@@ -143,21 +144,25 @@ export async function GET(request: NextRequest) {
       const rows: {
         entryId: string; date: string; score: number; grade: string
         seasonTag: string | null; seasonEmoji: string | null
-        domainsJson: DomainScores
+        domainsJson: object
       }[] = []
       for (const [eid, byDate] of Object.entries(computed)) {
         for (const [date, s] of Object.entries(byDate)) {
           const domains = (s.domains ?? {}) as DomainScores
+          const domainsJson: Record<string, unknown> = { ...domains }
+          if (s.chart || s.seasonDesc) {
+            domainsJson.__chart = { ...(s.chart ?? {}), ...(s.seasonDesc ? { seasonDesc: s.seasonDesc } : {}) }
+          }
           rows.push({
             entryId: eid, date, score: s.score, grade: s.grade,
             seasonTag: s.seasonTag || null, seasonEmoji: s.seasonEmoji || null,
-            domainsJson: domains,
+            domainsJson,
           })
           if (!cacheMap.has(eid)) cacheMap.set(eid, new Map())
           cacheMap.get(eid)!.set(date, {
             id: '', entryId: eid, date, score: s.score, grade: s.grade,
             seasonTag: s.seasonTag || null, seasonEmoji: s.seasonEmoji || null,
-            domainsJson: domains,
+            domainsJson,
             createdAt: new Date(),
           } as typeof cached[number])
         }
@@ -191,25 +196,37 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // 4) 대표 차트 카드 (좋은 운/주의 운 + 규칙 기반 코멘트, LLM 0).
+    // 4) 대표 차트 카드 (주간 위치 + 소식 신호, LLM 0).
     const repEntry = responseEntries.find((r) => r.id === repId) ?? null
     const repBW = bestWorst(repEntry?.domains ?? null)
-    const representative = repEntry && repEntry.score != null
+    const signalOpts = repEntry && repEntry.score != null
       ? {
-          id: repEntry.id,
-          name: repEntry.name,
           score: repEntry.score,
           delta: repEntry.delta,
-          direction: repEntry.direction,
           bestDomain: repBW.bestDomain,
           bestScore: repBW.bestScore,
           worstDomain: repBW.worstDomain,
           worstScore: repBW.worstScore,
-          comment: buildDailyComment({
-            score: repEntry.score,
-            bestDomain: repBW.bestDomain,
-            worstDomain: repBW.worstDomain,
-          }),
+          standoutDomain: repEntry.standoutDomain,
+          standoutScore: repEntry.standoutScore,
+          series: repEntry.series,
+        }
+      : null
+    const representative = signalOpts
+      ? {
+          id: repEntry!.id,
+          name: repEntry!.name,
+          score: repEntry!.score!,
+          delta: repEntry!.delta,
+          direction: repEntry!.direction,
+          bestDomain: repBW.bestDomain,
+          bestScore: repBW.bestScore,
+          worstDomain: repBW.worstDomain,
+          worstScore: repBW.worstScore,
+          domains: repEntry!.domains,
+          comment: buildDailyComment(signalOpts),
+          signals: buildDailySignals(signalOpts),
+          weekRange: weekScoreRange(signalOpts.score, signalOpts.series),
         }
       : null
 

@@ -987,6 +987,61 @@ ${isSingle ? '' : `\n평균 ${avgScore}점 / 최고 ${best.month}월(${best.scor
 순수 텍스트만 반환:`
 }
 
+export function buildWeeklySummaryPrompt(
+  report: SajuReportJson,
+  days: Array<{
+    date: string
+    weekday: string
+    score: number
+    grade?: string
+    domains?: Record<string, number> | null
+  }>,
+  opts?: { birthYear?: number; job?: string | null }
+): string {
+  const d = extractCoreData(report, opts)
+  const isSingle = days.length === 1
+  const dayLines = days.map((day) => {
+    const dom = day.domains
+    const domParts = dom
+      ? (['직업', '재물', '연애', '건강', '대인', '학업'] as const)
+          .map((k) => (dom[k] != null ? `${k}${dom[k]}` : ''))
+          .filter(Boolean)
+          .join('/')
+      : ''
+    return `- ${day.weekday}(${day.date.slice(5)}): ${day.score}점${day.grade ? ` ${day.grade}` : ''}${domParts ? ` ${domParts}` : ''}`
+  }).join('\n')
+
+  const scores = days.map((x) => x.score)
+  const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+  const best = days.reduce((a, b) => (a.score >= b.score ? a : b))
+  const worst = days.reduce((a, b) => (a.score <= b.score ? a : b))
+  const rangeLabel = isSingle
+    ? days[0]!.weekday
+    : `${days[0]!.weekday}~${days[days.length - 1]!.weekday}`
+
+  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 일운 점수를 현실 조언으로 번역한다.
+사용자가 이번 주 일운 차트에서 ${rangeLabel} 구간을 선택했어요.
+
+## 사주 원국 (원시 재료)
+[년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
+격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
+신강약: ${d.ssVerdict}${opts?.job ? `\n직업: ${opts.job}` : ''}
+
+## 선택 구간 일운 (FACT)
+${dayLines}
+${isSingle ? '' : `\n평균 ${avgScore}점 / 최고 ${best.weekday}(${best.score}점) / 최저 ${worst.weekday}(${worst.score}점)`}
+
+## 규칙
+- 카톡톤. 확신있게. 전문용어는 꼭 필요할 때만, 일상어로. 한자 금지.
+- 점수 낭독 금지. "그래서 오늘/이 구간에 뭐가 잘 되고 조심할지"로 번역.
+- ${isSingle ? '하루 핵심 흐름 1문장 + 활용/주의 1문장. 최대 180자.' : '구간 흐름 + 가장 좋은 날/주의할 날 이유 + 짧은 조언. 최대 260자.'}
+- special characters 사용 금지 (*, #, $, %, &, ^).
+- 비격식체 높임말(해요체). 소개/인사말 금지.
+- 단정 예언 금지. "~하기 쉬운 흐름", "~경향" 톤.
+
+순수 텍스트만 반환:`
+}
+
 export function buildRangeSummaryPrompt(
   report: SajuReportJson,
   yearDataArr: YearChartData[],

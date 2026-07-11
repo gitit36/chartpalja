@@ -46,14 +46,14 @@ export default function TestLoginPage() {
   return (
     <MobileContainer>
       <div className="px-6 pt-16 pb-32 min-h-screen flex flex-col">
-        <h1 className="text-xl font-bold text-gray-900">테스트 로그인</h1>
-        <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+        <h1 className="text-xl font-bold text-cp-text">테스트 로그인</h1>
+        <p className="mt-2 text-sm text-cp-muted leading-relaxed">
           심사용 테스트 계정으로 로그인합니다. 발급받은 아이디와 비밀번호를 입력해 주세요.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <label className="block">
-            <span className="text-sm font-semibold text-gray-700 mb-1.5 block">아이디</span>
+            <span className="text-sm font-semibold text-cp-text mb-1.5 block">아이디</span>
             <input
               type="text"
               value={id}
@@ -62,12 +62,12 @@ export default function TestLoginPage() {
               autoCorrect="off"
               spellCheck={false}
               placeholder="아이디"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-400"
+              className="w-full px-4 py-3 rounded-xl border border-cp-border text-sm text-cp-text placeholder-cp-muted focus:outline-none focus:border-cp-line"
             />
           </label>
 
           <label className="block">
-            <span className="text-sm font-semibold text-gray-700 mb-1.5 block">비밀번호</span>
+            <span className="text-sm font-semibold text-cp-text mb-1.5 block">비밀번호</span>
             <input
               type="password"
               value={password}
@@ -76,7 +76,7 @@ export default function TestLoginPage() {
               autoCorrect="off"
               spellCheck={false}
               placeholder="비밀번호"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-400"
+              className="w-full px-4 py-3 rounded-xl border border-cp-border text-sm text-cp-text placeholder-cp-muted focus:outline-none focus:border-cp-line"
             />
           </label>
 
@@ -89,8 +89,8 @@ export default function TestLoginPage() {
             disabled={!id || !password || loading}
             className={`w-full py-4 rounded-2xl text-base font-bold transition-all ${
               id && password && !loading
-                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                ? 'bg-cp-accent text-white shadow-lg hover:shadow-xl active:scale-[0.98]'
+                : 'bg-gray-200 text-cp-muted cursor-not-allowed'
             }`}
           >
             {loading ? '로그인 중...' : '로그인'}

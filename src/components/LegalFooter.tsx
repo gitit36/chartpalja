@@ -7,10 +7,10 @@ interface Props {
 }
 
 export function LegalFooter({ variant = 'light', className = '' }: Props) {
-  const textBase = variant === 'dark' ? 'text-white/35' : 'text-gray-400'
-  const linkColor = variant === 'dark' ? 'text-white/35 hover:text-white/60' : 'text-gray-400 hover:text-gray-600'
-  const dividerColor = variant === 'dark' ? 'text-white/15' : 'text-gray-200'
-  const borderColor = variant === 'dark' ? 'border-white/10' : 'border-gray-100'
+  const textBase = variant === 'dark' ? 'text-white/35' : 'text-cp-muted'
+  const linkColor = variant === 'dark' ? 'text-white/35 hover:text-white/60' : 'text-cp-muted hover:text-cp-muted'
+  const dividerColor = variant === 'dark' ? 'text-white/15' : 'text-cp-border'
+  const borderColor = variant === 'dark' ? 'border-white/10' : 'border-cp-border'
 
   return (
     <footer className={`w-full px-3 py-4 border-t ${borderColor} ${className} text-center`}>

@@ -72,6 +72,8 @@ export type ChartDatum = {
   eventWealth: number
   eventStudy: number
   eventConflict: number
+  /** 주간 뷰용 MM.DD 라벨 */
+  dayLabel?: string
   // v5 메타
   breakdown?: ScoreBreakdown
   trineHits?: TrineHit[]

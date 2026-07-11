@@ -55,9 +55,9 @@ export function StructuresCard({ report }: { report: SajuReportJson | null }) {
 
   if (!hasContent) {
     return (
-      <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-semibold mb-3 text-gray-800">신살·길성</h2>
-        <p className="text-sm text-gray-500">(추가 계산 예정)</p>
+      <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+        <h2 className="text-lg font-semibold mb-3 text-cp-text">신살·길성</h2>
+        <p className="text-sm text-cp-muted">(추가 계산 예정)</p>
       </section>
     )
   }
@@ -67,31 +67,31 @@ export function StructuresCard({ report }: { report: SajuReportJson | null }) {
     : []
 
   return (
-    <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h2 className="text-lg font-semibold mb-1 text-gray-800">신살·길성</h2>
-      <p className="text-xs text-gray-500 mb-4">
+    <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+      <h2 className="text-lg font-semibold mb-1 text-cp-text">신살·길성</h2>
+      <p className="text-xs text-cp-muted mb-4">
         사주에 깃든 특별한 기운입니다. 길성은 도움이 되는 쪽, 신살은 주의·보완을 참고할 수 있습니다.
       </p>
 
       {allGmJi.length > 0 && (
         <div className="mb-4 rounded-xl p-4 bg-slate-50 border border-slate-100">
-          <div className="text-xs font-medium text-gray-500 mb-2">공망</div>
-          <p className="text-xs text-gray-600 mb-2">
+          <div className="text-xs font-medium text-cp-muted mb-2">공망</div>
+          <p className="text-xs text-cp-muted mb-2">
             해당 지지의 힘이 상대적으로 비어 있다고 보는 관점입니다. 다른 기둥이나 대운으로 보완될 수 있어요.
           </p>
           <div className="flex flex-wrap gap-2">
             {allGmJi.map((c, i) => (
               <span
                 key={i}
-                className="inline-flex items-center rounded-lg bg-white border border-slate-200 px-2.5 py-1 text-sm text-gray-800"
+                className="inline-flex items-center rounded-lg bg-cp-bg border border-slate-200 px-2.5 py-1 text-sm text-cp-text"
               >
                 {c}
-                <span className="ml-1 text-gray-500">({BRANCH_HANGUL[c] ?? c})</span>
+                <span className="ml-1 text-cp-muted">({BRANCH_HANGUL[c] ?? c})</span>
               </span>
             ))}
           </div>
           {gongmangHits.length > 0 && (
-            <p className="mt-2 text-[11px] text-gray-500">
+            <p className="mt-2 text-[11px] text-cp-muted">
               적용: {gongmangHits.join(', ')}
             </p>
           )}
@@ -100,7 +100,7 @@ export function StructuresCard({ report }: { report: SajuReportJson | null }) {
 
       {shinsalEntries.length > 0 && (
         <div className="space-y-3">
-          <div className="text-xs font-medium text-gray-500">신살·길성 (한자+한글)</div>
+          <div className="text-xs font-medium text-cp-muted">신살·길성 (한자+한글)</div>
           <ul className="space-y-3">
             {shinsalEntries.map(([name, value]) => {
               const arr = Array.isArray(value) ? value as string[] : []
@@ -112,10 +112,10 @@ export function StructuresCard({ report }: { report: SajuReportJson | null }) {
               })
               const insight = getShinsalInsight(name)
               return (
-                <li key={name} className="rounded-xl p-4 bg-gray-50 border border-gray-100">
-                  <p className="font-semibold text-gray-800 mb-1">{name}</p>
-                  <p className="text-sm text-gray-600 mb-2">{labels.join(', ')}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed">{insight}</p>
+                <li key={name} className="rounded-xl p-4 bg-gray-50 border border-cp-border">
+                  <p className="font-semibold text-cp-text mb-1">{name}</p>
+                  <p className="text-sm text-cp-muted mb-2">{labels.join(', ')}</p>
+                  <p className="text-xs text-cp-muted leading-relaxed">{insight}</p>
                 </li>
               )
             })}

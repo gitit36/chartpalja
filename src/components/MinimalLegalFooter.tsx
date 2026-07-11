@@ -2,15 +2,17 @@ import Link from 'next/link'
 import { BUSINESS_INFO as B } from '@/lib/legal/business-info'
 
 interface Props {
-  variant?: 'light' | 'dark'
+  /** app: 다크 앱 셸(기본) / dark: 마케팅 다크 오버레이 */
+  variant?: 'app' | 'dark' | 'light'
   className?: string
 }
 
-export function MinimalLegalFooter({ variant = 'light', className = '' }: Props) {
-  const textBase = variant === 'dark' ? 'text-white/35' : 'text-gray-300'
-  const linkColor = variant === 'dark' ? 'text-white/35 hover:text-white/60' : 'text-gray-300 hover:text-gray-500'
-  const dividerColor = variant === 'dark' ? 'text-white/15' : 'text-gray-200'
-  const borderColor = variant === 'dark' ? 'border-white/10' : 'border-gray-50'
+export function MinimalLegalFooter({ variant = 'app', className = '' }: Props) {
+  const isOverlay = variant === 'dark'
+  const textBase = isOverlay ? 'text-white/35' : 'text-cp-dim'
+  const linkColor = isOverlay ? 'text-white/35 hover:text-white/60' : 'text-cp-dim hover:text-cp-muted'
+  const dividerColor = isOverlay ? 'text-white/15' : 'text-cp-border'
+  const borderColor = isOverlay ? 'border-white/10' : 'border-cp-border'
 
   return (
     <footer className={`w-full px-3 py-4 border-t ${borderColor} ${className} text-center`}>

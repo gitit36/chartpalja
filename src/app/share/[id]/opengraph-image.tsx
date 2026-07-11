@@ -9,22 +9,22 @@ export const alt = '차트팔자 — 인생 차트'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-/* ── 디자인 상수 (OG 1200×630 기준) ──────────────────────────── */
+/* ── 디자인 상수 (앱 다크 팔레트) ──────────────────────────── */
 const C = {
-  bg: 'linear-gradient(140deg, #0d1230 0%, #1b1547 52%, #3a1670 100%)',
+  bg: 'linear-gradient(155deg, #131316 0%, #1f1e25 55%, #25252c 100%)',
   glowChart:
-    'radial-gradient(760px circle at 82% 48%, rgba(95,182,255,0.22) 0%, rgba(95,182,255,0.0) 60%)',
+    'radial-gradient(760px circle at 82% 48%, rgba(240,68,82,0.18) 0%, rgba(240,68,82,0.0) 58%)',
   glowCorner:
-    'radial-gradient(620px circle at 14% 92%, rgba(96,90,220,0.28) 0%, rgba(96,90,220,0.0) 55%)',
-  score: '#5fb6ff',
+    'radial-gradient(620px circle at 12% 90%, rgba(49,130,246,0.12) 0%, rgba(49,130,246,0.0) 55%)',
+  up: '#F04452',
+  down: '#3182F6',
   white: '#ffffff',
-  title: '#e8e9ff',
-  sub: '#b7bbe6',
-  line: '#5fb6ff',
-  lineGlow: 'rgba(95,182,255,0.22)',
-  pillBg: 'rgba(255,255,255,0.10)',
-  pillBorder: 'rgba(255,255,255,0.24)',
-  domain: 'rgba(232,233,255,0.72)',
+  title: '#E8E8ED',
+  sub: '#8B8B93',
+  pillBg: 'rgba(45,45,54,0.85)',
+  pillBorder: '#4B4B54',
+  domain: '#6B6B75',
+  ink: '#131316',
 }
 
 const L = {
@@ -118,6 +118,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
   const curDot =
     card.currentIdx >= 0 && card.currentIdx < spark.points.length ? spark.points[card.currentIdx] : null
 
+  const accent = card.isUp ? C.up : C.down
+  const accentGlow = card.isUp ? 'rgba(240,68,82,0.22)' : 'rgba(49,130,246,0.22)'
   const deltaText = `${card.isUp ? '▲' : '▼'} ${Math.abs(card.delta)} (${card.isUp ? '+' : ''}${card.deltaPercent}%)`
 
   return new ImageResponse(
@@ -154,7 +156,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           <path
             d={spark.line}
             fill="none"
-            stroke={C.lineGlow}
+            stroke={accentGlow}
             strokeWidth={16}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -164,7 +166,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           <path
             d={spark.line}
             fill="none"
-            stroke={C.line}
+            stroke={accent}
             strokeWidth={6}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -175,8 +177,8 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               cx={curDot.x}
               cy={curDot.y}
               r={9}
-              fill={C.line}
-              stroke="#0d1230"
+              fill={accent}
+              stroke={C.ink}
               strokeWidth={4}
             />
           ) : null}
@@ -229,7 +231,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           </div>
 
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 30, marginTop: 14 }}>
-            <div style={{ display: 'flex', fontSize: 156, fontWeight: 700, lineHeight: 1, color: C.score }}>
+            <div style={{ display: 'flex', fontSize: 156, fontWeight: 700, lineHeight: 1, color: accent }}>
               {card.score}
             </div>
 
@@ -237,7 +239,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
               <div style={{ display: 'flex', fontSize: 30, fontWeight: 600, color: C.sub }}>
                 올해 운세 점수
               </div>
-              <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, color: C.sub }}>
+              <div style={{ display: 'flex', fontSize: 32, fontWeight: 700, color: accent }}>
                 {deltaText}
               </div>
             </div>

@@ -9,13 +9,13 @@ export const metadata: Metadata = {
 }
 
 function H2({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-base font-bold text-gray-900 mt-7 mb-2">{children}</h2>
+  return <h2 className="text-base font-bold text-cp-text mt-7 mb-2">{children}</h2>
 }
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm text-gray-700 leading-relaxed">{children}</p>
+  return <p className="text-sm text-cp-text leading-relaxed">{children}</p>
 }
 function Ol({ children }: { children: React.ReactNode }) {
-  return <ol className="list-decimal pl-5 space-y-1.5 text-sm text-gray-700 leading-relaxed">{children}</ol>
+  return <ol className="list-decimal pl-5 space-y-1.5 text-sm text-cp-text leading-relaxed">{children}</ol>
 }
 
 export default function TermsPage() {

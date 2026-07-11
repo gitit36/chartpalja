@@ -5162,126 +5162,355 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
 
     return timeline
 # ══════════════════════════════════════════════
-# SECTION: 일진(日辰) 해석 엔진 [Fix-13]
+# SECTION: 일진(日辰) 해석 엔진 [Fix-13 → v6.5 계층]
+# 월운과 동일 문법: 월운종합×w + 일운독립×(1-w) + 시너지
 # ══════════════════════════════════════════════
+
+# 월운 base 비중 / 일운 독립 비중 (세운 60/40 · 월운 65/35 와 같은 계층 감쇄)
+DAY_BLEND_MW = 0.60
+DAY_BLEND_DW = 0.40
+
+
+def _find_daewoon_block(dw_detail: List[Dict[str, Any]], year: int) -> Optional[Dict[str, Any]]:
+    if not dw_detail:
+        return None
+    for d in dw_detail:
+        if d["start_year"] <= year < d["end_year"]:
+            return d
+    if year < dw_detail[0]["start_year"]:
+        return dw_detail[0]
+    return dw_detail[-1]
+
+
+def _cached_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
+    cached = r.get("_dw_detail_cache")
+    if cached is not None:
+        return cached
+    detail = build_daewoon_detail(r)
+    r["_dw_detail_cache"] = detail
+    return detail
+
+
+def _cached_monthly_timeline(
+    r: Dict[str, Any], dw_detail: List[Dict[str, Any]], year: int
+) -> List[Dict[str, Any]]:
+    cache = r.setdefault("_monthly_tl_cache", {})
+    if year not in cache:
+        cache[year] = build_monthly_timeline(r, dw_detail, year)
+    return cache[year]
+
+
+def _parse_iso_dt(value: Any) -> Optional[datetime]:
+    if not value or not isinstance(value, str):
+        return None
+    try:
+        dt = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=KST)
+    return dt
+
+
+def _pick_monthly_row(
+    months: List[Dict[str, Any]], target_dt: datetime
+) -> Optional[Dict[str, Any]]:
+    """절기 월운 구간(start~end)에 날짜가 속한 행을 고른다."""
+    if not months:
+        return None
+    td = target_dt if target_dt.tzinfo else target_dt.replace(tzinfo=KST)
+    for row in months:
+        start = _parse_iso_dt(row.get("start"))
+        end = _parse_iso_dt(row.get("end"))
+        if start and end and start <= td < end:
+            return row
+    # fallback: month_index ≈ 양력월 (절기 경계 근처만 어긋날 수 있음)
+    cal_m = td.month
+    for row in months:
+        if int(row.get("month") or 0) == cal_m:
+            return row
+    return months[min(max(cal_m - 1, 0), len(months) - 1)]
+
+
+def _resolve_daily_upper_context(
+    r: Dict[str, Any], target_dt: datetime
+) -> Dict[str, Any]:
+    """해당일의 대운·세운·월운 기둥과 월운 종합점수/도메인을 해석한다."""
+    dw_detail = _cached_daewoon_detail(r)
+    year = target_dt.year
+    dw = _find_daewoon_block(dw_detail, year)
+    sw_gz = _sewoon_gz(year)
+    sw_stem, sw_branch = sw_gz[0], sw_gz[1]
+
+    mw_row = None
+    for y_try in (year, year - 1):
+        tl = _cached_monthly_timeline(r, dw_detail, y_try)
+        mw_row = _pick_monthly_row(tl, target_dt)
+        if mw_row and _parse_iso_dt(mw_row.get("start")):
+            # start가 있으면 절기 매칭 성공으로 간주
+            start = _parse_iso_dt(mw_row.get("start"))
+            end = _parse_iso_dt(mw_row.get("end"))
+            td = target_dt if target_dt.tzinfo else target_dt.replace(tzinfo=KST)
+            if start and end and start <= td < end:
+                if y_try != year:
+                    sw_gz = _sewoon_gz(y_try)
+                    sw_stem, sw_branch = sw_gz[0], sw_gz[1]
+                    dw = _find_daewoon_block(dw_detail, y_try) or dw
+                break
+        elif mw_row and y_try == year:
+            break
+
+    mw_stem = (mw_row or {}).get("stem") or sw_stem
+    mw_branch = (mw_row or {}).get("branch") or sw_branch
+    mw_scores = (mw_row or {}).get("scores") or {}
+    mw_score = float(mw_scores.get("종합") or 50)
+    mw_domains = {
+        "직업": float(mw_scores.get("직업") or 5.0),
+        "재물": float(mw_scores.get("재물") or 5.0),
+        "건강": float(mw_scores.get("건강") or 5.0),
+        "연애": float(mw_scores.get("연애") or 5.0),
+        "결혼": float(mw_scores.get("결혼") or 5.0),
+    }
+
+    return {
+        "dw": dw,
+        "sw_stem": sw_stem,
+        "sw_branch": sw_branch,
+        "sw_gz": sw_gz,
+        "mw_stem": mw_stem,
+        "mw_branch": mw_branch,
+        "mw_score": mw_score,
+        "mw_domains": mw_domains,
+        "mw_row": mw_row,
+    }
+
+
+def _domain_10_to_100(v: float) -> float:
+    """월운/대운 도메인(0~10) → 일운 UI 스케일(0~100)."""
+    return max(0.0, min(100.0, float(v) * 10.0))
+
 
 def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, Any]:
     """
-    특정 날짜의 일진(日辰) 해석.
-    target_date_str: 'YYYY-MM-DD' 형식
-    r: compute_all 결과
+    특정 날짜의 일진(日辰) 해석 (v6.5).
+    최종점수 = 월운종합×DAY_BLEND_MW + 일운독립×DAY_BLEND_DW + 시너지
+    일운독립은 세운/월운과 동일하게 용신 fit·상위운 관계·오행균형·병인해소·삼합을 반영.
     """
-    from datetime import datetime
     target_dt = datetime.strptime(target_date_str, "%Y-%m-%d")
-    
-    # 율리우스 일수 기반 일진 산출 (기준: 1984-01-01 = 甲子일)
+
+    # 율리우스 일수 기반 일진 산출
     y, m, d_val = target_dt.year, target_dt.month, target_dt.day
     if m <= 2:
-        y -= 1; m += 12
+        y -= 1
+        m += 12
     jd = int(365.25 * (y + 4716)) + int(30.6001 * (m + 1)) + d_val - 1524.5
     base_jd = 2445336.5  # 1983-01-27 = 甲子日
     day_offset = int(jd - base_jd) % 60
     d_stem = HEAVENLY_STEMS[day_offset % 10]
     d_branch = EARTHLY_BRANCHES[day_offset % 12]
     d_pillar = d_stem + d_branch
-    
+
     ds = r["원국"]["day"][0]
     db = r["원국"]["day"][1]
-    o_stems = [r["원국"][p][0] for p in ("year","month","day","hour")]
-    o_branches = [r["원국"][p][1] for p in ("year","month","day","hour")]
+    year_branch = r["원국"]["year"][1]
+    o_stems = [r["원국"][p][0] for p in ("year", "month", "day", "hour")]
+    o_branches = [r["원국"][p][1] for p in ("year", "month", "day", "hour")]
     yong = r["용신"]
-    
-    # 십신
+    geok_type = r.get("격국", {}).get("격국유형", "")
+    verdict = r.get("신강신약", {}).get("판정", "")
+    disease_info = yong.get("병인진단")
+    tmap = day_tengo_ohaeng(ds)
+    natal_gm_info = r.get("공망분류")
+    natal_bal = _ohang_balance(o_stems, o_branches, yong_info=yong)
+    day_gz = ds + db
+
+    ctx = _resolve_daily_upper_context(r, target_dt)
+    dw = ctx["dw"]
+    dw_stem = dw["stem"] if dw else ds
+    dw_branch = dw["branch"] if dw else db
+    sw_stem, sw_branch = ctx["sw_stem"], ctx["sw_branch"]
+    mw_stem, mw_branch = ctx["mw_stem"], ctx["mw_branch"]
+    mw_base = float(ctx["mw_score"])
+
+    # 십신 / 12운성
     tg_stem = ten_god(ds, d_stem)
-    tg_branch = ten_god(ds, branch_main_hs(d_branch) or d_stem)
-    
-    # 12운성
+    tg_branch = branch_main_tg(ds, d_branch)
     d_unseong = twelve_unseong(ds, d_branch)
-    
-    # 용신 부합
-    d_elem_s = STEM_ELEMENT[d_stem]
-    d_elem_b = BRANCH_ELEMENT_MAIN.get(d_branch, "")
-    yong_elem = yong.get("용신_오행", "")
-    hui_elems = yong.get("희신_오행", [])
-    gi_elems = yong.get("기신_오행", [])
-    
-    gu_elems = yong.get("구신_오행", [])
 
-    yong_match = d_elem_s == yong_elem or d_elem_b == yong_elem
-    hui_match = d_elem_s in hui_elems or d_elem_b in hui_elems
-    gi_match = d_elem_s in gi_elems or d_elem_b in gi_elems
-    gu_match = d_elem_s in gu_elems or d_elem_b in gu_elems
+    # 용신 부합 (천간/지지 세분 — 세운·월운과 동일)
+    d_yfit = _check_yongshin_fit(d_stem, d_branch, yong, ds)
+    yong_match = float(d_yfit.get("용신부합", 0)) > 0.0
+    hui_match = float(d_yfit.get("희신부합", 0)) > 0.0
+    gi_match = float(d_yfit.get("기신부합", 0)) > 0.0
+    gu_match = float(d_yfit.get("구신부합", 0)) > 0.0
 
-    # 일진-원국 관계
+    # 일진 vs 원국 / 대운 / 세운 / 월운 관계
     d_rels_orig = _calc_incoming_relations(d_stem, d_branch, o_stems, o_branches)
+    d_rels_dw = _calc_two_pillar_relations(d_stem, d_branch, dw_stem, dw_branch)
+    d_rels_sw = _calc_two_pillar_relations(d_stem, d_branch, sw_stem, sw_branch)
+    d_rels_mw = _calc_two_pillar_relations(d_stem, d_branch, mw_stem, mw_branch)
 
     # 신살
-    d_gil, d_hyung = _check_incoming_shinsal(d_branch, ds, o_branches[0], o_branches)
+    d_gil, d_hyung = _check_incoming_shinsal(d_branch, ds, year_branch, o_branches)
 
-    # 에너지장
-    d_energy = _calc_energy_field(d_rels_orig, [], yong_info=yong,
-                                  inc_stem=d_stem, inc_branch=d_branch,
-                                  orig_stems=o_stems, orig_branches=o_branches)
+    # 에너지장: 원국 + (대운·세운·월운) 관계
+    d_energy = _calc_energy_field(
+        d_rels_orig,
+        d_rels_dw + d_rels_sw + d_rels_mw,
+        yong_info=yong,
+        inc_stem=d_stem,
+        inc_branch=d_branch,
+        orig_stems=o_stems,
+        orig_branches=o_branches,
+    )
 
-    # 점수 산출
-    d_geok_type = r.get("격국", {}).get("격국유형", "")
-    d_verdict = r.get("신강신약", {}).get("판정", "")
-    disease_info = yong.get("병인진단")
-    d_day_gz = ds + db
+    # 오행 균형: 원국 + 대운 + 세운 + 월운 + 일운
+    d_balance = _ohang_balance(
+        o_stems + [dw_stem, sw_stem, mw_stem, d_stem],
+        o_branches + [dw_branch, sw_branch, mw_branch, d_branch],
+        yong_info=yong,
+    )
 
-    d_tg_s = ten_god(ds, d_stem)
-    d_tg_b = branch_main_tg(ds, d_branch)
-    d_gm = _gongmang_factors(d_branch, d_day_gz, o_branches)
-    d_haegong = _haegong_check(d_branch, r.get("공망분류"))
-    d_trine = _check_trine_direction(d_branch, o_branches)
+    # 삼합/방합: 원국 + 대운·세운·월운 지지
+    d_trine = _check_trine_direction(
+        d_branch, o_branches, [dw_branch, sw_branch, mw_branch]
+    )
     d_t_pos, d_t_neg = _trine_energy_adj(d_trine, yong)
-    d_shinsal_adj = _contextual_shinsal_adj(d_gil, d_hyung, d_verdict, d_geok_type)
+    d_gm = _gongmang_factors(d_branch, day_gz, o_branches)
+    d_haegong = _haegong_check(d_branch, natal_gm_info)
+    d_shinsal_adj = _contextual_shinsal_adj(d_gil, d_hyung, verdict, geok_type)
+    d_dis_res = _disease_resolution_score(d_stem, d_branch, disease_info, tmap)
 
-    d_yfit = {
-        "용신부합": 1.0 if yong_match else 0.0,
-        "희신부합": 1.0 if hui_match else 0.0,
-        "기신부합": 1.0 if gi_match else 0.0,
-        "구신부합": 1.0 if gu_match else 0.0,
-    }
+    # ── 일운 독립점수 ──
     _d_comp = _composite_score(
-        50, d_yfit, d_unseong, _calc_noble_power(d_gil, d_hyung),
-        d_energy["direction"], 0.5, d_geok_type, d_verdict,
-        tg_stem=d_tg_s, tg_branch=d_tg_b,
-        trine_pos=d_t_pos, trine_neg=d_t_neg, gm=d_gm,
+        50,
+        d_yfit,
+        d_unseong,
+        _calc_noble_power(d_gil, d_hyung),
+        d_energy["direction"],
+        d_balance,
+        geok_type,
+        verdict,
+        tg_stem=tg_stem,
+        tg_branch=tg_branch,
+        trine_pos=d_t_pos,
+        trine_neg=d_t_neg,
+        gm=d_gm,
         shinsal_adj=d_shinsal_adj,
+        disease_resolution=d_dis_res,
+        natal_balance=natal_bal,
         haegong_bonus=d_haegong["bonus"],
-        inc_stem=d_stem, inc_branch=d_branch,
-        yong_info=yong, disease_info=disease_info,
+        inc_stem=d_stem,
+        inc_branch=d_branch,
+        yong_info=yong,
+        disease_info=disease_info,
         trine_hits=d_trine,
     )
-    score = _d_comp["score"]
-    d_breakdown = _d_comp["breakdown"]
-    
+    d_ind = float(_d_comp["score"])
+    d_breakdown = dict(_d_comp["breakdown"])
+
+    # ── 시너지 (월운↔일진 중심, 대운·세운은 약하게) ──
+    syn_mw = _dw_sw_synergy(d_rels_mw, yong, mw_stem, mw_branch, d_stem, d_branch)
+    syn_dw = _dw_sw_synergy(d_rels_dw, yong, dw_stem, dw_branch, d_stem, d_branch)
+    syn_sw = _dw_sw_synergy(d_rels_sw, yong, sw_stem, sw_branch, d_stem, d_branch)
+    rel_syn = max(-5.0, min(5.0, syn_mw * 0.6 + syn_dw * 0.2 + syn_sw * 0.2))
+    mw_dev = mw_base - 50.0
+    d_dev = d_ind - 50.0
+    score_syn = max(
+        -3.0,
+        min(
+            3.0,
+            (mw_dev + d_dev)
+            / 100.0
+            * abs(mw_dev / 50.0)
+            * abs(d_dev / 50.0)
+            * 8,
+        ),
+    )
+    synergy = max(-5.0, min(5.0, rel_syn * 0.7 + score_syn * 0.3))
+
+    # 월운 중립(45~55)이면 일운 비중을 조금 높여 체감 변동↑ (월운 혼합과 동일 철학)
+    if 45 <= mw_base <= 55:
+        mw_w, d_w = 0.55, 0.45
+    else:
+        mw_w, d_w = DAY_BLEND_MW, DAY_BLEND_DW
+
+    score = int(max(0, min(100, round(mw_base * mw_w + d_ind * d_w + synergy))))
+    d_breakdown["monthly_base"] = round(mw_base, 2)
+    d_breakdown["daily_independent"] = round(d_ind, 2)
+    d_breakdown["synergy"] = round(synergy, 2)
+    d_breakdown["blend_mw"] = mw_w
+    d_breakdown["blend_daily"] = d_w
+
     # 등급
-    if score >= 70: grade = "길일(吉日)"
-    elif score >= 55: grade = "보통"
-    elif score >= 40: grade = "소흉(小凶)"
-    else: grade = "흉일(凶日)"
-    
+    if score >= 70:
+        grade = "길일(吉日)"
+    elif score >= 55:
+        grade = "보통"
+    elif score >= 40:
+        grade = "소흉(小凶)"
+    else:
+        grade = "흉일(凶日)"
+
     # 시즌 태그
-    ypower = 0.3 if yong_match else (-0.2 if gi_match else 0.0)
+    dw_yfit = {
+        "용신부합": dw.get("용신부합", 0) if dw else 0,
+        "희신부합": dw.get("희신부합", 0) if dw else 0,
+        "기신부합": dw.get("기신부합", 0) if dw else 0,
+        "구신부합": dw.get("구신부합", 0) if dw else 0,
+    }
+    ypower = _calc_yongshin_power(dw_yfit, d_yfit)
     season = _calc_season_tag(ypower, d_energy["total"], d_energy["direction"])
 
-    # 6대 생활 도메인 운세 점수 (0~100, 높을수록 좋음).
-    # 엔진의 이벤트 확률(_EVENT_TRIGGERS)을 그날 일진 기준으로 산출한 뒤,
-    # 긍정 이벤트(연애/재물/학업/이직)는 확률을 그대로, 부정 이벤트(건강주의/대인갈등)는
-    # 100-확률로 뒤집어 "운이 좋다=점수가 높다"로 일관되게 정렬한다.
-    _, _, _d_rel_keys = _extract_rel_keys(d_rels_orig, d_unseong)
-    _d_events = _calc_event_probabilities(d_gil + d_hyung, _d_rel_keys, d_unseong, [tg_stem, tg_branch])
-    # 종합점수(_composite_score)와 동일한 gamma 곡선으로 도메인 점수도 상향(체감 완화).
-    # 중·저 구간을 끌어올리고 100은 보존 → 순위/상한 유지하며 "너무 짜다" 감소.
+    d_noble = _calc_noble_power(d_gil, d_hyung)
+    d_tengo = _calc_tengo_balance(
+        ds,
+        o_stems + [dw_stem, sw_stem, mw_stem, d_stem],
+        o_branches + [dw_branch, sw_branch, mw_branch, d_branch],
+    )
+    d_unseong_score = _UNSEONG_SCORE.get(d_unseong, 0)
+
+    # ── 도메인: 월운(0~10) base + 일진 이벤트 보정 → 0~100 ──
+    _, _, rel_keys_o = _extract_rel_keys(d_rels_orig, d_unseong)
+    _, _, rel_keys_dw = _extract_rel_keys(d_rels_dw, d_unseong)
+    _, _, rel_keys_sw = _extract_rel_keys(d_rels_sw, d_unseong)
+    _, _, rel_keys_mw = _extract_rel_keys(d_rels_mw, d_unseong)
+    dw_tgs = []
+    if dw:
+        dw_tgs = [dw.get("십성_천간", ""), dw.get("십성_지지", "")]
+    _d_events = _calc_event_probabilities(
+        d_gil + d_hyung,
+        rel_keys_o + rel_keys_dw + rel_keys_sw + rel_keys_mw,
+        d_unseong,
+        [tg_stem, tg_branch] + [t for t in dw_tgs if t],
+    )
+
+    event_100 = {
+        "연애": float(_d_events.get("연애_결혼", 50)),
+        "재물": float(_d_events.get("재물_기회", 50)),
+        "학업": float(_d_events.get("학업_시험", 50)),
+        "직업": float(_d_events.get("이직_전환", 50)),
+        "건강": float(100 - _d_events.get("건강_주의", 50)),
+        "대인": float(100 - _d_events.get("대인_갈등", 50)),
+    }
+    mw_dom = ctx["mw_domains"]
+    # 월운에 없는 학업·대인은 이벤트 비중을 높임
     운세도메인 = {
-        "연애": _uplift_composite(_d_events.get("연애_결혼", 50)),
-        "재물": _uplift_composite(_d_events.get("재물_기회", 50)),
-        "학업": _uplift_composite(_d_events.get("학업_시험", 50)),
-        "직업": _uplift_composite(_d_events.get("이직_전환", 50)),
-        "건강": _uplift_composite(100 - _d_events.get("건강_주의", 50)),
-        "대인": _uplift_composite(100 - _d_events.get("대인_갈등", 50)),
+        "연애": _uplift_composite(
+            mw_w * _domain_10_to_100((mw_dom["연애"] + mw_dom["결혼"]) / 2.0)
+            + d_w * event_100["연애"]
+        ),
+        "재물": _uplift_composite(
+            mw_w * _domain_10_to_100(mw_dom["재물"]) + d_w * event_100["재물"]
+        ),
+        "직업": _uplift_composite(
+            mw_w * _domain_10_to_100(mw_dom["직업"]) + d_w * event_100["직업"]
+        ),
+        "건강": _uplift_composite(
+            mw_w * _domain_10_to_100(mw_dom["건강"]) + d_w * event_100["건강"]
+        ),
+        "학업": _uplift_composite(0.35 * _domain_10_to_100(mw_dom["직업"]) + 0.65 * event_100["학업"]),
+        "대인": _uplift_composite(0.35 * _domain_10_to_100(mw_dom["연애"]) + 0.65 * event_100["대인"]),
     }
 
     return {
@@ -5296,7 +5525,11 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
         "희신부합": hui_match,
         "기신부합": gi_match,
         "구신부합": gu_match,
+        "용신부합_상세": d_yfit,
         "관계": d_rels_orig,
+        "관계_with_대운": d_rels_dw,
+        "관계_with_세운": d_rels_sw,
+        "관계_with_월운": d_rels_mw,
         "신살_길신": d_gil,
         "신살_흉살": d_hyung,
         "에너지장": d_energy,
@@ -5307,9 +5540,22 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
         "trine_hits": [dict(h, applies_to="daily") for h in d_trine],
         "gongmang_factors": d_gm,
         "haegong": d_haegong,
-        "shinsal_context_adj": _shinsal_adj_detail(d_gil, d_hyung, d_verdict, d_geok_type),
+        "shinsal_context_adj": _shinsal_adj_detail(d_gil, d_hyung, verdict, geok_type),
         "시즌태그": season,
         "오행": {"천간": STEM_ELEMENT[d_stem], "지지": BRANCH_ELEMENT_MAIN.get(d_branch, "")},
+        "귀인력": d_noble,
+        "오행균형도": d_balance,
+        "12운성곡선": d_unseong_score,
+        "십성밸런스": d_tengo,
+        "이벤트확률": _d_events,
+        "상위운": {
+            "대운": dw.get("daewoon_pillar") if dw else None,
+            "세운": ctx["sw_gz"],
+            "월운": f"{mw_stem}{mw_branch}",
+            "월운종합": round(mw_base, 1),
+            "일운독립": round(d_ind, 1),
+            "시너지": round(synergy, 2),
+        },
     }
 
 

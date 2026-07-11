@@ -17,9 +17,9 @@ export function ElementsBar({ report }: { report: SajuReportJson | null }) {
   const counts = report?.오행분포
   if (!counts || typeof counts !== 'object') {
     return (
-      <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-semibold mb-3 text-gray-800">오행 분포</h2>
-        <p className="text-sm text-gray-500">(추가 계산 예정)</p>
+      <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+        <h2 className="text-lg font-semibold mb-3 text-cp-text">오행 분포</h2>
+        <p className="text-sm text-cp-muted">(추가 계산 예정)</p>
       </section>
     )
   }
@@ -33,9 +33,9 @@ export function ElementsBar({ report }: { report: SajuReportJson | null }) {
   const labelHangul = elementToHangul(dominantKey)
 
   return (
-    <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h2 className="text-lg font-semibold mb-1 text-gray-800">오행 분포</h2>
-      <p className="text-xs text-gray-500 mb-4">
+    <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+      <h2 className="text-lg font-semibold mb-1 text-cp-text">오행 분포</h2>
+      <p className="text-xs text-cp-muted mb-4">
         사주에 담긴 다섯 기운의 비율입니다. 기질과 성향에 영향을 줍니다.
       </p>
       <div className="space-y-3">
@@ -43,11 +43,11 @@ export function ElementsBar({ report }: { report: SajuReportJson | null }) {
           const v = values[i]!
           const pct = max > 0 ? Math.round((v / max) * 100) : 0
           const share = total > 0 ? Math.round((v / total) * 100) : 0
-          const bg = ELEMENT_BG[key] ?? 'bg-gray-100 border-2 border-gray-400 text-gray-800'
+          const bg = ELEMENT_BG[key] ?? 'bg-gray-100 border-2 border-gray-400 text-cp-text'
           const isDominant = i === dominantIdx
           return (
             <div key={key} className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-700 w-8 shrink-0">
+              <span className="text-sm font-medium text-cp-text w-8 shrink-0">
                 {elementToHangul(key)}{isDominant ? ' ★' : ''}
               </span>
               <div className="flex-1 h-6 bg-gray-100 rounded-lg overflow-hidden">
@@ -63,7 +63,7 @@ export function ElementsBar({ report }: { report: SajuReportJson | null }) {
                   }}
                 />
               </div>
-              <span className="text-xs text-gray-500 w-10 text-right">{v} · {share}%</span>
+              <span className="text-xs text-cp-muted w-10 text-right">{v} · {share}%</span>
             </div>
           )
         })}
@@ -77,10 +77,10 @@ export function ElementsBar({ report }: { report: SajuReportJson | null }) {
             dominantKey === '金' ? 'border-l-gray-500' : 'border-l-blue-500'
           }`}
         >
-          <p className="text-sm font-medium text-gray-800 mb-0.5">
+          <p className="text-sm font-medium text-cp-text mb-0.5">
             가장 많은 오행: <span className="font-semibold">{labelHangul}</span> ({insight.short})
           </p>
-          <p className="text-xs text-gray-600 leading-relaxed">{insight.tip}</p>
+          <p className="text-xs text-cp-muted leading-relaxed">{insight.tip}</p>
         </div>
       )}
     </section>

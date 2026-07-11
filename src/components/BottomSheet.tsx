@@ -58,10 +58,10 @@ export function BottomSheet({ onClose, children, header, footer }: BottomSheetPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center" onClick={dismiss}>
-      <div className={`absolute inset-0 bg-black/30 transition-opacity duration-250 ${closing ? 'opacity-0' : 'opacity-100'}`} />
+      <div className={`absolute inset-0 bg-cp-overlay transition-opacity duration-250 ${closing ? 'opacity-0' : 'opacity-100'}`} />
       <div
         ref={sheetRef}
-        className={`relative w-full max-w-[446px] bg-white rounded-t-2xl flex flex-col max-h-[85vh] transition-transform ${
+        className={`relative w-full max-w-[446px] bg-cp-surface rounded-t-2xl flex flex-col max-h-[85vh] transition-transform border-t border-cp-border ${
           closing ? 'duration-250 ease-in' : offsetY > 0 ? 'duration-0' : 'duration-300 ease-out'
         }`}
         style={{ transform: closing ? 'translateY(100%)' : `translateY(${offsetY}px)` }}
@@ -71,7 +71,7 @@ export function BottomSheet({ onClose, children, header, footer }: BottomSheetPr
         onTouchEnd={handleTouchEnd}
       >
         <div className="shrink-0 pt-3 pb-2 px-5">
-          <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto cursor-grab" />
+          <div className="w-10 h-1 bg-cp-border rounded-full mx-auto cursor-grab" />
         </div>
         {hasSplit ? (
           <>
@@ -80,7 +80,7 @@ export function BottomSheet({ onClose, children, header, footer }: BottomSheetPr
               {children}
             </div>
             {footer && (
-              <div className="shrink-0 px-5 pt-3 pb-6 border-t border-gray-100 bg-white">
+              <div className="shrink-0 px-5 pt-3 pb-6 border-t border-cp-border bg-cp-surface">
                 {footer}
               </div>
             )}

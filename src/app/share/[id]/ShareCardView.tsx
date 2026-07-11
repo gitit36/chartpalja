@@ -44,25 +44,25 @@ export function ShareCardView({
 
   return (
     <MobileContainer>
-      <div className="min-h-screen flex flex-col bg-white">
+      <div className="min-h-screen flex flex-col bg-cp-bg">
         {/* 헤더 + 탭 (app/saju 와 동일한 형태 — 이름·성별·생년만) */}
-        <div className="sticky top-0 z-30 bg-white border-b border-gray-100">
+        <div className="sticky top-0 z-30 bg-cp-bg border-b border-cp-border">
           <div className="px-4 pt-3 pb-2">
             <div className="flex items-center justify-center gap-1.5">
-              <span className="font-bold text-gray-900">{entry.name}</span>
-              <span className="text-xs text-gray-400">&middot;</span>
-              <span className="text-sm text-gray-500">{entry.gender === 'female' ? '여성' : '남성'}</span>
-              <span className="text-xs text-gray-400">&middot;</span>
-              <span className="text-sm text-gray-500">{entry.birthYear}년생</span>
+              <span className="font-bold text-cp-text">{entry.name}</span>
+              <span className="text-xs text-cp-muted">&middot;</span>
+              <span className="text-sm text-cp-muted">{entry.gender === 'female' ? '여성' : '남성'}</span>
+              <span className="text-xs text-cp-muted">&middot;</span>
+              <span className="text-sm text-cp-muted">{entry.birthYear}년생</span>
             </div>
           </div>
-          <div className="flex border-t border-gray-50">
+          <div className="flex border-t border-cp-border">
             {([['chart', '총운 차트'], ['info', '사주 정보']] as [TabKey, string][]).map(([k, label]) => (
               <button
                 key={k}
                 onClick={() => setTab(k)}
                 className={`flex-1 py-3 text-sm font-semibold text-center transition-colors ${
-                  tab === k ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-400 hover:text-gray-600'
+                  tab === k ? 'text-cp-line border-b-2 border-cp-line' : 'text-cp-muted hover:text-cp-muted'
                 }`}
               >
                 {label}
@@ -89,9 +89,9 @@ export function ShareCardView({
 
         {/* 공유 출처 안내 (슬림) */}
         <div className="px-4 pt-2">
-          <div className="rounded-xl bg-purple-50 border border-purple-100 px-3.5 py-2 flex items-center gap-2.5">
+          <div className="rounded-xl bg-cp-surface border border-cp-border px-3.5 py-2 flex items-center gap-2.5">
             <span className="text-base leading-none" aria-hidden>🔗</span>
-            <p className="text-[12px] text-purple-700/90 leading-snug flex-1">
+            <p className="text-[12px] text-cp-line/90 leading-snug flex-1">
               {isOwner ? '내가 공유 중인 인생 차트예요' : `${entry.name}님이 공유한 인생 차트예요`}
             </p>
           </div>
@@ -120,11 +120,11 @@ export function ShareCardView({
 
         {/* 하단 고정 self-CTA */}
         <div className="fixed bottom-0 left-0 right-0 z-20">
-          <div className="mx-auto max-w-[446px] px-4 py-3 bg-white/95 backdrop-blur-sm border-t border-gray-100">
+          <div className="mx-auto max-w-[446px] px-4 py-3 bg-cp-surface/95 backdrop-blur-sm border-t border-cp-border">
             {isOwner ? (
               <button
                 onClick={() => router.push(`/app/saju/${entry.id}`)}
-                className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
+                className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
               >
                 내 사주 페이지에서 관리하기 →
               </button>
@@ -132,11 +132,11 @@ export function ShareCardView({
               <>
                 <button
                   onClick={goMakeMine}
-                  className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
+                  className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
                 >
                   나도 내 인생 차트 만들기 →
                 </button>
-                <p className="text-center text-[11px] text-gray-400 mt-2">내 사주팔자는 몇 점일까? · 30초면 끝나요</p>
+                <p className="text-center text-[11px] text-cp-muted mt-2">내 사주팔자는 몇 점일까? · 30초면 끝나요</p>
               </>
             )}
           </div>
@@ -150,7 +150,7 @@ export function ShareCardView({
           footer={(
             <button
               onClick={() => setCtaSheet(false)}
-              className="w-full py-3 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors"
+              className="w-full py-3 rounded-xl text-sm font-medium text-cp-muted hover:text-cp-muted transition-colors"
             >
               그냥 둘러볼래요
             </button>
@@ -158,15 +158,15 @@ export function ShareCardView({
         >
           <div className="text-center px-2 pb-2">
             <div className="text-4xl mb-3">✨</div>
-            <h3 className="font-bold text-gray-900 text-base mb-1.5">내 차트를 만들면 열려요</h3>
-            <p className="text-sm text-gray-500 leading-relaxed mb-5">
+            <h3 className="font-bold text-cp-text text-base mb-1.5">내 차트를 만들면 열려요</h3>
+            <p className="text-sm text-cp-muted leading-relaxed mb-5">
               연도·구간별 상세 해설은 내 사주로 차트를 만든 뒤
               <br />
               이용권으로 볼 수 있어요.
             </p>
             <button
               onClick={goMakeMine}
-              className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
+              className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
             >
               내 차트 만들기 →
             </button>

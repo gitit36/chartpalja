@@ -47,16 +47,16 @@ export function ShareCompatView({
 
   return (
     <MobileContainer>
-      <div className="min-h-screen flex flex-col bg-white">
-        <div className="sticky top-0 z-30 bg-white border-b border-gray-100">
+      <div className="min-h-screen flex flex-col bg-cp-bg">
+        <div className="sticky top-0 z-30 bg-cp-bg border-b border-cp-border">
           <div className="px-4 pt-3 pb-2 text-center">
             <p className="text-xs text-rose-500 font-semibold mb-1">{relLabel} 궁합</p>
             <div className="flex items-center justify-center gap-1.5 flex-wrap">
-              <span className="font-bold text-gray-900">{entry.name}</span>
-              <span className="text-xs text-gray-400">·</span>
-              <span className="font-bold text-gray-900">{partner.name}</span>
+              <span className="font-bold text-cp-text">{entry.name}</span>
+              <span className="text-xs text-cp-muted">·</span>
+              <span className="font-bold text-cp-text">{partner.name}</span>
             </div>
-            <p className="text-[11px] text-purple-600 mt-1">{shortType}</p>
+            <p className="text-[11px] text-cp-line mt-1">{shortType}</p>
           </div>
           {activeOverlay ? (
             <CompatSummaryBar
@@ -102,7 +102,7 @@ export function ShareCompatView({
           <button
             type="button"
             onClick={() => router.push('/app/input')}
-            className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 shadow-lg"
+            className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-lg"
           >
             나도 궁합 보기 →
           </button>

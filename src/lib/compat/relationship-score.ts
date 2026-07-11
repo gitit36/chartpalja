@@ -3,6 +3,7 @@ import type { ChartPayload, YearlyDatum } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import {
   alignedScores,
+  canonicalizePair,
   complementScore,
   dayPillarMetrics,
   getOhangCounts,
@@ -237,18 +238,22 @@ export function buildRelationshipSeries(
   reportB: SajuReportJson,
   birthYearB: number,
 ): RelationshipYearPoint[] {
-  const chartA = buildLifeChartData(reportA.chartData as ChartPayload | undefined, reportA, birthYearA)
-  const chartB = buildLifeChartData(reportB.chartData as ChartPayload | undefined, reportB, birthYearB)
+  // 궁합 점수는 쌍(pair) 고유값이어야 하므로 입력 순서를 정규화한다.
+  // (어느 쪽 사주 페이지에서 봐도 동일한 점수가 나오도록. scoreA/scoreB 역할은
+  //  표시에 쓰이지 않고 내부 계산용이라 순서를 바꿔도 안전하다.)
+  const { rA, byA, rB, byB } = canonicalizePair(reportA, birthYearA, reportB, birthYearB)
+  const chartA = buildLifeChartData(rA.chartData as ChartPayload | undefined, rA, byA)
+  const chartB = buildLifeChartData(rB.chartData as ChartPayload | undefined, rB, byB)
   if (!chartA?.data?.length || !chartB?.data?.length) return []
 
-  const payloadA = reportA.chartData as ChartPayload | undefined
+  const payloadA = rA.chartData as ChartPayload | undefined
   const timelineA = payloadA?.연도별_타임라인 ?? []
   const timelineMap = new Map(timelineA.map(yd => [yd.year, yd]))
 
   const mapB = new Map(chartB.data.map(d => [d.year, d]))
-  const ohangA = getOhangCounts(reportA)
-  const ohangB = getOhangCounts(reportB)
-  const { harmony: natalHarmony, clash: natalClash } = dayPillarMetrics(reportA, reportB)
+  const ohangA = getOhangCounts(rA)
+  const ohangB = getOhangCounts(rB)
+  const { harmony: natalHarmony, clash: natalClash } = dayPillarMetrics(rA, rB)
 
   const aligned: Array<{
     year: number

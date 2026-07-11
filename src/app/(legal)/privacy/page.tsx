@@ -8,13 +8,13 @@ export const metadata: Metadata = {
 }
 
 function H2({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-base font-bold text-gray-900 mt-7 mb-2">{children}</h2>
+  return <h2 className="text-base font-bold text-cp-text mt-7 mb-2">{children}</h2>
 }
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm text-gray-700 leading-relaxed">{children}</p>
+  return <p className="text-sm text-cp-text leading-relaxed">{children}</p>
 }
 function Ul({ children }: { children: React.ReactNode }) {
-  return <ul className="list-disc pl-5 space-y-1.5 text-sm text-gray-700 leading-relaxed">{children}</ul>
+  return <ul className="list-disc pl-5 space-y-1.5 text-sm text-cp-text leading-relaxed">{children}</ul>
 }
 
 export default function PrivacyPage() {
@@ -56,17 +56,17 @@ export default function PrivacyPage() {
       <div className="overflow-x-auto">
         <table className="w-full text-xs border-collapse">
           <thead>
-            <tr className="bg-gray-50 border-y border-gray-200">
+            <tr className="bg-gray-50 border-y border-cp-border">
               <th className="px-2 py-2 text-left font-semibold">수탁업체</th>
               <th className="px-2 py-2 text-left font-semibold">위탁 업무</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-cp-border">
               <td className="px-2 py-2">PortOne (NHN KCP 등)</td>
               <td className="px-2 py-2">결제 처리</td>
             </tr>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-cp-border">
               <td className="px-2 py-2">Google LLC</td>
               <td className="px-2 py-2">AI 운세 해설 생성 (Gemini API)</td>
             </tr>
@@ -83,14 +83,14 @@ export default function PrivacyPage() {
       <div className="overflow-x-auto mt-2">
         <table className="w-full text-xs border-collapse">
           <thead>
-            <tr className="bg-gray-50 border-y border-gray-200">
+            <tr className="bg-gray-50 border-y border-cp-border">
               <th className="px-2 py-2 text-left font-semibold">이전받는 자</th>
               <th className="px-2 py-2 text-left font-semibold">국가</th>
               <th className="px-2 py-2 text-left font-semibold">이전 항목</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-cp-border">
               <td className="px-2 py-2">Google LLC</td>
               <td className="px-2 py-2">미국</td>
               <td className="px-2 py-2">사주 입력 정보(이름·생년월일·시간·성별)</td>

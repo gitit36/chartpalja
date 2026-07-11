@@ -13,6 +13,8 @@ import { BottomSheet } from '@/components/BottomSheet'
 import type { ChartPayload, ScoreBreakdown } from '@/types/chart'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import type { ChartDatum, SeasonBand } from '@/lib/saju/life-chart-data'
+import { buildWeekChartData, buildWeekChartFromHydrated, weekTickLabel, weekFullLabel, evenYearTicks, WEEK_TICKS, WEEK_X_DOMAIN, WEEK_TODAY_X } from '@/lib/saju/week-chart-data'
+import { kstCenteredWeekDates, kstRecentDates } from '@/lib/saju/daily-util'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
 import { getGuestId } from '@/lib/auth/guest'
 import { LockedPreview } from '@/components/LockedPreview'
@@ -75,7 +77,7 @@ const DOMAIN_OVERLAYS = [
   { key: 'marriage', label: '결혼운', color: '#9c27b0', field: 'domainMarriage' },
 ] as const
 
-type PeriodKey = '1y' | '10y' | 'all'
+type PeriodKey = 'week' | 'year' | 'all'
 type MainOverlayKey = (typeof MAIN_OVERLAYS)[number]['key']
 type AuxKey = (typeof AUX_PANELS)[number]['key']
 type DomainOverlayKey = (typeof DOMAIN_OVERLAYS)[number]['key']
@@ -162,9 +164,36 @@ function CandleShape(props: Record<string, unknown>) {
   </g>)
 }
 
+type ExtremePoint = { year: number; score: number }
+
+/** 상단 라벨들이 겹치지 않도록 x 근접 시 y를 엇갈리게 배치한다. */
+function staggerLabelYs(
+  items: Array<{ key: string; x: number; preferTop: boolean }>,
+  baseTop: number,
+  baseBottom: number,
+): Map<string, number> {
+  const sorted = [...items].sort((a, b) => a.x - b.x)
+  const ys = new Map<string, number>()
+  const MIN_GAP = 28
+  for (let i = 0; i < sorted.length; i++) {
+    const cur = sorted[i]!
+    let y = cur.preferTop ? baseTop : baseBottom
+    const prev = sorted[i - 1]
+    if (prev && Math.abs(cur.x - prev.x) < MIN_GAP) {
+      const prevY = ys.get(prev.key) ?? baseTop
+      y = prevY === baseTop ? baseBottom : baseTop
+    }
+    ys.set(cur.key, y)
+  }
+  return ys
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ThisYearMarker(props: any) {
-  const { formattedGraphicalItems, xAxisMap, yAxisMap, period, markerYear, selection, rangeMode, isMonthly } = props
+  const {
+    formattedGraphicalItems, xAxisMap, yAxisMap, period, markerYear, selection, rangeMode, isMonthly, isWeekly, weekLen, weekLabelAt,
+    peak, low, showExtremes, extremesOpaque,
+  } = props
   if (!formattedGraphicalItems?.length || !xAxisMap || !yAxisMap) return null
   const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
   const yAxis = Object.values(yAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
@@ -172,67 +201,188 @@ function ThisYearMarker(props: any) {
   const elements: React.ReactElement[] = []
   const yTop = yAxis.scale(yAxis.scale.domain?.()[1] ?? 110) ?? 0
   const yBottom = yAxis.scale(yAxis.scale.domain?.()[0] ?? 0) ?? 280
-  const labelY = Math.max(yTop - 4, 6)
-  if (isMonthly) {
+  const labelYTop = Math.max(yTop - 4, 6)
+  const labelYAlt = labelYTop + 12
+
+  type LabelSpec = { key: string; x: number; text: string; fill: string; bold?: boolean; preferTop: boolean }
+  const labels: LabelSpec[] = []
+
+  if (isWeekly) {
+    const todayX = weekLen || WEEK_TODAY_X
+    const cx = xAxis.scale(todayX)
+    if (typeof cx === 'number' && !isNaN(cx)) {
+      elements.push(
+        <line key="tw-line" x1={cx} y1={yTop} x2={cx} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
+      )
+      labels.push({ key: 'tw', x: cx, text: '오늘', fill: '#F04452', bold: true, preferTop: true })
+    }
+  } else if (isMonthly) {
     const cx = xAxis.scale(THIS_MONTH)
     if (typeof cx === 'number' && !isNaN(cx)) {
       elements.push(
-        <line key="tm-line" x1={cx} y1={yTop} x2={cx} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
-        <text key="tm-text" x={cx} y={labelY} textAnchor="middle" fontSize={9} fontWeight="bold" fill="#7c3aed">이번달</text>
+        <line key="tm-line" x1={cx} y1={yTop} x2={cx} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
       )
+      labels.push({ key: 'tm', x: cx, text: '이번달', fill: '#F04452', bold: true, preferTop: true })
     }
-  } else if (period === 'all') {
+  } else if (period === 'all' || period === 'year') {
     const cx = xAxis.scale(THIS_YEAR)
     if (typeof cx === 'number' && !isNaN(cx)) {
       elements.push(
-        <line key="ty-line" x1={cx} y1={yTop} x2={cx} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
-        <text key="ty-text" x={cx} y={labelY} textAnchor="middle" fontSize={9} fontWeight="bold" fill="#7c3aed">올해</text>
+        <line key="ty-line" x1={cx} y1={yTop} x2={cx} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
       )
+      labels.push({ key: 'ty', x: cx, text: '올해', fill: '#F04452', bold: true, preferTop: true })
     }
   }
+
   if (rangeMode && selection) {
     const { startYear, endYear } = selection as { startYear: number; endYear: number }
     const sx = xAxis.scale(startYear)
     if (typeof sx === 'number' && !isNaN(sx)) {
       elements.push(
-        <line key="sel-s-line" x1={sx} y1={yTop} x2={sx} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
-        <text key="sel-s-text" x={sx} y={labelY} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#7c3aed">{isMonthly ? `${startYear}월` : startYear}</text>
+        <line key="sel-s-line" x1={sx} y1={yTop} x2={sx} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
       )
+      labels.push({
+        key: 'sel-s',
+        x: sx,
+        text: isWeekly
+          ? (typeof weekLabelAt === 'function' ? weekLabelAt(startYear) : String(startYear))
+          : isMonthly ? `${startYear}월` : String(startYear),
+        fill: '#F04452',
+        bold: true,
+        preferTop: true,
+      })
     }
     if (endYear !== startYear) {
       const ex = xAxis.scale(endYear)
       if (typeof ex === 'number' && !isNaN(ex)) {
         elements.push(
-          <line key="sel-e-line" x1={ex} y1={yTop} x2={ex} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
-          <text key="sel-e-text" x={ex} y={labelY} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#7c3aed">{isMonthly ? `${endYear}월` : endYear}</text>
+          <line key="sel-e-line" x1={ex} y1={yTop} x2={ex} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
         )
+        labels.push({
+          key: 'sel-e',
+          x: ex,
+          text: isWeekly
+            ? (typeof weekLabelAt === 'function' ? weekLabelAt(endYear) : String(endYear))
+            : isMonthly ? `${endYear}월` : String(endYear),
+          fill: '#F04452',
+          bold: true,
+          // 시작 연도와 같은 높이로 맞춤
+          preferTop: true,
+        })
       }
     }
   } else if (markerYear != null) {
-    const isCurrentMarker = isMonthly ? markerYear === THIS_MONTH : (period === 'all' && markerYear === THIS_YEAR)
+    const isCurrentMarker = isWeekly
+      ? markerYear === (weekLen || WEEK_TODAY_X)
+      : isMonthly
+        ? markerYear === THIS_MONTH
+        : ((period === 'all' || period === 'year') && markerYear === THIS_YEAR)
     if (!isCurrentMarker) {
       const hx = xAxis.scale(markerYear)
       if (typeof hx === 'number' && !isNaN(hx)) {
         elements.push(
-          <line key="marker-line" x1={hx} y1={yTop} x2={hx} y2={yBottom} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
-          <text key="marker-text" x={hx} y={labelY} textAnchor="middle" fontSize={8} fill="#6b7280">{isMonthly ? `${markerYear}월` : markerYear}</text>
+          <line key="marker-line" x1={hx} y1={yTop} x2={hx} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>,
+        )
+        labels.push({
+          key: 'marker',
+          x: hx,
+          text: isWeekly
+            ? (typeof weekLabelAt === 'function' ? weekLabelAt(markerYear) : String(markerYear))
+            : isMonthly ? `${markerYear}월` : String(markerYear),
+          fill: '#6b7280',
+          preferTop: true,
+        })
+      }
+    }
+  }
+
+  const labelYs = staggerLabelYs(
+    labels.map(l => ({ key: l.key, x: l.x, preferTop: l.preferTop })),
+    labelYTop,
+    labelYAlt,
+  )
+  for (const l of labels) {
+    elements.push(
+      <text
+        key={`${l.key}-text`}
+        x={l.x}
+        y={labelYs.get(l.key) ?? labelYTop}
+        textAnchor="middle"
+        fontSize={l.key === 'ty' || l.key === 'tm' ? 9 : 8}
+        fontWeight={l.bold ? 'bold' : 'normal'}
+        fill={l.fill}
+      >
+        {l.text}
+      </text>,
+    )
+  }
+
+  // 최고/최저 — 라인 종료 후 표시. opacity는 부모 state로 1회만 올려 hover 깜빡임 방지
+  if (showExtremes && !rangeMode) {
+    const peakPt = peak as ExtremePoint | null | undefined
+    const lowPt = low as ExtremePoint | null | undefined
+    const fade = {
+      opacity: extremesOpaque ? 1 : 0,
+      transition: 'opacity 0.45s ease-out',
+      pointerEvents: 'none' as const,
+    }
+    if (peakPt) {
+      const px = xAxis.scale(peakPt.year)
+      const py = yAxis.scale(peakPt.score)
+      if (typeof px === 'number' && !isNaN(px) && typeof py === 'number' && !isNaN(py)) {
+        elements.push(
+          <g key="peak-g" style={fade}>
+            <circle cx={px} cy={py} r={3.5} fill="#F04452" stroke="#1F1E25" strokeWidth={1.5} />
+            <text
+              x={px}
+              y={py - 8}
+              textAnchor="middle"
+              fontSize={8}
+              fontWeight="bold"
+              fill="#F04452"
+            >
+              {`최고 ${Math.round(peakPt.score)}`}
+            </text>
+          </g>,
+        )
+      }
+    }
+    if (lowPt && (!peakPt || lowPt.year !== peakPt.year)) {
+      const lx = xAxis.scale(lowPt.year)
+      const ly = yAxis.scale(lowPt.score)
+      if (typeof lx === 'number' && !isNaN(lx) && typeof ly === 'number' && !isNaN(ly)) {
+        elements.push(
+          <g key="low-g" style={{ ...fade, transitionDelay: '120ms' }}>
+            <circle cx={lx} cy={ly} r={3.5} fill="#3182F6" stroke="#1F1E25" strokeWidth={1.5} />
+            <text
+              x={lx}
+              y={ly + 14}
+              textAnchor="middle"
+              fontSize={8}
+              fontWeight="bold"
+              fill="#3182F6"
+            >
+              {`최저 ${Math.round(lowPt.score)}`}
+            </text>
+          </g>,
         )
       }
     }
   }
+
   return elements.length ? <g>{elements}</g> : null
 }
 
 const YEAR_LEVEL_COLORS: Record<YearCompatLevel, string> = {
-  good: '#2dd4bf',
-  normal: '#e2e8f0',
-  caution: '#f59e0b',
+  good: '#14B8A6',
+  normal: '#6B6B75',
+  caution: '#F5A524',
 }
 
 const YEAR_LEVEL_TEXT: Record<YearCompatLevel, string> = {
-  good: '#0d9488',
-  normal: '#6b7280',
-  caution: '#d97706',
+  good: '#5EEAD4',
+  normal: '#8B8B93',
+  caution: '#FBBF24',
 }
 
 /**
@@ -306,8 +456,10 @@ function CompatYearBar(props: any) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels }: any) {
   if (!active || !payload?.length) return null
-  const d = payload[0]?.payload as (MergedDatum) | undefined
+  const d = payload[0]?.payload as (MergedDatum & { dayLabel?: string }) | undefined
   if (!d) return null
+  const timeLabel = d.dayLabel ? d.dayLabel : monthly ? `${d.year}월` : `${d.year}년`
+  const scoreName = d.dayLabel ? '일운' : monthly ? '월운' : '세운'
   const ov = overlays as Record<MainOverlayKey, boolean> | undefined
   const dom = domainOverlays as Record<DomainOverlayKey, boolean> | undefined
   const activeDomains = dom
@@ -317,24 +469,24 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
     : []
 
   if (overlayActive && d.scoreOv != null) {
-    const level = (!monthly && yearLevels?.get?.(d.year)) as YearCompatLevel | undefined
+    const level = yearLevels?.get?.(d.year) as YearCompatLevel | undefined
     return (
-      <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-lg shadow-sm text-[10px] leading-tight overflow-hidden min-w-[150px]">
-        <div className="font-bold text-gray-800 px-2.5 py-1 flex items-center gap-1.5">
-          <span>{monthly ? `${d.year}월` : `${d.year}년`}</span>
+      <div className="bg-cp-surface border border-cp-border rounded-lg text-[10px] leading-tight overflow-hidden min-w-[150px]">
+        <div className="font-bold text-cp-text px-2.5 py-1 flex items-center gap-1.5">
+          <span>{timeLabel}</span>
           {level && (
             <>
-              <span className="text-gray-300">·</span>
+              <span className="text-cp-border">·</span>
               <span style={{ color: YEAR_LEVEL_TEXT[level] }}>관계 {YEAR_LEVEL_LABELS[level]}</span>
             </>
           )}
         </div>
-        <div className="px-2.5 py-1 border-t border-gray-100 flex items-center justify-between gap-3">
-          <span className="font-semibold text-emerald-700">{currentName || '나'} {Math.round(d.score)}</span>
-          <span className="font-semibold text-rose-700">{overlayName || '상대'} {Math.round(d.scoreOv)}</span>
+        <div className="px-2.5 py-1 border-t border-cp-border flex items-center justify-between gap-3">
+          <span className="font-semibold text-cp-line">{currentName || '나'} {Math.round(d.score)}</span>
+          <span className="font-semibold text-cp-down">{overlayName || '상대'} {Math.round(d.scoreOv)}</span>
         </div>
         {ov?.daewoon && (d.trend != null || d.trendOv != null) && (
-          <div className="px-2.5 py-1 border-t border-gray-100 flex items-center justify-between gap-3 text-[9px] text-gray-400">
+          <div className="px-2.5 py-1 border-t border-cp-border flex items-center justify-between gap-3 text-[9px] text-cp-muted">
             <span>{d.trend != null ? `대운 ${Math.round(d.trend)}` : ''}</span>
             <span>{d.trendOv != null ? `대운 ${Math.round(d.trendOv)}` : ''}</span>
           </div>
@@ -344,20 +496,20 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
   }
 
   return (
-    <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-lg px-2.5 py-1.5 shadow-sm text-[10px] leading-tight">
-      <div className="font-bold text-gray-800 mb-0.5">{monthly ? `${d.year}월` : `${d.year}년`}</div>
-      <div className="text-gray-600">{monthly ? '월운' : '세운'}: <span className="font-semibold text-green-600">{Math.round(d.score)}</span></div>
+    <div className="bg-cp-surface/95 backdrop-blur border border-cp-border rounded-lg px-2.5 py-1.5 shadow-sm text-[10px] leading-tight">
+      <div className="font-bold text-cp-text mb-0.5">{timeLabel}</div>
+      <div className="text-cp-muted">{scoreName}: <span className="font-semibold text-green-600">{Math.round(d.score)}</span></div>
       {ov?.daewoon && d.trend != null && (
-        <div className="text-gray-600">대운: <span className="font-semibold text-yellow-600">{Math.round(d.trend)}</span>{d.daewoonPillar && <span className="text-gray-400 ml-1">{fmtPillar(d.daewoonPillar)}</span>}</div>
+        <div className="text-cp-muted">대운: <span className="font-semibold text-yellow-600">{Math.round(d.trend)}</span>{d.daewoonPillar && <span className="text-cp-muted ml-1">{fmtPillar(d.daewoonPillar)}</span>}</div>
       )}
-      {ov?.candle && d.high != null && <div className="text-gray-500">고/저: {d.high?.toFixed(0)}~{d.low?.toFixed(0)}</div>}
-      {ov?.season && d.seasonTag && <div className="text-gray-500">시즌: <span className="font-semibold" style={{color: SEASON_TAG_COLORS[d.seasonTag] || '#666'}}>{d.seasonEmoji} {d.seasonTag}</span></div>}
+      {ov?.candle && d.high != null && <div className="text-cp-muted">고/저: {d.high?.toFixed(0)}~{d.low?.toFixed(0)}</div>}
+      {ov?.season && d.seasonTag && <div className="text-cp-muted">시즌: <span className="font-semibold" style={{color: SEASON_TAG_COLORS[d.seasonTag] || '#666'}}>{d.seasonEmoji} {d.seasonTag}</span></div>}
       {activeDomains.length > 0 && (
-        <div className="mt-0.5 pt-0.5 border-t border-gray-100 grid grid-cols-2 gap-x-2">
+        <div className="mt-0.5 pt-0.5 border-t border-cp-border grid grid-cols-2 gap-x-2">
           {activeDomains.map(x => (
             <div key={x.label} className="flex items-center gap-1">
               <span className="w-2 h-0.5 rounded inline-block" style={{ backgroundColor: x.color }} />
-              <span className="text-gray-500">{x.label}</span>
+              <span className="text-cp-muted">{x.label}</span>
               <span className="font-semibold" style={{ color: x.color }}>{Math.round(x.val as number)}</span>
             </div>
           ))}
@@ -367,16 +519,16 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
         const { up, down } = breakdownFactors(d.breakdown)
         if (!up.length && !down.length) return null
         return (
-          <div className="mt-0.5 pt-0.5 border-t border-gray-100">
-            {up.length > 0 && <div className="text-emerald-600">▲ {up.join(', ')}</div>}
-            {down.length > 0 && <div className="text-red-500">▼ {down.join(', ')}</div>}
+          <div className="mt-0.5 pt-0.5 border-t border-cp-border">
+            {up.length > 0 && <div className="text-cp-up">▲ {up.join(', ')}</div>}
+            {down.length > 0 && <div className="text-cp-up">▼ {down.join(', ')}</div>}
           </div>
         )
       })()}
       {(() => {
         const tags = getShinsalTags(d.shinsalTags, d.shinsalContextAdj)
         if (!tags.length) return null
-        return <div className="mt-0.5 pt-0.5 border-t border-gray-100 text-gray-400">🏷️ {tags.join(' · ')}</div>
+        return <div className="mt-0.5 pt-0.5 border-t border-cp-border text-cp-muted">🏷️ {tags.join(' · ')}</div>
       })()}
     </div>
   )
@@ -389,10 +541,13 @@ function SubTooltip({ active, payload, decimals = 2, monthly = false }: any) {
   if (!entry) return null
   const dec = typeof decimals === 'number' ? decimals : 2
   const val = typeof entry.value === 'number' ? (dec === 0 ? Math.round(entry.value) : entry.value.toFixed(dec)) : entry.value
+  const label = entry.payload?.dayLabel
+    ? String(entry.payload.dayLabel).replace('요일', '')
+    : `${entry.payload?.year ?? ''}${monthly ? '월' : ''}`
   return (
-    <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-lg px-2 py-1 shadow-sm text-[10px]">
-      <span className="text-gray-600">{entry.payload?.year}{monthly ? '월' : ''}: </span>
-      <span className="font-semibold" style={{color: entry.color || '#333'}}>{val}</span>
+    <div className="bg-cp-surface/95 backdrop-blur border border-cp-border rounded-lg px-2 py-1 shadow-sm text-[10px]">
+      <span className="text-cp-muted">{label}: </span>
+      <span className="font-semibold text-cp-text tabular-nums">{val}</span>
     </div>
   )
 }
@@ -451,6 +606,13 @@ interface ChartTabProps {
   onFortuneJsonUpdate?: (fortuneJson: unknown) => void
   /** URL ?overlay= 등 초기 비교 대상 */
   initialOverlayId?: string | null
+  /** 리스트 '오늘' 카드 진입 — 올해 월운 + 이번 달 포커스 */
+  initialFocus?: 'today' | null
+  /**
+   * GET /api/saju/[id] 가 hydrate 한 이번 주(월~일) 일운.
+   * 있으면 /api/saju/daily 재호출 없이 바로 그린다.
+   */
+  weekSeries?: { dates: string[]; scores: (number | null)[] } | null
   /** 궁합 공유 페이지 — 상대 리포트 인라인 (공개 API 없이) */
   sharePartner?: {
     id: string
@@ -465,15 +627,20 @@ export function ChartTab({
   report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
   isLocked = false, onLockedClick, shareMode = false, onShareCta,
   onOverlayChange, onCompatCta, expandCompatCardKey, onFortuneJsonUpdate, compatGeneration,
-  entryName, myGender, initialOverlayId, sharePartner,
+  entryName, myGender, initialOverlayId, initialFocus, sharePartner, weekSeries,
 }: ChartTabProps) {
-  const [period, setPeriod] = useState<PeriodKey>('all')
+  const [period, setPeriod] = useState<PeriodKey>(initialFocus === 'today' ? 'week' : 'all')
   const [panelOpen, setPanelOpen] = useState(false)
   const [mainOverlays, setMainOverlays] = useState<Record<MainOverlayKey, boolean>>({ daewoon: false, candle: false, season: false })
   const [domainOverlays, setDomainOverlays] = useState<Record<DomainOverlayKey, boolean>>({ job: false, wealth: false, love: false, health: false, marriage: false })
+  /** 기본 세운/월운(초록) 선 — 다른 선이 켜져 있을 때만 끌 수 있음 */
+  const [baseLineVisible, setBaseLineVisible] = useState(true)
   const [auxPanels, setAuxPanels] = useState<Record<AuxKey, boolean>>({ yongshin: false, energy: false, noble: false, ohang: false, tengo: false, event: false })
   const [hoverYear, setHoverYear] = useState<number | null>(null)
-  const [clickedYear, setClickedYear] = useState<number | null>(null)
+  const [clickedYear, setClickedYear] = useState<number | null>(initialFocus === 'today' ? WEEK_TODAY_X : null)
+  const [weekData, setWeekData] = useState<ChartDatum[]>(() => buildWeekChartFromHydrated(weekSeries))
+  const [weekDataOv, setWeekDataOv] = useState<ChartDatum[]>([])
+  const [weekLoading, setWeekLoading] = useState(false)
   const [selection, setSelection] = useState<{ startYear: number; endYear: number } | null>(null)
   const [yearSummary, setYearSummary] = useState<{ startYear: number; endYear: number; text: string } | null>(null)
   const [yearSummaryLoading, setYearSummaryLoading] = useState(false)
@@ -484,8 +651,12 @@ export function ChartTab({
   const [chartHint, setChartHint] = useState(false)
   const [summaryCache] = useState<Map<string, { text: string }>>(() => new Map())
   const chartRef = React.useRef<HTMLDivElement>(null)
+  const auxSectionRef = React.useRef<HTMLDivElement>(null)
+  const pendingAuxScroll = React.useRef(false)
   const lastHapticYear = React.useRef<number | null>(null)
   const hasAnimated = React.useRef(false)
+  const [lineAnimDone, setLineAnimDone] = useState(false)
+  const [extremesOpaque, setExtremesOpaque] = useState(false)
   const isTouchRef = React.useRef(false)
   useEffect(() => {
     const onTouch = () => { isTouchRef.current = true }
@@ -493,10 +664,26 @@ export function ChartTab({
     return () => window.removeEventListener('touchstart', onTouch)
   }, [])
 
+  // 라인 드로잉(2s) 끝난 뒤 최고/최저 표시 — 첫 진입에서만 대기
   useEffect(() => {
-    const t = setTimeout(() => { hasAnimated.current = true }, 2500)
+    if (hasAnimated.current) {
+      setLineAnimDone(true)
+      setExtremesOpaque(true)
+      return
+    }
+    const t = setTimeout(() => {
+      hasAnimated.current = true
+      setLineAnimDone(true)
+    }, 2100)
     return () => clearTimeout(t)
   }, [])
+
+  // opacity 전환은 한 번만 (hover 재마운트 시에도 opaque 유지 → 깜빡임 없음)
+  useEffect(() => {
+    if (!lineAnimDone || extremesOpaque) return
+    const id = requestAnimationFrame(() => setExtremesOpaque(true))
+    return () => cancelAnimationFrame(id)
+  }, [lineAnimDone, extremesOpaque])
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !localStorage.getItem('chartpalja_opened_settings')) {
@@ -528,14 +715,77 @@ export function ChartTab({
   const [inviteUrl, setInviteUrl] = useState<string | null>(null)
   const overlayFetchedRef = React.useRef<string | null>(null)
 
+  // 이번 주 일운 — entry.weekSeries(hydrate) 우선. 없거나 주가 바뀌었을 때만 /daily 폴백.
   useEffect(() => {
-    if (!overlayEntryId) { setOverlayReport(null); setOverlayBirthYear(null); overlayFetchedRef.current = null; return }
+    const week = kstCenteredWeekDates()
+    const fresh =
+      weekSeries?.dates?.length === 7 &&
+      weekSeries.dates[0] === week[0] &&
+      weekSeries.dates[6] === week[6] &&
+      weekSeries.dates[3] === week[3]
+
+    if (fresh) {
+      const built = buildWeekChartFromHydrated(weekSeries)
+      setWeekData(built)
+      setWeekLoading(false)
+      if (period === 'week' && built.length) {
+        const todayPt = built.find((p) => p.year === WEEK_TODAY_X) ?? built[built.length - 1]!
+        setClickedYear(todayPt.year)
+      }
+      return
+    }
+
+    // hydrate 없음/스테일 → 기존 daily API 폴백 (shareMode·딥링크 등)
+    if (!entryId || shareMode) {
+      setWeekData([])
+      return
+    }
+    if (period !== 'week') return
+    let cancelled = false
+    setWeekLoading(true)
+    const gid = getGuestId()
+    const headers: Record<string, string> = {}
+    if (gid) headers['x-guest-id'] = gid
+    fetch('/api/saju/daily', { headers, cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (cancelled || !d) return
+        const entries = (d.entries ?? []) as { id: string; series?: (number | null)[] }[]
+        const row = entries.find((e) => e.id === entryId)
+        const series = row?.series
+        if (!series?.length) {
+          setWeekData([])
+          return
+        }
+        const recentDates = kstRecentDates(series.length)
+        const built = buildWeekChartData(series, recentDates, week)
+        setWeekData(built)
+        if (built.length) {
+          const todayPt = built.find((p) => p.year === WEEK_TODAY_X) ?? built[built.length - 1]!
+          setClickedYear(todayPt.year)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setWeekData([])
+      })
+      .finally(() => {
+        if (!cancelled) setWeekLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [entryId, shareMode, period, weekSeries])
+
+  // 비교 상대 — 오버레이 entry fetch (weekSeries 포함)
+  useEffect(() => {
+    if (!overlayEntryId) { setOverlayReport(null); setOverlayBirthYear(null); overlayFetchedRef.current = null; setWeekDataOv([]); return }
     if (sharePartner && overlayEntryId === sharePartner.id) {
       setOverlayReport(sharePartner.report)
       setOverlayBirthYear(sharePartner.birthYear)
       setOverlayName(sharePartner.name)
       setOverlayGender(sharePartner.gender)
       overlayFetchedRef.current = overlayEntryId
+      setWeekDataOv([])
       return
     }
     if (overlayEntryId === overlayFetchedRef.current) return
@@ -543,7 +793,6 @@ export function ChartTab({
     const gid = getGuestId()
     const headers: Record<string, string> = {}
     if (gid) headers['x-guest-id'] = gid
-    // 공유 뷰에서는 인증 없이 접근 가능한 공개 엔드포인트를 쓴다.
     const url = shareMode
       ? `/api/share/${overlayEntryId}`
       : `/api/saju/${overlayEntryId}${entryId ? `?contextEntryId=${encodeURIComponent(entryId)}` : ''}`
@@ -559,8 +808,11 @@ export function ChartTab({
           setOverlayName(d.name || '')
           setOverlayGender(d.gender || '')
         }
+        setWeekDataOv(buildWeekChartFromHydrated(d?.weekSeries))
       })
-      .catch(() => {})
+      .catch(() => {
+        setWeekDataOv([])
+      })
   }, [overlayEntryId, shareMode, entryId, sharePartner])
 
   useEffect(() => {
@@ -576,6 +828,7 @@ export function ChartTab({
   const clearOverlay = useCallback(() => {
     setOverlayEntryId(null); setOverlayReport(null); setOverlayBirthYear(null)
     setOverlayName(''); setOverlayGender('')
+    setWeekDataOv([])
     setSelection(null); setYearSummary(null)
     onOverlayChange?.(null)
   }, [onOverlayChange])
@@ -643,18 +896,32 @@ export function ChartTab({
     overlayEntryId, overlayName, overlayGender, fullChartData, overlayChartData, fortuneJson,
   ])
 
-  const { filteredData, xDomain, isMonthly } = useMemo(() => {
-    if (!fullChartData) return { filteredData: [], xDomain: [2000, 2080] as [number, number], isMonthly: false }
-    const all = fullChartData.data
+  const { filteredData, xDomain, isMonthly, isWeekly } = useMemo(() => {
+    if (!fullChartData && period !== 'week') {
+      return { filteredData: [] as ChartDatum[], xDomain: [2000, 2080] as [number, number], isMonthly: false, isWeekly: false }
+    }
+    if (period === 'week') {
+      return {
+        filteredData: weekData,
+        xDomain: WEEK_X_DOMAIN,
+        isMonthly: false,
+        isWeekly: true,
+      }
+    }
+    const all = fullChartData!.data
     let filtered: ChartDatum[]
     let monthly = false
     switch (period) {
-      case '1y':
-        if (fullChartData.monthlyData?.length) { filtered = fullChartData.monthlyData; monthly = true }
-        else { filtered = all.filter(d => d.year === THIS_YEAR) }
+      case 'year':
+        if (fullChartData!.monthlyData?.length) {
+          filtered = fullChartData!.monthlyData
+          monthly = true
+        } else {
+          filtered = all.filter((d) => d.year === THIS_YEAR)
+        }
         break
-      case '10y': filtered = all.filter(d => d.year >= THIS_YEAR && d.year < THIS_YEAR + 10); break
-      default: filtered = all
+      default:
+        filtered = all
     }
     if (!filtered.length) filtered = all
     if (overlayChartData && !monthly && period === 'all') {
@@ -662,17 +929,18 @@ export function ChartTab({
       if (ovAll.length) {
         const ovStart = ovAll[0]!.year
         const ovEnd = ovAll[ovAll.length - 1]!.year
-        filtered = filtered.filter(d => d.year >= ovStart && d.year <= ovEnd)
+        filtered = filtered.filter((d) => d.year >= ovStart && d.year <= ovEnd)
       }
     }
     let xd: [number, number]
-    if (monthly) { xd = [0.5, 12.5] }
-    else {
+    if (monthly) {
+      xd = [0.5, 12.5]
+    } else {
       const pad = filtered.length <= 5 ? 1 : filtered.length <= 12 ? 0.5 : 0
       xd = [filtered[0]!.year - pad, filtered[filtered.length - 1]!.year + pad]
     }
-    return { filteredData: filtered, xDomain: xd, isMonthly: monthly }
-  }, [fullChartData, period, overlayChartData])
+    return { filteredData: filtered, xDomain: xd, isMonthly: monthly, isWeekly: false }
+  }, [fullChartData, period, overlayChartData, weekData])
 
   const relationshipSeries = useMemo(() => {
     if (!overlayActive || !report || !overlayReport || birthYear == null || overlayBirthYear == null) return []
@@ -685,6 +953,27 @@ export function ChartTab({
   }, [relationshipSeries, overlayActive])
 
   const monthLevel = yearLevels.get(THIS_YEAR)
+
+  /** 이번 주 X축 리듬 바 — 비교(관계) 활성일 때만 */
+  const weekLevels = useMemo(() => {
+    if (!isWeekly || !overlayActive || !weekData.length || !weekDataOv.length) {
+      return new Map<number, YearCompatLevel>()
+    }
+    const stub = (year: number, score: number): import('@/lib/compat/types').RelationshipYearPoint => ({
+      year,
+      score,
+      dots: 3,
+      components: { sync: 0, ohang: 0, support: 0, clash: 0 },
+      events: [],
+      scoreA: score,
+      scoreB: score,
+    })
+    const ovMap = new Map(weekDataOv.map(d => [d.year, d.score]))
+    const points = weekData
+      .filter(d => ovMap.has(d.year))
+      .map(d => stub(d.year, (d.score + (ovMap.get(d.year) ?? d.score)) / 2))
+    return buildYearLevels(points)
+  }, [isWeekly, weekData, weekDataOv, overlayActive])
 
   const compatCard = useMemo<CompatCardData | null>(() => {
     if (!overlayActive) return null
@@ -707,6 +996,14 @@ export function ChartTab({
   const mergedData = useMemo<MergedDatum[]>(() => {
     const relMap = new Map(relationshipSeries.map(p => [p.year, p.score]))
     if (!overlayActive) return filteredData
+    if (isWeekly) {
+      if (!weekDataOv.length) return filteredData
+      const ovMap = new Map(weekDataOv.map(d => [d.year, d]))
+      return filteredData.map(d => {
+        const ov = ovMap.get(d.year)
+        return ov ? { ...d, scoreOv: ov.score } : d
+      })
+    }
     const ovSrc = isMonthly ? overlayChartData!.monthlyData : overlayChartData!.data
     if (!ovSrc?.length) return filteredData.map(d => ({ ...d, compatFlow: relMap.get(d.year) }))
     const ovMap = new Map(ovSrc.map(d => [d.year, d]))
@@ -719,26 +1016,63 @@ export function ChartTab({
         : d
       return { ...base, compatFlow: relMap.get(d.year) }
     })
-  }, [filteredData, overlayActive, overlayChartData, isMonthly, relationshipSeries])
+  }, [filteredData, overlayActive, overlayChartData, isMonthly, isWeekly, weekDataOv, relationshipSeries])
 
   const yDomain = useMemo<[number, number]>(() => {
     if (!mergedData.length) return [0, 110]
     let lo = Infinity, hi = -Infinity
+    const bump = (v: number | null | undefined) => {
+      if (typeof v !== 'number' || isNaN(v)) return
+      if (v < lo) lo = v
+      if (v > hi) hi = v
+    }
     for (const d of mergedData) {
-      for (const v of [d.score, d.scoreOv].filter(v => typeof v === 'number' && !isNaN(v)) as number[]) {
-        if (v < lo) lo = v; if (v > hi) hi = v
+      if (baseLineVisible) {
+        bump(d.score)
+        if (overlayActive) bump(d.scoreOv)
       }
+      for (const o of DOMAIN_OVERLAYS) {
+        if (!domainOverlays[o.key]) continue
+        bump(domainValue(d as unknown as Record<string, unknown>, o.field))
+      }
+      if (mainOverlays.daewoon) bump(d.trend)
     }
     if (!isFinite(lo)) return [0, 110]
     const pad = Math.max(5, (hi - lo) * 0.15)
     return [Math.max(0, Math.floor(lo - pad)), Math.min(120, Math.ceil(hi + pad))]
-  }, [mergedData])
+  }, [mergedData, baseLineVisible, domainOverlays, mainOverlays.daewoon, overlayActive])
 
   const currentYearScore = useMemo(() => {
-    const target = isMonthly ? THIS_MONTH : THIS_YEAR
+    const target = isWeekly
+      ? WEEK_TODAY_X
+      : isMonthly
+        ? THIS_MONTH
+        : THIS_YEAR
     const d = mergedData.find(d => d.year === target)
-    return d ? Math.round(d.score) : null
-  }, [mergedData, isMonthly])
+    if (!d) return null
+    if (baseLineVisible) return Math.round(d.score)
+    for (const o of DOMAIN_OVERLAYS) {
+      if (!domainOverlays[o.key]) continue
+      const v = domainValue(d as unknown as Record<string, unknown>, o.field)
+      if (v != null) return v
+    }
+    return null
+  }, [mergedData, isMonthly, isWeekly, baseLineVisible, domainOverlays])
+
+  /** 현재 뷰(기간) 기준 최고/최저 — 기본 세운/월운/일운 선이 보일 때만 */
+  const extremes = useMemo(() => {
+    if (!baseLineVisible || mergedData.length < 2) return { peak: null as ExtremePoint | null, low: null as ExtremePoint | null }
+    let peak = mergedData[0]!
+    let low = mergedData[0]!
+    for (const d of mergedData) {
+      if (d.score > peak.score) peak = d
+      if (d.score < low.score) low = d
+    }
+    return {
+      peak: { year: peak.year, score: peak.score },
+      low: { year: low.year, score: low.score },
+    }
+  }, [mergedData, baseLineVisible])
 
   const markerYear = hoverYear ?? clickedYear
 
@@ -746,8 +1080,11 @@ export function ChartTab({
   // 커서/손가락을 떼도(=markerYear 가 null 이 되어도) 직전 값이 남도록 한다.
   const [pinnedYear, setPinnedYear] = useState<number | null>(null)
   useEffect(() => { if (markerYear != null) setPinnedYear(markerYear) }, [markerYear])
-  // 우선순위: 현재 가리키는 연도 > 선택 구간 시작 > 마지막 고정 연도 > 올해(월)
-  const focusYear = markerYear ?? selection?.startYear ?? pinnedYear ?? (isMonthly ? THIS_MONTH : THIS_YEAR)
+  // 우선순위: 현재 가리키는 연도 > 선택 구간 시작 > 마지막 고정 연도 > 기본(오늘/이번달/올해)
+  const focusYear = markerYear ?? selection?.startYear ?? pinnedYear ?? (
+    isWeekly ? WEEK_TODAY_X
+      : isMonthly ? THIS_MONTH : THIS_YEAR
+  )
 
   const selectedData = useMemo(() => {
     return focusYear != null ? mergedData.find(d => d.year === focusYear) ?? null : null
@@ -755,18 +1092,20 @@ export function ChartTab({
 
   const selectedOverlayData = useMemo(() => {
     if (!overlayActive || focusYear == null) return null
+    if (isWeekly) return weekDataOv.find(d => d.year === focusYear) ?? null
     const ovSrc = isMonthly ? overlayChartData!.monthlyData : overlayChartData!.data
     return ovSrc?.find(d => d.year === focusYear) ?? null
-  }, [focusYear, overlayActive, overlayChartData, isMonthly])
+  }, [focusYear, overlayActive, overlayChartData, isMonthly, isWeekly, weekDataOv])
 
   const hasEngineData = !!(chartPayload?.['연도별_타임라인']?.length)
   const seasonBands = fullChartData?.seasonBands ?? []
 
-  const fetchSummary = useCallback((startYear: number, endYear: number, monthly = false) => {
+  const fetchSummary = useCallback((startYear: number, endYear: number, monthly = false, weekly = false) => {
     // 공유 뷰에서는 소유자 크레딧을 소모하는 구간 해설 생성을 막고 self-CTA 로 유도한다.
     if (shareMode) { onShareCta?.(); return }
     if (!entryId) return
-    const prefix = monthly ? 'm_' : ''
+
+    const prefix = weekly ? 'w_' : monthly ? 'm_' : ''
     const ovSuffix = overlayEntryId ? `_ov${overlayEntryId.slice(0, 6)}` : ''
     const cacheKey = startYear === endYear ? `${prefix}${startYear}${ovSuffix}` : `${prefix}${startYear}_${endYear}${ovSuffix}`
     const cached = summaryCache.get(cacheKey)
@@ -776,7 +1115,11 @@ export function ChartTab({
     const headers: Record<string, string> = {}
     if (gid) headers['x-guest-id'] = gid
     let url: string
-    if (monthly) {
+    if (weekly) {
+      url = startYear === endYear
+        ? `/api/saju/${entryId}/fortune/year?weekStart=${startYear}`
+        : `/api/saju/${entryId}/fortune/year?weekStart=${startYear}&weekEnd=${endYear}`
+    } else if (monthly) {
       url = startYear === endYear
         ? `/api/saju/${entryId}/fortune/year?month=${startYear}`
         : `/api/saju/${entryId}/fortune/year?month=${startYear}&monthEnd=${endYear}`
@@ -789,6 +1132,9 @@ export function ChartTab({
     fetch(url, { headers })
       .then(async r => {
         const d = await r.json().catch(() => null)
+        if (r.status === 401) {
+          throw new Error('login_required')
+        }
         if (r.status === 402) {
           const d402 = d as { needed?: number; ju?: number } | null
           setJuShortage({
@@ -801,12 +1147,18 @@ export function ChartTab({
         return d
       })
       .then(d => {
-        const result = { text: d?.summary ?? '해석을 불러오지 못했습니다.' }
-        summaryCache.set(cacheKey, result)
+        const text = d?.summary ?? '해석을 불러오지 못했습니다.'
+        const result = { text }
+        // 실패 문구는 캐시하지 않아 "다시 시도"가 동작하도록 한다.
+        if (!/불러오지 못했습니다/.test(text)) summaryCache.set(cacheKey, result)
         setYearSummary({ startYear, endYear, ...result })
       })
       .catch(e => {
-        if (!e?.message?.includes('이용권')) setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' })
+        if (e?.message === 'login_required') {
+          setYearSummary({ startYear, endYear, text: '구간 해설을 보려면 로그인이 필요해요.' })
+        } else if (!e?.message?.includes('이용권')) {
+          setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' })
+        }
       })
       .finally(() => setYearSummaryLoading(false))
   }, [entryId, summaryCache, overlayEntryId, shareMode, onShareCta])
@@ -862,8 +1214,34 @@ export function ChartTab({
   }, [mergedData, rangeMode])
 
   const toggleMain = (k: MainOverlayKey) => setMainOverlays(p => ({ ...p, [k]: !p[k] }))
-  const toggleAux = (k: AuxKey) => setAuxPanels(p => ({ ...p, [k]: !p[k] }))
+  const toggleAux = (k: AuxKey) => {
+    setAuxPanels(p => {
+      const next = !p[k]
+      if (next) pendingAuxScroll.current = true
+      return { ...p, [k]: next }
+    })
+  }
   const toggleDomain = (k: DomainOverlayKey) => setDomainOverlays(p => ({ ...p, [k]: !p[k] }))
+
+  const anyDomainOn = Object.values(domainOverlays).some(Boolean)
+  const canHideBase = anyDomainOn || mainOverlays.daewoon || mainOverlays.candle || overlayActive
+
+  useEffect(() => {
+    if (!canHideBase && !baseLineVisible) setBaseLineVisible(true)
+  }, [canHideBase, baseLineVisible])
+
+  const applyPanelAndScroll = useCallback(() => {
+    setPanelOpen(false)
+    if (pendingAuxScroll.current) {
+      pendingAuxScroll.current = false
+      // 패널 닫힘 애니메이션 후 보조지표 영역으로 스크롤
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          auxSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+        }, 80)
+      })
+    }
+  }, [])
 
   /**
    * 잠금 상태에서 인터랙션이 발생하면 카카오 로그인 시트를 띄우고 true를 반환.
@@ -875,8 +1253,21 @@ export function ChartTab({
     return true
   }, [isLocked, onLockedClick])
 
+  /** 해당 도메인만 켜고 기본 세운 선은 끈다 */
+  const showDomainSolo = (k: DomainOverlayKey) => {
+    if (blockIfLocked(DOMAIN_OVERLAYS.find(o => o.key === k)?.label ?? '도메인')) return
+    setDomainOverlays({
+      job: k === 'job',
+      wealth: k === 'wealth',
+      love: k === 'love',
+      health: k === 'health',
+      marriage: k === 'marriage',
+    })
+    setBaseLineVisible(false)
+  }
+
   if (!fullChartData) {
-    return <div className="py-12 text-center text-gray-400 text-sm">차트 데이터가 없습니다.</div>
+    return <div className="py-12 text-center text-cp-muted text-sm">차트 데이터가 없습니다.</div>
   }
 
   const anyAux = Object.values(auxPanels).some(Boolean)
@@ -901,47 +1292,76 @@ export function ChartTab({
             localStorage.setItem('chartpalja_opened_settings', '1')
           }
         }}
-          className="absolute top-3 right-3 z-10 flex items-center justify-center w-7 h-7 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm">
+          className="absolute top-3 right-3 z-10 flex items-center gap-1 h-8 px-2 rounded-full bg-cp-surface/95 backdrop-blur border border-cp-border/80 hover:bg-cp-surface hover:border-cp-border transition-all shadow-sm">
           <span className="text-sm leading-none">📊</span>
-          {settingsBadge && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />}
+          <span className="text-[10px] font-semibold text-cp-line">지표</span>
+          {settingsBadge && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-cp-line rounded-full animate-pulse" />}
         </button>
 
         {/* Overlay legend — fixed height to prevent layout shift */}
         <div className="min-h-4 flex flex-wrap justify-center items-center gap-x-3 gap-y-0.5">
-          {overlayActive && (<>
-            <span className="flex items-center gap-1 text-[10px] text-gray-500">
-              <span className="w-4 h-0.5 bg-emerald-400 rounded inline-block" /> {currentName || '나'}
+          {baseLineVisible && !overlayActive && (
+            <span className="flex items-center gap-1 text-[10px] text-cp-muted">
+              <span className="w-4 h-0.5 bg-cp-line rounded inline-block" /> {isWeekly ? '일운' : isMonthly ? '월운' : '세운'}
             </span>
-            <span className="flex items-center gap-1 text-[10px] text-gray-500">
-              <span className="w-4 h-0.5 bg-rose-400 rounded inline-block" /> {overlayName}
+          )}
+          {mainOverlays.daewoon && (
+            <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-600">
+              <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: '#ffd700' }} /> 대운
+            </span>
+          )}
+          {overlayActive && (<>
+            {baseLineVisible && (
+              <span className="flex items-center gap-1 text-[10px] text-cp-muted">
+                <span className="w-4 h-0.5 bg-cp-line rounded inline-block" /> {currentName || '나'}
+              </span>
+            )}
+            <span className="flex items-center gap-1 text-[10px] text-cp-muted">
+              <span className="w-4 h-0.5 bg-cp-down rounded inline-block" /> {overlayName}
             </span>
           </>)}
           {overlayActive && (
             <>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-cp-muted">
                 <span className="w-3 h-2 rounded-sm inline-block" style={{ backgroundColor: YEAR_LEVEL_COLORS.good }} /> 좋음
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
-                <span className="w-3 h-2 rounded-sm inline-block border border-gray-200" style={{ backgroundColor: YEAR_LEVEL_COLORS.normal }} /> 보통
+              <span className="flex items-center gap-1 text-[10px] text-cp-muted">
+                <span className="w-3 h-2 rounded-sm inline-block border border-cp-border" style={{ backgroundColor: YEAR_LEVEL_COLORS.normal }} /> 보통
               </span>
-              <span className="flex items-center gap-1 text-[10px] text-gray-500">
+              <span className="flex items-center gap-1 text-[10px] text-cp-muted">
                 <span className="w-3 h-2 rounded-sm inline-block" style={{ backgroundColor: YEAR_LEVEL_COLORS.caution }} /> 주의
               </span>
             </>
           )}
           {DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
-            <span key={o.key} className="flex items-center gap-1 text-[10px] text-gray-500">
+            <span key={o.key} className="flex items-center gap-1 text-[10px] text-cp-muted">
               <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: o.color }} /> {o.label}
             </span>
           ))}
         </div>
 
         {/* Main chart */}
-        <div className="w-full h-[420px] relative" onPointerDown={dismissChartHint}>
+        <div className="w-full h-[420px] relative z-0 bg-cp-raised rounded-xl" onPointerDown={dismissChartHint}>
           {chartHint && (
             <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none animate-fade-in">
-              <span className="bg-white/90 backdrop-blur-sm text-gray-500 text-xs px-3 py-1.5 rounded-full shadow-sm border border-gray-100">
-                👆 차트를 터치해서 시기별 흐름을 확인해보세요
+              <span className="bg-cp-surface/95 backdrop-blur-sm text-cp-muted text-xs px-3 py-2 rounded-xl shadow-sm border border-cp-border text-center max-w-[240px] leading-relaxed">
+                빨간·파란 점은 최고·최저예요
+                <span className="block text-[10px] text-cp-muted mt-0.5">차트를 터치해 시기별 흐름을 확인해보세요</span>
+              </span>
+            </div>
+          )}
+          {/* 구간 안내 — X축 라벨·눈금보다 확실히 위(플롯 하단) */}
+          {rangeMode && !selection && (
+            <div className="absolute left-0 right-0 bottom-[76px] z-[5] flex justify-center pointer-events-none">
+              <span className="text-[10px] text-cp-violet animate-pulse bg-cp-violetMuted px-2.5 py-0.5 rounded-full border border-cp-violetBorder/50">
+                👆 시작 연도를 선택하거나 드래그하세요
+              </span>
+            </div>
+          )}
+          {rangeMode && selection && selection.startYear === selection.endYear && rangeFirst.current && (
+            <div className="absolute left-0 right-0 bottom-[76px] z-[5] flex justify-center pointer-events-none">
+              <span className="text-[10px] text-cp-violet animate-pulse bg-cp-violetMuted px-2.5 py-0.5 rounded-full border border-cp-violetBorder/50">
+                👆 끝 연도를 선택하세요
               </span>
             </div>
           )}
@@ -960,67 +1380,138 @@ export function ChartTab({
                   setHoverYear(null); lastHapticYear.current = null; dragStartYear.current = null
                   if (!isTouchRef.current) setClickedYear(null)
                 }}>
-              <XAxis dataKey="year" type="number" domain={xDomain} tick={{ fontSize: 8 }} angle={isMonthly ? 0 : -45} textAnchor={isMonthly ? 'middle' : 'end'} height={40}
-                    ticks={isMonthly ? [1,2,3,4,5,6,7,8,9,10,11,12] : period === '10y' ? filteredData.map(d => d.year) : undefined}
-                    tickCount={period === 'all' ? 10 : undefined}
-                    tickFormatter={isMonthly ? (v: number) => MONTH_LABELS[v - 1] ?? '' : undefined}
+              <defs>
+                <linearGradient id="cpScoreFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#F04452" stopOpacity={0.28} />
+                  <stop offset="100%" stopColor="#F04452" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="cpScoreEdgeFade" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#fff" stopOpacity={0} />
+                  <stop offset="10%" stopColor="#fff" stopOpacity={1} />
+                  <stop offset="90%" stopColor="#fff" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#fff" stopOpacity={0} />
+                </linearGradient>
+                <mask id="cpScoreEdgeMask" maskContentUnits="objectBoundingBox">
+                  <rect x="0" y="0" width="1" height="1" fill="url(#cpScoreEdgeFade)" />
+                </mask>
+              </defs>
+              <XAxis dataKey="year" type="number" domain={xDomain} tick={{ fontSize: 8, fill: '#8B8B93' }} angle={isMonthly || isWeekly ? 0 : -45} textAnchor={isMonthly || isWeekly ? 'middle' : 'end'} height={40}
+                    ticks={
+                      isWeekly
+                        ? [...WEEK_TICKS]
+                        : isMonthly
+                          ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                          : period === 'all'
+                            ? evenYearTicks(filteredData, 8)
+                            : undefined
+                    }
+                    interval={0}
+                    tickFormatter={
+                      isWeekly
+                        ? (v: number) => weekTickLabel(filteredData, v)
+                        : isMonthly
+                          ? (v: number) => MONTH_LABELS[v - 1] ?? ''
+                          : undefined
+                    }
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={yearLevels}/>} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
-              {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#a78bfa', strokeWidth: 1, strokeDasharray: '4 2' } : false}/>}
-              {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#e0e0e0" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#aaa', offset: 4 }}/>}
-              {mainOverlays.season && hasEngineData && seasonBands.map((b: SeasonBand, i: number) => (
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : yearLevels}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
+              {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
+              {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#2E2F36" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#8B8B93', offset: 4 }}/>}
+              {mainOverlays.season && hasEngineData && !isWeekly && seasonBands.map((b: SeasonBand, i: number) => (
                 <ReferenceArea key={i} x1={b.startYear} x2={b.endYear} fill={SEASON_COLORS[b.tag] ?? 'rgba(0,0,0,0.03)'} fillOpacity={1}/>
               ))}
-              {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#a78bfa" fillOpacity={0.12} stroke="#a78bfa" strokeOpacity={0.3} strokeWidth={1}/>}
-              {mainOverlays.daewoon && <Line type="stepAfter" dataKey="trend" stroke="#ffd700" strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>}
-              <Line type="monotone" dataKey="score" stroke="#82ca9d" strokeWidth={1.5} dot={false} name={isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
+              {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#A78BFA" fillOpacity={0.16} stroke="#A78BFA" strokeOpacity={0.45} strokeWidth={1}/>}
+              {mainOverlays.daewoon && !isWeekly && <Line type="stepAfter" dataKey="trend" stroke="#ffd700" strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>}
+              {baseLineVisible && (
+                <Area
+                  type="monotone"
+                  dataKey="score"
+                  stroke="none"
+                  fill="url(#cpScoreFill)"
+                  mask="url(#cpScoreEdgeMask)"
+                  isAnimationActive={!hasAnimated.current}
+                  animationDuration={2000}
+                  animationEasing="ease-in-out"
+                  legendType="none"
+                />
+              )}
+              {baseLineVisible && (
+                <Line type="monotone" dataKey="score" stroke="#F04452" strokeWidth={2} dot={false} name={isWeekly ? '일운' : isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
+              )}
               {DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
                 <Line key={o.key} type="monotone"
                   dataKey={(d: Record<string, unknown>) => domainValue(d, o.field)}
                   stroke={o.color} strokeWidth={1.5} dot={false} name={o.label}
-                  strokeDasharray="3 2" isAnimationActive={false} connectNulls={false}/>
+                  strokeDasharray={baseLineVisible ? '3 2' : undefined} isAnimationActive={false} connectNulls={false}/>
               ) : null)}
-              {overlayActive && mainOverlays.daewoon && <Line type="stepAfter" dataKey="trendOv" stroke="#fda4af" strokeWidth={2} dot={false} name="대운(비교)" strokeDasharray="6 3" isAnimationActive={false} connectNulls={false}/>}
-              {overlayActive && <Line type="monotone" dataKey="scoreOv" stroke="#fb7185" strokeWidth={1.5} dot={false} name={isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>}
-              {mainOverlays.candle && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
-              {overlayActive && (
+              {overlayActive && mainOverlays.daewoon && !isWeekly && <Line type="stepAfter" dataKey="trendOv" stroke="#4B8FF7" strokeWidth={2} dot={false} name="대운(비교)" strokeDasharray="6 3" isAnimationActive={false} connectNulls={false}/>}
+              {overlayActive && baseLineVisible && (
+                <Line type="monotone" dataKey="scoreOv" stroke="#3182F6" strokeWidth={1.5} dot={false} name={isWeekly ? '일운(비교)' : isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>
+              )}
+              {mainOverlays.candle && !isWeekly && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
+              {overlayActive && !isWeekly && (
                 <Customized component={(p: any) => (
                   <CompatYearBar {...p} yearLevels={yearLevels} isMonthly={isMonthly} monthLevel={monthLevel} />
                 )}/>
               )}
-              <Customized component={(p: any) => <ThisYearMarker {...p} period={period} markerYear={markerYear} selection={selection} rangeMode={rangeMode} isMonthly={isMonthly}/>}/>
+              {overlayActive && isWeekly && weekLevels.size > 0 && (
+                <Customized component={(p: any) => (
+                  <CompatYearBar {...p} yearLevels={weekLevels} isMonthly={false} />
+                )}/>
+              )}
+              <Customized component={(p: any) => (
+                <ThisYearMarker
+                  {...p}
+                  period={period}
+                  markerYear={markerYear}
+                  selection={selection}
+                  rangeMode={rangeMode}
+                  isMonthly={isMonthly}
+                  isWeekly={isWeekly}
+                  weekLen={WEEK_TODAY_X}
+                  weekLabelAt={(x: number) => weekFullLabel(x, filteredData)}
+                  peak={extremes.peak}
+                  low={extremes.low}
+                  showExtremes={lineAnimDone}
+                  extremesOpaque={extremesOpaque}
+                />
+              )}/>
             </ComposedChart>
           </ResponsiveContainer>
         </div>
 
-        {rangeMode && !selection && (
-          <div className="text-center mt-1 mb-0">
-            <span className="text-[10px] text-purple-400 animate-pulse">👆 시작 연도를 선택하거나 드래그하세요</span>
-          </div>
-        )}
-        {rangeMode && selection && selection.startYear === selection.endYear && rangeFirst.current && (
-          <div className="text-center mt-1 mb-0">
-            <span className="text-[10px] text-purple-400 animate-pulse">👆 끝 연도를 선택하세요</span>
-          </div>
-        )}
-
-        {/* Period selector + function buttons */}
-        <div className="flex justify-center items-center gap-1.5 mt-2 mb-1" ref={chartRef}>
-          {([['1y', '1년'], ['10y', '10년'], ['all', '전체']] as [PeriodKey, string][]).map(([k, l]) => (
-            <button key={k} onClick={() => { setPeriod(k); setSelection(null); setYearSummary(null); setYearSummaryLoading(false); setRangeMode(false); rangeFirst.current = null; setPinnedYear(null) }}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>{l}</button>
+        {/* Period selector — 차트에 가깝게 올리되, z-index로 클릭이 차트에 먹히지 않게 */}
+        <div className="relative z-10 flex justify-center items-center gap-1.5 -mt-5 mb-1" ref={chartRef}>
+          {([['week', '이번 주'], ['year', '올해'], ['all', '전체']] as [PeriodKey, string][]).map(([k, l]) => (
+            <button key={k} onClick={() => {
+              setPeriod(k)
+              setSelection(null)
+              setYearSummary(null)
+              setYearSummaryLoading(false)
+              setRangeMode(false)
+              rangeFirst.current = null
+              setPinnedYear(null)
+              if (k === 'week') {
+                setClickedYear(WEEK_TODAY_X)
+              } else if (k === 'year') {
+                setClickedYear(THIS_MONTH)
+              } else {
+                setClickedYear(THIS_YEAR)
+              }
+            }}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-cp-hover text-cp-text' : 'text-cp-muted hover:bg-cp-hover/60 hover:text-cp-secondary'}`}>{l}</button>
           ))}
           {/* 구분선 — 비교/구간 버튼 중 하나라도 보일 때만 */}
           {(otherEntries.length > 0 || !shareMode) && (
-            <span className="w-px h-4 bg-gray-200 mx-1"/>
+            <span className="w-px h-4 bg-cp-border mx-1"/>
           )}
           {/* 비교: 공유 뷰에서도 예시 인물과 비교 가능 (크레딧 무소모) */}
           {otherEntries.length > 0 && (
             overlayActive ? (
               <button onClick={clearOverlay}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-[10px] font-medium hover:bg-rose-100 transition-all">
-                👥 {overlayName} <span className="ml-0.5 text-rose-400">&times;</span>
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-cp-surface border border-cp-border text-cp-down text-[10px] font-medium hover:bg-cp-border transition-all">
+                👥 {overlayName} <span className="ml-0.5 text-cp-down">&times;</span>
               </button>
             ) : (
               <button
@@ -1028,10 +1519,10 @@ export function ChartTab({
                   if (blockIfLocked('비교')) return
                   setCompareSheetOpen(true)
                 }}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 transition-all shadow-sm group"
+                className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-cp-surface/80 backdrop-blur border border-cp-border/60 hover:bg-cp-surface hover:border-cp-border transition-all shadow-sm group"
               >
-                <span className="text-[10px] font-medium text-gray-400 group-hover:text-purple-500 transition-colors">
-                  👥 비교{isLocked ? ' 🔒' : ''}
+                <span className="text-[10px] font-medium text-cp-muted group-hover:text-cp-line transition-colors">
+                  👥 궁합{isLocked ? ' 🔒' : ''}
                 </span>
               </button>
             )
@@ -1048,8 +1539,8 @@ export function ChartTab({
               }}
               className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
                 rangeMode
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/80 backdrop-blur border border-gray-200/60 hover:bg-white hover:border-gray-300 shadow-sm text-gray-400 hover:text-purple-500'
+                  ? 'bg-cp-violetMuted text-cp-violet border border-cp-violetBorder'
+                  : 'bg-cp-surface/80 backdrop-blur border border-cp-border/60 hover:bg-cp-violetMuted/50 hover:border-cp-violetBorder/60 text-cp-muted hover:text-cp-violet'
               }`}
             >
               🗓️ 구간{isLocked ? ' 🔒' : ''}
@@ -1061,27 +1552,35 @@ export function ChartTab({
       {/* Selection card — only in range mode */}
       {rangeMode && selection && !yearSummary && !yearSummaryLoading && (
         <div className="mx-3 sm:mx-4 mt-3 mb-1">
-          <div className="relative bg-white rounded-2xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
+          <div className="relative bg-cp-raised rounded-2xl p-3 sm:p-4 ring-1 ring-cp-violetBorder/60 border border-cp-violetBorder/30">
             <button onClick={() => { setSelection(null); rangeFirst.current = null }}
-              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 text-xs leading-none transition-colors">&times;</button>
+              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-hover hover:text-cp-secondary text-xs leading-none transition-colors">&times;</button>
             <div className="flex items-center gap-2 mb-3 pr-6">
-              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-purple-50 text-purple-600 whitespace-nowrap flex-shrink-0">
-                {isMonthly
-                  ? (selection.startYear === selection.endYear ? `${selection.startYear}월` : `${selection.startYear}~${selection.endYear}월`)
-                  : (selection.startYear === selection.endYear ? `${selection.startYear}년` : `${selection.startYear}~${selection.endYear}년`)}
+              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-cp-violetMuted text-cp-violet whitespace-nowrap flex-shrink-0">
+                {isWeekly
+                  ? (selection.startYear === selection.endYear
+                    ? weekFullLabel(selection.startYear, mergedData)
+                    : `${weekFullLabel(selection.startYear, mergedData)}~${weekFullLabel(selection.endYear, mergedData)}`)
+                  : isMonthly
+                    ? (selection.startYear === selection.endYear ? `${selection.startYear}월` : `${selection.startYear}~${selection.endYear}월`)
+                    : (selection.startYear === selection.endYear ? `${selection.startYear}년` : `${selection.startYear}~${selection.endYear}년`)}
               </span>
               {(() => {
                 const yds = mergedData.filter(d => d.year >= selection.startYear && d.year <= selection.endYear)
                 if (!yds.length) return null
                 const avg = Math.round(yds.reduce((a, b) => a + b.score, 0) / yds.length)
-                return <span className="text-[11px] text-gray-400 truncate">평균 {avg}점</span>
+                return <span className="text-[11px] text-cp-muted truncate">평균 {avg}점</span>
               })()}
             </div>
-            <button onClick={() => fetchSummary(selection.startYear, selection.endYear, isMonthly)}
-              className="w-full py-2.5 rounded-xl text-[13px] sm:text-sm font-semibold bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors truncate">
-              {isMonthly
-                ? (selection.startYear === selection.endYear ? `${selection.startYear}월 해설 보기` : `${selection.startYear}~${selection.endYear}월 해설 보기`)
-                : (selection.startYear === selection.endYear ? `${selection.startYear}년 해설 보기` : `${selection.startYear}~${selection.endYear}년 해설 보기`)}
+            <button onClick={() => fetchSummary(selection.startYear, selection.endYear, isMonthly, isWeekly)}
+              className="w-full py-2.5 rounded-xl text-[13px] sm:text-sm font-semibold bg-cp-violetMuted text-cp-violet border border-cp-violetBorder hover:brightness-110 transition-colors truncate">
+              {isWeekly
+                ? (selection.startYear === selection.endYear
+                  ? `${weekFullLabel(selection.startYear, mergedData)} 해설 보기`
+                  : `${weekFullLabel(selection.startYear, mergedData)}~${weekFullLabel(selection.endYear, mergedData)} 해설 보기`)
+                : isMonthly
+                  ? (selection.startYear === selection.endYear ? `${selection.startYear}월 해설 보기` : `${selection.startYear}~${selection.endYear}월 해설 보기`)
+                  : (selection.startYear === selection.endYear ? `${selection.startYear}년 해설 보기` : `${selection.startYear}~${selection.endYear}년 해설 보기`)}
             </button>
           </div>
         </div>
@@ -1089,38 +1588,64 @@ export function ChartTab({
 
       {rangeMode && (yearSummaryLoading || yearSummary) && (
         <div className="mx-3 sm:mx-4 mt-3 mb-1">
-          <div className="relative bg-white rounded-2xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-purple-100">
+          <div className="relative bg-cp-bg rounded-2xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-cp-border">
             <button onClick={() => { setYearSummary(null); setYearSummaryLoading(false); setSelection(null); rangeFirst.current = null }}
-              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 text-xs leading-none transition-colors">&times;</button>
+              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-border hover:text-cp-muted text-xs leading-none transition-colors">&times;</button>
             {yearSummaryLoading ? (
               <div className="flex items-center gap-2 py-1">
-                <div className="w-4 h-4 rounded-full border-2 border-purple-200 border-t-purple-500 animate-spin" />
-                <span className="text-xs text-gray-400">해설을 생성하고 있어요...</span>
+                <div className="w-4 h-4 rounded-full border-2 border-cp-border border-t-cp-line animate-spin" />
+                <span className="text-xs text-cp-muted">해설을 생성하고 있어요...</span>
               </div>
             ) : yearSummary ? (
               <>
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 pr-6">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-purple-50 text-purple-600 whitespace-nowrap flex-shrink-0">
-                    {isMonthly
-                      ? (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}월` : `${yearSummary.startYear}~${yearSummary.endYear}월`)
-                      : (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}년` : `${yearSummary.startYear}~${yearSummary.endYear}년`)}
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-cp-surface text-cp-line whitespace-nowrap flex-shrink-0">
+                    {isWeekly
+                      ? (yearSummary.startYear === yearSummary.endYear
+                        ? weekFullLabel(yearSummary.startYear, mergedData)
+                        : `${weekFullLabel(yearSummary.startYear, mergedData)}~${weekFullLabel(yearSummary.endYear, mergedData)}`)
+                      : isMonthly
+                        ? (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}월` : `${yearSummary.startYear}~${yearSummary.endYear}월`)
+                        : (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}년` : `${yearSummary.startYear}~${yearSummary.endYear}년`)}
                   </span>
                   {(() => {
                     const yds = mergedData.filter(d => d.year >= yearSummary.startYear && d.year <= yearSummary.endYear)
                     if (!yds.length) return null
                     if (yds.length === 1) return (
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-gray-400">{Math.round(yds[0]!.score)}점</span>
-                        <span className="w-1 h-1 rounded-full bg-gray-300" />
-                        <span className="text-xs text-gray-400">{yds[0]!.seasonTag}</span>
+                        <span className="text-xs text-cp-muted">{Math.round(yds[0]!.score)}점</span>
+                        {!isWeekly && yds[0]!.seasonTag && (
+                          <>
+                            <span className="w-1 h-1 rounded-full bg-cp-border" />
+                            <span className="text-xs text-cp-muted">{yds[0]!.seasonTag}</span>
+                          </>
+                        )}
                       </div>
                     )
                     const avg = Math.round(yds.reduce((a, b) => a + b.score, 0) / yds.length)
                     const peak = yds.reduce((a, b) => a.score > b.score ? a : b)
-                    return <span className="text-[10px] sm:text-[11px] text-gray-400 truncate">평균 {avg}점 · 최고 {peak.year}년({Math.round(peak.score)}점)</span>
+                    const peakLabel = isWeekly
+                      ? (peak.dayLabel ?? weekFullLabel(peak.year, mergedData))
+                      : isMonthly
+                        ? `${peak.year}월`
+                        : `${peak.year}년`
+                    return <span className="text-[10px] sm:text-[11px] text-cp-muted truncate">평균 {avg}점 · 최고 {peakLabel}({Math.round(peak.score)}점)</span>
                   })()}
                 </div>
-                <p className="text-[13px] text-gray-600 leading-relaxed pr-2">{cleanFortuneText(yearSummary.text)}</p>
+                {/불러오지 못했습니다/.test(yearSummary.text) ? (
+                  <div className="flex flex-col items-center gap-2 py-2">
+                    <p className="text-[13px] text-cp-muted text-center">{yearSummary.text}</p>
+                    <button
+                      type="button"
+                      onClick={() => fetchSummary(yearSummary.startYear, yearSummary.endYear, isMonthly, isWeekly)}
+                      className="px-4 py-2 rounded-xl text-sm font-semibold bg-cp-surface text-cp-line hover:bg-cp-border transition-colors"
+                    >
+                      다시 시도
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-[13px] text-cp-muted leading-relaxed pr-2">{cleanFortuneText(yearSummary.text)}</p>
+                )}
               </>
             ) : null}
           </div>
@@ -1128,54 +1653,56 @@ export function ChartTab({
       )}
 
       {/* Auxiliary charts */}
-      {anyAux && hasEngineData && (
-        <div className="px-2 mt-2 space-y-3" data-capture="02_보조지표">
+      {anyAux && (hasEngineData || (isWeekly && weekData.length > 0)) && (
+        <div ref={auxSectionRef} className="px-2 mt-2 space-y-3" data-capture="02_보조지표">
           {auxPanels.yongshin && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">필요한 기운<InfoTip align="right" text={"내게 가장 필요한 기운(용신)이 얼마나 들어오는지 보여줘요.\n양수 → 좋은 기운이 충분한 시기\n음수 → 기운이 부족한 시기"} /></div>
-            <div className="h-[80px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
+            <div>
+              <div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label="필요한 기운" text={"내게 가장 필요한 기운(용신)이 얼마나 들어오는지 보여줘요.\n양수 → 좋은 기운이 충분한 시기\n음수 → 기운이 부족한 시기"} /></div>
+              <div className="h-[80px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-1,1]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip monthly={isMonthly}/>}/><ReferenceLine y={0} stroke="#666"/>
-              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
+              <Tooltip content={<SubTooltip monthly={isMonthly}/>} cursor={{ stroke: 'rgba(255,255,255,0.12)', strokeWidth: 1 }}/><ReferenceLine y={0} stroke="#3A3942"/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Area dataKey="yongshinPower" stroke="#9b59b6" fill="#9b59b6" fillOpacity={0.2} dot={false}/>
-              {overlayActive && <Area dataKey="yongshinPowerOv" stroke="#fb7185" fill="#fb7185" fillOpacity={0.15} dot={false} strokeDasharray="4 2"/>}
-            </AreaChart></ResponsiveContainer></div></div>
+              {overlayActive && <Area dataKey="yongshinPowerOv" stroke="#3182F6" fill="#3182F6" fillOpacity={0.15} dot={false} strokeDasharray="4 2"/>}
+            </AreaChart></ResponsiveContainer></div>
+            </div>
           )}
           {auxPanels.energy && (
             <div><div className="flex items-center justify-between px-2 mb-0.5">
               <div className="flex items-center gap-2 text-[9px] ml-7">
-                <span className="flex items-center gap-0.5"><span className="inline-block w-2 h-2 rounded-sm" style={{background:'#27ae60',opacity:0.7}}/><span className="text-gray-400">길한 변화</span></span>
-                <span className="flex items-center gap-0.5"><span className="inline-block w-2 h-2 rounded-sm" style={{background:'#e74c3c',opacity:0.7}}/><span className="text-gray-400">도전적 변화</span></span>
+                <span className="flex items-center gap-0.5"><span className="inline-block w-2 h-2 rounded-sm" style={{background:'#27ae60',opacity:0.7}}/><span className="text-cp-muted">길한 변화</span></span>
+                <span className="flex items-center gap-0.5"><span className="inline-block w-2 h-2 rounded-sm" style={{background:'#e74c3c',opacity:0.7}}/><span className="text-cp-muted">도전적 변화</span></span>
               </div>
-              <div className="text-[10px] text-gray-400">변화의 파도<InfoTip align="right" text={"그 해/달에 일어날 수 있는 변화의 강도예요.\n🟢 초록 = 좋은 방향의 변화\n🔴 빨강 = 도전적 변화\n막대가 클수록 변화가 큰 시기예요."} /></div>
+              <div className="text-[10px] text-cp-muted"><InfoTip align="right" label="변화의 파도" text={"그 해/달에 일어날 수 있는 변화의 강도예요.\n🟢 초록 = 좋은 방향의 변화\n🔴 빨강 = 도전적 변화\n막대가 클수록 변화가 큰 시기예요."} /></div>
             </div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,8]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip decimals={1} monthly={isMonthly}/>}/>
-              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
+              <Tooltip content={<SubTooltip decimals={1} monthly={isMonthly}/>} cursor={{ fill: 'rgba(255,255,255,0.06)' }}/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Bar dataKey="energyTotal" isAnimationActive={false}>{mergedData.map((d,i) => <Cell key={i} fill={d.energyDirection>=0?'#27ae60':'#e74c3c'} fillOpacity={0.7}/>)}</Bar>
             </BarChart></ResponsiveContainer></div></div>
           )}
           {auxPanels.noble && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">귀인의 도움<InfoTip align="right" text={"주변 사람과의 관계 에너지예요.\n양수 → 도움을 주는 인연이 활성화\n음수 → 관계에서 마찰이 생기기 쉬운 시기"} /></div>
+            <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label="귀인의 도움" text={"주변 사람과의 관계 에너지예요.\n양수 → 도움을 주는 인연이 활성화\n음수 → 관계에서 마찰이 생기기 쉬운 시기"} /></div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-15,15]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip decimals={0} monthly={isMonthly}/>}/><ReferenceLine y={0} stroke="#666"/>
-              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
+              <Tooltip content={<SubTooltip decimals={0} monthly={isMonthly}/>} cursor={{ fill: 'rgba(255,255,255,0.06)' }}/><ReferenceLine y={0} stroke="#3A3942"/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Bar dataKey="noblePower" isAnimationActive={false}>{mergedData.map((d,i) => <Cell key={i} fill={d.noblePower>=0?'#f39c12':'#8e44ad'} fillOpacity={0.7}/>)}</Bar>
             </BarChart></ResponsiveContainer></div></div>
           )}
           {auxPanels.ohang && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">오행 균형도<InfoTip align="right" text={"목·화·토·금·수 다섯 기운의 균형 정도예요.\n0.5에 가까울수록 균형이 잘 맞고,\n0이나 1에 가까우면 특정 기운이 치우쳐 있다는 뜻이에요."} /></div>
+            <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label="오행 균형도" text={"목·화·토·금·수 다섯 기운의 균형 정도예요.\n0.5에 가까울수록 균형이 잘 맞고,\n0이나 1에 가까우면 특정 기운이 치우쳐 있다는 뜻이에요."} /></div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><LineChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,1]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip monthly={isMonthly}/>}/><ReferenceLine y={0.5} stroke="#999" strokeDasharray="3 3"/>
-              {markerYear != null && <ReferenceLine x={markerYear} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
+              <Tooltip content={<SubTooltip monthly={isMonthly}/>} cursor={{ stroke: 'rgba(255,255,255,0.12)', strokeWidth: 1 }}/><ReferenceLine y={0.5} stroke="#3A3942" strokeDasharray="3 3"/>
+              {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Line dataKey="ohangBalance" stroke="#3498db" dot={false} strokeWidth={1.5}/>
-              {overlayActive && <Line dataKey="ohangBalanceOv" stroke="#fb7185" dot={false} strokeWidth={1.5} strokeDasharray="4 2"/>}
+              {overlayActive && <Line dataKey="ohangBalanceOv" stroke="#3182F6" dot={false} strokeWidth={1.5} strokeDasharray="4 2"/>}
             </LineChart></ResponsiveContainer></div></div>
           )}
           {auxPanels.tengo && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">십성 밸런스 {selectedData ? `(${selectedData.year}${isMonthly ? '월' : '년'})` : '- 차트 클릭'}<InfoTip align="right" text={"해당 시점의 다섯 가지 에너지 분포예요.\n자아(비겁) = 내 주체성\n표현(식상) = 창의력·표현\n재물(재성) = 돈·현실감각\n직업(관살) = 조직·규율\n학업(인성) = 배움·사고력\n균형이 잡혀야 안정적이에요."} /></div>
+            <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label={`십성 밸런스 ${selectedData ? `(${isWeekly ? (selectedData.dayLabel?.replace('요일', '') || selectedData.sewoonPillar) : `${selectedData.year}${isMonthly ? '월' : '년'}`})` : '- 차트 클릭'}`} text={"해당 시점의 다섯 가지 에너지 분포예요.\n자아(비겁) = 내 주체성\n표현(식상) = 창의력·표현\n재물(재성) = 돈·현실감각\n직업(관살) = 조직·규율\n학업(인성) = 배움·사고력\n균형이 잡혀야 안정적이에요."} /></div>
             {selectedData ? (() => {
               const rd = [{a:'자아',v:selectedData['tengo비겁'],vO:selectedOverlayData?.['tengo비겁']},{a:'표현',v:selectedData['tengo식상'],vO:selectedOverlayData?.['tengo식상']},{a:'재물',v:selectedData['tengo재성'],vO:selectedOverlayData?.['tengo재성']},{a:'직업',v:selectedData['tengo관살'],vO:selectedOverlayData?.['tengo관살']},{a:'학업',v:selectedData['tengo인성'],vO:selectedOverlayData?.['tengo인성']}]
               const allVals = rd.flatMap(d => [d.v, d.vO]).filter((v): v is number => typeof v === 'number')
@@ -1183,30 +1710,30 @@ export function ChartTab({
               return (<>
                 <div className="flex justify-center"><div className="w-[220px] h-[170px]"><ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={rd}>
-                    <PolarGrid/><PolarAngleAxis dataKey="a" tick={{fontSize:9}}/><PolarRadiusAxis domain={[0, radarMax]} tick={{fontSize:7}}/>
+                    <PolarGrid/><PolarAngleAxis dataKey="a" tick={{fontSize:9, fill:'#8A898C'}}/><PolarRadiusAxis domain={[0, radarMax]} tick={{fontSize:7, fill:'#8A898C'}}/>
                     <Radar dataKey="v" stroke="#1abc9c" fill="#1abc9c" fillOpacity={0.3} name={currentName || '나'}/>
-                    {overlayActive && <Radar dataKey="vO" stroke="#fb7185" fill="#fb7185" fillOpacity={0.2} name={overlayName}/>}
+                    {overlayActive && <Radar dataKey="vO" stroke="#3182F6" fill="#3182F6" fillOpacity={0.2} name={overlayName}/>}
                   </RadarChart>
                 </ResponsiveContainer></div></div>
                 <div className="flex justify-center gap-3 mt-1">
                   {rd.map(d => (
-                    <span key={d.a} className="text-[9px] text-gray-500">{d.a} <span className="font-semibold text-teal-600">{d.v?.toFixed(1)}</span>
-                      {overlayActive && d.vO != null && <span className="text-rose-500 ml-0.5">/{d.vO.toFixed(1)}</span>}
+                    <span key={d.a} className="text-[9px] text-cp-muted">{d.a} <span className="font-semibold text-teal-600">{d.v?.toFixed(1)}</span>
+                      {overlayActive && d.vO != null && <span className="text-cp-down ml-0.5">/{d.vO.toFixed(1)}</span>}
                     </span>
                   ))}
                 </div>
                 {overlayActive && (
                   <div className="flex justify-center gap-3 mt-0.5 text-[9px]">
                     <span className="text-teal-600">■ {currentName || '나'}</span>
-                    <span className="text-rose-500">■ {overlayName}</span>
+                    <span className="text-cp-down">■ {overlayName}</span>
                   </div>
                 )}
               </>)
-            })() : <div className="text-center text-gray-300 text-xs py-4">메인 차트에서 연도를 클릭하세요</div>}
+            })() : <div className="text-center text-cp-border text-xs py-4">메인 차트에서 연도를 클릭하세요</div>}
             </div>
           )}
           {auxPanels.event && (
-            <div><div className="text-[10px] text-gray-400 text-right pr-2 mb-0.5">이벤트 확률 {selectedData ? `(${selectedData.year}${isMonthly ? '월' : '년'})` : '- 차트 클릭'}<InfoTip align="right" text={"총운 점수와는 별개로, 특정 사건이 일어날 가능성을 보여줘요.\n예) 총운의 재물 점수 = 재물운의 좋고 나쁨\n이벤트 재물확률 = 큰 돈이 오갈 이벤트가 생길 확률\n높다고 반드시 좋은 건 아니에요."} /></div>
+            <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label={`이벤트 확률 ${selectedData ? `(${isWeekly ? (selectedData.dayLabel?.replace('요일', '') || selectedData.sewoonPillar) : `${selectedData.year}${isMonthly ? '월' : '년'}`})` : '- 차트 클릭'}`} text={"총운 점수와는 별개로, 특정 사건이 일어날 가능성을 보여줘요.\n예) 총운의 재물 점수 = 재물운의 좋고 나쁨\n이벤트 재물확률 = 큰 돈이 오갈 이벤트가 생길 확률\n높다고 반드시 좋은 건 아니에요."} /></div>
             {selectedData ? (() => {
               const evData = [
                 {n:'직업', p:selectedData.eventCareer, pO:selectedOverlayData?.eventCareer ?? 0},
@@ -1219,21 +1746,21 @@ export function ChartTab({
               return (
                 <div style={{ height: overlayActive ? 140 : 120 }}><ResponsiveContainer width="100%" height="100%">
                   <BarChart data={evData} layout="vertical" margin={{left:4,right:24,top:4,bottom:0}}>
-                    <XAxis type="number" domain={[0,100]} tick={{fontSize:8}}/>
-                    <YAxis type="category" dataKey="n" tick={{fontSize:9}} width={32} interval={0}/>
+                    <XAxis type="number" domain={[0,100]} tick={{fontSize:8, fill:'#8A898C'}}/>
+                    <YAxis type="category" dataKey="n" tick={{fontSize:9, fill:'#8A898C'}} width={32} interval={0}/>
                     <Bar dataKey="p" isAnimationActive={false} barSize={overlayActive ? 6 : 10} name={currentName || '나'}
                       label={!overlayActive ? {position:'right',fontSize:9,fill:'#666',formatter:(v:number)=>`${v}%`} : undefined}>
                       {['#e74c3c','#e91e63','#ff9800','#4caf50','#2196f3','#9c27b0'].map((c,i)=><Cell key={i} fill={c} fillOpacity={0.8}/>)}
                     </Bar>
                     {overlayActive && (
                       <Bar dataKey="pO" isAnimationActive={false} barSize={6} name={overlayName}>
-                        {evData.map((_,i)=><Cell key={i} fill="#fb7185" fillOpacity={0.6}/>)}
+                        {evData.map((_,i)=><Cell key={i} fill="#3182F6" fillOpacity={0.6}/>)}
                       </Bar>
                     )}
                   </BarChart>
                 </ResponsiveContainer></div>
               )
-            })() : <div className="text-center text-gray-300 text-xs py-4">메인 차트에서 연도를 클릭하세요</div>}
+            })() : <div className="text-center text-cp-border text-xs py-4">메인 차트에서 연도를 클릭하세요</div>}
             </div>
           )}
         </div>
@@ -1258,73 +1785,124 @@ export function ChartTab({
 
       {/* Sliding Panel — indicator settings */}
       {panelOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end" onClick={() => setPanelOpen(false)}>
+        <div className="fixed inset-0 z-50 flex justify-end" onClick={applyPanelAndScroll}>
           <div className="absolute inset-0 bg-black/30"/>
-          <div className="relative w-[280px] max-w-[80vw] bg-white h-full shadow-xl overflow-y-auto animate-slide-in-right" onClick={e => e.stopPropagation()}>
+          <div className="relative w-[280px] max-w-[80vw] bg-cp-bg h-full shadow-xl overflow-y-auto animate-slide-in-right" onClick={e => e.stopPropagation()}>
             <div className="p-5">
-              <h3 className="font-bold text-gray-900 mb-4">차트 지표 설정</h3>
+              <h3 className="font-bold text-cp-text mb-4">차트 지표 설정</h3>
               <div className="mb-5">
-                <div className="text-xs font-semibold text-gray-500 mb-2">메인 차트 오버레이</div>
+                <div className="text-xs font-semibold text-cp-muted mb-2">메인 차트 선</div>
                 <div className={isLocked ? '' : 'stagger-fade-in'}>
-                  {MAIN_OVERLAYS.map(o => (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (blockIfLocked(isMonthly ? '월운' : '세운')) return
+                      if (!canHideBase && baseLineVisible) return
+                      setBaseLineVisible(v => !v)
+                    }}
+                    className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-cp-bg transition-colors min-h-[44px] text-left"
+                  >
+                    <span className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={!isLocked && baseLineVisible}
+                        readOnly
+                        disabled={isLocked || (!canHideBase && baseLineVisible)}
+                        className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
+                      />
+                      <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-cp-muted' : 'text-cp-text'}`}>
+                        <span className="w-3 h-0.5 rounded bg-cp-line" />
+                        기본 {isWeekly ? '일운' : isMonthly ? '월운' : '세운'}
+                      </span>
+                    </span>
+                    {isLocked ? (
+                      <span className="text-cp-border text-sm leading-none">🔒</span>
+                    ) : !canHideBase ? (
+                      <span className="text-[10px] text-cp-border">필수</span>
+                    ) : null}
+                  </button>
+                  {MAIN_OVERLAYS.map(o => {
+                    const weeklyUnsupported = isWeekly && (o.key === 'daewoon' || o.key === 'candle' || o.key === 'season')
+                    return (
                     <button
                       key={o.key}
                       type="button"
                       onClick={() => {
+                        if (weeklyUnsupported) return
                         if (blockIfLocked(o.label)) return
                         toggleMain(o.key)
                       }}
-                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-gray-50 transition-colors min-h-[44px] text-left"
+                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-cp-bg transition-colors min-h-[44px] text-left"
                     >
                       <span className="flex items-center gap-3">
                         <input
                           type="checkbox"
-                          checked={!isLocked && mainOverlays[o.key]}
+                          checked={!isLocked && !weeklyUnsupported && mainOverlays[o.key]}
                           readOnly
-                          disabled={isLocked}
-                          className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 pointer-events-none"
+                          disabled={isLocked || weeklyUnsupported}
+                          className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
                         />
-                        <span className={`text-sm ${isLocked ? 'text-gray-400' : 'text-gray-700'}`}>{o.label}</span>
+                        <span className={`text-sm ${isLocked || weeklyUnsupported ? 'text-cp-muted' : 'text-cp-text'}`}>
+                          {o.label}
+                          {weeklyUnsupported ? <span className="text-[10px] text-cp-border ml-1">이번 주 미지원</span> : null}
+                        </span>
                       </span>
-                      {isLocked && <span className="text-gray-300 text-sm leading-none">🔒</span>}
+                      {isLocked && <span className="text-cp-border text-sm leading-none">🔒</span>}
                     </button>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
               <div className="mb-5">
-                <div className="text-xs font-semibold text-gray-500 mb-0.5">도메인 운세 선 (메인 차트)</div>
-                <div className="text-[10px] text-gray-400 mb-2">세운 점수와 같은 운세 점수(0~100) 기준이에요</div>
+                <div className="text-xs font-semibold text-cp-muted mb-0.5">도메인 운세 선 (메인 차트)</div>
+                <div className="text-[10px] text-cp-muted mb-2">「만」을 누르면 그 운만 단독으로 봐요</div>
                 <div className={isLocked ? '' : 'stagger-fade-in'}>
                   {DOMAIN_OVERLAYS.map(o => (
-                    <button
+                    <div
                       key={o.key}
-                      type="button"
-                      onClick={() => {
-                        if (blockIfLocked(o.label)) return
-                        toggleDomain(o.key)
-                      }}
-                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-gray-50 transition-colors min-h-[44px] text-left"
+                      className="w-full flex items-center justify-between gap-2 py-2 px-1 -mx-1 rounded-lg min-h-[44px]"
                     >
-                      <span className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (blockIfLocked(o.label)) return
+                          toggleDomain(o.key)
+                        }}
+                        className="flex-1 flex items-center gap-3 text-left hover:bg-cp-bg rounded-lg py-1 -my-1 px-1 -mx-1 transition-colors"
+                      >
                         <input
                           type="checkbox"
                           checked={!isLocked && domainOverlays[o.key]}
                           readOnly
                           disabled={isLocked}
-                          className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 pointer-events-none"
+                          className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
                         />
-                        <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-gray-400' : 'text-gray-700'}`}>
+                        <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-cp-muted' : 'text-cp-text'}`}>
                           <span className="w-3 h-0.5 rounded" style={{ backgroundColor: o.color, opacity: isLocked ? 0.4 : 1 }} />
                           {o.label}
                         </span>
-                      </span>
-                      {isLocked && <span className="text-gray-300 text-sm leading-none">🔒</span>}
-                    </button>
+                      </button>
+                      {isLocked ? (
+                        <span className="text-cp-border text-sm leading-none pr-1">🔒</span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => showDomainSolo(o.key)}
+                          className={`shrink-0 text-[11px] font-semibold px-2 py-1 rounded-md transition-colors ${
+                            domainOverlays[o.key] && !baseLineVisible && !DOMAIN_OVERLAYS.some(x => x.key !== o.key && domainOverlays[x.key])
+                              ? 'bg-cp-border text-cp-line'
+                              : 'bg-cp-surface text-cp-muted hover:bg-cp-surface hover:text-cp-line'
+                          }`}
+                        >
+                          만
+                        </button>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
               <div className="mb-5">
-                <div className="text-xs font-semibold text-gray-500 mb-2">보조지표 (차트 아래)</div>
+                <div className="text-xs font-semibold text-cp-muted mb-2">보조지표 (차트 아래)</div>
                 <div className={isLocked ? '' : 'stagger-fade-in'}>
                   {AUX_PANELS.map(o => (
                     <button
@@ -1334,7 +1912,7 @@ export function ChartTab({
                         if (blockIfLocked(o.label)) return
                         toggleAux(o.key)
                       }}
-                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-gray-50 transition-colors min-h-[44px] text-left"
+                      className="w-full flex items-center justify-between gap-3 py-3 px-1 -mx-1 rounded-lg hover:bg-cp-bg transition-colors min-h-[44px] text-left"
                     >
                       <span className="flex items-center gap-3">
                         <input
@@ -1342,20 +1920,20 @@ export function ChartTab({
                           checked={!isLocked && auxPanels[o.key]}
                           readOnly
                           disabled={isLocked}
-                          className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500 pointer-events-none"
+                          className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
                         />
-                        <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-gray-400' : 'text-gray-700'}`}>
+                        <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-cp-muted' : 'text-cp-text'}`}>
                           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: o.color, opacity: isLocked ? 0.4 : 1 }} />
                           {o.label}
                         </span>
                       </span>
-                      {isLocked && <span className="text-gray-300 text-sm leading-none">🔒</span>}
+                      {isLocked && <span className="text-cp-border text-sm leading-none">🔒</span>}
                     </button>
                   ))}
                 </div>
               </div>
-              <button onClick={() => setPanelOpen(false)}
-                className="w-full py-3 rounded-xl bg-purple-600 text-white font-semibold text-sm hover:bg-purple-700 transition-colors">적용</button>
+              <button onClick={applyPanelAndScroll}
+                className="w-full py-3 rounded-xl bg-cp-accent text-white font-semibold text-sm hover:brightness-110 transition-colors">적용</button>
             </div>
           </div>
         </div>
@@ -1365,18 +1943,18 @@ export function ChartTab({
       {compareSheetOpen && (
         <BottomSheet
           onClose={() => setCompareSheetOpen(false)}
-          header={<h3 className="font-bold text-gray-900 pt-1 pb-2">누구와 비교할까요?</h3>}
+          header={<h3 className="font-bold text-cp-text pt-1 pb-2">누구와 비교할까요?</h3>}
           footer={(
             <button onClick={() => setCompareSheetOpen(false)}
-              className="w-full py-3 rounded-xl text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors">닫기</button>
+              className="w-full py-3 rounded-xl text-sm font-medium text-cp-muted hover:text-cp-muted transition-colors">닫기</button>
           )}
         >
           {shareMode && (
-            <p className="text-xs text-gray-400 mb-3">차트팔자에 저장된 공인과 비교해볼 수 있어요</p>
+            <p className="text-xs text-cp-muted mb-3">차트팔자에 저장된 공인과 비교해볼 수 있어요</p>
           )}
           {!shareMode && <div className="mb-4" />}
           {otherEntries.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-6">비교할 다른 사주가 없습니다</p>
+            <p className="text-sm text-cp-muted text-center py-6">비교할 다른 사주가 없습니다</p>
           ) : (
             <div className="space-y-1">
               {otherEntries.map(e => (
@@ -1388,24 +1966,24 @@ export function ChartTab({
                   setSelection(null)
                   setYearSummary(null)
                 }}
-                  className="w-full text-left p-3.5 rounded-xl hover:bg-purple-50 flex items-center gap-3 transition-colors">
+                  className="w-full text-left p-3.5 rounded-xl hover:bg-cp-surface flex items-center gap-3 transition-colors">
                   <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-gray-900 text-sm">{e.name}</div>
-                    <div className="text-xs text-gray-400">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>
+                    <div className="font-semibold text-cp-text text-sm">{e.name}</div>
+                    <div className="text-xs text-cp-muted">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>
                   </div>
                 </button>
               ))}
             </div>
           )}
           {!shareMode && entryId && (
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <p className="text-xs text-gray-500 mb-2">친구가 아직 차트팔자에 없나요?</p>
+            <div className="mt-4 pt-4 border-t border-cp-border">
+              <p className="text-xs text-cp-muted mb-2">친구가 아직 차트팔자에 없나요?</p>
               <button
                 type="button"
                 onClick={handleInviteFriend}
                 disabled={inviteBusy || isLocked}
-                className="w-full py-3 rounded-xl text-sm font-semibold text-purple-700 bg-purple-50 border border-purple-200/70 hover:bg-purple-100/80 transition-colors disabled:opacity-50"
+                className="w-full py-3 rounded-xl text-sm font-semibold text-cp-line bg-cp-surface border border-cp-border/70 hover:bg-cp-border/80 transition-colors disabled:opacity-50"
               >
                 {inviteBusy ? '링크 만드는 중…' : '친구 초대하기'}
               </button>
@@ -1550,12 +2128,12 @@ function FortuneQuoteLoader() {
   return (
     <div className="pt-3 pb-4 flex flex-col items-center gap-2">
       <div className="flex gap-1">
-        <div className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-        <div className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-        <div className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+        <div className="w-1.5 h-1.5 rounded-full bg-cp-line animate-bounce" style={{ animationDelay: '0ms' }} />
+        <div className="w-1.5 h-1.5 rounded-full bg-cp-line animate-bounce" style={{ animationDelay: '150ms' }} />
+        <div className="w-1.5 h-1.5 rounded-full bg-cp-line animate-bounce" style={{ animationDelay: '300ms' }} />
       </div>
       <div className="h-12 flex items-center justify-center overflow-hidden px-2">
-        <p className={`text-xs text-gray-400 text-center leading-relaxed transition-all duration-300 ease-in-out ${animClass}`}>
+        <p className={`text-xs text-cp-muted text-center leading-relaxed transition-all duration-300 ease-in-out ${animClass}`}>
           {FORTUNE_QUOTES[idx]}
         </p>
       </div>
@@ -1569,30 +2147,30 @@ type FortuneItem = { category: string; title: string; content: string }
 function FortunePlaceholder() {
   return (
     <div className="space-y-2">
-      <div className="rounded-2xl p-4 bg-purple-50 border border-purple-100">
-        <p className="text-xs font-medium mb-1 text-purple-500">당신의 기본 성향</p>
-        <p className="text-base font-bold text-gray-900 leading-snug mb-2">
+      <div className="rounded-2xl p-4 bg-cp-surface border border-cp-border">
+        <p className="text-xs font-medium mb-1 text-cp-line">당신의 기본 성향</p>
+        <p className="text-base font-bold text-cp-text leading-snug mb-2">
           깊은 사유와 부드러운 결단력을 함께 지닌 사람
         </p>
-        <p className="text-sm text-gray-700 leading-relaxed">
+        <p className="text-sm text-cp-text leading-relaxed">
           타고난 감수성과 분석력이 균형 잡혀 있어 직관과 논리를 동시에 잘 쓰는 편이에요.
         </p>
       </div>
-      <div className="rounded-2xl p-4 bg-indigo-50 border border-indigo-100">
-        <p className="text-xs font-medium mb-1 text-indigo-500">인생의 큰 그림</p>
-        <p className="text-base font-bold text-gray-900 leading-snug mb-2">
+      <div className="rounded-2xl p-4 bg-cp-surface border border-cp-border">
+        <p className="text-xs font-medium mb-1 text-cp-down">인생의 큰 그림</p>
+        <p className="text-base font-bold text-cp-text leading-snug mb-2">
           30대 후반부터 본격적인 도약기가 펼쳐져요
         </p>
-        <p className="text-sm text-gray-700 leading-relaxed">
+        <p className="text-sm text-cp-text leading-relaxed">
           초년의 시행착오가 단단한 기반이 되어 중년 이후 큰 폭의 성장이 가능해요.
         </p>
       </div>
       {['성격과 잠재력', '직업과 커리어', '재물과 투자'].map(t => (
-        <div key={t} className="border rounded-xl border-gray-100 p-3.5 flex items-start gap-2.5">
-          <span className="text-gray-400 text-sm mt-0.5">▶</span>
+        <div key={t} className="border rounded-xl border-cp-border p-3.5 flex items-start gap-2.5">
+          <span className="text-cp-muted text-sm mt-0.5">▶</span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-800 leading-snug">{t} 해설</p>
-            <p className="text-[11px] text-gray-400 mt-0.5">{t}</p>
+            <p className="text-sm font-semibold text-cp-text leading-snug">{t} 해설</p>
+            <p className="text-[11px] text-cp-muted mt-0.5">{t}</p>
           </div>
         </div>
       ))}
@@ -1629,7 +2207,7 @@ interface FortuneSectionProps {
 function CompatSpinner() {
   return (
     <span className="inline-flex w-4 h-4 items-center justify-center shrink-0 mt-0.5" aria-hidden>
-      <svg className="animate-spin w-3.5 h-3.5 text-rose-400" viewBox="0 0 24 24" fill="none">
+      <svg className="animate-spin w-3.5 h-3.5 text-cp-down" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" strokeOpacity={0.2} />
         <path
           d="M12 3a9 9 0 0 1 9 9"
@@ -1908,9 +2486,9 @@ function FortuneSection({
         return (
           <div
             key={key}
-            className={`group relative border rounded-xl border-rose-100 bg-rose-50/30 transition-colors ${
+            className={`group relative border rounded-xl border-cp-border bg-cp-surface/30 transition-colors ${
               isGenerating ? 'opacity-95' : ''
-            } ${!isGenerating && canToggle ? (isOpen ? 'bg-rose-50' : 'hover:bg-rose-50/60 active:bg-rose-50/80') : ''}`}
+            } ${!isGenerating && canToggle ? (isOpen ? 'bg-cp-surface' : 'hover:bg-cp-surface/60 active:bg-cp-surface/80') : ''}`}
           >
             <div className="flex items-center">
               <button
@@ -1924,14 +2502,14 @@ function FortuneSection({
                 {isGenerating ? (
                   <CompatSpinner />
                 ) : (
-                  <span className="text-rose-400 text-sm mt-0.5">{isOpen ? '▼' : '▶'}</span>
+                  <span className="text-cp-down text-sm mt-0.5">{isOpen ? '▼' : '▶'}</span>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-800 leading-snug">
-                    {currentName || '나'} <span className="text-rose-300">✕</span> {ce.partnerName}
-                    {chem && <span className="text-rose-500 font-bold"> · 궁합 {chem.overallScore}</span>}
+                  <p className="text-sm font-semibold text-cp-text leading-snug">
+                    {currentName || '나'} <span className="text-cp-muted">✕</span> {ce.partnerName}
+                    {chem && <span className="text-cp-down font-bold"> · 궁합 {chem.overallScore}</span>}
                   </p>
-                  <p className="text-[11px] text-rose-500 mt-0.5 truncate">
+                  <p className="text-[11px] text-cp-secondary mt-0.5 truncate">
                     {isGenerating
                       ? '해설을 작성하고 있어요…'
                       : isSynthetic
@@ -1945,7 +2523,7 @@ function FortuneSection({
                   <button
                     type="button"
                     onClick={ev => { ev.stopPropagation(); setMenuOpenKey(menuOpenKey === cardKey ? null : cardKey) }}
-                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                    className="w-8 h-8 flex items-center justify-center text-cp-muted hover:text-cp-muted transition-colors"
                     aria-label="메뉴"
                   >
                     &#x22EE;
@@ -1953,12 +2531,12 @@ function FortuneSection({
                   {menuOpenKey === cardKey && (
                     <>
                       <div className="fixed inset-0 z-[5]" onClick={() => setMenuOpenKey(null)} />
-                      <div className="absolute top-1/2 -translate-y-1/2 right-9 bg-white border border-gray-200 rounded-lg shadow-lg z-20 overflow-hidden w-[68px]">
+                      <div className="absolute top-1/2 -translate-y-1/2 right-9 bg-cp-bg border border-cp-border rounded-lg shadow-lg z-20 overflow-hidden w-[68px]">
                         <button
                           type="button"
                           disabled={shareBusyKey === cardKey && shareCopiedKey !== cardKey}
                           onClick={() => handleCompatShareFromMenu(ce, cardKey)}
-                          className="block w-full text-center px-2 py-2 text-xs text-gray-700 hover:bg-gray-50"
+                          className="block w-full text-center px-2 py-2 text-xs text-cp-text hover:bg-cp-bg"
                         >
                           {shareCopiedKey === cardKey ? (
                             <span className="text-green-600 font-medium">✓</span>
@@ -1971,7 +2549,7 @@ function FortuneSection({
                         <button
                           type="button"
                           onClick={() => { setMenuOpenKey(null); setDeleteTarget(ce) }}
-                          className="block w-full text-center px-2 py-2 text-xs text-red-600 hover:bg-red-50 border-t border-gray-100"
+                          className="block w-full text-center px-2 py-2 text-xs text-cp-up hover:bg-cp-line/10 border-t border-cp-border"
                         >
                           삭제
                         </button>
@@ -1982,15 +2560,15 @@ function FortuneSection({
               )}
             </div>
             {isOpen && (
-              <div className="px-4 pb-4 pt-1 border-t border-rose-100/80 animate-fade-in space-y-3.5">
+              <div className="px-4 pb-4 pt-1 border-t border-cp-border/80 animate-fade-in space-y-3.5">
                 {chem && <CompatChemistry card={chem} flow={flow} />}
                 {ce.text ? (
-                  <div className="text-sm text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(ce.text) }} />
+                  <div className="text-sm text-cp-text leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(ce.text) }} />
                 ) : !shareMode && onCompatCta ? (
                   <button
                     type="button"
                     onClick={onCompatCta}
-                    className="w-full py-2.5 rounded-xl bg-rose-500 text-white text-[13px] font-semibold active:scale-[0.99] transition-transform shadow-sm"
+                    className="w-full py-2.5 rounded-xl bg-cp-accent text-white text-[13px] font-semibold active:scale-[0.99] transition-transform shadow-sm"
                   >
                     궁합 해설 보기
                   </button>
@@ -2006,7 +2584,7 @@ function FortuneSection({
   if (isLocked) {
     return (
       <div className="px-4 mt-6">
-        <h3 className="font-bold text-gray-900 mb-3">운세 해설</h3>
+        <h3 className="font-bold text-cp-text mb-3">운세 해설</h3>
         <LockedPreview
           onUnlock={() => onLockedClick?.('운세 해설')}
           ariaLabel="운세 해설 — 로그인하면 풀려요"
@@ -2021,7 +2599,7 @@ function FortuneSection({
 
   return (
     <div className="px-4 mt-6">
-      <h3 className="font-bold text-gray-900 mb-3">운세 해설</h3>
+      <h3 className="font-bold text-cp-text mb-3">운세 해설</h3>
 
       {juShortage && (
         <JuShortageNudge
@@ -2036,30 +2614,30 @@ function FortuneSection({
       {isLoading ? (
         <FortuneQuoteLoader />
       ) : juShortage ? (
-        <div className="rounded-xl border border-purple-200 bg-purple-50 p-4 text-center">
-          <p className="text-sm text-gray-700 font-medium">주(株)가 부족해요</p>
-          <p className="text-xs text-gray-500 mt-1">운세 해설은 {READING_COST.fortune}주가 필요해요.</p>
+        <div className="rounded-xl border border-cp-border bg-cp-surface p-4 text-center">
+          <p className="text-sm text-cp-text font-medium">주(株)가 부족해요</p>
+          <p className="text-xs text-cp-muted mt-1">운세 해설은 {READING_COST.fortune}주가 필요해요.</p>
         </div>
       ) : error ? (
-        <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 text-center">
-          <p className="text-sm text-gray-600">해설을 불러오는 중 문제가 발생했습니다.</p>
+        <div className="rounded-xl border border-cp-border bg-cp-bg p-4 text-center">
+          <p className="text-sm text-cp-muted">해설을 불러오는 중 문제가 발생했습니다.</p>
           {error.includes('GEMINI_API_KEY') && (
-            <p className="text-xs text-gray-500 mt-2">프로젝트 루트에 .env.local 파일을 만들고 GEMINI_API_KEY=발급받은키 를 추가한 뒤 서버를 재시작하세요.</p>
+            <p className="text-xs text-cp-muted mt-2">프로젝트 루트에 .env.local 파일을 만들고 GEMINI_API_KEY=발급받은키 를 추가한 뒤 서버를 재시작하세요.</p>
           )}
-          <button onClick={() => fetchFortune()} className="mt-3 px-4 py-2 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">다시 시도</button>
+          <button onClick={() => fetchFortune()} className="mt-3 px-4 py-2 text-sm font-medium text-cp-line bg-cp-surface rounded-lg hover:bg-cp-border transition-colors">다시 시도</button>
         </div>
       ) : items.length === 0 ? (
-        <div className="text-center text-gray-400 text-sm py-6">운세 해설을 불러오는 중...</div>
+        <div className="text-center text-cp-muted text-sm py-6">운세 해설을 불러오는 중...</div>
       ) : (
         <div className="space-y-2">
           {topCards.map((card, i) => {
             const displayCategory = card.category === '한 줄 사주' ? '당신의 기본 성향' : card.category
             return (
             <div key={`card-${i}`} data-capture={i === 0 ? '03_기본성향' : '04_인생의큰그림'}
-              className={`rounded-2xl p-4 ${i === 0 ? 'bg-purple-50 border border-purple-100' : 'bg-indigo-50 border border-indigo-100'}`}>
-              <p className={`text-xs font-medium mb-1 ${i === 0 ? 'text-purple-500' : 'text-indigo-500'}`}>{displayCategory}</p>
-              <p className="text-base font-bold text-gray-900 leading-snug mb-2">{card.title}</p>
-              <div className="text-sm text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(card.content) }} />
+              className={`rounded-2xl p-4 ${i === 0 ? 'bg-cp-surface border border-cp-border' : 'bg-cp-surface border border-cp-border'}`}>
+              <p className={`text-xs font-medium mb-1 ${i === 0 ? 'text-cp-line' : 'text-cp-down'}`}>{displayCategory}</p>
+              <p className="text-base font-bold text-cp-text leading-snug mb-2">{card.title}</p>
+              <div className="text-sm text-cp-text leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(card.content) }} />
             </div>
           )})}
           {accordionItems.map((item, i) => {
@@ -2067,18 +2645,18 @@ function FortuneSection({
             return (
               <div key={realIdx}
                 data-capture={['05_성격과잠재력','06_직업과커리어','07_재물과투자','08_인연과관계','09_건강과에너지','10_결혼과가정','11_개운법'][i] || undefined}
-                className="border rounded-xl overflow-hidden border-gray-100">
+                className="border rounded-xl overflow-hidden border-cp-border">
                 <button onClick={() => toggle(realIdx)}
-                  className={`w-full text-left p-3.5 flex items-start gap-2.5 transition-colors ${openIds.has(realIdx) ? 'bg-gray-50' : 'hover:bg-gray-50/50'}`}>
-                  <span className="text-gray-400 text-sm mt-0.5">{openIds.has(realIdx) ? '▼' : '▶'}</span>
+                  className={`w-full text-left p-3.5 flex items-start gap-2.5 transition-colors ${openIds.has(realIdx) ? 'bg-cp-bg' : 'hover:bg-cp-bg/50'}`}>
+                  <span className="text-cp-muted text-sm mt-0.5">{openIds.has(realIdx) ? '▼' : '▶'}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 leading-snug">{item.title}</p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">{item.category}</p>
+                    <p className="text-sm font-semibold text-cp-text leading-snug">{item.title}</p>
+                    <p className="text-[11px] text-cp-muted mt-0.5">{item.category}</p>
                   </div>
                 </button>
                 {openIds.has(realIdx) && (
                   <div className="px-4 pb-4 pt-1">
-                    <div className="text-sm text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(item.content) }} />
+                    <div className="text-sm text-cp-text leading-relaxed" dangerouslySetInnerHTML={{ __html: renderMarkdown(item.content) }} />
                   </div>
                 )}
               </div>
@@ -2093,29 +2671,29 @@ function FortuneSection({
           onClick={() => !deleteBusy && setDeleteTarget(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden"
+            className="bg-cp-bg rounded-2xl shadow-xl w-full max-w-sm overflow-hidden"
             onClick={ev => ev.stopPropagation()}
           >
             <div className="px-6 pt-6 pb-4 text-center">
               <div className="w-12 h-12 mx-auto mb-3 bg-red-100 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <svg className="w-6 h-6 text-cp-up" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                 </svg>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">궁합 해설 삭제</h3>
-              <p className="text-sm text-gray-500">
-                <span className="font-semibold text-gray-700">{deleteTarget.partnerName}</span>
+              <h3 className="text-lg font-bold text-cp-text mb-1">궁합 해설 삭제</h3>
+              <p className="text-sm text-cp-muted">
+                <span className="font-semibold text-cp-text">{deleteTarget.partnerName}</span>
                 {' · '}
                 {RELATIONSHIP_LABELS[deleteTarget.relationship]} 궁합 해설을 삭제할까요?
               </p>
-              <p className="text-xs text-gray-400 mt-1">삭제된 해설은 복구할 수 없습니다.</p>
+              <p className="text-xs text-cp-muted mt-1">삭제된 해설은 복구할 수 없습니다.</p>
             </div>
-            <div className="grid grid-cols-2 border-t border-gray-100">
+            <div className="grid grid-cols-2 border-t border-cp-border">
               <button
                 type="button"
                 disabled={deleteBusy}
                 onClick={() => setDeleteTarget(null)}
-                className="py-3.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors border-r border-gray-100"
+                className="py-3.5 text-sm font-medium text-cp-muted hover:bg-cp-bg transition-colors border-r border-cp-border"
               >
                 취소
               </button>
@@ -2123,7 +2701,7 @@ function FortuneSection({
                 type="button"
                 disabled={deleteBusy}
                 onClick={handleCompatDelete}
-                className="py-3.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"
+                className="py-3.5 text-sm font-bold text-cp-up hover:bg-cp-line/10 transition-colors"
               >
                 {deleteBusy ? '삭제 중...' : '삭제'}
               </button>

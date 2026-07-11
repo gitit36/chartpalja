@@ -4,6 +4,7 @@ import { Suspense, useState, useCallback, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
+import { AppPageHeader } from '@/components/AppPageHeader'
 import { ProductSelector } from '@/components/payment/ProductSelector'
 import { CouponRedeemSection } from '@/components/payment/CouponRedeemSection'
 import { PaymentMethodSelector } from '@/components/payment/PaymentMethodSelector'
@@ -164,7 +165,7 @@ async function createAndPay(
 
 export default function CheckoutPage() {
   return (
-    <Suspense fallback={<MobileContainer><div className="py-20 text-center text-gray-400 text-sm">로딩 중...</div></MobileContainer>}>
+    <Suspense fallback={<MobileContainer><div className="py-20 text-center text-cp-muted text-sm">로딩 중...</div></MobileContainer>}>
       <CheckoutContent />
     </Suspense>
   )
@@ -315,18 +316,10 @@ function CheckoutContent() {
     <MobileContainer>
       <script src="https://cdn.portone.io/v2/browser-sdk.js" async />
 
-      <div className="px-4 pt-4 pb-32 min-h-screen">
-        <div className="flex items-center gap-3 mb-5">
-          <button
-            onClick={() => router.push(returnUrl || '/app/list')}
-            className="w-11 h-11 -ml-2.5 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full text-lg transition-colors"
-            aria-label="뒤로가기"
-          >
-            &larr;
-          </button>
-          <h1 className="text-lg font-bold text-gray-900">이용권 구매</h1>
-        </div>
+      <div className="min-h-screen pb-32">
+        <AppPageHeader title="이용권 구매" backHref={returnUrl || '/app/list'} />
 
+        <div className="px-4 pt-5">
         <section className="mb-6">
           <ProductSelector
             selectedCode={juCode}
@@ -346,7 +339,7 @@ function CheckoutContent() {
 
         {hasSelection && (
           <section className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">결제수단</h3>
+            <h3 className="text-sm font-semibold text-cp-text mb-3">결제수단</h3>
             <PaymentMethodSelector
               selected={paymentMethod}
               onSelect={setPaymentMethod}
@@ -358,7 +351,7 @@ function CheckoutContent() {
         {hasSelection && paymentMethod && phoneRequired && (
           <section className="mb-5">
             <label className="block">
-              <span className="text-sm font-semibold text-gray-700 mb-1.5 block">연락처</span>
+              <span className="text-sm font-semibold text-cp-text mb-1.5 block">연락처</span>
               <input
                 type="tel"
                 inputMode="numeric"
@@ -371,13 +364,13 @@ function CheckoutContent() {
                 placeholder="010-1234-5678"
                 maxLength={13}
                 aria-invalid={phoneRaw.length > 0 && !isPhoneValid}
-                className={`w-full px-4 py-3 rounded-xl border text-sm text-gray-900 placeholder-gray-400 focus:outline-none ${
+                className={`w-full px-4 py-3 rounded-xl border bg-cp-input text-sm text-cp-text placeholder-cp-muted focus:outline-none ${
                   phoneRaw.length > 0 && !isPhoneValid
-                    ? 'border-red-300 focus:border-red-400'
-                    : 'border-gray-200 focus:border-gray-400'
+                    ? 'border-red-400 focus:border-red-400'
+                    : 'border-cp-border focus:border-cp-line'
                 }`}
               />
-              <span className="text-[11px] text-gray-500 mt-1.5 block">
+              <span className="text-[11px] text-cp-muted mt-1.5 block">
                 결제 영수증 발송 등 결제 처리에만 사용됩니다.
               </span>
             </label>
@@ -391,37 +384,38 @@ function CheckoutContent() {
                 type="checkbox"
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
-                className="w-4 h-4 rounded border-gray-300 text-gray-700 focus:ring-gray-300"
+                className="w-4 h-4 rounded border-cp-border text-cp-text focus:ring-gray-300"
               />
-              <span className="text-[13px] text-gray-700">
-                <Link href="/terms" className="underline decoration-gray-300 hover:text-gray-900">이용약관</Link>
+              <span className="text-[13px] text-cp-text">
+                <Link href="/terms" className="underline decoration-cp-border hover:text-cp-secondary">이용약관</Link>
                 {' · '}
-                <Link href="/privacy" className="underline decoration-gray-300 hover:text-gray-900">개인정보처리방침</Link>
+                <Link href="/privacy" className="underline decoration-cp-border hover:text-cp-secondary">개인정보처리방침</Link>
                 {' · '}
-                <Link href="/refund" className="underline decoration-gray-300 hover:text-gray-900">환불정책</Link>
-                <span className="text-gray-500">에 동의합니다.</span>
+                <Link href="/refund" className="underline decoration-cp-border hover:text-cp-secondary">환불정책</Link>
+                <span className="text-cp-muted">에 동의합니다.</span>
               </span>
             </label>
           </section>
         )}
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 rounded-xl text-sm text-red-600">{error}</div>
+          <div className="mb-4 p-3 bg-cp-line/10 rounded-xl text-sm text-cp-up">{error}</div>
         )}
 
         <MinimalLegalFooter className="mt-8" />
+        </div>
       </div>
 
       {hasSelection && (
         <div className="fixed bottom-0 left-0 right-0 z-20">
-          <div className="mx-auto max-w-[446px] p-4 bg-white border-t border-gray-100">
+          <div className="mx-auto max-w-[446px] p-4 bg-cp-raised border-t border-cp-border">
             <button
               onClick={handlePay}
               disabled={!canPay}
               className={`w-full py-4 rounded-2xl text-base font-bold transition-all ${
                 canPay
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  ? 'bg-cp-accent text-white active:scale-[0.98]'
+                  : 'bg-cp-border text-cp-muted cursor-not-allowed'
               }`}
             >
               {loading ? '결제 진행 중...' : `${formatPrice(totalPrice)}원 결제하기`}

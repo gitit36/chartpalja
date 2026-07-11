@@ -30,25 +30,25 @@ export function PaymentMethodSelector({ selected, onSelect, disabledMethods }: P
               title={disabledReason}
               className={`flex flex-col items-center gap-1 p-3.5 rounded-xl border transition-all ${
                 isSelected
-                  ? 'border-purple-400 bg-purple-50/60'
+                  ? 'border-cp-line bg-cp-surface/60'
                   : isDisabled
-                    ? 'border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed'
-                    : 'border-gray-100 bg-white hover:border-gray-200'
+                    ? 'border-cp-border bg-cp-input opacity-50 cursor-not-allowed'
+                    : 'border-cp-border bg-cp-input hover:border-cp-borderStrong'
               }`}
             >
               <span className="text-xl">{m.icon}</span>
-              <span className="text-[13px] font-medium text-gray-800">{m.label}</span>
+              <span className="text-[13px] font-medium text-cp-text">{m.label}</span>
               {isInactive ? (
-                <span className="text-[10px] text-gray-400">{PAYMENT_INACTIVE_NOTE}</span>
+                <span className="text-[10px] text-cp-muted">{PAYMENT_INACTIVE_NOTE}</span>
               ) : (
-                <span className="text-[10px] text-gray-400">{m.desc}</span>
+                <span className="text-[10px] text-cp-muted">{m.desc}</span>
               )}
             </button>
           )
         })}
       </div>
       {disabledNotes.length > 0 && (
-        <p className="mt-2.5 text-[11px] text-gray-400 leading-relaxed">
+        <p className="mt-2.5 text-[11px] text-cp-muted leading-relaxed">
           {disabledNotes.join(' · ')}
         </p>
       )}

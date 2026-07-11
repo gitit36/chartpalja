@@ -12,9 +12,9 @@ interface SparklineProps {
 }
 
 const COLORS = {
-  up: '#e74c3c',
-  down: '#3498db',
-  flat: '#9ca3af',
+  up: '#F04452',
+  down: '#3182F6',
+  flat: '#8B8B93',
 }
 
 /**

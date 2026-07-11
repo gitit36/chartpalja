@@ -74,31 +74,31 @@ export function SummaryLine({
     return { linePath: line, areaPath: area, dotPos: dot }
   }, [data.sparkData, data.currentIdx])
 
-  const strokeColor = isUp ? '#d63031' : '#2d6cdf'
-  const fillColor = isUp ? 'rgba(214,48,49,0.1)' : 'rgba(45,108,223,0.1)'
+  const strokeColor = isUp ? '#F04452' : '#3182F6'
+  const fillColor = isUp ? 'rgba(240,68,82,0.14)' : 'rgba(49,130,246,0.14)'
 
   return (
     <div
       className={`px-4 h-[36px] flex items-center transition-colors ${
         scrolled
           ? isUp
-            ? 'bg-[#fff0f0] border-t border-[#ffcccc]'
-            : 'bg-[#f0f4ff] border-t border-[#ccd6ff]'
-          : 'bg-white'
+            ? 'bg-cp-line/10 border-t border-cp-line/30'
+            : 'bg-cp-down/10 border-t border-cp-down/30'
+          : 'bg-cp-bg'
       }`}
     >
       {!scrolled ? (
-        <p className="text-[11px] text-gray-700 text-center font-medium w-full whitespace-nowrap overflow-hidden text-ellipsis">
+        <p className="text-[11px] text-cp-text text-center font-medium w-full whitespace-nowrap overflow-hidden text-ellipsis">
           올해 운세 <span className="font-bold">{data.score}점</span> | {data.label}, {data.desc} {data.emoji}
         </p>
       ) : (
         <div className="flex items-center justify-between w-full">
           <div className="flex items-baseline gap-2">
-            <span className={`text-lg font-bold ${isUp ? 'text-[#d63031]' : 'text-[#2d6cdf]'}`}>{data.score}</span>
-            <span className={`text-xs font-semibold ${isUp ? 'text-[#e05050]' : 'text-[#4a8af4]'}`}>
+            <span className={`text-lg font-bold ${isUp ? 'text-[#F04452]' : 'text-[#3182F6]'}`}>{data.score}</span>
+            <span className={`text-xs font-semibold ${isUp ? 'text-[#F04452]' : 'text-[#3182F6]'}`}>
               {isUp ? '\u25b2' : '\u25bc'}{Math.abs(data.delta)}
             </span>
-            <span className={`text-[10px] ${isUp ? 'text-[#e87070]' : 'text-[#6fa0f6]'}`}>
+            <span className={`text-[10px] ${isUp ? 'text-[#F25563]' : 'text-[#4B8FF7]'}`}>
               ({isUp ? '+' : ''}{data.deltaPercent}%)
             </span>
           </div>

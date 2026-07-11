@@ -22,9 +22,9 @@ export function IdentityCard({ report }: { report: SajuReportJson | null }) {
 
   if (!dayStem && !label && !yong && !heui) {
     return (
-      <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-semibold mb-3 text-gray-800">핵심 정체성</h2>
-        <p className="text-sm text-gray-500">(추가 계산 예정)</p>
+      <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+        <h2 className="text-lg font-semibold mb-3 text-cp-text">핵심 정체성</h2>
+        <p className="text-sm text-cp-muted">(추가 계산 예정)</p>
       </section>
     )
   }
@@ -35,49 +35,49 @@ export function IdentityCard({ report }: { report: SajuReportJson | null }) {
   const strengthInsight = label ? STRENGTH_INSIGHT[label] ?? '' : ''
 
   return (
-    <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h2 className="text-lg font-semibold mb-1 text-gray-800">핵심 정체성</h2>
-      <p className="text-xs text-gray-500 mb-4">
+    <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+      <h2 className="text-lg font-semibold mb-1 text-cp-text">핵심 정체성</h2>
+      <p className="text-xs text-cp-muted mb-4">
         사주의 중심인 일간과 기운의 강약, 추천하는 오행(용신·희신)입니다.
       </p>
       <div className="space-y-4">
         {dayStem != null && (
-          <div className="rounded-xl p-4 bg-gray-50 border border-gray-100">
-            <div className="text-xs text-gray-500 mb-1">일간 (나의 기둥)</div>
-            <p className="text-lg font-bold text-gray-800">
-              {dayStem} <span className="text-gray-500 font-normal">({dayStemHangul})</span>
+          <div className="rounded-xl p-4 bg-gray-50 border border-cp-border">
+            <div className="text-xs text-cp-muted mb-1">일간 (나의 기둥)</div>
+            <p className="text-lg font-bold text-cp-text">
+              {dayStem} <span className="text-cp-muted font-normal">({dayStemHangul})</span>
               {dayElement && (
-                <span className="ml-2 text-sm font-medium text-gray-600">
+                <span className="ml-2 text-sm font-medium text-cp-muted">
                   · {dayElemHangul} ({dayElement})
                 </span>
               )}
             </p>
-            <p className="text-xs text-gray-600 mt-1">
+            <p className="text-xs text-cp-muted mt-1">
               일간은 사주에서 ‘나’를 나타내는 기준입니다. 성향과 대인관계 해석의 중심이 됩니다.
             </p>
           </div>
         )}
         {(label != null || score != null) && (
           <div className="rounded-xl p-4 bg-amber-50/50 border border-amber-100">
-            <div className="text-xs text-gray-500 mb-1">신강·신약</div>
-            <p className="text-base font-semibold text-gray-800">
+            <div className="text-xs text-cp-muted mb-1">신강·신약</div>
+            <p className="text-base font-semibold text-cp-text">
               {label ?? '—'}
-              {score != null && <span className="text-gray-500 font-normal ml-1">(점수 {score})</span>}
+              {score != null && <span className="text-cp-muted font-normal ml-1">(점수 {score})</span>}
             </p>
             {strengthInsight && (
-              <p className="text-xs text-gray-600 mt-1 leading-relaxed">{strengthInsight}</p>
+              <p className="text-xs text-cp-muted mt-1 leading-relaxed">{strengthInsight}</p>
             )}
           </div>
         )}
         {(yong != null || heui != null) && (
           <div className="rounded-xl p-4 bg-emerald-50/50 border border-emerald-100">
-            <div className="text-xs text-gray-500 mb-1">용신 · 희신</div>
-            <p className="text-sm text-gray-800">
+            <div className="text-xs text-cp-muted mb-1">용신 · 희신</div>
+            <p className="text-sm text-cp-text">
               <span className="font-semibold">용신</span> {yong ?? '—'}
-              <span className="text-gray-400 mx-2">/</span>
+              <span className="text-cp-muted mx-2">/</span>
               <span className="font-semibold">희신</span> {heui ?? '—'}
             </p>
-            <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+            <p className="text-xs text-cp-muted mt-1 leading-relaxed">
               용신은 보완하면 좋은 오행, 희신은 도움이 되는 오행입니다. 생활·직업·관계에서 참고해 보세요.
             </p>
           </div>

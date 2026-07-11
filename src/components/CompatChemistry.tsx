@@ -19,17 +19,17 @@ function SpectrumRow({ spectrum, index }: { spectrum: CompatSpectrum; index: num
   return (
     <div>
       <div className="flex items-center justify-between text-[11px] mb-1">
-        <span className="text-gray-400">{spectrum.leftLabel}</span>
-        <span className="text-gray-600 font-medium">{spectrum.title}</span>
-        <span className="text-gray-400">{spectrum.rightLabel}</span>
+        <span className="text-cp-muted">{spectrum.leftLabel}</span>
+        <span className="text-cp-muted font-medium">{spectrum.title}</span>
+        <span className="text-cp-muted">{spectrum.rightLabel}</span>
       </div>
-      <div className="relative h-1.5 rounded-full bg-gradient-to-r from-emerald-200/70 via-gray-200/70 to-rose-200/70">
+      <div className="relative h-1.5 rounded-full bg-gradient-to-r from-cp-down/40 via-cp-borderStrong to-cp-line/40">
         <div
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-white border-2 border-rose-400 shadow-sm transition-all duration-700 ease-out"
+          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-cp-text border-2 border-cp-accent shadow-sm transition-all duration-700 ease-out"
           style={{ left: drawn ? `${pct}%` : '0%' }}
         />
       </div>
-      <div className="mt-1 text-[10px] text-gray-400 leading-tight">{spectrum.caption}</div>
+      <div className="mt-1 text-[10px] text-cp-muted leading-tight">{spectrum.caption}</div>
     </div>
   )
 }
@@ -39,9 +39,9 @@ function FlowTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null
   const entry = payload[0]
   return (
-    <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-lg px-2 py-1 shadow-sm text-[10px]">
-      <span className="text-gray-600">{entry?.payload?.y}: </span>
-      <span className="font-semibold text-rose-500">{Math.round(entry?.value ?? 0)}</span>
+    <div className="bg-cp-surface/95 backdrop-blur border border-cp-border rounded-lg px-2 py-1 shadow-sm text-[10px]">
+      <span className="text-cp-muted">{entry?.payload?.y}: </span>
+      <span className="font-semibold text-cp-down">{Math.round(entry?.value ?? 0)}</span>
     </div>
   )
 }
@@ -85,17 +85,17 @@ export function CompatChemistry({ card, flow }: CompatChemistryProps) {
       {(card.goodYears.length > 0 || card.cautionYears.length > 0) && (
         <div className="flex flex-nowrap gap-1">
           {card.goodYears.slice(0, 3).map(y => (
-            <span key={`g${y}`} className="flex-1 min-w-0 text-center text-[10px] leading-none px-1 py-1 rounded-md whitespace-nowrap bg-teal-50 text-teal-700 border border-teal-100">{y} 좋음</span>
+            <span key={`g${y}`} className="flex-1 min-w-0 text-center text-[10px] leading-none px-1 py-1 rounded-md whitespace-nowrap bg-teal-500/15 text-teal-300 border border-teal-500/30">{y} 좋음</span>
           ))}
           {card.cautionYears.slice(0, 3).map(y => (
-            <span key={`c${y}`} className="flex-1 min-w-0 text-center text-[10px] leading-none px-1 py-1 rounded-md whitespace-nowrap bg-amber-50 text-amber-700 border border-amber-100">{y} 주의</span>
+            <span key={`c${y}`} className="flex-1 min-w-0 text-center text-[10px] leading-none px-1 py-1 rounded-md whitespace-nowrap bg-cp-caution/15 text-cp-caution border border-cp-caution/30">{y} 주의</span>
           ))}
         </div>
       )}
 
       {flow && flow.length > 1 && (
         <div>
-          <div className="text-[10px] text-gray-400 text-right pr-1 mb-0.5">
+          <div className="text-[10px] text-cp-muted text-right pr-1 mb-0.5">
             궁합 흐름<InfoTip align="right" text={'두 사람 사주를 오행·동기화·상생·충돌 네 가지로 합산한 관계 흐름이에요.\n선이 높을수록 관계가 순조로운 시기, 낮을수록 조율이 필요한 시기예요.'} />
           </div>
           <div className="h-[64px]">
@@ -104,8 +104,8 @@ export function CompatChemistry({ card, flow }: CompatChemistryProps) {
                 <XAxis dataKey="y" type="number" domain={['dataMin', 'dataMax']} hide padding={{ left: 8, right: 8 }} />
                 <YAxis domain={flowDomain} hide width={0} />
                 <Tooltip content={<FlowTooltip />} />
-                <ReferenceLine x={THIS_YEAR} stroke="#a78bfa" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5} />
-                <Line dataKey="s" stroke="#e879a9" strokeWidth={1.5} dot={false} connectNulls={false} isAnimationActive animationDuration={900} animationEasing="ease-out" />
+                <ReferenceLine x={THIS_YEAR} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5} />
+                <Line dataKey="s" stroke="#3182F6" strokeWidth={1.5} dot={false} connectNulls={false} isAnimationActive animationDuration={900} animationEasing="ease-out" />
               </LineChart>
             </ResponsiveContainer>
           </div>

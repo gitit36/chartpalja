@@ -66,31 +66,31 @@ function MenuDrawer({
 
   // 게스트는 클릭/hover/포커스 모두 막힌 상태. 자물쇠만 우측에 표시.
   const LockBadge = () => (
-    <span className="text-gray-300 text-sm leading-none ml-auto" aria-hidden>🔒</span>
+    <span className="text-cp-border text-sm leading-none ml-auto" aria-hidden>🔒</span>
   )
 
   const itemClass = (locked: boolean) =>
     `w-full px-5 py-3 text-left text-sm flex items-center gap-3 min-h-[44px] ${
       locked
-        ? 'text-gray-400 cursor-not-allowed select-none'
-        : 'text-gray-700 hover:bg-gray-50'
+        ? 'text-cp-muted cursor-not-allowed select-none'
+        : 'text-cp-text hover:bg-cp-bg'
     }`
 
   return (
     <div className="fixed inset-0 z-[9999] flex justify-end">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
-      <div className="relative z-10 w-72 max-w-[80vw] bg-white h-full shadow-xl flex flex-col animate-slide-in-right">
-        <div className="px-5 pt-5 pb-4 border-b border-gray-100">
+      <div className="relative z-10 w-72 max-w-[80vw] bg-cp-bg h-full shadow-xl flex flex-col animate-slide-in-right">
+        <div className="px-5 pt-5 pb-4 border-b border-cp-border">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900">메뉴</h2>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
+            <h2 className="text-lg font-bold text-cp-text">메뉴</h2>
+            <button onClick={onClose} className="text-cp-muted hover:text-cp-muted text-xl leading-none">&times;</button>
           </div>
 
-          <div className={`rounded-lg px-3 py-2.5 text-center ${isGuest ? 'bg-gray-50' : 'bg-purple-50'}`}>
-            <p className={`text-[10px] font-medium ${isGuest ? 'text-gray-400' : 'text-purple-600'}`}>보유 주(株)</p>
-            <p className={`text-lg font-bold ${isGuest ? 'text-gray-400' : 'text-purple-700'}`}>
-              {ju != null ? ju : <span className="text-gray-300">-</span>}
+          <div className={`rounded-lg px-3 py-2.5 text-center ${isGuest ? 'bg-cp-bg' : 'bg-cp-surface'}`}>
+            <p className={`text-[10px] font-medium ${isGuest ? 'text-cp-muted' : 'text-cp-line'}`}>보유 주(株)</p>
+            <p className={`text-lg font-bold ${isGuest ? 'text-cp-muted' : 'text-cp-line'}`}>
+              {ju != null ? ju : <span className="text-cp-border">-</span>}
               <span className="text-xs ml-0.5">주</span>
             </p>
           </div>
@@ -141,21 +141,21 @@ function MenuDrawer({
           </button>
         </nav>
 
-        <div className="px-5 py-4 border-t border-gray-100 space-y-3">
-          <div className="flex items-center justify-center gap-x-1 text-[10px] text-gray-300 whitespace-nowrap tracking-tight">
-            <Link href="/terms" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">이용약관</Link>
-            <span className="text-gray-200">·</span>
-            <Link href="/privacy" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">개인정보처리방침</Link>
-            <span className="text-gray-200">·</span>
-            <Link href="/refund" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">환불정책</Link>
-            <span className="text-gray-200">·</span>
-            <Link href="/business" onClick={onClose} className="text-gray-300 hover:text-gray-500 transition-colors">사업자정보</Link>
+        <div className="px-5 py-4 border-t border-cp-border space-y-3">
+          <div className="flex items-center justify-center gap-x-1 text-[10px] text-cp-border whitespace-nowrap tracking-tight">
+            <Link href="/terms" onClick={onClose} className="text-cp-border hover:text-cp-muted transition-colors">이용약관</Link>
+            <span className="text-cp-border">·</span>
+            <Link href="/privacy" onClick={onClose} className="text-cp-border hover:text-cp-muted transition-colors">개인정보처리방침</Link>
+            <span className="text-cp-border">·</span>
+            <Link href="/refund" onClick={onClose} className="text-cp-border hover:text-cp-muted transition-colors">환불정책</Link>
+            <span className="text-cp-border">·</span>
+            <Link href="/business" onClick={onClose} className="text-cp-border hover:text-cp-muted transition-colors">사업자정보</Link>
           </div>
 
           {isLoggedIn === true ? (
             <button
               onClick={handleLogout}
-              className="w-full py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors min-h-[44px]"
+              className="w-full py-2.5 rounded-xl border border-cp-border text-sm font-medium text-cp-muted hover:bg-cp-bg transition-colors min-h-[44px]"
             >
               로그아웃
             </button>
@@ -168,7 +168,7 @@ function MenuDrawer({
             </button>
           ) : (
             // 로딩 중에는 placeholder로 자리만 유지 (깜빡임 방지).
-            <div className="w-full h-[44px] rounded-xl bg-gray-100/60" aria-hidden />
+            <div className="w-full h-[44px] rounded-xl bg-cp-surface/60" aria-hidden />
           )}
         </div>
       </div>
@@ -209,7 +209,7 @@ export function HamburgerMenu() {
       <button
         onClick={handleOpen}
         onMouseEnter={() => { if (isLoggedIn === true) prefetchBalance() }}
-        className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors"
+        className="w-8 h-8 flex items-center justify-center text-cp-muted hover:text-cp-text transition-colors"
         aria-label="메뉴"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

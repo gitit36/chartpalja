@@ -4,6 +4,8 @@ import { getUserFromSession } from '@/lib/auth/session'
 import { buildSajuReportViaPython } from '@/lib/saju/saju-report'
 import { resolveYongshin } from '@/lib/ai/yongshin-llm'
 import { canReadSajuEntry, stripSensitiveEntryFields } from '@/lib/compat/access'
+import { slimSajuEntryForClient } from '@/lib/saju/slim-entry'
+import { hydrateWeekSeries } from '@/lib/saju/hydrate-week-series'
 import { compatShareStorageKey } from '@/lib/compat/storage'
 import { compatStorageKey, isRelationshipType } from '@/lib/compat/relationship'
 import type { CompatShareSnapshot } from '@/lib/compat/types'
@@ -34,7 +36,18 @@ export async function GET(
     const user = await getUserFromSession().catch(() => null)
     const guestId = getGuestId(request)
     const isOwner = !!(user && entry.userId === user.id) || !!(guestId && entry.guestId === guestId)
-    const payload = stripSensitiveEntryFields(entry as Record<string, unknown>, isOwner)
+    // 차트 UI용으로 페이로드를 줄여 첫 페인트 지연을 줄인다 (풀 데이터는 DB에 유지).
+    const payload = slimSajuEntryForClient(
+      stripSensitiveEntryFields(entry as Record<string, unknown>, isOwner),
+      isOwner,
+    )
+    // 이번 주 일운 — 응답에 붙여 ChartTab이 /api/saju/daily 재호출 없이 바로 그리게 함
+    try {
+      payload.weekSeries = await hydrateWeekSeries(entry)
+    } catch (e) {
+      console.error('weekSeries hydrate failed:', e)
+      payload.weekSeries = null
+    }
     return NextResponse.json(payload)
   } catch (error) {
     console.error('GET /api/saju/[id] error:', error)

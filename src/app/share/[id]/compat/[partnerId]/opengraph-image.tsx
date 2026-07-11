@@ -11,19 +11,19 @@ export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 const C = {
-  bg: 'linear-gradient(140deg, #0d1230 0%, #1b1547 52%, #3a1670 100%)',
-  glowChart: 'radial-gradient(760px circle at 82% 48%, rgba(251,113,133,0.20) 0%, rgba(251,113,133,0.0) 60%)',
-  glowCorner: 'radial-gradient(620px circle at 14% 92%, rgba(96,90,220,0.28) 0%, rgba(96,90,220,0.0) 55%)',
-  scoreA: '#5fb6ff',
-  scoreB: '#fb7185',
+  bg: 'linear-gradient(155deg, #131316 0%, #1f1e25 55%, #25252c 100%)',
+  glowChart: 'radial-gradient(760px circle at 82% 48%, rgba(240,68,82,0.16) 0%, rgba(240,68,82,0.0) 58%)',
+  glowCorner: 'radial-gradient(620px circle at 14% 92%, rgba(49,130,246,0.14) 0%, rgba(49,130,246,0.0) 55%)',
+  scoreA: '#F04452',
+  scoreB: '#3182F6',
   white: '#ffffff',
-  title: '#e8e9ff',
-  sub: '#b7bbe6',
-  lineA: '#5fb6ff',
-  lineB: '#fb7185',
-  pillBg: 'rgba(255,255,255,0.10)',
-  pillBorder: 'rgba(255,255,255,0.24)',
-  domain: 'rgba(232,233,255,0.72)',
+  title: '#E8E8ED',
+  sub: '#8B8B93',
+  lineA: '#F04452',
+  lineB: '#3182F6',
+  pillBg: 'rgba(45,45,54,0.85)',
+  pillBorder: '#4B4B54',
+  domain: '#6B6B75',
 }
 
 const L = {

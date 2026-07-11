@@ -12,16 +12,43 @@ export type DomainScores = Partial<Record<DomainKey, number>>
 
 export type DomainKey = '연애' | '대인' | '재물' | '학업' | '직업' | '건강'
 
+export interface DailyChartIndicators {
+  v?: number
+  yongshinPower: number
+  energyTotal: number
+  energyDirection: number
+  noblePower: number
+  ohangBalance: number
+  unseongCurve: number
+  tengo?: {
+    비겁: number
+    식상: number
+    재성: number
+    관살: number
+    인성: number
+  }
+  events?: {
+    이직_전환: number
+    연애_결혼: number
+    건강_주의: number
+    재물_기회: number
+    학업_시험: number
+    대인_갈등: number
+  }
+}
+
 export interface DailyScore {
   score: number
   grade: string
   seasonTag: string
   seasonEmoji: string
+  seasonDesc?: string
   domains: DomainScores
   bestDomain: string
   bestScore: number
   worstDomain: string
   worstScore: number
+  chart?: DailyChartIndicators
 }
 
 /** entryId -> (date -> score) */

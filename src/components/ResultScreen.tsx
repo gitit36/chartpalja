@@ -41,9 +41,9 @@ export function ResultScreen({ variant, title, description, detail, actions }: P
       <div className="min-h-screen flex flex-col">
         <div className="flex-1 px-4 pt-16 pb-8 flex flex-col items-center justify-center text-center">
           <div className="text-5xl mb-6" aria-hidden>{ICON_BY_VARIANT[variant]}</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{title}</h1>
+          <h1 className="text-2xl font-bold text-cp-text mb-2">{title}</h1>
           {description && (
-            <p className="text-gray-500 text-sm mb-8 max-w-sm leading-relaxed">{description}</p>
+            <p className="text-cp-muted text-sm mb-8 max-w-sm leading-relaxed">{description}</p>
           )}
 
           {detail}
@@ -55,8 +55,8 @@ export function ResultScreen({ variant, title, description, detail, actions }: P
                 onClick={() => router.push(a.href)}
                 className={
                   a.primary
-                    ? 'w-full py-4 rounded-2xl text-base font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98] transition-all min-h-[56px]'
-                    : 'w-full py-3 rounded-2xl text-sm text-gray-500 hover:text-gray-700 transition-colors min-h-[44px]'
+                    ? 'w-full py-4 rounded-2xl text-base font-bold bg-cp-accent text-white shadow-lg hover:shadow-xl active:scale-[0.98] transition-all min-h-[56px]'
+                    : 'w-full py-3 rounded-2xl text-sm text-cp-muted hover:text-cp-text transition-colors min-h-[44px]'
                 }
               >
                 {a.label}

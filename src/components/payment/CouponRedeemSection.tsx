@@ -59,39 +59,39 @@ export function CouponRedeemSection({ isLoggedIn, onRedeemed }: Props) {
 
   if (success) {
     return (
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3.5 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-          <svg className="w-4.5 h-4.5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3.5 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+          <svg className="w-4.5 h-4.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         </div>
         <div className="text-[13px] leading-snug">
-          <span className="font-bold text-emerald-700">+{success.addedJu}주</span>
-          <span className="text-emerald-700"> 적용됐어요!</span>
-          <span className="text-emerald-600/80"> 현재 {success.balance}주</span>
+          <span className="font-bold text-emerald-400">+{success.addedJu}주</span>
+          <span className="text-emerald-400"> 적용됐어요!</span>
+          <span className="text-cp-muted"> 현재 {success.balance}주</span>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+    <div className="rounded-xl border border-cp-border bg-cp-surface overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center gap-2 px-4 py-3 text-left"
       >
         <span className="text-base">🎟</span>
-        <span className="text-[13px] font-medium text-gray-700 flex-1">쿠폰 코드가 있으신가요?</span>
-        <svg className={`w-4 h-4 text-gray-300 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <span className="text-[13px] font-medium text-cp-text flex-1">쿠폰 코드가 있으신가요?</span>
+        <svg className={`w-4 h-4 text-cp-dim transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 pt-1 border-t border-gray-50">
+        <div className="px-4 pb-4 pt-1 border-t border-cp-border">
           {isLoggedIn === false ? (
-            <p className="text-[12px] text-gray-500 mt-2 leading-relaxed">
+            <p className="text-[12px] text-cp-muted mt-2 leading-relaxed">
               쿠폰 등록은 로그인 후 이용할 수 있어요. 카카오로 로그인한 뒤 다시 시도해 주세요.
             </p>
           ) : (
@@ -104,7 +104,7 @@ export function CouponRedeemSection({ isLoggedIn, onRedeemed }: Props) {
                   onKeyDown={(e) => { if (e.key === 'Enter') handleRedeem() }}
                   placeholder="예: CHARTPALJA26"
                   autoCapitalize="characters"
-                  className="flex-1 min-w-0 px-3.5 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder-gray-400 tracking-wide focus:outline-none focus:border-gray-400"
+                  className="flex-1 min-w-0 px-3.5 py-2.5 rounded-lg border border-cp-border bg-cp-input text-sm text-cp-text placeholder-cp-muted tracking-wide focus:outline-none focus:border-cp-line"
                 />
                 <button
                   type="button"
@@ -112,8 +112,8 @@ export function CouponRedeemSection({ isLoggedIn, onRedeemed }: Props) {
                   disabled={!code.trim() || loading}
                   className={`px-4 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${
                     code.trim() && !loading
-                      ? 'bg-gray-900 text-white hover:bg-gray-800'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      ? 'bg-cp-accent text-white hover:bg-cp-accent/90'
+                      : 'bg-cp-border text-cp-muted cursor-not-allowed'
                   }`}
                 >
                   {loading ? '확인 중' : '등록'}

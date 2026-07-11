@@ -29,11 +29,11 @@ export function LoginPromptSheet({ open, onClose, feature, returnTo }: Props) {
       header={(
         <div className="pt-1 pb-2 text-center">
           <div className="text-4xl mb-3" aria-hidden>🔓</div>
-          <h3 className="text-lg font-bold text-gray-900 mb-1">
+          <h3 className="text-lg font-bold text-cp-text mb-1">
             로그인하면 모든 기능이 열려요
           </h3>
           {feature && (
-            <p className="text-xs text-gray-400">{feature}도 함께 풀려요</p>
+            <p className="text-xs text-cp-muted">{feature}도 함께 풀려요</p>
           )}
         </div>
       )}
@@ -49,24 +49,24 @@ export function LoginPromptSheet({ open, onClose, feature, returnTo }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-3 mt-1 text-sm text-gray-500 hover:text-gray-700 transition-colors min-h-[44px]"
+            className="w-full py-3 mt-1 text-sm text-cp-muted hover:text-cp-text transition-colors min-h-[44px]"
           >
             다음에
           </button>
         </div>
       )}
     >
-      <ul className="text-sm text-gray-600 text-left space-y-2 pb-4 px-2 max-w-xs mx-auto">
+      <ul className="text-sm text-cp-muted text-left space-y-2 pb-4 px-2 max-w-xs mx-auto">
         <li className="flex items-center gap-2.5">
-          <span className="text-purple-500 font-bold">✓</span>
+          <span className="text-cp-line font-bold">✓</span>
           <span>대운·시즌·캔들 등 전체 시각화</span>
         </li>
         <li className="flex items-center gap-2.5">
-          <span className="text-purple-500 font-bold">✓</span>
+          <span className="text-cp-line font-bold">✓</span>
           <span>비교·구간 분석</span>
         </li>
         <li className="flex items-center gap-2.5">
-          <span className="text-purple-500 font-bold">✓</span>
+          <span className="text-cp-line font-bold">✓</span>
           <span>운세 해설</span>
         </li>
       </ul>

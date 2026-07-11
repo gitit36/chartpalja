@@ -2,9 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --cp-bg: #131316;
+  --cp-raised: #1f1e25;
+  --cp-surface: #2d2d36;
+  --cp-hover: #34343c;
+  --cp-input: #25252c;
+  --cp-border: #2e2f36;
+  --cp-border-strong: #4b4b54;
+  --cp-text: #ffffff;
+  --cp-secondary: #e8e8ed;
+  --cp-muted: #8b8b93;
+  --cp-dim: #6b6b75;
+  --cp-line: #f04452;
+  --cp-up: #f04452;
+  --cp-down: #3182f6;
+  --cp-accent: #3182f6;
+  --cp-caution: #f5a524;
+  --cp-violet: #c4b5fd;
+  --cp-violet-muted: rgba(167, 139, 250, 0.22);
+  --cp-violet-border: rgba(167, 139, 250, 0.4);
+  --cp-up-muted: rgba(240, 68, 82, 0.12);
+  --cp-down-muted: rgba(49, 130, 246, 0.12);
+  --cp-overlay: rgba(0, 0, 0, 0.6);
+  --cp-grid: rgba(240, 68, 82, 0.18);
+  --cp-line-fill: rgba(240, 68, 82, 0.22);
+}
+
 body {
-  @apply bg-gray-50 text-gray-900;
+  @apply bg-cp-bg text-cp-text font-sans antialiased;
   overflow-x: hidden;
+}
+
+/* Recharts 마운트 직전 흰 플래시 방지 */
+.recharts-wrapper,
+.recharts-surface {
+  background: transparent !important;
 }
 
 *::-webkit-scrollbar {
@@ -18,7 +51,7 @@ body {
   height: 4px;
 }
 .show-scrollbar::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--cp-border);
   border-radius: 2px;
 }
 .show-scrollbar::-webkit-scrollbar-track {
@@ -26,7 +59,7 @@ body {
 }
 .show-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db transparent;
+  scrollbar-color: var(--cp-border) transparent;
 }
 
 @keyframes slideInRight {
@@ -61,9 +94,6 @@ body {
   animation: slideUp 0.3s ease-out;
 }
 
-/* 잠금 해제 stagger: 자식들이 순차로 fade-in.
- * 사용: <div class="stagger-fade-in"><Child/><Child/></div>
- */
 .stagger-fade-in > * {
   animation: fadeIn 0.4s ease-out both;
 }

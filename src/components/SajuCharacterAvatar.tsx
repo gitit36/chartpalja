@@ -67,7 +67,7 @@ export function SajuCharacterAvatar({ gender, element, personId = '', size = 48 
         <span style={{ fontSize: personFontSize, lineHeight: 1 }}>{personEmoji}</span>
       </div>
       <span
-        className="absolute flex items-center justify-center bg-white rounded-full shadow-sm border border-gray-100"
+        className="absolute flex items-center justify-center bg-cp-bg rounded-full shadow-sm border border-cp-border"
         style={{
           width: badgeSize,
           height: badgeSize,

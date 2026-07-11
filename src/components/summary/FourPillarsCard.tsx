@@ -25,7 +25,7 @@ function StemBox({ hanja, isMe }: { hanja: string; isMe?: boolean }) {
   const element = STEM_ELEMENT[hanja] ?? '土'
   const hangul = STEM_HANGUL[hanja] ?? hanja
   const elemHangul = elementToHangul(element)
-  const bg = ELEMENT_BG[element] ?? 'bg-gray-100 border-2 border-gray-400 text-gray-800'
+  const bg = ELEMENT_BG[element] ?? 'bg-gray-100 border-2 border-gray-400 text-cp-text'
   return (
     <div className={`relative rounded-xl px-2 py-2.5 text-center min-w-[3rem] ${bg}`}>
       {isMe && (
@@ -43,7 +43,7 @@ function BranchBox({ hanja }: { hanja: string }) {
   const element = BRANCH_ELEMENT[hanja] ?? '土'
   const hangul = BRANCH_HANGUL[hanja] ?? hanja
   const elemHangul = elementToHangul(element)
-  const bg = ELEMENT_BG[element] ?? 'bg-gray-100 border-2 border-gray-400 text-gray-800'
+  const bg = ELEMENT_BG[element] ?? 'bg-gray-100 border-2 border-gray-400 text-cp-text'
   return (
     <div className={`rounded-xl px-2 py-2.5 text-center min-w-[3rem] ${bg}`}>
       <div className="text-xl font-bold leading-tight">{hanja}</div>
@@ -64,9 +64,9 @@ export function FourPillarsCard({ report }: { report: SajuReportJson | null }) {
 
   if (!pillars || !ganji) {
     return (
-      <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-        <h2 className="text-lg font-semibold mb-3 text-gray-800">사주원국</h2>
-        <p className="text-sm text-gray-500">(추가 계산 예정)</p>
+      <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+        <h2 className="text-lg font-semibold mb-3 text-cp-text">사주원국</h2>
+        <p className="text-sm text-cp-muted">(추가 계산 예정)</p>
       </section>
     )
   }
@@ -98,8 +98,8 @@ export function FourPillarsCard({ report }: { report: SajuReportJson | null }) {
   const allGmBranches = new Set([...dayGmSet, ...yearGmSet])
 
   return (
-    <section className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h2 className="text-lg font-semibold mb-4 text-gray-800">사주원국</h2>
+    <section className="bg-cp-bg rounded-xl p-5 shadow-sm border border-cp-border">
+      <h2 className="text-lg font-semibold mb-4 text-cp-text">사주원국</h2>
       <div className="grid grid-cols-4 gap-3">
         {DISPLAY_ORDER.map(({ label, lifeStage, index, isDay }) => {
           const stem = stems[index]
@@ -112,18 +112,18 @@ export function FourPillarsCard({ report }: { report: SajuReportJson | null }) {
 
           return (
             <div key={label} className="flex flex-col items-center gap-1.5">
-              <div className="text-sm font-bold text-gray-800">{label}{isDay ? ' (나)' : ''}</div>
-              <div className="text-[10px] text-gray-500">{lifeStage}</div>
-              <div className="text-xs text-gray-600 font-medium">{topSipsung === '—' ? '일원' : topSipsung}</div>
+              <div className="text-sm font-bold text-cp-text">{label}{isDay ? ' (나)' : ''}</div>
+              <div className="text-[10px] text-cp-muted">{lifeStage}</div>
+              <div className="text-xs text-cp-muted font-medium">{topSipsung === '—' ? '일원' : topSipsung}</div>
               {stem !== '—' ? <StemBox hanja={stem} isMe={isDay} /> : <div className="min-h-[3.5rem]" />}
               {branch !== '—' ? <BranchBox hanja={branch} /> : <div className="min-h-[3.5rem]" />}
-              <div className="text-xs font-bold text-gray-700 mt-0.5">{topSipsung}</div>
-              <div className="text-[10px] text-gray-500">{unseong}</div>
+              <div className="text-xs font-bold text-cp-text mt-0.5">{topSipsung}</div>
+              <div className="text-[10px] text-cp-muted">{unseong}</div>
               {isGongmang && (
                 <div className="text-[10px] text-red-400 font-medium">공망</div>
               )}
               {hiddenStems.length > 0 && (
-                <div className="mt-1 space-y-0.5 text-[10px] text-gray-600 text-center">
+                <div className="mt-1 space-y-0.5 text-[10px] text-cp-muted text-center">
                   {hiddenStems.slice(0, 3).map((hs, i) => (
                     <div key={i}>
                       {hs.stem ?? ''} {hs.ten_god ?? ''}
@@ -136,7 +136,7 @@ export function FourPillarsCard({ report }: { report: SajuReportJson | null }) {
         })}
       </div>
       {gmTags.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-gray-100 text-center text-xs text-gray-500 space-y-0.5">
+        <div className="mt-3 pt-3 border-t border-cp-border text-center text-xs text-cp-muted space-y-0.5">
           {gmTags.map((t, i) => (
             <div key={i}>
               [{t.source}] 공망: {t.pillar}지={t.branch}({BRANCH_HANGUL[t.branch] ?? t.branch})

@@ -88,16 +88,50 @@ def _compute_entry(mod, entry: dict, dates: list) -> dict:
         season = daily.get("시즌태그") or {}
         domains = daily.get("운세도메인") or {}
         best_k, best_v, worst_k, worst_v = _best_worst(domains)
+        detail = daily.get("용신부합_상세") or {}
+        energy = daily.get("에너지장") or {}
+        yong = float(detail.get("용신부합") or 0)
+        hui = float(detail.get("희신부합") or 0)
+        gi = float(detail.get("기신부합") or 0)
+        # 차트 보조지표용 — 용신력 ≈ 용신·희신 − 기신
+        yongshin_power = max(-2.0, min(2.0, yong + 0.5 * hui - gi))
+        tengo = daily.get("십성밸런스") or {}
+        events = daily.get("이벤트확률") or {}
         out[date_str] = {
             "score": int(daily.get("점수", 0)),
             "grade": daily.get("등급", ""),
             "seasonTag": season.get("tag", ""),
             "seasonEmoji": season.get("emoji", ""),
+            "seasonDesc": season.get("desc", ""),
             "domains": {k: int(v) for k, v in domains.items()},
             "bestDomain": best_k,
             "bestScore": best_v,
             "worstDomain": worst_k,
             "worstScore": worst_v,
+            "chart": {
+                "v": 2,
+                "yongshinPower": round(yongshin_power, 3),
+                "energyTotal": float(energy.get("total") or 0),
+                "energyDirection": float(energy.get("direction") or 0),
+                "noblePower": float(daily.get("귀인력") or 0),
+                "ohangBalance": float(daily.get("오행균형도") if daily.get("오행균형도") is not None else 0.5),
+                "unseongCurve": float(daily.get("12운성곡선") or 0),
+                "tengo": {
+                    "비겁": float(tengo.get("비겁") or 0),
+                    "식상": float(tengo.get("식상") or 0),
+                    "재성": float(tengo.get("재성") or 0),
+                    "관살": float(tengo.get("관살") or 0),
+                    "인성": float(tengo.get("인성") or 0),
+                },
+                "events": {
+                    "이직_전환": int(events.get("이직_전환") or 0),
+                    "연애_결혼": int(events.get("연애_결혼") or 0),
+                    "건강_주의": int(events.get("건강_주의") or 0),
+                    "재물_기회": int(events.get("재물_기회") or 0),
+                    "학업_시험": int(events.get("학업_시험") or 0),
+                    "대인_갈등": int(events.get("대인_갈등") or 0),
+                },
+            },
         }
     return out
 

@@ -8,21 +8,21 @@ export const alt = '차트팔자 — 사주도 주식처럼 차트로'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-/* ── 디자인 상수 (share/[id] OG 와 동일 브랜드 톤) ── */
+/* ── 디자인 상수 (앱 다크 팔레트) ── */
 const C = {
-  bg: 'linear-gradient(140deg, #0d1230 0%, #1b1547 52%, #3a1670 100%)',
-  glowChart: 'radial-gradient(820px circle at 78% 44%, rgba(95,182,255,0.22) 0%, rgba(95,182,255,0.0) 60%)',
-  glowCorner: 'radial-gradient(640px circle at 12% 92%, rgba(96,90,220,0.30) 0%, rgba(96,90,220,0.0) 55%)',
-  score: '#5fb6ff',
+  bg: 'linear-gradient(155deg, #131316 0%, #1f1e25 55%, #25252c 100%)',
+  glowChart: 'radial-gradient(820px circle at 78% 44%, rgba(240,68,82,0.18) 0%, rgba(240,68,82,0.0) 58%)',
+  glowCorner: 'radial-gradient(640px circle at 12% 92%, rgba(49,130,246,0.12) 0%, rgba(49,130,246,0.0) 55%)',
+  score: '#F04452',
   white: '#ffffff',
-  title: '#e8e9ff',
-  sub: '#b7bbe6',
-  line: '#5fb6ff',
+  title: '#E8E8ED',
+  sub: '#8B8B93',
+  line: '#F04452',
   grid: 'rgba(255,255,255,0.06)',
-  gridStrong: 'rgba(255,255,255,0.10)',
-  pillBg: 'rgba(255,255,255,0.08)',
-  pillBorder: 'rgba(255,255,255,0.16)',
-  domain: 'rgba(232,233,255,0.72)',
+  pillBg: 'rgba(45,45,54,0.85)',
+  pillBorder: '#4B4B54',
+  domain: '#6B6B75',
+  ink: '#131316',
 }
 
 // 개인정보 없는 데모용 인생 곡선(연도별 세운 점수 느낌).
@@ -89,19 +89,14 @@ export default async function Image() {
           style={{ position: 'absolute', top: L.sparkTop, right: L.sparkRight }}
         >
           <defs>
-            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stopColor="#8f7bff" />
-              <stop offset="0.5" stopColor="#5fb6ff" />
-              <stop offset="1" stopColor="#5fe6c8" />
-            </linearGradient>
             <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="rgba(95,182,255,0.30)" />
-              <stop offset="0.55" stopColor="rgba(120,140,255,0.10)" />
-              <stop offset="1" stopColor="rgba(95,182,255,0)" />
+              <stop offset="0" stopColor="rgba(240,68,82,0.28)" />
+              <stop offset="0.55" stopColor="rgba(240,68,82,0.08)" />
+              <stop offset="1" stopColor="rgba(240,68,82,0)" />
             </linearGradient>
             <radialGradient id="dotHalo" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0" stopColor="rgba(95,182,255,0.55)" />
-              <stop offset="1" stopColor="rgba(95,182,255,0)" />
+              <stop offset="0" stopColor="rgba(240,68,82,0.45)" />
+              <stop offset="1" stopColor="rgba(240,68,82,0)" />
             </radialGradient>
           </defs>
 
@@ -127,17 +122,17 @@ export default async function Image() {
           <path
             d={spark.line}
             fill="none"
-            stroke="rgba(95,182,255,0.22)"
+            stroke="rgba(240,68,82,0.22)"
             strokeWidth={16}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
 
-          {/* 메인 라인 (그라디언트) */}
+          {/* 메인 라인 */}
           <path
             d={spark.line}
             fill="none"
-            stroke="url(#lineGrad)"
+            stroke={C.line}
             strokeWidth={7}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -151,14 +146,14 @@ export default async function Image() {
                 y1={curDot.y + 6}
                 x2={curDot.x}
                 y2={L.sparkH - 8}
-                stroke="rgba(95,182,255,0.40)"
+                stroke="rgba(240,68,82,0.35)"
                 strokeWidth={2}
                 strokeDasharray="3 7"
                 strokeLinecap="round"
               />
               {/* 후광 + 포인트 */}
               <circle cx={curDot.x} cy={curDot.y} r={26} fill="url(#dotHalo)" />
-              <circle cx={curDot.x} cy={curDot.y} r={11} fill="#ffffff" />
+              <circle cx={curDot.x} cy={curDot.y} r={11} fill={C.ink} />
               <circle cx={curDot.x} cy={curDot.y} r={7} fill={C.line} />
             </g>
           ) : null}
@@ -176,8 +171,8 @@ export default async function Image() {
               alignItems: 'center',
               padding: '8px 18px',
               borderRadius: 18,
-              background: 'rgba(13,18,48,0.72)',
-              border: '1px solid rgba(95,182,255,0.45)',
+              background: 'rgba(31,30,37,0.92)',
+              border: '1px solid #4B4B54',
             }}
           >
             <div style={{ display: 'flex', fontSize: 20, fontWeight: 600, color: C.sub }}>올해</div>

@@ -30,16 +30,15 @@ export function Toast({ open, message, duration = 2400, onClose }: Props) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center pointer-events-none px-4">
+    <div className="fixed inset-x-0 bottom-28 z-50 flex justify-center pointer-events-none px-4">
       <div
         role="status"
         aria-live="polite"
-        className={`pointer-events-auto max-w-[400px] w-full bg-gray-900/95 text-white text-sm px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 transition-all duration-250 ${
+        className={`pointer-events-auto w-auto max-w-[min(400px,calc(100%-2rem))] bg-cp-hover border border-cp-borderStrong text-cp-secondary text-sm font-medium px-4 py-3 rounded-xl text-center shadow-[0_8px_28px_rgba(0,0,0,0.45)] transition-all duration-250 ${
           visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
         }`}
       >
-        <span aria-hidden>✨</span>
-        <span className="flex-1 leading-snug">{message}</span>
+        <span className="leading-snug">{message}</span>
       </div>
     </div>
   )

@@ -137,6 +137,34 @@ export function alignedScores(
 }
 
 /**
+ * 궁합은 쌍(pair) 고유값이어야 하므로, 두 사주의 입력 순서를 결정적으로 정규화한다.
+ * 사주 여덟 글자(원국) + 출생연도로 안정적인 키를 만들어 정렬하면, A→B 로 넣든
+ * B→A 로 넣든 항상 같은 순서로 계산돼 어느 페이지에서 봐도 점수가 일치한다.
+ * (키가 같으면 사실상 동일 사주라 순서와 무관하게 대칭)
+ */
+export function canonicalPairKey(report: SajuReportJson, birthYear: number): string {
+  const w = report.만세력_사주원국
+  const pillars = `${w?.연주 ?? ''}${w?.월주 ?? ''}${w?.일주 ?? ''}${w?.시주 ?? ''}`
+  // 같은 원국·출생연도라도 성별(대운 방향)이 다르면 차트가 달라지므로,
+  // 대운 기둥 시퀀스를 덧붙여 순서를 완전히 결정적으로 만든다.
+  const cp = report.chartData as ChartPayload | undefined
+  const dae = (cp?.대운기둥10 ?? []).map(d => d?.daewoon_pillar ?? '').join('')
+  return `${birthYear}|${pillars}|${dae}`
+}
+
+export function canonicalizePair(
+  reportA: SajuReportJson,
+  birthYearA: number,
+  reportB: SajuReportJson,
+  birthYearB: number,
+): { rA: SajuReportJson; byA: number; rB: SajuReportJson; byB: number } {
+  const keyA = canonicalPairKey(reportA, birthYearA)
+  const keyB = canonicalPairKey(reportB, birthYearB)
+  if (keyA <= keyB) return { rA: reportA, byA: birthYearA, rB: reportB, byB: birthYearB }
+  return { rA: reportB, byA: birthYearB, rB: reportA, byB: birthYearA }
+}
+
+/**
  * 두 사주 리포트로 무료 궁합 유형 6종 중 1개를 분류한다 (v1 휴리스틱).
  */
 export function classifyCompat(
@@ -145,12 +173,14 @@ export function classifyCompat(
   reportB: SajuReportJson,
   birthYearB: number,
 ): CompatType {
-  const ohangA = getOhangCounts(reportA)
-  const ohangB = getOhangCounts(reportB)
+  // 순서 무관(대칭)하게: 쌍 정규화 후 계산.
+  const { rA, byA, rB, byB } = canonicalizePair(reportA, birthYearA, reportB, birthYearB)
+  const ohangA = getOhangCounts(rA)
+  const ohangB = getOhangCounts(rB)
   const complement = complementScore(ohangA, ohangB)
   const diversity = diversityScore(ohangA, ohangB)
-  const { clash, harmony } = dayPillarMetrics(reportA, reportB)
-  const { scoresA, scoresB } = alignedScores(reportA, birthYearA, reportB, birthYearB)
+  const { clash, harmony } = dayPillarMetrics(rA, rB)
+  const { scoresA, scoresB } = alignedScores(rA, byA, rB, byB)
   const corr = pearson(scoresA, scoresB)
   const vol = volatility(scoresA.map((s, i) => Math.abs(s - (scoresB[i] ?? s))))
 

@@ -14,16 +14,16 @@ const PILLAR_LABELS: Record<string, string> = { "시주": "시주", "일주": "�
 const PILLAR_DATA_IDX: Record<string, number> = { "연주": 0, "월주": 1, "일주": 2, "시주": 3 }
 
 const ELEMENT_BAR_COLORS: Record<string, string> = {
-  "목": "bg-green-400", "화": "bg-red-400", "토": "bg-yellow-400", "금": "bg-gray-300", "수": "bg-blue-400",
-  "木": "bg-green-400", "火": "bg-red-400", "土": "bg-yellow-400", "金": "bg-gray-300", "水": "bg-blue-400",
+  "목": "bg-emerald-400", "화": "bg-cp-line", "토": "bg-cp-caution", "금": "bg-cp-muted", "수": "bg-cp-down",
+  "木": "bg-emerald-400", "火": "bg-cp-line", "土": "bg-cp-caution", "金": "bg-cp-muted", "水": "bg-cp-down",
 }
 
 const ELEMENT_CELL_STYLES: Record<string, { bg: string; ring: string; text: string; badge: string }> = {
-  "木": { bg: "bg-green-50",  ring: "ring-green-300", text: "text-green-800", badge: "bg-green-100 text-green-700" },
-  "火": { bg: "bg-red-50",    ring: "ring-red-300",   text: "text-red-800",   badge: "bg-red-100 text-red-700" },
-  "土": { bg: "bg-amber-50",  ring: "ring-amber-300", text: "text-amber-800", badge: "bg-amber-100 text-amber-700" },
-  "金": { bg: "bg-gray-50",   ring: "ring-gray-300",  text: "text-gray-700",  badge: "bg-gray-200 text-gray-600" },
-  "水": { bg: "bg-blue-50",   ring: "ring-blue-300",  text: "text-blue-800",  badge: "bg-blue-100 text-blue-700" },
+  "木": { bg: "bg-emerald-500/15", ring: "ring-emerald-500/30", text: "text-emerald-300", badge: "bg-emerald-500/20 text-emerald-300" },
+  "火": { bg: "bg-cp-line/15", ring: "ring-cp-line/30", text: "text-cp-line", badge: "bg-cp-line/20 text-cp-line" },
+  "土": { bg: "bg-cp-caution/15", ring: "ring-cp-caution/30", text: "text-cp-caution", badge: "bg-cp-caution/20 text-cp-caution" },
+  "金": { bg: "bg-cp-hover", ring: "ring-cp-borderStrong", text: "text-cp-secondary", badge: "bg-cp-border text-cp-muted" },
+  "水": { bg: "bg-cp-down/15", ring: "ring-cp-down/30", text: "text-cp-down", badge: "bg-cp-down/20 text-cp-down" },
 }
 
 const TEN_GOD_KR: Record<string, string> = {
@@ -42,13 +42,13 @@ const UNSUNG_KR: Record<string, string> = {
 }
 
 const REL_STYLE: Record<string, { icon: string; color: string; bg: string }> = {
-  "충": { icon: "\u26A1", color: "text-red-600",    bg: "bg-red-50 border-red-200" },
-  "극": { icon: "\uD83D\uDD25", color: "text-orange-600", bg: "bg-orange-50 border-orange-200" },
-  "형": { icon: "\u26A0\uFE0F", color: "text-amber-600",  bg: "bg-amber-50 border-amber-200" },
-  "합": { icon: "\uD83E\uDD1D", color: "text-blue-600",   bg: "bg-blue-50 border-blue-200" },
-  "파": { icon: "\uD83D\uDCA2", color: "text-purple-600", bg: "bg-purple-50 border-purple-200" },
-  "해": { icon: "\uD83C\uDF0A", color: "text-teal-600",   bg: "bg-teal-50 border-teal-200" },
-  "원진": { icon: "\uD83D\uDE24", color: "text-rose-600", bg: "bg-rose-50 border-rose-200" },
+  "충": { icon: "\u26A1", color: "text-cp-up",    bg: "bg-cp-upMuted border-cp-line/30" },
+  "극": { icon: "\uD83D\uDD25", color: "text-cp-caution", bg: "bg-cp-caution/15 border-cp-caution/30" },
+  "형": { icon: "\u26A0\uFE0F", color: "text-cp-caution", bg: "bg-cp-caution/15 border-cp-caution/30" },
+  "합": { icon: "\uD83E\uDD1D", color: "text-cp-down", bg: "bg-cp-downMuted border-cp-down/30" },
+  "파": { icon: "\uD83D\uDCA2", color: "text-cp-secondary", bg: "bg-cp-hover border-cp-border" },
+  "해": { icon: "\uD83C\uDF0A", color: "text-teal-300", bg: "bg-teal-500/15 border-teal-500/30" },
+  "원진": { icon: "\uD83D\uDE24", color: "text-cp-down", bg: "bg-cp-surface border-cp-border" },
 }
 
 const REL_TOOLTIP_BY_POS: Record<string, Record<string, string>> = {
@@ -250,10 +250,10 @@ const SHINSAL_PILLAR_TIP: Record<string, PillarTip> = {
 }
 
 const PILLAR_DOT_COLORS: { key: string; label: string; color: string }[] = [
-  { key: "시주", label: "시", color: "bg-gray-800" },
+  { key: "시주", label: "시", color: "bg-cp-muted" },
   { key: "일주", label: "일", color: "bg-teal-400" },
   { key: "월주", label: "월", color: "bg-orange-400" },
-  { key: "년주", label: "년", color: "bg-purple-500" },
+  { key: "년주", label: "년", color: "bg-cp-line" },
 ]
 const BRANCH_KEY_MAP: Record<string, string> = { "연주": "년주", "월주": "월주", "일주": "일주", "시주": "시주" }
 
@@ -402,7 +402,7 @@ interface InfoTabProps {
 }
 
 export function InfoTab({ report, isLocked = false, onLockedClick }: InfoTabProps) {
-  if (!report) return <div className="py-12 text-center text-gray-400 text-sm">사주 정보가 없습니다.</div>
+  if (!report) return <div className="py-12 text-center text-cp-muted text-sm">사주 정보가 없습니다.</div>
 
   const unlock = (feature: string) => onLockedClick?.(feature)
 
@@ -457,27 +457,27 @@ export function InfoTab({ report, isLocked = false, onLockedClick }: InfoTabProp
 function RelationsPlaceholder() {
   const tabs = ['년월', '년일', '월일', '일시']
   const chips = [
-    { t: '시묘합', cls: 'bg-blue-50 border-blue-200 text-blue-600' },
-    { t: '월일충', cls: 'bg-red-50 border-red-200 text-red-600' },
-    { t: '연월형', cls: 'bg-amber-50 border-amber-200 text-amber-600' },
-    { t: '일시파', cls: 'bg-purple-50 border-purple-200 text-purple-600' },
+    { t: '시묘합', cls: 'bg-cp-downMuted border-cp-down/30 text-cp-down' },
+    { t: '월일충', cls: 'bg-cp-upMuted border-cp-line/30 text-cp-up' },
+    { t: '연월형', cls: 'bg-cp-caution/15 border-cp-caution/30 text-cp-caution' },
+    { t: '일시파', cls: 'bg-cp-surface border-cp-border text-cp-line' },
   ]
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 기운의 관계</h3>
+      <h3 className="font-bold text-cp-text text-sm mb-2">타고난 기운의 관계</h3>
       <div className="flex gap-1 mb-2 overflow-hidden">
         {tabs.map((t, i) => (
           <span
             key={t}
             className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
-              i === 0 ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500'
+              i === 0 ? 'bg-cp-accent text-white' : 'bg-cp-surface text-cp-muted'
             }`}
           >
             {t}<span className="ml-0.5 text-[9px] opacity-70">2</span>
           </span>
         ))}
       </div>
-      <div className="bg-gray-50 rounded-xl px-3.5 py-2.5">
+      <div className="bg-cp-raised rounded-xl px-3.5 py-2.5">
         <div className="flex flex-wrap gap-1.5">
           {chips.map(c => (
             <span key={c.t} className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg border ${c.cls}`}>
@@ -494,12 +494,12 @@ function ShinsalPlaceholder() {
   const items = ['천을귀인', '도화살', '역마살', '문창귀인', '화개살', '양인살', '월덕귀인', '천덕귀인']
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 복과 걸림돌</h3>
+      <h3 className="font-bold text-cp-text text-sm mb-2">타고난 복과 걸림돌</h3>
       <div className="flex flex-wrap gap-1.5">
         {items.map(n => (
           <span
             key={n}
-            className="inline-flex items-center gap-1.5 text-xs bg-purple-50 text-purple-700 border border-purple-200 rounded-lg px-2.5 py-1 font-medium"
+            className="inline-flex items-center gap-1.5 text-xs bg-cp-surface text-cp-line border border-cp-border rounded-lg px-2.5 py-1 font-medium"
           >
             {n}
           </span>
@@ -520,13 +520,13 @@ function DaewoonPlaceholder() {
   ]
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">대운 타임라인</h3>
+      <h3 className="font-bold text-cp-text text-sm mb-2">대운 타임라인</h3>
       <div className="overflow-hidden pb-2 -mx-4 px-4">
         <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
           {blocks.map(b => (
-            <div key={b.age} className="shrink-0 w-[100px] bg-gray-50 border border-gray-100 rounded-xl p-2.5 text-center">
-              <div className="text-base font-bold text-gray-800">{b.p}</div>
-              <div className="text-[10px] text-gray-500 mt-0.5">{b.age}세</div>
+            <div key={b.age} className="shrink-0 w-[100px] bg-cp-raised border border-cp-border rounded-xl p-2.5 text-center">
+              <div className="text-base font-bold text-cp-text">{b.p}</div>
+              <div className="text-[10px] text-cp-muted mt-0.5">{b.age}세</div>
             </div>
           ))}
         </div>
@@ -556,7 +556,7 @@ function PillarGrid({ report }: { report: SajuReportJson }) {
 
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-3">사주원국</h3>
+      <h3 className="font-bold text-cp-text text-sm mb-3">사주원국</h3>
       <div className="grid grid-cols-4 gap-2">
         {PILLAR_KEYS.map(p => {
           const pillar = wonkuk[p]
@@ -582,47 +582,47 @@ function PillarGrid({ report }: { report: SajuReportJson }) {
           return (
             <div key={p} className="flex flex-col items-center gap-1.5">
               {/* Header */}
-              <div className={`text-[11px] font-semibold ${isMe ? "text-purple-600" : "text-gray-500"}`}>
+              <div className={`text-[11px] font-semibold ${isMe ? "text-cp-line" : "text-cp-muted"}`}>
                 {PILLAR_LABELS[p]}
               </div>
               {/* 천간 cell */}
               <div className={`w-full aspect-square rounded-xl ring-1 flex flex-col items-center justify-center gap-0.5 ${
-                stemStyle ? `${stemStyle.bg} ${stemStyle.ring}` : "bg-gray-50 ring-gray-200"
+                stemStyle ? `${stemStyle.bg} ${stemStyle.ring}` : "bg-cp-raised ring-cp-border"
               }`}>
-                <span className={`text-2xl font-bold leading-none ${stemStyle?.text ?? "text-gray-800"}`}>
+                <span className={`text-2xl font-bold leading-none ${stemStyle?.text ?? "text-cp-text"}`}>
                   {stemHangul}
                 </span>
                 {stemEl && (
-                  <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${stemStyle?.badge ?? "bg-gray-100 text-gray-500"}`}>
+                  <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${stemStyle?.badge ?? "bg-cp-surface text-cp-muted"}`}>
                     {stemEl}
                   </span>
                 )}
                 {stemTG && (
-                  <span className="text-[9px] text-gray-400 leading-none">{tgKr(stemTG)}</span>
+                  <span className="text-[9px] text-cp-muted leading-none">{tgKr(stemTG)}</span>
                 )}
               </div>
               {/* 지지 cell */}
               <div className={`w-full aspect-square rounded-xl ring-1 flex flex-col items-center justify-center gap-0.5 relative ${
-                branchStyle ? `${branchStyle.bg} ${branchStyle.ring}` : "bg-gray-50 ring-gray-200"
+                branchStyle ? `${branchStyle.bg} ${branchStyle.ring}` : "bg-cp-raised ring-cp-border"
               }`}>
-                {isGongmang && <span className={`absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${gmInfo?.type === '진공' ? 'bg-rose-400' : 'bg-amber-400'}`} title={gmInfo?.type ? `공망(${gmInfo.type})` : '공망'} />}
-                <span className={`text-2xl font-bold leading-none ${branchStyle?.text ?? "text-gray-800"}`}>
+                {isGongmang && <span className={`absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-cp-raised ${gmInfo?.type === '진공' ? 'bg-cp-down' : 'bg-cp-caution'}`} title={gmInfo?.type ? `공망(${gmInfo.type})` : '공망'} />}
+                <span className={`text-2xl font-bold leading-none ${branchStyle?.text ?? "text-cp-text"}`}>
                   {branchHangul}
                 </span>
                 {branchEl && (
-                  <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${branchStyle?.badge ?? "bg-gray-100 text-gray-500"}`}>
+                  <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full ${branchStyle?.badge ?? "bg-cp-surface text-cp-muted"}`}>
                     {branchEl}
                   </span>
                 )}
                 {branchTG && (
-                  <span className="text-[9px] text-gray-400 leading-none">{tgKr(branchTG)}</span>
+                  <span className="text-[9px] text-cp-muted leading-none">{tgKr(branchTG)}</span>
                 )}
               </div>
               {/* Detail rows below cells */}
               <div className="w-full space-y-0.5 mt-0.5">
                 {/* 지장간 */}
                 <div className="text-center">
-                  <span className="text-[9px] text-gray-400">
+                  <span className="text-[9px] text-cp-muted">
                     {hidden.length
                       ? hidden.map((h: { stem?: string; ten_god?: string }) => sh(h.stem ?? "") || h.stem || "").join(" ")
                       : "-"}
@@ -635,7 +635,7 @@ function PillarGrid({ report }: { report: SajuReportJson }) {
                 {/* 공망 */}
                 {isGongmang && (
                   <div className="text-center">
-                    <span className={`text-[8px] font-semibold ${gmInfo?.type === '진공' ? 'text-rose-500' : 'text-amber-500'}`}>
+                    <span className={`text-[8px] font-semibold ${gmInfo?.type === '진공' ? 'text-cp-down' : 'text-cp-caution'}`}>
                       {gmInfo?.type === '진공' ? '공망' : gmInfo?.type === '가공(합)' ? '공망(해소)' : gmInfo?.type === '가공(충)' ? '공망(약)' : '공망'}
                     </span>
                   </div>
@@ -683,12 +683,12 @@ function CoreInfoCard({ report }: { report: SajuReportJson }) {
 
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">핵심 정보</h3>
-      <div className="bg-gray-50 rounded-xl divide-y divide-gray-100">
+      <h3 className="font-bold text-cp-text text-sm mb-2">핵심 정보</h3>
+      <div className="bg-cp-raised rounded-xl divide-y divide-cp-border">
         {rows.map(r => (
           <div key={r.label} className="flex items-center justify-between px-3.5 py-2.5">
-            <span className="text-xs text-gray-500">{r.label}</span>
-            <span className={`text-sm font-medium ${r.highlight ? "text-purple-700" : "text-gray-800"}`}>
+            <span className="text-xs text-cp-muted">{r.label}</span>
+            <span className={`text-sm font-medium ${r.highlight ? "text-cp-line" : "text-cp-text"}`}>
               {r.value}
             </span>
           </div>
@@ -708,19 +708,21 @@ function OhangInlineBar({ report }: { report: SajuReportJson }) {
 
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">오행 분포<InfoTip lift text="사주원국의 8글자(천간4+지지4)에 포함된 오행의 개수예요. 지지 안에 숨어있는 지장간의 가중치까지 포함하기 때문에, 단순히 글자 수를 세는 것과 숫자가 다를 수 있어요." /></h3>
+      <h3 className="font-bold text-cp-text text-sm mb-2">
+        <InfoTip lift label="오행 분포" text="사주원국의 8글자(천간4+지지4)에 포함된 오행의 개수예요. 지지 안에 숨어있는 지장간의 가중치까지 포함하기 때문에, 단순히 글자 수를 세는 것과 숫자가 다를 수 있어요." />
+      </h3>
       <div className="space-y-1.5">
         {entries.map(([el, count]) => {
           const pct = Math.round((count / maxVal) * 100)
           const hg = elementToHangul(el)
           return (
             <div key={el} className="flex items-center gap-2">
-              <span className="text-[11px] text-gray-600 w-8 shrink-0">{hg}</span>
-              <div className="flex-1 bg-gray-100 rounded-full h-4 overflow-hidden">
-                {count > 0 && <div className={`h-full rounded-full ${ELEMENT_BAR_COLORS[el] ?? "bg-gray-400"} transition-all`}
+              <span className="text-[11px] text-cp-muted w-8 shrink-0">{hg}</span>
+              <div className="flex-1 bg-cp-surface rounded-full h-4 overflow-hidden">
+                {count > 0 && <div className={`h-full rounded-full ${ELEMENT_BAR_COLORS[el] ?? "bg-cp-muted"} transition-all`}
                   style={{ width: `${Math.max(pct, 8)}%` }}/>}
               </div>
-              <span className="text-[11px] text-gray-500 w-6 text-right">{count}</span>
+              <span className="text-[11px] text-cp-muted w-6 text-right">{count}</span>
             </div>
           )
         })}
@@ -801,9 +803,16 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
 
   if (!pairs.length) return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 기운의 관계<InfoTip lift text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."} /></h3>
-      <div className="bg-gray-50 rounded-xl px-3.5 py-4 text-center">
-        <span className="text-xs text-gray-400">원국 내 특별한 충·합·형·파·해 관계가 없어요</span>
+      <h3 className="font-bold text-cp-text text-sm mb-2">
+        <InfoTip
+          lift
+          label="타고난 기운의 관계"
+          text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
+        />
+      </h3>
+      <p className="text-[11px] text-cp-muted mb-2 -mt-1">합·충처럼 글자들이 서로 끌어당기거나 부딪히는 관계예요</p>
+      <div className="bg-cp-raised rounded-xl px-3.5 py-4 text-center">
+        <span className="text-xs text-cp-muted">원국 내 특별한 충·합·형·파·해 관계가 없어요</span>
       </div>
     </div>
   )
@@ -813,12 +822,19 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
 
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">타고난 기운의 관계<InfoTip lift text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."} /></h3>
+      <h3 className="font-bold text-cp-text text-sm mb-2">
+        <InfoTip
+          lift
+          label="타고난 기운의 관계"
+          text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
+        />
+      </h3>
+      <p className="text-[11px] text-cp-muted mb-2 -mt-1">합·충처럼 글자들이 서로 끌어당기거나 부딪히는 관계예요</p>
       <div className="flex gap-1 mb-2 overflow-x-auto">
         {pairs.map((pair, i) => (
           <button key={i} onClick={() => { setActiveTab(i); setTooltipIdx(null) }}
             className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition-all ${
-              safeIdx === i ? "bg-purple-600 text-white" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              safeIdx === i ? "bg-cp-accent text-white" : "bg-cp-surface text-cp-muted hover:bg-cp-border"
             }`}>
             {pair.shortLabel}
             <span className="ml-0.5 text-[9px] opacity-70">{pair.relations.length}</span>
@@ -826,7 +842,7 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
         ))}
       </div>
       {active && (
-        <div className="bg-gray-50 rounded-xl px-3.5 py-2.5">
+        <div className="bg-cp-raised rounded-xl px-3.5 py-2.5">
           <div className="flex flex-wrap gap-1.5">
             {active.relations.map((r, j) => {
               const type = classifyRelation(r)
@@ -839,14 +855,14 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
                 <span key={j} className="relative">
                   <button onPointerDown={e => e.stopPropagation()} onClick={() => setTooltipIdx(isOpen ? null : j)}
                     className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg border transition-all ${
-                      style?.bg ?? "bg-gray-100 border-gray-200"
+                      style?.bg ?? "bg-cp-surface border-cp-border"
                     } cursor-pointer active:scale-95`}>
                     {style && <span className="text-sm leading-none">{style.icon}</span>}
-                    <span className={style?.color ?? "text-gray-700"}>{label}</span>
+                    <span className={style?.color ?? "text-cp-text"}>{label}</span>
                   </button>
                   {isOpen && (
                     <div onPointerDown={e => e.stopPropagation()} ref={positionTooltip}
-                      className="fixed z-[9999] w-48 max-w-[calc(100vw-1rem)] px-2.5 py-1.5 rounded-lg bg-gray-800 text-white text-[10px] leading-relaxed shadow-lg">
+                      className="fixed z-[9999] w-48 max-w-[calc(100vw-1rem)] px-2.5 py-1.5 rounded-lg bg-cp-surface text-cp-text border border-cp-border text-[10px] leading-relaxed shadow-lg">
                       {tip || '해당 관계에 대한 설명이 준비 중이에요'}
                     </div>
                   )}
@@ -910,16 +926,23 @@ function ShinsalBadges({ report }: { report: SajuReportJson }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <h3 className="font-bold text-gray-900 text-sm">타고난 복과 걸림돌<InfoTip lift text={"사주에 타고난 특별한 기운들이에요.\n길성(복) = 도움이 되는 좋은 기운\n흉살(걸림돌) = 주의해야 할 기운\n같은 신살이라도 위치(년/월/일/시)에 따라\n작용하는 의미가 달라요."} /></h3>
+        <h3 className="font-bold text-cp-text text-sm">
+          <InfoTip
+            lift
+            label="타고난 복과 걸림돌"
+            text={"사주에 타고난 특별한 기운들이에요.\n길성(복) = 도움이 되는 좋은 기운\n흉살(걸림돌) = 주의해야 할 기운\n같은 신살이라도 위치(년/월/일/시)에 따라\n작용하는 의미가 달라요."}
+          />
+        </h3>
         <div className="flex items-center gap-2">
           {PILLAR_DOT_COLORS.map(d => (
             <div key={d.key} className="flex items-center gap-0.5">
               <span className={`w-[6px] h-[6px] rounded-full ${d.color}`}/>
-              <span className="text-[9px] text-gray-400">{d.label}</span>
+              <span className="text-[9px] text-cp-muted">{d.label}</span>
             </div>
           ))}
         </div>
       </div>
+      <p className="text-[11px] text-cp-muted mb-2 -mt-0.5">길성은 복, 흉살은 주의할 기운이에요. 배지를 눌러 자세히 볼 수 있어요</p>
       <div className="flex flex-wrap gap-1.5">
         {items.map((item, i) => {
           const tip = getShinsalTooltip(item.name, item.pillars)
@@ -927,7 +950,7 @@ function ShinsalBadges({ report }: { report: SajuReportJson }) {
           return (
             <span key={i} className="relative">
               <button onPointerDown={e => e.stopPropagation()} onClick={() => setTooltipIdx(isOpen ? null : i)}
-                className={`inline-flex items-center gap-1.5 text-xs bg-purple-50 text-purple-700 border border-purple-200 rounded-lg px-2.5 py-1 font-medium transition-all cursor-pointer active:scale-95`}>
+                className={`inline-flex items-center gap-1.5 text-xs bg-cp-surface text-cp-line border border-cp-border rounded-lg px-2.5 py-1 font-medium transition-all cursor-pointer active:scale-95`}>
                 {item.name}
                 {item.pillars.size > 0 && (
                   <span className="flex flex-col gap-[2px] ml-0.5">
@@ -941,7 +964,7 @@ function ShinsalBadges({ report }: { report: SajuReportJson }) {
               </button>
               {isOpen && (
                 <div onPointerDown={e => e.stopPropagation()} ref={positionTooltip}
-                  className="fixed z-[9999] w-52 max-w-[calc(100vw-1rem)] px-2.5 py-1.5 rounded-lg bg-gray-800 text-white text-[10px] leading-relaxed shadow-lg whitespace-pre-line">
+                  className="fixed z-[9999] w-52 max-w-[calc(100vw-1rem)] px-2.5 py-1.5 rounded-lg bg-cp-surface text-cp-text border border-cp-border text-[10px] leading-relaxed shadow-lg whitespace-pre-line">
                   {tip || '해당 신살에 대한 설명이 준비 중이에요'}
                 </div>
               )}
@@ -954,24 +977,73 @@ function ShinsalBadges({ report }: { report: SajuReportJson }) {
 }
 
 /* ── 대운 타임라인 ── */
+function daewoonTone(score: number | undefined): { label: string; text: string } {
+  if (score == null || Number.isNaN(score)) return { label: '미산출', text: 'text-cp-muted' }
+  if (score >= 75) return { label: '강세', text: 'text-emerald-300' }
+  if (score >= 60) return { label: '안정', text: 'text-cp-down' }
+  if (score >= 45) return { label: '보통', text: 'text-cp-caution' }
+  if (score >= 30) return { label: '조정', text: 'text-cp-caution' }
+  return { label: '저점', text: 'text-cp-muted' }
+}
+
 function DaewoonCarousel({ report }: { report: SajuReportJson }) {
-  const blocks = report.대운?.대운기둥10
-  if (!blocks?.length) return null
+  // 점수는 chartData.대운기둥10 에 있고, report.대운 은 요약만 있는 경우가 많다.
+  const chartBlocks = report.chartData?.대운기둥10
+  const summaryBlocks = report.대운?.대운기둥10
+  const blocks = (chartBlocks?.length ? chartBlocks : summaryBlocks) ?? []
+  if (!blocks.length) return null
+
+  const thisYear = new Date().getFullYear()
 
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">대운 타임라인</h3>
+      <h3 className="font-bold text-cp-text text-sm mb-2">
+        <InfoTip
+          lift
+          label="대운 타임라인"
+          text={"대운은 약 10년 단위로 크게 바뀌는 운의 흐름이에요.\n각 카드를 옆으로 넘겨 시기별 기운을 볼 수 있어요."}
+        />
+      </h3>
       <div className="overflow-x-auto pb-2 -mx-4 px-4 show-scrollbar">
-        <div className="flex gap-2 snap-x snap-mandatory" style={{ minWidth: "max-content" }}>
+        <div className="flex gap-2 items-stretch snap-x snap-mandatory" style={{ minWidth: "max-content" }}>
           {blocks.map((b, i) => {
-            const pillar = b.daewoon_pillar ?? ""
+            const block = b as {
+              daewoon_pillar?: string
+              start_age_years?: number
+              end_age_years?: number
+              start_year?: number
+              end_year?: number
+              종합운점수?: number
+            }
+            const pillar = block.daewoon_pillar ?? ""
             const hangul = pillarToHangul(pillar)
+            const score = typeof block.종합운점수 === 'number' ? Math.round(block.종합운점수) : undefined
+            const tone = daewoonTone(score)
+            const isCurrent = (block.start_year ?? 0) <= thisYear && thisYear <= (block.end_year ?? 0)
+            const age = `${block.start_age_years ?? 0}~${block.end_age_years ?? 0}세`
             return (
-              <div key={i} className="snap-start shrink-0 w-[100px] bg-gray-50 border border-gray-100 rounded-xl p-2.5 text-center">
-                <div className="text-base font-bold text-gray-800">{hangul || pillar}</div>
-                <div className="text-[10px] text-gray-500 mt-0.5">
-                  {b.start_age_years ?? 0}~{b.end_age_years ?? 0}세
+              <div
+                key={i}
+                className={`snap-start shrink-0 w-[108px] min-h-[108px] rounded-xl px-2.5 py-3 text-center border flex flex-col items-center justify-center gap-1 ${
+                  isCurrent
+                    ? 'bg-cp-surface border-cp-border ring-1 ring-cp-border'
+                    : 'bg-cp-raised border-cp-border'
+                }`}
+              >
+                {isCurrent && (
+                  <span className="px-1.5 py-0.5 rounded-full bg-cp-accent text-white text-[9px] font-bold leading-none">
+                    지금
+                  </span>
+                )}
+                <div className="text-[13px] font-bold text-cp-text leading-tight">
+                  {hangul || pillar}
+                  <span className="text-cp-dim font-medium"> · </span>
+                  <span className={`text-[11px] font-semibold ${tone.text}`}>{tone.label}</span>
                 </div>
+                <div className="text-[10px] text-cp-muted tabular-nums leading-none">{age}</div>
+                {score != null && (
+                  <div className="text-[11px] font-semibold text-cp-secondary tabular-nums leading-none">{score}점</div>
+                )}
               </div>
             )
           })}
@@ -1001,7 +1073,7 @@ function SewoonCarousel({ report }: { report: SajuReportJson }) {
 
   return (
     <div>
-      <h3 className="font-bold text-gray-900 text-sm mb-2">세운 (연운)</h3>
+      <h3 className="font-bold text-cp-text text-sm mb-2">세운 (연운)</h3>
       <div className="overflow-x-auto pb-2 -mx-4 px-4">
         <div className="flex gap-2 snap-x snap-mandatory" style={{ minWidth: "max-content" }}>
           {entries.map(([year, pillar]) => {
@@ -1009,10 +1081,10 @@ function SewoonCarousel({ report }: { report: SajuReportJson }) {
             const hangul = pillarToHangul(pillar)
             return (
               <div key={year} className={`snap-start shrink-0 w-[80px] border rounded-xl p-2.5 text-center ${
-                isCurrent ? "bg-purple-50 border-purple-300" : "bg-gray-50 border-gray-100"
+                isCurrent ? "bg-cp-hover border-cp-accent/40" : "bg-cp-raised border-cp-border"
               }`}>
-                <div className="text-[11px] text-gray-500">{year}</div>
-                <div className={`text-base font-bold ${isCurrent ? "text-purple-700" : "text-gray-800"}`}>{hangul || pillar}</div>
+                <div className="text-[11px] text-cp-muted">{year}</div>
+                <div className={`text-base font-bold ${isCurrent ? "text-cp-line" : "text-cp-text"}`}>{hangul || pillar}</div>
               </div>
             )
           })}

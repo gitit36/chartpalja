@@ -3,13 +3,14 @@ import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
-import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt } from '@/lib/ai/fortune-prompt'
+import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt, buildWeeklySummaryPrompt } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { YearChartData } from '@/lib/ai/fortune-prompt'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
 import type { ChartPayload, YearlyDatum, MonthlyDatum } from '@/types/chart'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
 import { callGemini } from '@/lib/ai/gemini'
+import { kstCenteredWeekDates } from '@/lib/saju/daily-util'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -103,9 +104,14 @@ export async function GET(
     const yearEndStr = request.nextUrl.searchParams.get('yearEnd')
     const monthStr = request.nextUrl.searchParams.get('month')
     const monthEndStr = request.nextUrl.searchParams.get('monthEnd')
+    const weekStartStr = request.nextUrl.searchParams.get('weekStart')
+    const weekEndStr = request.nextUrl.searchParams.get('weekEnd')
     const isMonthlyRequest = !!monthStr
+    const isWeeklyRequest = !!weekStartStr
 
-    if (!yearStr && !monthStr) return NextResponse.json({ error: 'year or month is required' }, { status: 400 })
+    if (!yearStr && !monthStr && !weekStartStr) {
+      return NextResponse.json({ error: 'year, month, or weekStart is required' }, { status: 400 })
+    }
 
     const user = await getUserFromSession().catch(() => null)
     const guestId = getGuestId(request)
@@ -133,6 +139,68 @@ export async function GET(
     const birthYear = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
     const chartPayload = report.chartData as ChartPayload | undefined
     const chartData = chartPayload ? buildLifeChartData(chartPayload, report, birthYear) : null
+
+    if (isWeeklyRequest) {
+      const weekStart = parseInt(weekStartStr!, 10)
+      const weekEnd = weekEndStr ? parseInt(weekEndStr, 10) : weekStart
+      if (isNaN(weekStart) || weekStart < 1 || weekStart > 7 || isNaN(weekEnd) || weekEnd < weekStart || weekEnd > 7) {
+        return NextResponse.json({ error: 'invalid weekStart/weekEnd' }, { status: 400 })
+      }
+
+      const cacheKey = weekStart === weekEnd ? `weekSummary_${weekStart}` : `weekSummary_${weekStart}_${weekEnd}`
+      const cached = entry.fortuneJson as Record<string, unknown> | null
+      if (cached && typeof cached === 'object' && cached[cacheKey]) {
+        return NextResponse.json({ weekStart, weekEnd: weekEnd > weekStart ? weekEnd : undefined, summary: cached[cacheKey] })
+      }
+
+      const balance = await getBalance(user.id)
+      if (balance.ju < READING_COST.period) {
+        return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: balance.ju }, { status: 402 })
+      }
+
+      const weekDates = kstCenteredWeekDates()
+      const selectedDates = weekDates.slice(weekStart - 1, weekEnd)
+      const rows = await prisma.dailyFortune.findMany({
+        where: { entryId: id, date: { in: selectedDates } },
+      })
+      const byDate = new Map(rows.map((r) => [r.date, r]))
+      const days = selectedDates.map((date, i) => {
+        const row = byDate.get(date)
+        const rawDom = (row?.domainsJson && typeof row.domainsJson === 'object')
+          ? (row.domainsJson as Record<string, unknown>)
+          : null
+        const domains: Record<string, number> | null = rawDom
+          ? Object.fromEntries(
+              Object.entries(rawDom).filter(([k, v]) => !k.startsWith('_') && typeof v === 'number'),
+            ) as Record<string, number>
+          : null
+        const x = weekStart + i
+        const weekdayLabels = ['', '월', '화', '수', '목', '금', '토', '일']
+        // 실제 요일명 — date 기준
+        const [y, m, d] = date.split('-').map(Number) as [number, number, number]
+        const full = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'] as const
+        const weekday = full[new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay()] ?? `${weekdayLabels[x]}요일`
+        return {
+          date,
+          weekday,
+          score: row?.score ?? 50,
+          grade: row?.grade,
+          domains,
+        }
+      })
+
+      const prompt = buildWeeklySummaryPrompt(report, days, { birthYear, job: entry.job })
+      const summary = (await callGemini(prompt)).trim()
+
+      const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>
+      await prisma.sajuEntry.update({
+        where: { id },
+        data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
+      })
+      await consumeUnits(user.id, READING_COST.period, 'use:period')
+
+      return NextResponse.json({ weekStart, weekEnd: weekEnd > weekStart ? weekEnd : undefined, summary })
+    }
 
     if (isMonthlyRequest) {
       const monthStart = parseInt(monthStr!, 10)

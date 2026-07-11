@@ -28,20 +28,20 @@ function SuccessContent() {
   }, [orderId])
 
   const detail = loading ? (
-    <div className="text-gray-400 text-sm mb-8">주문 정보 확인 중...</div>
+    <div className="text-cp-muted text-sm mb-8">주문 정보 확인 중...</div>
   ) : order ? (
-    <div className="w-full max-w-sm bg-gray-50 rounded-2xl p-5 mb-8">
+    <div className="w-full max-w-sm bg-cp-surface rounded-2xl p-5 mb-8 border border-cp-border">
       <div className="flex justify-between text-sm mb-2">
-        <span className="text-gray-500">구매 상품</span>
-        <span className="font-semibold text-gray-900">{order.productName}</span>
+        <span className="text-cp-muted">구매 상품</span>
+        <span className="font-semibold text-cp-text">{order.productName}</span>
       </div>
       <div className="flex justify-between text-sm mb-2">
-        <span className="text-gray-500">지급 수량</span>
-        <span className="font-semibold text-purple-700">{order.quantity}회</span>
+        <span className="text-cp-muted">지급 수량</span>
+        <span className="font-semibold text-cp-line">{order.quantity}회</span>
       </div>
       <div className="flex justify-between text-sm">
-        <span className="text-gray-500">결제 금액</span>
-        <span className="font-semibold text-gray-900">{order.amount?.toLocaleString()}원</span>
+        <span className="text-cp-muted">결제 금액</span>
+        <span className="font-semibold text-cp-text">{order.amount?.toLocaleString()}원</span>
       </div>
     </div>
   ) : null
@@ -61,7 +61,7 @@ function SuccessContent() {
 
 export default function SuccessPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-gray-400">로딩 중...</div>}>
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-cp-muted">로딩 중...</div>}>
       <SuccessContent />
     </Suspense>
   )

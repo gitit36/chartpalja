@@ -72,7 +72,7 @@ export function LockedPreview({
       aria-label={ariaLabel ?? badgeText}
       onClick={onUnlock}
       onKeyDown={handleKey}
-      className={`relative w-full block text-left group cursor-pointer rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 ${className}`}
+      className={`relative w-full block text-left group cursor-pointer rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-cp-line/40 ${className}`}
       style={minHeight ? { minHeight } : undefined}
     >
       {/* 예시 콘텐츠 — 블러 처리 + 인터랙션 차단 */}
@@ -84,7 +84,7 @@ export function LockedPreview({
       </div>
 
       {/* 오버레이: 항상 배경 블러 레이어는 깔되, 배지(버튼)는 옵션에 따라 표시 */}
-      <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px] group-hover:bg-white/40 transition-colors rounded-2xl pointer-events-none" />
+      <div className="absolute inset-0 bg-cp-bg/30 backdrop-blur-[2px] group-hover:bg-cp-surface/40 transition-colors rounded-2xl pointer-events-none" />
 
       {showBadge && (
         badgeUseTopOffset ? (
@@ -92,18 +92,18 @@ export function LockedPreview({
             className="absolute left-0 right-0 flex justify-center pointer-events-none"
             style={{ top: badgeOffsetTop }}
           >
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white shadow-md border border-gray-100 group-hover:shadow-lg transition-shadow">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-cp-bg shadow-md border border-cp-border group-hover:shadow-lg transition-shadow">
               <span className="text-base leading-none" aria-hidden>🔒</span>
-              <span className="text-xs font-medium text-gray-700">{badgeText}</span>
-              <span className="text-xs font-bold text-purple-600">로그인 →</span>
+              <span className="text-xs font-medium text-cp-text">{badgeText}</span>
+              <span className="text-xs font-bold text-cp-line">로그인 →</span>
             </div>
           </div>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white shadow-md border border-gray-100 group-hover:shadow-lg transition-shadow">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-cp-bg shadow-md border border-cp-border group-hover:shadow-lg transition-shadow">
               <span className="text-base leading-none" aria-hidden>🔒</span>
-              <span className="text-xs font-medium text-gray-700">{badgeText}</span>
-              <span className="text-xs font-bold text-purple-600">로그인 →</span>
+              <span className="text-xs font-medium text-cp-text">{badgeText}</span>
+              <span className="text-xs font-bold text-cp-line">로그인 →</span>
             </div>
           </div>
         )
