@@ -810,7 +810,7 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
           text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
         />
       </h3>
-      <p className="text-[11px] text-cp-muted mb-2 -mt-1">합·충처럼 글자들이 서로 끌어당기거나 부딪히는 관계예요</p>
+      <p className="text-[11px] text-cp-muted mb-2 -mt-1">항목을 눌러 사주 속 글자들이 서로 주고받는 영향을 확인해보세요.</p>
       <div className="bg-cp-raised rounded-xl px-3.5 py-4 text-center">
         <span className="text-xs text-cp-muted">원국 내 특별한 충·합·형·파·해 관계가 없어요</span>
       </div>
@@ -829,7 +829,7 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
           text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
         />
       </h3>
-      <p className="text-[11px] text-cp-muted mb-2 -mt-1">합·충처럼 글자들이 서로 끌어당기거나 부딪히는 관계예요</p>
+      <p className="text-[11px] text-cp-muted mb-2 -mt-1">항목을 눌러 사주 속 글자들이 서로 주고받는 영향을 확인해보세요.</p>
       <div className="flex gap-1 mb-2 overflow-x-auto">
         {pairs.map((pair, i) => (
           <button key={i} onClick={() => { setActiveTab(i); setTooltipIdx(null) }}
@@ -942,7 +942,7 @@ function ShinsalBadges({ report }: { report: SajuReportJson }) {
           ))}
         </div>
       </div>
-      <p className="text-[11px] text-cp-muted mb-2 -mt-0.5">길성은 복, 흉살은 주의할 기운이에요. 배지를 눌러 자세히 볼 수 있어요</p>
+      <p className="text-[11px] text-cp-muted mb-2 -mt-0.5">항목을 눌러 복과 주의할 기운을 확인해보세요.</p>
       <div className="flex flex-wrap gap-1.5">
         {items.map((item, i) => {
           const tip = getShinsalTooltip(item.name, item.pillars)
@@ -1030,20 +1030,27 @@ function DaewoonCarousel({ report }: { report: SajuReportJson }) {
                     : 'bg-cp-raised border-cp-border'
                 }`}
               >
-                {isCurrent && (
-                  <span className="px-1.5 py-0.5 rounded-full bg-cp-accent text-white text-[9px] font-bold leading-none">
-                    지금
-                  </span>
-                )}
-                <div className="text-[13px] font-bold text-cp-text leading-tight">
+                <div className="text-[13px] font-bold text-cp-text leading-tight text-center">
                   {hangul || pillar}
-                  <span className="text-cp-dim font-medium"> · </span>
-                  <span className={`text-[11px] font-semibold ${tone.text}`}>{tone.label}</span>
+                  {isCurrent && (
+                    <>
+                      <span className="text-cp-dim font-medium"> · </span>
+                      <span className="text-[11px] font-semibold text-cp-accent">지금</span>
+                    </>
+                  )}
                 </div>
-                <div className="text-[10px] text-cp-muted tabular-nums leading-none">{age}</div>
-                {score != null && (
-                  <div className="text-[11px] font-semibold text-cp-secondary tabular-nums leading-none">{score}점</div>
-                )}
+                <div className="text-[10px] text-cp-muted tabular-nums leading-none text-center">{age}</div>
+                <div className="text-[11px] font-semibold tabular-nums leading-none text-center">
+                  {score != null ? (
+                    <>
+                      <span className="text-cp-secondary">{score}점</span>
+                      <span className="text-cp-dim font-medium"> · </span>
+                      <span className={tone.text}>{tone.label}</span>
+                    </>
+                  ) : (
+                    <span className={tone.text}>{tone.label}</span>
+                  )}
+                </div>
               </div>
             )
           })}
