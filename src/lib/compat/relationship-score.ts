@@ -70,13 +70,13 @@ function calibrateRelScore(raw01: number): number {
 /**
  * 궁합 성분/헤드라인 모집단 분포 (3160 페어 샘플, 2026-07 기준).
  * 각 축·헤드라인을 "다른 커플 대비 어디쯤인가"의 상대 위치로 펴는 기준값이다.
- * 원시값은 축마다 평균·폭이 제각각(예: lean 은 0.63에 몰려 std 0.06)이라
- * 그대로 표시하면 커플 간 차이가 안 보인다 → z-점수로 재중심(평균→0.5)·확대한다.
+ * lean 은 leanAsymmetryRaw 재정의 후 추정 분포(구 support 평균 0.63 편향 제거).
  */
 const POP = {
   energy: { mean: 0.320, std: 0.128 },
   rhythm: { mean: 0.444, std: 0.106 },
-  lean: { mean: 0.633, std: 0.059 },
+  // leanAsymmetryRaw 기준 추정 분포 (서로 괜찮음 기본 → 왼쪽으로 쏠리던 구 lean 과 반대).
+  lean: { mean: 0.24, std: 0.11 },
   temp: { mean: 0.520, std: 0.092 },
   // raw 는 RELATIONSHIP_WEIGHTS(0.25/0.05/0.25/0.45) 기준 3160 페어 샘플 분포.
   raw: { mean: 0.477, std: 0.056 },
@@ -183,17 +183,72 @@ function supportYearScore(
   eventConflictA: number,
   eventConflictB: number,
 ): number {
+  // 관계 질용: 한쪽이 상대를 받쳐줄 수 있으면 높음. 스펙트럼(lean)과는 별개.
   const lowA = scoreA < p40A
   const lowB = scoreB < p40B
   let s = 0.5
   if (lowA && scoreB >= 55) s = 0.85
   else if (lowB && scoreA >= 55) s = 0.85
   else if (lowA && lowB) s = 0.2
-  else if (!lowA && !lowB) s = 0.65
+  else if (!lowA && !lowB) s = 0.72
   const loveAvg = (eventLoveA + eventLoveB) / 2
   const conflictAvg = (eventConflictA + eventConflictB) / 2
   s += (loveAvg / 100) * 0.08 - (conflictAvg / 100) * 0.08
   return clamp01(s)
+}
+
+/**
+ * 기대는 방향 raw (0=서로 받쳐줌, 1=한쪽이 이끔).
+ * support(관계 질)과 분리한다.
+ * - 둘이 함께 괜찮은 해가 많을수록 → 왼쪽
+ * - 한쪽만 강하고 한쪽만 약한 해가 많되, 방향이 한쪽으로 치우칠수록 → 오른쪽
+ * - 교대로 서로 이끄는 해(방향 bias≈0)는 「서로 받쳐줌」에 가깝게
+ * - 둘 다 힘든 해는 「서로 받쳐줌」이 아님 → 가운데~약간 오른쪽
+ */
+function leanAsymmetryRaw(series: RelationshipYearPoint[]): number {
+  if (!series.length) return 0.5
+  const scoresA = series.map(p => p.scoreA)
+  const scoresB = series.map(p => p.scoreB)
+  const p40A = percentile(scoresA, 0.4)
+  const p40B = percentile(scoresB, 0.4)
+
+  let aLeads = 0
+  let bLeads = 0
+  let bothOk = 0
+  let bothLow = 0
+  let mixed = 0
+
+  for (let i = 0; i < series.length; i++) {
+    const a = scoresA[i]!
+    const b = scoresB[i]!
+    const lowA = a < p40A
+    const lowB = b < p40B
+    const strongA = a >= 55
+    const strongB = b >= 55
+    if (lowB && strongA) aLeads++
+    else if (lowA && strongB) bLeads++
+    else if (!lowA && !lowB) bothOk++
+    else if (lowA && lowB) bothLow++
+    else mixed++
+  }
+
+  const n = series.length
+  const leadTotal = aLeads + bLeads
+  const directionBias = leadTotal > 0 ? Math.abs(aLeads - bLeads) / leadTotal : 0
+  const leadRate = leadTotal / n
+  const mutualRate = bothOk / n
+  const bothLowRate = bothLow / n
+  const mixedRate = mixed / n
+
+  // 한 방향 이끔만 강하게 오른쪽. 교대 이끔(bias↓)은 약하게만 반영.
+  const asymmetricLead = leadRate * (0.2 + 0.8 * directionBias)
+
+  return clamp01(
+    asymmetricLead * 0.85
+    + (1 - mutualRate) * 0.12
+    + bothLowRate * 0.15
+    + mixedRate * 0.06,
+  )
 }
 
 function detectEvents(
@@ -426,8 +481,8 @@ export function buildYearLevels(series: RelationshipYearPoint[]): Map<number, Ye
 
 function pickArchetype(v: { energy: number; rhythm: number; lean: number; temp: number }): CompatArchetype {
   const { energy, rhythm, lean, temp } = v
-  // 우선순위: 뚜렷한 축부터 라벨을 부여한다.
-  if (lean >= 0.7) return { category: '이끔형', label: '기대는 언덕이 되어주는 사이' }
+  // 우선순위: 뚜렷한 축부터. lean 은 비대칭도가 분명히 높을 때만 이끔형.
+  if (lean >= 0.68) return { category: '이끔형', label: '기대는 언덕이 되어주는 사이' }
   if (temp >= 0.62 && rhythm < 0.45) return { category: '자극형', label: '부딪히며 크는 사이' }
   if (energy >= 0.6 && rhythm >= 0.55) return { category: '팀형', label: '서로의 빈칸을 채우는 사이' }
   if (energy >= 0.6 && temp >= 0.55) return { category: '매력형', label: '달라서 끌리는 사이' }
@@ -449,9 +504,11 @@ export function buildCompatCard(series: RelationshipYearPoint[]): CompatCardData
   // 커플 평균 원시 성분값 → 모집단 대비 상대 위치로 재매핑(축 간 차이가 보이도록).
   const engRaw = mean(series.map(p => p.components.ohang))
   const rhyRaw = mean(series.map(p => p.components.sync))
-  const leaRaw = mean(series.map(p => p.components.support))
+  const supportRaw = mean(series.map(p => p.components.support))
   const clashRaw = mean(series.map(p => p.components.clash))
-  const rawMean = combineRaw({ ohang: engRaw, sync: rhyRaw, support: leaRaw, clash: clashRaw })
+  // lean 스펙트럼은 support(관계 질)과 분리 — 이끔 방향의 비대칭도.
+  const leaRaw = leanAsymmetryRaw(series)
+  const rawMean = combineRaw({ ohang: engRaw, sync: rhyRaw, support: supportRaw, clash: clashRaw })
 
   const overallScore = headlineScore(rawMean)
   const energy = normAxis(engRaw, POP.energy.mean, POP.energy.std)
@@ -461,10 +518,38 @@ export function buildCompatCard(series: RelationshipYearPoint[]): CompatCardData
   const temp = normAxis(1 - clashRaw, POP.temp.mean, POP.temp.std)
 
   const spectrums: CompatSpectrum[] = [
-    { key: 'energy', title: '에너지 궁합', leftLabel: '닮은 결', rightLabel: '보완의 결', caption: '성향이 비슷한지, 부족한 걸 서로 채우는지', value: energy },
-    { key: 'rhythm', title: '인생 리듬', leftLabel: '따로 리듬', rightLabel: '함께 리듬', caption: '좋을 때·힘들 때 타이밍이 겹치는지', value: rhythm },
-    { key: 'lean', title: '기대는 방향', leftLabel: '서로 받쳐줌', rightLabel: '한쪽이 이끎', caption: '힘을 주고받는 균형', value: lean },
-    { key: 'temp', title: '관계 온도', leftLabel: '편안·안정', rightLabel: '자극·긴장', caption: '무난하게 편한지, 부딪히며 끌리는지', value: temp },
+    {
+      key: 'energy',
+      title: '에너지 궁합',
+      leftLabel: '닮은 결',
+      rightLabel: '보완의 결',
+      caption: '원국 오행이 비슷한지, 부족한 기운을 서로 채우는지',
+      value: energy,
+    },
+    {
+      key: 'rhythm',
+      title: '인생 리듬',
+      leftLabel: '따로 리듬',
+      rightLabel: '함께 리듬',
+      caption: '인생운의 오르내림 타이밍이 겹치는지',
+      value: rhythm,
+    },
+    {
+      key: 'lean',
+      title: '기대는 방향',
+      leftLabel: '서로 받쳐줌',
+      rightLabel: '한쪽이 이끔',
+      caption: '힘이 한쪽으로 쏠리는지, 번갈아 받치는지',
+      value: lean,
+    },
+    {
+      key: 'temp',
+      title: '관계 온도',
+      leftLabel: '편안·안정',
+      rightLabel: '자극·긴장',
+      caption: '합·충 기운이 편한지, 부딪히며 끌리는지',
+      value: temp,
+    },
   ]
 
   const levels = buildYearLevels(series)

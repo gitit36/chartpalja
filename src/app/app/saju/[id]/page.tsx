@@ -231,12 +231,14 @@ function PersonalSajuPageInner() {
   const [loginSheet, setLoginSheet] = useState<{ open: boolean; feature?: string }>({ open: false })
   const [alertState, setAlertState] = useState<{ open: boolean; title: string; description?: string }>({ open: false, title: '' })
   const [welcomeToast, setWelcomeToast] = useState(false)
+  const [infoToast, setInfoToast] = useState<string | null>(null)
   const [guestBannerDismissed, setGuestBannerDismissed] = useState(false)
   const [bannerVisible, setBannerVisible] = useState(true)
   const [activeOverlay, setActiveOverlay] = useState<OverlayCompatInfo | null>(null)
   const [compatConfirmOpen, setCompatConfirmOpen] = useState(false)
   const [compatGeneration, setCompatGeneration] = useState<CompatGenerationState | null>(null)
   const [expandCompatCardKey, setExpandCompatCardKey] = useState<string | null>(null)
+  const [fortuneScrollToken, setFortuneScrollToken] = useState(0)
   const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
 
   useEffect(() => {
@@ -404,6 +406,14 @@ function PersonalSajuPageInner() {
       setLoginSheet({ open: true, feature: '궁합 해설' })
       return
     }
+    // 같은 상대 생성 중이면 주 차감·시트 없이 안내만
+    if (compatGeneration?.partnerId === activeOverlay.overlayId) {
+      setCompatConfirmOpen(false)
+      setTab('chart')
+      setFortuneScrollToken((n) => n + 1)
+      setInfoToast('이미 궁합 해설을 만들고 있어요')
+      return
+    }
     try {
       const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
       if (balRes.status === 401) {
@@ -421,7 +431,7 @@ function PersonalSajuPageInner() {
     } catch {
       setCompatConfirmOpen(true)
     }
-  }, [activeOverlay, isLoggedIn])
+  }, [activeOverlay, isLoggedIn, compatGeneration])
 
   const handleCompatViewExisting = useCallback((relationship: RelationshipType) => {
     if (!activeOverlay) return
@@ -433,6 +443,13 @@ function PersonalSajuPageInner() {
   const handleCompatConfirm = useCallback(async (relationship: RelationshipType) => {
     if (!activeOverlay) return
     setCompatConfirmOpen(false)
+
+    if (compatGeneration?.partnerId === activeOverlay.overlayId) {
+      setTab('chart')
+      setFortuneScrollToken((n) => n + 1)
+      setInfoToast('이미 궁합 해설을 만들고 있어요')
+      return
+    }
 
     const bal = await fetchBalance()
     if (bal && bal.ju < READING_COST.compat) {
@@ -491,7 +508,7 @@ function PersonalSajuPageInner() {
       setCompatGeneration(null)
       setAlertState({ open: true, title: '궁합 해설 생성 실패', description: '네트워크 오류가 발생했어요.' })
     }
-  }, [activeOverlay, id, entry?.fortuneJson])
+  }, [activeOverlay, id, entry?.fortuneJson, compatGeneration])
 
   // 공유 시 비로그인 수신자도 결과를 볼 수 있도록 isShared=true 로 올린다.
   const ensureShared = useCallback(async () => {
@@ -613,7 +630,7 @@ function PersonalSajuPageInner() {
     <MobileContainer>
       <div className="min-h-screen flex flex-col">
         {/* Sticky Header + Tabs */}
-        <div className="sticky top-0 z-30 bg-cp-raised/95 backdrop-blur border-b border-cp-border">
+        <div className="sticky top-0 z-30 bg-cp-raised/95 backdrop-blur border-b border-cp-border" data-saju-sticky>
           <div className="px-4 pt-3 pb-2 flex items-center">
             <div className="flex items-center gap-1 flex-shrink-0 w-[72px]">
               <button onClick={() => router.push('/app/list')} className="w-8 h-8 flex items-center justify-center text-cp-muted hover:text-cp-muted text-lg leading-none">&larr;</button>
@@ -765,6 +782,7 @@ function PersonalSajuPageInner() {
                 onOverlayChange={setActiveOverlay}
                 onCompatCta={handleCompatCta}
                 expandCompatCardKey={expandCompatCardKey}
+                fortuneScrollToken={fortuneScrollToken}
                 compatGeneration={compatGeneration}
                 entryName={entry.name}
                 myGender={entry.gender}
@@ -1025,6 +1043,11 @@ function PersonalSajuPageInner() {
         open={welcomeToast}
         message="모든 잠금이 해제됐어요"
         onClose={() => setWelcomeToast(false)}
+      />
+      <Toast
+        open={infoToast != null}
+        message={infoToast ?? ''}
+        onClose={() => setInfoToast(null)}
       />
     </MobileContainer>
   )

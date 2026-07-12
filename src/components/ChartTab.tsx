@@ -601,6 +601,8 @@ interface ChartTabProps {
   onCompatCta?: () => void
   /** 생성 직후 펼칠 궁합 카드 (partnerId|relationship) */
   expandCompatCardKey?: string | null
+  /** 운세 해설 섹션으로 스크롤 트리거 (값 변경 시) */
+  fortuneScrollToken?: number
   /** 궁합 해설 생성 중 — 플레이스홀더 카드 표시 */
   compatGeneration?: CompatGenerationState | null
   entryName?: string
@@ -629,7 +631,7 @@ interface ChartTabProps {
 export function ChartTab({
   report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
   isLocked = false, onLockedClick, shareMode = false, onShareCta,
-  onOverlayChange, onCompatCta, expandCompatCardKey, onFortuneJsonUpdate, compatGeneration,
+  onOverlayChange, onCompatCta, expandCompatCardKey, fortuneScrollToken, onFortuneJsonUpdate, compatGeneration,
   entryName, myGender, initialOverlayId, initialFocus, sharePartner, weekSeries,
 }: ChartTabProps) {
   const [period, setPeriod] = useState<PeriodKey>(
@@ -1935,6 +1937,7 @@ export function ChartTab({
         shareMode={shareMode}
         onShareCta={onShareCta}
         expandCompatCardKey={expandCompatCardKey}
+        fortuneScrollToken={fortuneScrollToken}
         compatGeneration={compatGeneration}
         onFortuneJsonUpdate={onFortuneJsonUpdate}
         activeCompat={activeCompat}
@@ -2400,6 +2403,8 @@ interface FortuneSectionProps {
   shareMode?: boolean
   onShareCta?: () => void
   expandCompatCardKey?: string | null
+  /** 운세 해설 섹션으로 스크롤 트리거 (값 변경 시) */
+  fortuneScrollToken?: number
   compatGeneration?: CompatGenerationState | null
   onFortuneJsonUpdate?: (fortuneJson: unknown) => void
   /** 현재 비교 중인 상대의 라이브 케미 (저장 카드가 없을 때 무료 카드로 표시) */
@@ -2427,7 +2432,7 @@ function CompatSpinner() {
 function FortuneSection({
   fortuneJson, entryId, entryName, myGender, currentName,
   isLocked = false, onLockedClick, shareMode = false, onShareCta,
-  expandCompatCardKey, compatGeneration, onFortuneJsonUpdate,
+  expandCompatCardKey, fortuneScrollToken, compatGeneration, onFortuneJsonUpdate,
   activeCompat, onCompatCta,
 }: FortuneSectionProps) {
   const [shareBusyKey, setShareBusyKey] = useState<string | null>(null)
@@ -2444,6 +2449,16 @@ function FortuneSection({
   const [showJuToast, setShowJuToast] = useState(false)
   const fetchedRef = React.useRef(false)
   const compatSectionRef = React.useRef<HTMLDivElement>(null)
+  const fortuneHeadingRef = React.useRef<HTMLHeadingElement>(null)
+
+  const scrollToFortuneHeading = React.useCallback(() => {
+    const el = fortuneHeadingRef.current
+    if (!el) return
+    const sticky = document.querySelector('[data-saju-sticky]') as HTMLElement | null
+    const offset = (sticky?.getBoundingClientRect().height ?? 0) + 8
+    const top = el.getBoundingClientRect().top + window.scrollY - offset
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+  }, [])
 
   const compatCards = useMemo(() => {
     if (shareMode) return [] as Array<{ key: string; entry: CompatReportEntry }>
@@ -2695,10 +2710,15 @@ function FortuneSection({
 
   useEffect(() => {
     if (!compatGeneration) return
-    requestAnimationFrame(() => {
-      compatSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    })
-  }, [compatGeneration])
+    const t = window.setTimeout(scrollToFortuneHeading, 160)
+    return () => clearTimeout(t)
+  }, [compatGeneration, scrollToFortuneHeading])
+
+  useEffect(() => {
+    if (!fortuneScrollToken) return
+    const t = window.setTimeout(scrollToFortuneHeading, 160)
+    return () => clearTimeout(t)
+  }, [fortuneScrollToken, scrollToFortuneHeading])
 
   useEffect(() => {
     if (!expandCompatCardKey) return
@@ -2707,10 +2727,9 @@ function FortuneSection({
     )
     if (!saved?.entry.text) return
     setOpenCompatIds(prev => new Set(prev).add(expandCompatCardKey))
-    requestAnimationFrame(() => {
-      compatSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    })
-  }, [expandCompatCardKey, fortuneJson])
+    const t = window.setTimeout(scrollToFortuneHeading, 160)
+    return () => clearTimeout(t)
+  }, [expandCompatCardKey, fortuneJson, scrollToFortuneHeading])
 
   useEffect(() => {
     const handleExpandAll = () => setOpenIds(new Set(items.map((_, i) => i)))
@@ -2853,7 +2872,7 @@ function FortuneSection({
 
   return (
     <div className="px-4 mt-6">
-      <h3 className="font-bold text-cp-text mb-3">운세 해설</h3>
+      <h3 ref={fortuneHeadingRef} className="font-bold text-cp-text mb-3">운세 해설</h3>
 
       {showJuToast && juShortage && (
         <JuShortageNudge
