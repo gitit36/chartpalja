@@ -88,6 +88,9 @@ function dayToDatum(x: number, day: WeekSeriesDay): ChartDatum {
     eventStudy: events?.학업_시험 ?? 0,
     eventConflict: events?.대인_갈등 ?? 0,
     dayLabel,
+    breakdown: chart.breakdown,
+    shinsalTags: chart.shinsalTags,
+    shinsalContextAdj: chart.shinsalContextAdj,
   }
 }
 

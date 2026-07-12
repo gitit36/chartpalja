@@ -96,7 +96,10 @@ export async function POST(
       relationship,
       { birthYearA, birthYearB },
     )
-    const text = (await callGemini(prompt)).trim()
+    const text = (await callGemini(prompt, {
+      feature: 'compat',
+      meta: { entryId: id, overlayId, relationship },
+    })).trim()
 
     // 관계 케미 스냅샷 — 두 리포트가 이미 로드된 이 시점에 계산해 저장하면
     // 이후 카드 렌더 시 추가 fetch/지연이 전혀 없다.

@@ -35,6 +35,10 @@ export interface DailyChartIndicators {
     학업_시험: number
     대인_갈등: number
   }
+  /** 일운 툴팁용 — 올해/전체와 동일하게 좋은점/나쁜점 */
+  breakdown?: Record<string, number>
+  shinsalTags?: string[]
+  shinsalContextAdj?: Record<string, number>
 }
 
 export interface DailyScore {

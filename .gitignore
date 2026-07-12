@@ -55,5 +55,8 @@ __pycache__/
 *.db
 *.db-journal
 
+# Local ops logs (Gemini usage / cost measures)
+/logs/
+
 # Obsolete / archived files
 /obsolete/

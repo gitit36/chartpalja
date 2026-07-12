@@ -215,7 +215,7 @@ const FEATURE_ITEMS: GuideItem[] = [
       <ul className="space-y-1">
         <Bullet>다른 사주와 같은 차트 위에 겹쳐서 총운 흐름을 비교 가능.</Bullet>
         <Bullet>흐름이 겹치는 구간과 벌어지는 구간을 한눈에 파악해요.</Bullet>
-        <Bullet>연인·친구·가족·비즈니스 파트너와의 궁합 확인에 유용 (자세한 지표는 아래 <b>궁합(비교)</b> 참고).</Bullet>
+        <Bullet>연인·친구·가족·비즈니스 파트너와의 궁합 확인에 유용 (자세한 지표는 아래 <b>궁합</b> 참고).</Bullet>
       </ul>
     ),
   },
@@ -224,9 +224,9 @@ const FEATURE_ITEMS: GuideItem[] = [
     icon: '🗓️',
     body: (
       <ul className="space-y-1">
-        <Bullet>특정 연도나 범위를 선택한 뒤 AI 해설을 받을 수 있어요.</Bullet>
-        <Bullet>한 번 클릭 = 단일 연도 / 두 번 클릭 또는 드래그 = 범위 선택.</Bullet>
-        <Bullet>선택 후 하단 버튼으로 해당 구간 운세 해설 생성.</Bullet>
+        <Bullet>차트에서 연도(또는 월·요일)를 누르면 하단에 <b>「n년 해설 보기」</b>가 바로 떠요.</Bullet>
+        <Bullet>여러 해가 궁금하면 <Tag color="bg-cp-violetMuted text-cp-violet">🗓️ 구간</Tag>을 켠 뒤, 드래그하거나 시작·끝을 눌러 범위를 고르세요.</Bullet>
+        <Bullet>선택 후 버튼으로 해당 시점·구간의 AI 운세 해설을 생성해요.</Bullet>
       </ul>
     ),
   },
@@ -268,13 +268,16 @@ const COMPAT_ITEMS: GuideItem[] = [
     ),
   },
   {
-    title: '좋음 · 보통 · 주의 해',
+    title: '좋음 · 보통 · 주의',
     icon: '📅',
     body: (
       <ul className="space-y-1">
-        <Bullet>연도별 관계 흐름을 3단계로 나눈 거예요.</Bullet>
-        <Bullet><Tag color="bg-emerald-500/15 text-emerald-400">좋음</Tag> 흐름이 맞는 해 / <Tag color="bg-cp-surface text-cp-muted">보통</Tag> 무난한 해 / <Tag color="bg-cp-upMuted text-cp-up">주의</Tag> 어긋나기 쉬운 해</Bullet>
-        <Bullet>절대 점수가 아닌 <b>상대 기준</b>이라, 두 사람 사이에서 상위·하위 시기를 균형 있게 잡아줘요.</Bullet>
+        <Bullet>차트 하단 리듬 바·툴팁의 <Tag color="bg-emerald-500/15 text-emerald-400">좋음</Tag> <Tag color="bg-cp-surface text-cp-muted">보통</Tag> <Tag color="bg-cp-caution/15 text-cp-caution">주의</Tag> 는 두 사람 관계 흐름을 3단계로 나눈 표시예요.</Bullet>
+        <Bullet><b>절대 점수가 아니라 상대 순위</b>예요. 그 화면의 구간 안에서 상위·중위·하위를 나눠요.</Bullet>
+        <Bullet><b>전체</b> 뷰: 인생 전체 해들끼리 비교 → “2026이 좋음”은 <b>다른 해들보다</b> 관계가 나은 해라는 뜻이에요.</Bullet>
+        <Bullet><b>올해</b> 뷰: 그해 12개월끼리만 비교 → 같은 해 안에서도 주의 달이 더 많을 수 있어요. 연간이 좋음이어도 모순이 아니에요.</Bullet>
+        <Bullet><b>이번 주</b> 뷰: 그주 요일끼리만 비교해요. 역시 주 안 상대 순위예요.</Bullet>
+        <Bullet>그래서 “좋은 해인데 주의 달이 많다”처럼 보여도, 비교 범위가 다르기 때문이에요.</Bullet>
       </ul>
     ),
   },
@@ -284,8 +287,9 @@ const COMPAT_ITEMS: GuideItem[] = [
     body: (
       <ul className="space-y-1">
         <Bullet>해가 지날수록 두 사람의 궁합이 어떻게 오르내리는지 보여주는 선이에요.</Bullet>
-        <Bullet>카드를 펼치면 왼쪽에서 오른쪽으로 그려지며, 각 해의 관계 수준(좋음/보통/주의)과 함께 확인 가능.</Bullet>
+        <Bullet>카드를 펼치면 왼쪽에서 오른쪽으로 그려지며, 연도별 관계 수준(좋음/보통/주의)과 함께 확인 가능.</Bullet>
         <Bullet>선이 올라가는 구간 = 서로 맞는 시기, 내려가는 구간 = 신경 써야 할 시기.</Bullet>
+        <Bullet>흐름선의 연간 수준과, 올해·이번 주 화면의 월/요일 라벨은 비교 범위가 다를 수 있어요. (위 <b>좋음 · 보통 · 주의</b> 참고)</Bullet>
       </ul>
     ),
   },
@@ -294,7 +298,7 @@ const COMPAT_ITEMS: GuideItem[] = [
     icon: '💬',
     body: (
       <ul className="space-y-1">
-        <Bullet>비교를 누르면 카드가 <b>바로</b> 생성되며, 점수·케미·흐름은 관계 유형과 무관하게 고정돼요.</Bullet>
+        <Bullet>궁합을 켜면 카드가 <b>바로</b> 생성되며, 점수·케미·흐름은 관계 유형과 무관하게 고정돼요.</Bullet>
         <Bullet><Tag color="bg-cp-surface text-cp-line">연애</Tag> <Tag color="bg-cp-surface text-cp-line">친구</Tag> <Tag color="bg-cp-surface text-cp-line">비즈니스</Tag> <Tag color="bg-cp-surface text-cp-line">가족</Tag> 중 선택 가능.</Bullet>
         <Bullet>선택한 관계 유형은 <b>유료 「궁합 해설」 텍스트</b>에만 반영되어, 맥락에 맞는 조언을 제공해요.</Bullet>
         <Bullet>출생정보 기반 이론값이며, 실제 사건을 예측하는 것은 아니에요.</Bullet>
@@ -399,7 +403,7 @@ export default function GuidePage() {
           <SectionGroup label="메인 차트 오버레이" items={CHART_ITEMS} />
           <SectionGroup label="보조 지표" items={AUX_ITEMS} />
           <SectionGroup label="기능" items={FEATURE_ITEMS} />
-          <SectionGroup label="궁합 (비교)" items={COMPAT_ITEMS} />
+          <SectionGroup label="궁합" items={COMPAT_ITEMS} />
           <SectionGroup label="사주 개념" items={CONCEPT_ITEMS} />
         </div>
 

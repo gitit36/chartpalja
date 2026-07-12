@@ -109,7 +109,7 @@ def _compute_entry(mod, entry: dict, dates: list) -> dict:
             "worstDomain": worst_k,
             "worstScore": worst_v,
             "chart": {
-                "v": 2,
+                "v": 3,
                 "yongshinPower": round(yongshin_power, 3),
                 "energyTotal": float(energy.get("total") or 0),
                 "energyDirection": float(energy.get("direction") or 0),
@@ -130,6 +130,21 @@ def _compute_entry(mod, entry: dict, dates: list) -> dict:
                     "재물_기회": int(events.get("재물_기회") or 0),
                     "학업_시험": int(events.get("학업_시험") or 0),
                     "대인_갈등": int(events.get("대인_갈등") or 0),
+                },
+                "breakdown": {
+                    str(k): round(float(v), 2)
+                    for k, v in (daily.get("breakdown") or {}).items()
+                    if isinstance(v, (int, float))
+                },
+                "shinsalTags": list(dict.fromkeys(
+                    str(n).split("(")[0].strip()
+                    for n in (daily.get("신살_길신") or []) + (daily.get("신살_흉살") or [])
+                    if n
+                )),
+                "shinsalContextAdj": {
+                    str(k): round(float(v), 2)
+                    for k, v in (daily.get("shinsal_context_adj") or {}).items()
+                    if isinstance(v, (int, float))
                 },
             },
         }

@@ -65,6 +65,19 @@ function unpackChart(meta: Partial<DailyChartIndicators> & { seasonDesc?: string
   if (!meta) return null
   const tengo = meta.tengo
   const events = meta.events
+  const breakdown = meta.breakdown && typeof meta.breakdown === 'object'
+    ? Object.fromEntries(
+        Object.entries(meta.breakdown).filter(([, v]) => typeof v === 'number') as [string, number][],
+      )
+    : undefined
+  const shinsalTags = Array.isArray(meta.shinsalTags)
+    ? meta.shinsalTags.filter((t): t is string => typeof t === 'string')
+    : undefined
+  const shinsalContextAdj = meta.shinsalContextAdj && typeof meta.shinsalContextAdj === 'object'
+    ? Object.fromEntries(
+        Object.entries(meta.shinsalContextAdj).filter(([, v]) => typeof v === 'number') as [string, number][],
+      )
+    : undefined
   return {
     v: typeof meta.v === 'number' ? meta.v : undefined,
     yongshinPower: Number(meta.yongshinPower) || 0,
@@ -92,6 +105,9 @@ function unpackChart(meta: Partial<DailyChartIndicators> & { seasonDesc?: string
           대인_갈등: Number(events.대인_갈등) || 0,
         }
       : undefined,
+    breakdown: breakdown && Object.keys(breakdown).length ? breakdown : undefined,
+    shinsalTags: shinsalTags?.length ? shinsalTags : undefined,
+    shinsalContextAdj: shinsalContextAdj && Object.keys(shinsalContextAdj).length ? shinsalContextAdj : undefined,
   }
 }
 
@@ -122,10 +138,10 @@ function needsChartRefresh(row: CacheRow | undefined): boolean {
   if (!row) return true
   const raw = row.domainsJson
   if (!raw || typeof raw !== 'object') return true
-  const chart = (raw as { __chart?: { v?: number; tengo?: unknown } }).__chart
+  const chart = (raw as { __chart?: { v?: number; tengo?: unknown; breakdown?: unknown } }).__chart
   if (!chart || typeof chart !== 'object') return true
-  // v2 = 십성·이벤트 포함. 옛 __chart 만 있으면 재계산.
-  return chart.v !== 2 || !chart.tengo
+  // v3 = 십성·이벤트 + breakdown/신살 (이번 주 툴팁용). 그 이전이면 재계산.
+  return chart.v !== 3 || !chart.tengo || !chart.breakdown
 }
 
 export async function hydrateWeekSeries(entry: EntryForDaily): Promise<WeekSeriesPayload> {

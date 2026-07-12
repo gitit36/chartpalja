@@ -13,14 +13,17 @@ interface InfoTipProps {
    * 예: <InfoTip label="대운" text="..." /> → "대운 i" 전체가 토글
    */
   label?: React.ReactNode
+  /** 긴 안내문용 — 줄바꿈이 의도대로 보이도록 가로 폭 확대 */
+  wide?: boolean
 }
 
-const POPUP_W = 224
-const POPUP_EST_H = 120
+const POPUP_W_DEFAULT = 224
+const POPUP_W_WIDE = 340
+const POPUP_EST_H = 140
 const VIEWPORT_PAD = 8
 
 /** 얇은 원형 정보 아이콘 — 터치 영역은 크게, 비주얼은 절제 */
-function InfoIcon({ lift = false }: { lift?: boolean }) {
+function InfoIcon() {
   return (
     <svg
       width="14"
@@ -28,7 +31,7 @@ function InfoIcon({ lift = false }: { lift?: boolean }) {
       viewBox="0 0 14 14"
       fill="none"
       aria-hidden
-      className={`shrink-0 text-cp-muted${lift ? ' -translate-y-[1px]' : ''}`}
+      className="shrink-0 text-cp-muted translate-y-px"
     >
       <circle cx="7" cy="7" r="5.25" stroke="currentColor" strokeWidth="1.2" />
       <circle cx="7" cy="4.4" r="0.7" fill="currentColor" />
@@ -37,26 +40,28 @@ function InfoIcon({ lift = false }: { lift?: boolean }) {
   )
 }
 
-/** (i) 아이콘 — 원 하단이 옆 텍스트 하단과 맞도록 align-text-bottom */
-export function InfoTip({ text, align = 'auto', lift = false, label }: InfoTipProps) {
+/** (i) 아이콘 — 옆 텍스트와 세로 가운데 정렬 */
+export function InfoTip({ text, align = 'auto', lift: _lift = false, label, wide = false }: InfoTipProps) {
   const [open, setOpen] = useState(false)
   const [popupPos, setPopupPos] = useState<{ top: number; left: number } | null>(null)
   const wrapRef = useRef<HTMLSpanElement>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
+  const popupW = wide ? POPUP_W_WIDE : POPUP_W_DEFAULT
 
   const updatePopupPos = () => {
     const btn = btnRef.current
     if (!btn) return
     const rect = btn.getBoundingClientRect()
-    let left = align === 'right' ? rect.right - POPUP_W : rect.left
+    const maxW = Math.min(popupW, window.innerWidth - VIEWPORT_PAD * 2)
+    let left = align === 'right' ? rect.right - maxW : rect.left
     if (align === 'auto' || align === 'left') {
-      if (left + POPUP_W > window.innerWidth - VIEWPORT_PAD) {
-        left = rect.right - POPUP_W
+      if (left + maxW > window.innerWidth - VIEWPORT_PAD) {
+        left = rect.right - maxW
       }
     }
     if (left < VIEWPORT_PAD) left = VIEWPORT_PAD
-    if (left + POPUP_W > window.innerWidth - VIEWPORT_PAD) {
-      left = window.innerWidth - VIEWPORT_PAD - POPUP_W
+    if (left + maxW > window.innerWidth - VIEWPORT_PAD) {
+      left = window.innerWidth - VIEWPORT_PAD - maxW
     }
     // 그래프/하단을 가리지 않도록: 아래 공간이 부족하면 위로 띄운다.
     const spaceBelow = window.innerHeight - rect.bottom - VIEWPORT_PAD
@@ -78,7 +83,7 @@ export function InfoTip({ text, align = 'auto', lift = false, label }: InfoTipPr
       window.removeEventListener('resize', updatePopupPos)
       window.removeEventListener('scroll', updatePopupPos, true)
     }
-  }, [open, align])
+  }, [open, align, wide])
 
   useEffect(() => {
     if (!open) return
@@ -103,7 +108,7 @@ export function InfoTip({ text, align = 'auto', lift = false, label }: InfoTipPr
           aria-expanded={open}
         >
           <span>{label}</span>
-          <InfoIcon lift={lift} />
+          <InfoIcon />
         </button>
       ) : (
         <button
@@ -114,12 +119,12 @@ export function InfoTip({ text, align = 'auto', lift = false, label }: InfoTipPr
           aria-label="정보"
           aria-expanded={open}
         >
-          <InfoIcon lift={lift} />
+          <InfoIcon />
         </button>
       )}
       {open && popupPos && (
         <div
-          className="fixed z-[100] w-56 p-3 rounded-xl bg-cp-bg shadow-lg border border-cp-border text-[11px] text-cp-muted leading-relaxed font-normal text-left whitespace-pre-line"
+          className={`fixed z-[100] p-3 rounded-xl bg-cp-bg shadow-lg border border-cp-border text-[11px] text-cp-muted leading-relaxed font-normal text-left whitespace-pre-line ${wide ? 'w-[340px] max-w-[calc(100vw-16px)]' : 'w-56'}`}
           style={{ top: popupPos.top, left: popupPos.left }}
         >
           {text}

@@ -24,7 +24,7 @@ import { LoginPromptSheet } from '@/components/LoginPromptSheet'
 import { AlertSheet } from '@/components/AlertSheet'
 import { Toast } from '@/components/Toast'
 import { getGuestId } from '@/lib/auth/guest'
-import { clearBalanceCache } from '@/lib/hooks/useBalance'
+import { clearBalanceCache, fetchBalance } from '@/lib/hooks/useBalance'
 import { READING_COST } from '@/lib/payment/products'
 
 const ChartTab = dynamic(
@@ -351,6 +351,12 @@ function PersonalSajuPageInner() {
     setRegenModal(null)
     setRegenerating(true)
     try {
+      const bal = await fetchBalance()
+      if (bal && bal.ju < READING_COST.fortune) {
+        setRegenModal('no-credit')
+        setRegenerating(false)
+        return
+      }
       const headers = getHeaders()
       const res = await fetch(`/api/saju/${id}/fortune?regenerate=true&consumeCredit=true`, { headers })
       if (res.ok) {
@@ -363,10 +369,12 @@ function PersonalSajuPageInner() {
               : {}
             return { ...prev, fortuneJson: { ...existing, items: d.items } }
           })
+          clearBalanceCache()
+          void fetchBalance()
         }
       } else {
         const err = await res.json().catch(() => ({}))
-        if (err.error?.includes('이용권')) {
+        if (err.error?.includes('이용권') || res.status === 402) {
           setRegenModal('no-credit')
         } else {
           setRegenModal('failed')
@@ -413,6 +421,13 @@ function PersonalSajuPageInner() {
   const handleCompatConfirm = useCallback(async (relationship: RelationshipType) => {
     if (!activeOverlay) return
     setCompatConfirmOpen(false)
+
+    const bal = await fetchBalance()
+    if (bal && bal.ju < READING_COST.compat) {
+      setJuShortage({ needed: READING_COST.compat, current: bal.ju })
+      return
+    }
+
     const overlayId = activeOverlay.overlayId
     setCompatGeneration({
       partnerId: overlayId,
@@ -430,6 +445,8 @@ function PersonalSajuPageInner() {
       if (res.status === 402) {
         setCompatGeneration(null)
         setJuShortage({ needed: READING_COST.compat, current: data.ju ?? 0 })
+        clearBalanceCache()
+        void fetchBalance()
         return
       }
       if (!res.ok) {
@@ -456,6 +473,7 @@ function PersonalSajuPageInner() {
         setCompatGeneration(null)
         setExpandCompatCardKey(compatCardKey(overlayId, relationship))
         clearBalanceCache()
+        void fetchBalance()
       }
     } catch {
       setCompatGeneration(null)
@@ -706,7 +724,7 @@ function PersonalSajuPageInner() {
                 currentName={entry.name}
                 currentGender={entry.gender}
                 overlayEntries={overlayEntries}
-                isLocked={isLoggedIn !== true}
+                isLocked={isLoggedIn === false}
                 onLockedClick={(feature) => setLoginSheet({ open: true, feature })}
                 onOverlayChange={setActiveOverlay}
                 onCompatCta={handleCompatCta}
@@ -731,7 +749,7 @@ function PersonalSajuPageInner() {
           {tab === 'info' && entry && (
             <InfoTab
               report={report}
-              isLocked={isLoggedIn !== true}
+              isLocked={isLoggedIn === false}
               onLockedClick={(feature) => setLoginSheet({ open: true, feature })}
             />
           )}
@@ -754,45 +772,93 @@ function PersonalSajuPageInner() {
       </div>
 
       {/* Switch saju bottom sheet */}
-      {switchSheetOpen && (
-        <BottomSheet
-          onClose={() => setSwitchSheetOpen(false)}
-          header={<h3 className="font-bold text-cp-text pt-1 pb-2">다른 사주 보기</h3>}
-          footer={(
-            <div className="flex gap-2">
-              <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/list') }}
-                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-cp-muted bg-cp-surface hover:bg-cp-border transition-colors">
-                목록으로
-              </button>
-              <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
-                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white bg-cp-accent hover:brightness-110 transition-colors">
-                새 사주 등록
-              </button>
-            </div>
-          )}
-        >
-          {overlayEntries.filter(e => e.id !== id).length === 0 ? (
-            <div className="text-center py-6">
-              <p className="text-sm text-cp-muted mb-3">다른 사주가 없습니다</p>
-              <button onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
-                className="text-sm text-cp-line font-medium">+ 새 사주 등록하기</button>
-            </div>
-          ) : (
-            <div className="space-y-1">
-              {overlayEntries.filter(e => e.id !== id).map(e => (
-                <button key={e.id} onClick={() => { setSwitchSheetOpen(false); router.push(`/app/saju/${e.id}`) }}
-                  className="w-full text-left p-3.5 rounded-xl hover:bg-cp-surface flex items-center gap-3 transition-colors">
-                  <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-cp-text text-sm">{e.name}</div>
-                    <div className="text-xs text-cp-muted">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>
-                  </div>
+      {switchSheetOpen && (() => {
+        const switchCandidates = overlayEntries.filter(e => e.id !== id)
+        return (
+          <BottomSheet
+            onClose={() => setSwitchSheetOpen(false)}
+            header={(
+              <div className="pb-3">
+                <h3 className="font-bold text-cp-text text-lg leading-tight">다른 사주 보기</h3>
+                <p className="text-xs text-cp-muted mt-1">저장된 사주 차트로 바로 전환해요</p>
+              </div>
+            )}
+            footer={(
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => { setSwitchSheetOpen(false); router.push('/app/list') }}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold text-cp-secondary border border-cp-borderStrong bg-cp-input hover:bg-cp-hover active:brightness-95 transition-colors"
+                >
+                  목록으로
                 </button>
-              ))}
-            </div>
-          )}
-        </BottomSheet>
-      )}
+                <button
+                  type="button"
+                  onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold text-white bg-cp-accent hover:brightness-110 active:brightness-95 transition-colors"
+                >
+                  새 사주 등록
+                </button>
+              </div>
+            )}
+          >
+            {switchCandidates.length === 0 ? (
+              <div className="text-center py-10 px-2">
+                <p className="text-sm font-medium text-cp-text mb-1">전환할 다른 사주가 없어요</p>
+                <p className="text-xs text-cp-muted mb-5">새 사주를 등록하면 여기서 바로 바꿀 수 있어요</p>
+                <button
+                  type="button"
+                  onClick={() => { setSwitchSheetOpen(false); router.push('/app/input') }}
+                  className="inline-flex px-4 py-2.5 rounded-xl text-sm font-semibold text-cp-line bg-cp-input border border-cp-borderStrong hover:bg-cp-hover transition-colors"
+                >
+                  새 사주 등록하기
+                </button>
+              </div>
+            ) : (
+              <ul className="space-y-2.5 pb-2">
+                {switchCandidates.map(e => (
+                    <li key={e.id}>
+                      <button
+                        type="button"
+                        onClick={() => { setSwitchSheetOpen(false); router.push(`/app/saju/${e.id}`) }}
+                        className="w-full text-left px-3.5 py-3.5 rounded-2xl border border-cp-border bg-cp-input hover:bg-cp-hover hover:border-cp-borderStrong active:brightness-95 flex items-center gap-3.5 transition-colors"
+                      >
+                        <SajuCharacterAvatar
+                          gender={e.gender === 'female' ? 'female' : 'male'}
+                          element={normalizeElement(e.dayElement ?? undefined)}
+                          personId={e.id}
+                          size={44}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="font-semibold text-cp-text text-base truncate">{e.name}</span>
+                            <span className="text-sm text-cp-muted shrink-0">
+                              · {e.gender === 'female' ? '여성' : '남성'}
+                            </span>
+                          </div>
+                          <div className="text-sm text-cp-muted mt-0.5 truncate">
+                            {e.birthDate.replace(/-/g, '.')}
+                            {e.dayElement ? ` · ${e.dayElement} 일간` : ''}
+                          </div>
+                        </div>
+                        <svg
+                          className="w-5 h-5 text-cp-muted shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          aria-hidden
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </li>
+                ))}
+              </ul>
+            )}
+          </BottomSheet>
+        )
+      })()}
       {/* Share bottom sheet */}
       {shareOpen && (
         <BottomSheet
@@ -836,19 +902,22 @@ function PersonalSajuPageInner() {
       {/* Regenerate confirmation modal */}
       {regenModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setRegenModal(null)}>
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="relative bg-cp-bg rounded-2xl p-6 mx-6 max-w-sm w-full shadow-xl" onClick={e => e.stopPropagation()}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+          <div
+            className="relative bg-cp-raised rounded-2xl p-6 mx-6 max-w-sm w-full border border-cp-borderStrong shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+            onClick={e => e.stopPropagation()}
+          >
             {regenModal === 'confirm' ? (
               <>
                 <p className="text-base font-semibold text-cp-text mb-1.5 text-center">운세 풀이를 다시 생성할까요?</p>
                 <p className="text-sm text-cp-muted text-center mb-5">운세 해설 {READING_COST.fortune}주가 차감됩니다.</p>
                 <div className="flex gap-3">
                   <button onClick={() => setRegenModal(null)}
-                    className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-muted bg-cp-surface hover:bg-cp-border transition-colors">
+                    className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-secondary bg-cp-surface border border-cp-border hover:bg-cp-hover transition-colors">
                     나중에
                   </button>
                   <button onClick={handleRegenerateConfirm}
-                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:shadow-lg transition-all active:scale-[0.98]">
+                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:brightness-110 transition-all active:scale-[0.98]">
                     운세 풀이 재생성
                   </button>
                 </div>
@@ -859,11 +928,11 @@ function PersonalSajuPageInner() {
                 <p className="text-sm text-cp-muted text-center mb-5">이용권은 차감되지 않았습니다.</p>
                 <div className="flex gap-3">
                   <button onClick={() => setRegenModal(null)}
-                    className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-muted bg-cp-surface hover:bg-cp-border transition-colors">
+                    className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-secondary bg-cp-surface border border-cp-border hover:bg-cp-hover transition-colors">
                     나가기
                   </button>
                   <button onClick={handleRegenerateConfirm}
-                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:shadow-lg transition-all active:scale-[0.98]">
+                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:brightness-110 transition-all active:scale-[0.98]">
                     다시 생성
                   </button>
                 </div>
@@ -874,11 +943,11 @@ function PersonalSajuPageInner() {
                 <p className="text-sm text-cp-muted text-center mb-5">운세 해설은 {READING_COST.fortune}주가 필요해요.</p>
                 <div className="flex gap-3">
                   <button onClick={() => setRegenModal(null)}
-                    className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-muted bg-cp-surface hover:bg-cp-border transition-colors">
+                    className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-secondary bg-cp-surface border border-cp-border hover:bg-cp-hover transition-colors">
                     나중에
                   </button>
                   <button onClick={() => { setRegenModal(null); router.push(`/app/checkout?returnUrl=${encodeURIComponent(window.location.pathname)}`) }}
-                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:shadow-lg transition-all active:scale-[0.98]">
+                    className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:brightness-110 transition-all active:scale-[0.98]">
                     충전하기
                   </button>
                 </div>

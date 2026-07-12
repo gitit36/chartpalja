@@ -21,6 +21,7 @@ import { LockedPreview } from '@/components/LockedPreview'
 import { JuShortageNudge } from '@/components/JuShortageNudge'
 import { InfoTip } from '@/components/InfoTip'
 import { READING_COST } from '@/lib/payment/products'
+import { fetchBalance, clearBalanceCache } from '@/lib/hooks/useBalance'
 import { classifyCompat } from '@/lib/compat/classify'
 import { listCompatEntries, getGeneratedRelationships, compatShareStorageKey } from '@/lib/compat/storage'
 import { compatCardKey, RELATIONSHIP_LABELS } from '@/lib/compat/relationship'
@@ -90,28 +91,29 @@ function domainValue(d: Record<string, unknown>, field: string): number | null {
 }
 
 const BD_LABEL_POS: Record<string, string> = {
-  yongshin_fit: '필요한 기운 충만', unseong: '좋은 시기', unseong_context: '대운과 시너지',
-  relations: '좋은 인연·합', trine: '삼합·방합 길운', balance: '기운 균형 개선', shinsal: '길성 발동',
-  disease_resolution: '약점 보완됨', haegong: '공망 해소', structural_adj: '구조적 호재',
+  yongshin_fit: '필요한 기운 유입', unseong: '타이밍이 잘 맞는 시기', unseong_context: '대운과 조화',
+  relations: '인연의 도움', trine: '기운이 한데 모임', balance: '기운 균형 개선', shinsal: '좋은 기운 발동',
+  disease_resolution: '약점이 보완됨', haegong: '막힘이 풀림', structural_adj: '구조가 받쳐줌',
 }
 const BD_LABEL_NEG: Record<string, string> = {
-  yongshin_fit: '필요한 기운 부족', unseong: '어려운 시기', unseong_context: '대운과 엇박자',
-  relations: '갈등·충돌', trine: '에너지 분산', balance: '기운 편중 심화', shinsal: '흉살 작용',
-  disease_resolution: '약점 노출됨', haegong: '공망 해소', structural_adj: '구조적 악재',
+  yongshin_fit: '필요한 기운 부족', unseong: '타이밍이 엇갈리는 시기', unseong_context: '대운과 엇박자',
+  relations: '관계의 마찰', trine: '에너지 분산', balance: '기운 편중 심화', shinsal: '안 좋은 기운 발동',
+  disease_resolution: '약점이 드러남', haegong: '빈 기운이 드러남', structural_adj: '구조가 부담됨',
 }
 
 function intensityWord(v: number): string {
   const a = Math.abs(v)
-  if (a >= 8) return '매우 강'
+  if (a >= 8) return '강+'
   if (a >= 5) return '강'
-  if (a >= 2) return '보통'
+  if (a >= 2) return '중'
   return '약'
 }
 
 function breakdownFactors(bd: ScoreBreakdown | undefined): { up: string[]; down: string[] } {
   if (!bd) return { up: [], down: [] }
+  const skip = new Set(['base', 'monthly_base', 'daily_independent', 'synergy', 'blend_mw', 'blend_daily'])
   const entries = Object.entries(bd)
-    .filter(([k]) => k !== 'base')
+    .filter(([k]) => !skip.has(k))
     .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
     .slice(0, 4)
   const up: string[] = []
@@ -332,14 +334,14 @@ function ThisYearMarker(props: any) {
       if (typeof px === 'number' && !isNaN(px) && typeof py === 'number' && !isNaN(py)) {
         elements.push(
           <g key="peak-g" style={fade}>
-            <circle cx={px} cy={py} r={3.5} fill="#F04452" stroke="#1F1E25" strokeWidth={1.5} />
+            <circle cx={px} cy={py} r={3.5} fill="#F5A524" stroke="#1F1E25" strokeWidth={1.5} />
             <text
               x={px}
               y={py - 8}
               textAnchor="middle"
               fontSize={8}
               fontWeight="bold"
-              fill="#F04452"
+              fill="#F5A524"
             >
               {`최고 ${Math.round(peakPt.score)}`}
             </text>
@@ -386,12 +388,12 @@ const YEAR_LEVEL_TEXT: Record<YearCompatLevel, string> = {
 }
 
 /**
- * 메인 차트 하단 리듬 바 — X축에 붙어 솟아나는 연도별 관계 수준(좋음/보통/주의) 3단계.
- * 월(1년) 뷰에서는 12개월 셀로 확장하되, 관계 수준은 연 단위 값이므로 올해 값으로 채운다.
+ * 메인 차트 하단 리듬 바 — X축에 붙어 솟아나는 관계 수준(좋음/보통/주의) 3단계.
+ * 월(올해) 뷰에서는 monthLevels(1~12)를, 전체/연 뷰에서는 yearLevels를 사용한다.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function CompatYearBar(props: any) {
-  const { xAxisMap, yAxisMap, yearLevels, isMonthly, monthLevel } = props
+  const { xAxisMap, yAxisMap, yearLevels, isMonthly } = props
   if (!xAxisMap || !yAxisMap) return null
   const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) & { range?: () => number[] } } | undefined
   const yAxis = Object.values(yAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
@@ -401,15 +403,16 @@ function CompatYearBar(props: any) {
 
   type Cell = { pos: number; level: YearCompatLevel }
   const cells: Cell[] = []
+  const levels = yearLevels as Map<number, YearCompatLevel> | undefined
+  if (!levels?.size) return null
   if (isMonthly) {
-    if (!monthLevel) return null
     for (let m = 1; m <= 12; m++) {
+      const level = levels.get(m)
+      if (!level) continue
       const pos = scale(m)
-      if (typeof pos === 'number' && !isNaN(pos)) cells.push({ pos, level: monthLevel as YearCompatLevel })
+      if (typeof pos === 'number' && !isNaN(pos)) cells.push({ pos, level })
     }
   } else {
-    const levels = yearLevels as Map<number, YearCompatLevel> | undefined
-    if (!levels?.size) return null
     for (const [year, level] of levels) {
       const pos = scale(year)
       if (typeof pos === 'number' && !isNaN(pos)) cells.push({ pos, level })
@@ -521,7 +524,7 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
         return (
           <div className="mt-0.5 pt-0.5 border-t border-cp-border">
             {up.length > 0 && <div className="text-cp-up">▲ {up.join(', ')}</div>}
-            {down.length > 0 && <div className="text-cp-up">▼ {down.join(', ')}</div>}
+            {down.length > 0 && <div className="text-cp-down">▼ {down.join(', ')}</div>}
           </div>
         )
       })()}
@@ -642,6 +645,8 @@ export function ChartTab({
   const [weekDataOv, setWeekDataOv] = useState<ChartDatum[]>([])
   const [weekLoading, setWeekLoading] = useState(false)
   const [selection, setSelection] = useState<{ startYear: number; endYear: number } | null>(null)
+  /** 일반 모드에서 차트 클릭으로 고른 단일 시점 — 하단 「n년 해설 보기」 CTA용 (구간 모드와 별개) */
+  const [quickPick, setQuickPick] = useState<number | null>(null)
   const [yearSummary, setYearSummary] = useState<{ startYear: number; endYear: number; text: string } | null>(null)
   const [yearSummaryLoading, setYearSummaryLoading] = useState(false)
   const [rangeMode, setRangeMode] = useState(false)
@@ -952,7 +957,33 @@ export function ChartTab({
     return buildYearLevels(relationshipSeries)
   }, [relationshipSeries, overlayActive])
 
-  const monthLevel = yearLevels.get(THIS_YEAR)
+  /** 올해(월간) X축 리듬 바 — 양쪽 월운 점수로 월별 좋음/보통/주의 */
+  const monthLevels = useMemo(() => {
+    if (!isMonthly || !overlayActive) return new Map<number, YearCompatLevel>()
+    const mine = fullChartData?.monthlyData ?? []
+    const ov = overlayChartData?.monthlyData ?? []
+    if (!mine.length || !ov.length) {
+      // 월운 없으면 올해 연간 레벨로 12개월 동일 채움(기존 동작)
+      const lvl = yearLevels.get(THIS_YEAR)
+      const m = new Map<number, YearCompatLevel>()
+      if (lvl) for (let i = 1; i <= 12; i++) m.set(i, lvl)
+      return m
+    }
+    const stub = (year: number, score: number): import('@/lib/compat/types').RelationshipYearPoint => ({
+      year,
+      score,
+      dots: 3,
+      components: { sync: 0, ohang: 0, support: 0, clash: 0 },
+      events: [],
+      scoreA: score,
+      scoreB: score,
+    })
+    const ovMap = new Map(ov.map(d => [d.year, d.score]))
+    const points = mine
+      .filter(d => ovMap.has(d.year))
+      .map(d => stub(d.year, (d.score + (ovMap.get(d.year) ?? d.score)) / 2))
+    return buildYearLevels(points)
+  }, [isMonthly, overlayActive, fullChartData?.monthlyData, overlayChartData?.monthlyData, yearLevels])
 
   /** 이번 주 X축 리듬 바 — 비교(관계) 활성일 때만 */
   const weekLevels = useMemo(() => {
@@ -1105,63 +1136,84 @@ export function ChartTab({
     if (shareMode) { onShareCta?.(); return }
     if (!entryId) return
 
+    // 서버가 overlay를 쓰지 않으므로 클라 캐시도 본인 차트 기준만 유지
     const prefix = weekly ? 'w_' : monthly ? 'm_' : ''
-    const ovSuffix = overlayEntryId ? `_ov${overlayEntryId.slice(0, 6)}` : ''
-    const cacheKey = startYear === endYear ? `${prefix}${startYear}${ovSuffix}` : `${prefix}${startYear}_${endYear}${ovSuffix}`
+    const cacheKey = startYear === endYear ? `${prefix}${startYear}` : `${prefix}${startYear}_${endYear}`
     const cached = summaryCache.get(cacheKey)
     if (cached) { setYearSummary({ startYear, endYear, ...cached }); return }
-    setYearSummaryLoading(true); setYearSummary(null)
-    const gid = getGuestId()
-    const headers: Record<string, string> = {}
-    if (gid) headers['x-guest-id'] = gid
-    let url: string
-    if (weekly) {
-      url = startYear === endYear
-        ? `/api/saju/${entryId}/fortune/year?weekStart=${startYear}`
-        : `/api/saju/${entryId}/fortune/year?weekStart=${startYear}&weekEnd=${endYear}`
-    } else if (monthly) {
-      url = startYear === endYear
-        ? `/api/saju/${entryId}/fortune/year?month=${startYear}`
-        : `/api/saju/${entryId}/fortune/year?month=${startYear}&monthEnd=${endYear}`
-    } else {
-      url = startYear === endYear
-        ? `/api/saju/${entryId}/fortune/year?year=${startYear}`
-        : `/api/saju/${entryId}/fortune/year?year=${startYear}&yearEnd=${endYear}`
-    }
-    if (overlayEntryId) url += `&overlayId=${overlayEntryId}`
-    fetch(url, { headers })
-      .then(async r => {
+
+    const run = async () => {
+      const bal = await fetchBalance()
+      // 잔액 부족이어도 서버 캐시 hit 가능 → API는 호출. Gemini는 서버에서 잔액 검사 후 스킵.
+      if (bal && bal.ju < READING_COST.period) {
+        setJuShortage({ needed: READING_COST.period, current: bal.ju })
+      }
+
+      setYearSummaryLoading(true); setYearSummary(null)
+      const gid = getGuestId()
+      const headers: Record<string, string> = {}
+      if (gid) headers['x-guest-id'] = gid
+      let url: string
+      if (weekly) {
+        url = startYear === endYear
+          ? `/api/saju/${entryId}/fortune/year?weekStart=${startYear}`
+          : `/api/saju/${entryId}/fortune/year?weekStart=${startYear}&weekEnd=${endYear}`
+      } else if (monthly) {
+        url = startYear === endYear
+          ? `/api/saju/${entryId}/fortune/year?month=${startYear}`
+          : `/api/saju/${entryId}/fortune/year?month=${startYear}&monthEnd=${endYear}`
+      } else {
+        url = startYear === endYear
+          ? `/api/saju/${entryId}/fortune/year?year=${startYear}`
+          : `/api/saju/${entryId}/fortune/year?year=${startYear}&yearEnd=${endYear}`
+      }
+
+      // 잔액 부족 + 캐시 미스가 확실하면 Gemini 경로를 아예 안 탈 수 있게 early stop
+      // → 서버 캐시 가능성을 위해 API는 유지하되, 잔액 0이면 로딩을 짧게만 유지
+      try {
+        const r = await fetch(url, { headers })
         const d = await r.json().catch(() => null)
         if (r.status === 401) {
-          throw new Error('login_required')
+          setYearSummary({ startYear, endYear, text: '구간 해설을 보려면 로그인이 필요해요.' })
+          return
         }
         if (r.status === 402) {
           const d402 = d as { needed?: number; ju?: number } | null
           setJuShortage({
             needed: d402?.needed ?? READING_COST.period,
-            current: d402?.ju ?? 0,
+            current: d402?.ju ?? bal?.ju ?? 0,
           })
-          throw new Error('이용권 부족')
+          clearBalanceCache()
+          void fetchBalance()
+          return
         }
-        if (!r.ok) throw new Error(d?.error ?? 'Failed')
-        return d
-      })
-      .then(d => {
+        if (r.status === 409) {
+          setYearSummary({
+            startYear,
+            endYear,
+            text: typeof d?.error === 'string' ? d.error : '데이터가 아직 준비되지 않았어요.',
+          })
+          return
+        }
+        if (!r.ok) {
+          setYearSummary({ startYear, endYear, text: d?.error ?? '해설을 불러오지 못했습니다.' })
+          return
+        }
         const text = d?.summary ?? '해석을 불러오지 못했습니다.'
         const result = { text }
-        // 실패 문구는 캐시하지 않아 "다시 시도"가 동작하도록 한다.
         if (!/불러오지 못했습니다/.test(text)) summaryCache.set(cacheKey, result)
         setYearSummary({ startYear, endYear, ...result })
-      })
-      .catch(e => {
-        if (e?.message === 'login_required') {
-          setYearSummary({ startYear, endYear, text: '구간 해설을 보려면 로그인이 필요해요.' })
-        } else if (!e?.message?.includes('이용권')) {
-          setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' })
-        }
-      })
-      .finally(() => setYearSummaryLoading(false))
-  }, [entryId, summaryCache, overlayEntryId, shareMode, onShareCta])
+        setJuShortage(null)
+        clearBalanceCache()
+        void fetchBalance()
+      } catch {
+        setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' })
+      } finally {
+        setYearSummaryLoading(false)
+      }
+    }
+    void run()
+  }, [entryId, summaryCache, shareMode, onShareCta])
 
   const dragStartYear = React.useRef<number | null>(null)
   const didDrag = React.useRef(false)
@@ -1199,7 +1251,15 @@ export function ChartTab({
 
     setClickedYear(yr)
 
-    if (!rangeMode) return
+    if (!rangeMode) {
+      // 일반 모드: 포커스 + 단일 시점 해설 CTA (공유 뷰는 크레딧 소모라 CTA 생략)
+      if (!shareMode) {
+        setQuickPick(yr)
+        setYearSummary(null)
+        setYearSummaryLoading(false)
+      }
+      return
+    }
 
     if (!rangeFirst.current) {
       rangeFirst.current = yr
@@ -1211,7 +1271,7 @@ export function ChartTab({
       rangeFirst.current = null
       setClickedYear(null)
     }
-  }, [mergedData, rangeMode])
+  }, [mergedData, rangeMode, shareMode])
 
   const toggleMain = (k: MainOverlayKey) => setMainOverlays(p => ({ ...p, [k]: !p[k] }))
   const toggleAux = (k: AuxKey) => {
@@ -1272,6 +1332,22 @@ export function ChartTab({
 
   const anyAux = Object.values(auxPanels).some(Boolean)
   const otherEntries = overlayEntries?.filter(e => e.id !== entryId) ?? []
+
+  const formatPeriodLabel = (start: number, end: number) => {
+    if (isWeekly) {
+      return start === end
+        ? weekFullLabel(start, mergedData)
+        : `${weekFullLabel(start, mergedData)}~${weekFullLabel(end, mergedData)}`
+    }
+    if (isMonthly) {
+      return start === end ? `${start}월` : `${start}~${end}월`
+    }
+    return start === end ? `${start}년` : `${start}~${end}년`
+  }
+
+  const showRangeCta = rangeMode && selection && !yearSummary && !yearSummaryLoading
+  const showQuickCta = !rangeMode && !shareMode && quickPick != null && !yearSummary && !yearSummaryLoading
+  const showSummaryCard = !!(yearSummaryLoading || yearSummary) && (rangeMode || !shareMode)
 
   return (
     <div>
@@ -1345,7 +1421,7 @@ export function ChartTab({
           {chartHint && (
             <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none animate-fade-in">
               <span className="bg-cp-surface/95 backdrop-blur-sm text-cp-muted text-xs px-3 py-2 rounded-xl shadow-sm border border-cp-border text-center max-w-[240px] leading-relaxed">
-                빨간·파란 점은 최고·최저예요
+                노란·파란 점은 최고·최저예요
                 <span className="block text-[10px] text-cp-muted mt-0.5">차트를 터치해 시기별 흐름을 확인해보세요</span>
               </span>
             </div>
@@ -1354,14 +1430,22 @@ export function ChartTab({
           {rangeMode && !selection && (
             <div className="absolute left-0 right-0 bottom-[76px] z-[5] flex justify-center pointer-events-none">
               <span className="text-[10px] text-cp-violet animate-pulse bg-cp-violetMuted px-2.5 py-0.5 rounded-full border border-cp-violetBorder/50">
-                👆 시작 연도를 선택하거나 드래그하세요
+                {isWeekly
+                  ? '👆 여러 요일을 드래그하거나, 시작·끝을 눌러 주세요'
+                  : isMonthly
+                    ? '👆 여러 달을 드래그하거나, 시작·끝을 눌러 주세요'
+                    : '👆 여러 해를 드래그하거나, 시작·끝을 눌러 주세요'}
               </span>
             </div>
           )}
           {rangeMode && selection && selection.startYear === selection.endYear && rangeFirst.current && (
             <div className="absolute left-0 right-0 bottom-[76px] z-[5] flex justify-center pointer-events-none">
               <span className="text-[10px] text-cp-violet animate-pulse bg-cp-violetMuted px-2.5 py-0.5 rounded-full border border-cp-violetBorder/50">
-                👆 끝 연도를 선택하세요
+                {isWeekly
+                  ? '👆 끝 요일을 눌러 주세요'
+                  : isMonthly
+                    ? '👆 끝 달을 눌러 주세요'
+                    : '👆 끝 연도를 눌러 주세요'}
               </span>
             </div>
           )}
@@ -1415,7 +1499,7 @@ export function ChartTab({
                     }
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : yearLevels}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
               {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#2E2F36" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#8B8B93', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && !isWeekly && seasonBands.map((b: SeasonBand, i: number) => (
@@ -1452,7 +1536,7 @@ export function ChartTab({
               {mainOverlays.candle && !isWeekly && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
               {overlayActive && !isWeekly && (
                 <Customized component={(p: any) => (
-                  <CompatYearBar {...p} yearLevels={yearLevels} isMonthly={isMonthly} monthLevel={monthLevel} />
+                  <CompatYearBar {...p} yearLevels={isMonthly ? monthLevels : yearLevels} isMonthly={isMonthly} />
                 )}/>
               )}
               {overlayActive && isWeekly && weekLevels.size > 0 && (
@@ -1487,6 +1571,7 @@ export function ChartTab({
             <button key={k} onClick={() => {
               setPeriod(k)
               setSelection(null)
+              setQuickPick(null)
               setYearSummary(null)
               setYearSummaryLoading(false)
               setRangeMode(false)
@@ -1534,6 +1619,7 @@ export function ChartTab({
                 if (blockIfLocked('구간 해설')) return
                 const next = !rangeMode
                 setRangeMode(next)
+                setQuickPick(null)
                 if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
                 else { setSelection(null); rangeFirst.current = null }
               }}
@@ -1549,70 +1635,111 @@ export function ChartTab({
         </div>
       </div>
 
-      {/* Selection card — only in range mode */}
-      {rangeMode && selection && !yearSummary && !yearSummaryLoading && (
+      {/* Selection CTA — 구간 모드 범위 선택, 또는 일반 모드 단일 클릭 */}
+      {showRangeCta && selection && (
         <div className="mx-3 sm:mx-4 mt-3 mb-1">
-          <div className="relative bg-cp-raised rounded-2xl p-3 sm:p-4 ring-1 ring-cp-violetBorder/60 border border-cp-violetBorder/30">
-            <button onClick={() => { setSelection(null); rangeFirst.current = null }}
-              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-hover hover:text-cp-secondary text-xs leading-none transition-colors">&times;</button>
-            <div className="flex items-center gap-2 mb-3 pr-6">
+          <div className="bg-cp-raised rounded-2xl p-3 sm:p-4 ring-1 ring-cp-violetBorder/60 border border-cp-violetBorder/30">
+            <div className="flex items-center gap-2 mb-3">
               <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-cp-violetMuted text-cp-violet whitespace-nowrap flex-shrink-0">
-                {isWeekly
-                  ? (selection.startYear === selection.endYear
-                    ? weekFullLabel(selection.startYear, mergedData)
-                    : `${weekFullLabel(selection.startYear, mergedData)}~${weekFullLabel(selection.endYear, mergedData)}`)
-                  : isMonthly
-                    ? (selection.startYear === selection.endYear ? `${selection.startYear}월` : `${selection.startYear}~${selection.endYear}월`)
-                    : (selection.startYear === selection.endYear ? `${selection.startYear}년` : `${selection.startYear}~${selection.endYear}년`)}
+                {formatPeriodLabel(selection.startYear, selection.endYear)}
               </span>
               {(() => {
                 const yds = mergedData.filter(d => d.year >= selection.startYear && d.year <= selection.endYear)
                 if (!yds.length) return null
                 const avg = Math.round(yds.reduce((a, b) => a + b.score, 0) / yds.length)
-                return <span className="text-[11px] text-cp-muted truncate">평균 {avg}점</span>
+                return <span className="text-[11px] text-cp-muted truncate min-w-0">평균 {avg}점</span>
               })()}
+              <button
+                type="button"
+                onClick={() => { setSelection(null); rangeFirst.current = null }}
+                className="ml-auto w-6 h-6 flex-shrink-0 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-hover hover:text-cp-secondary text-xs leading-none transition-colors"
+                aria-label="닫기"
+              >&times;</button>
             </div>
-            <button onClick={() => fetchSummary(selection.startYear, selection.endYear, isMonthly, isWeekly)}
+            <button
+              onClick={() => {
+                if (blockIfLocked('구간 해설')) return
+                fetchSummary(selection.startYear, selection.endYear, isMonthly, isWeekly)
+              }}
               className="w-full py-2.5 rounded-xl text-[13px] sm:text-sm font-semibold bg-cp-violetMuted text-cp-violet border border-cp-violetBorder hover:brightness-110 transition-colors truncate">
-              {isWeekly
-                ? (selection.startYear === selection.endYear
-                  ? `${weekFullLabel(selection.startYear, mergedData)} 해설 보기`
-                  : `${weekFullLabel(selection.startYear, mergedData)}~${weekFullLabel(selection.endYear, mergedData)} 해설 보기`)
-                : isMonthly
-                  ? (selection.startYear === selection.endYear ? `${selection.startYear}월 해설 보기` : `${selection.startYear}~${selection.endYear}월 해설 보기`)
-                  : (selection.startYear === selection.endYear ? `${selection.startYear}년 해설 보기` : `${selection.startYear}~${selection.endYear}년 해설 보기`)}
+              {formatPeriodLabel(selection.startYear, selection.endYear)} 해설 보기
             </button>
           </div>
         </div>
       )}
 
-      {rangeMode && (yearSummaryLoading || yearSummary) && (
+      {showQuickCta && quickPick != null && (
         <div className="mx-3 sm:mx-4 mt-3 mb-1">
-          <div className="relative bg-cp-bg rounded-2xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-cp-border">
-            <button onClick={() => { setYearSummary(null); setYearSummaryLoading(false); setSelection(null); rangeFirst.current = null }}
-              className="absolute top-2.5 right-2.5 w-6 h-6 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-border hover:text-cp-muted text-xs leading-none transition-colors">&times;</button>
+          <div className="bg-cp-raised rounded-2xl p-3 sm:p-4 ring-1 ring-cp-violetBorder/60 border border-cp-violetBorder/30">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-cp-violetMuted text-cp-violet whitespace-nowrap flex-shrink-0">
+                {formatPeriodLabel(quickPick, quickPick)}
+              </span>
+              {(() => {
+                const yd = mergedData.find(d => d.year === quickPick)
+                if (!yd) return null
+                return (
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-[11px] text-cp-muted">{Math.round(yd.score)}점</span>
+                    {!isWeekly && yd.seasonTag && (
+                      <>
+                        <span className="w-1 h-1 rounded-full bg-cp-border flex-shrink-0" />
+                        <span className="text-[11px] text-cp-muted truncate">{yd.seasonTag}</span>
+                      </>
+                    )}
+                  </div>
+                )
+              })()}
+              <button
+                type="button"
+                onClick={() => setQuickPick(null)}
+                className="ml-auto w-6 h-6 flex-shrink-0 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-hover hover:text-cp-secondary text-xs leading-none transition-colors"
+                aria-label="닫기"
+              >&times;</button>
+            </div>
+            <button
+              onClick={() => {
+                if (blockIfLocked('구간 해설')) return
+                fetchSummary(quickPick, quickPick, isMonthly, isWeekly)
+              }}
+              className="w-full py-2.5 rounded-xl text-[13px] sm:text-sm font-semibold bg-cp-violetMuted text-cp-violet border border-cp-violetBorder hover:brightness-110 transition-colors truncate">
+              {formatPeriodLabel(quickPick, quickPick)} 해설 보기
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showSummaryCard && (
+        <div className="mx-3 sm:mx-4 mt-3 mb-1">
+          <div className="bg-cp-bg rounded-2xl p-3 sm:p-4 shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-cp-border">
             {yearSummaryLoading ? (
-              <div className="flex items-center gap-2 py-1">
+              <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full border-2 border-cp-border border-t-cp-line animate-spin" />
-                <span className="text-xs text-cp-muted">해설을 생성하고 있어요...</span>
+                <span className="text-xs text-cp-muted flex-1">해설을 생성하고 있어요...</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setYearSummary(null)
+                    setYearSummaryLoading(false)
+                    setSelection(null)
+                    setQuickPick(null)
+                    rangeFirst.current = null
+                  }}
+                  className="w-6 h-6 flex-shrink-0 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-border hover:text-cp-muted text-xs leading-none transition-colors"
+                  aria-label="닫기"
+                >&times;</button>
               </div>
             ) : yearSummary ? (
               <>
-                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 pr-6">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2">
                   <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-cp-surface text-cp-line whitespace-nowrap flex-shrink-0">
-                    {isWeekly
-                      ? (yearSummary.startYear === yearSummary.endYear
-                        ? weekFullLabel(yearSummary.startYear, mergedData)
-                        : `${weekFullLabel(yearSummary.startYear, mergedData)}~${weekFullLabel(yearSummary.endYear, mergedData)}`)
-                      : isMonthly
-                        ? (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}월` : `${yearSummary.startYear}~${yearSummary.endYear}월`)
-                        : (yearSummary.startYear === yearSummary.endYear ? `${yearSummary.startYear}년` : `${yearSummary.startYear}~${yearSummary.endYear}년`)}
+                    {formatPeriodLabel(yearSummary.startYear, yearSummary.endYear)}
                   </span>
                   {(() => {
                     const yds = mergedData.filter(d => d.year >= yearSummary.startYear && d.year <= yearSummary.endYear)
                     if (!yds.length) return null
                     if (yds.length === 1) return (
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5 min-w-0">
                         <span className="text-xs text-cp-muted">{Math.round(yds[0]!.score)}점</span>
                         {!isWeekly && yds[0]!.seasonTag && (
                           <>
@@ -1629,10 +1756,22 @@ export function ChartTab({
                       : isMonthly
                         ? `${peak.year}월`
                         : `${peak.year}년`
-                    return <span className="text-[10px] sm:text-[11px] text-cp-muted truncate">평균 {avg}점 · 최고 {peakLabel}({Math.round(peak.score)}점)</span>
+                    return <span className="text-[10px] sm:text-[11px] text-cp-muted truncate min-w-0">평균 {avg}점 · 최고 {peakLabel}({Math.round(peak.score)}점)</span>
                   })()}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setYearSummary(null)
+                      setYearSummaryLoading(false)
+                      setSelection(null)
+                      setQuickPick(null)
+                      rangeFirst.current = null
+                    }}
+                    className="ml-auto w-6 h-6 flex-shrink-0 flex items-center justify-center rounded-full bg-cp-surface text-cp-muted hover:bg-cp-border hover:text-cp-muted text-xs leading-none transition-colors"
+                    aria-label="닫기"
+                  >&times;</button>
                 </div>
-                {/불러오지 못했습니다/.test(yearSummary.text) ? (
+                {/(불러오지 못했습니다|준비되지|부족해요)/.test(yearSummary.text) ? (
                   <div className="flex flex-col items-center gap-2 py-2">
                     <p className="text-[13px] text-cp-muted text-center">{yearSummary.text}</p>
                     <button
@@ -1733,7 +1872,7 @@ export function ChartTab({
             </div>
           )}
           {auxPanels.event && (
-            <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label={`이벤트 확률 ${selectedData ? `(${isWeekly ? (selectedData.dayLabel?.replace('요일', '') || selectedData.sewoonPillar) : `${selectedData.year}${isMonthly ? '월' : '년'}`})` : '- 차트 클릭'}`} text={"총운 점수와는 별개로, 특정 사건이 일어날 가능성을 보여줘요.\n예) 총운의 재물 점수 = 재물운의 좋고 나쁨\n이벤트 재물확률 = 큰 돈이 오갈 이벤트가 생길 확률\n높다고 반드시 좋은 건 아니에요."} /></div>
+            <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" wide label={`이벤트 확률 ${selectedData ? `(${isWeekly ? (selectedData.dayLabel?.replace('요일', '') || selectedData.sewoonPillar) : `${selectedData.year}${isMonthly ? '월' : '년'}`})` : '- 차트 클릭'}`} text={"총운 점수와는 별개로, 특정 사건이 일어날 가능성을 보여줘요.\n예) 총운의 재물 점수 = 재물운의 좋고 나쁨\n이벤트 재물확률 = 큰 돈이 오갈 이벤트가 생길 확률\n높다고 반드시 좋은 건 아니에요."} /></div>
             {selectedData ? (() => {
               const evData = [
                 {n:'직업', p:selectedData.eventCareer, pO:selectedOverlayData?.eventCareer ?? 0},
@@ -1943,52 +2082,97 @@ export function ChartTab({
       {compareSheetOpen && (
         <BottomSheet
           onClose={() => setCompareSheetOpen(false)}
-          header={<h3 className="font-bold text-cp-text pt-1 pb-2">누구와 비교할까요?</h3>}
-          footer={(
-            <button onClick={() => setCompareSheetOpen(false)}
-              className="w-full py-3 rounded-xl text-sm font-medium text-cp-muted hover:text-cp-muted transition-colors">닫기</button>
-          )}
-        >
-          {shareMode && (
-            <p className="text-xs text-cp-muted mb-3">차트팔자에 저장된 공인과 비교해볼 수 있어요</p>
-          )}
-          {!shareMode && <div className="mb-4" />}
-          {otherEntries.length === 0 ? (
-            <p className="text-sm text-cp-muted text-center py-6">비교할 다른 사주가 없습니다</p>
-          ) : (
-            <div className="space-y-1">
-              {otherEntries.map(e => (
-                <button key={e.id} onClick={() => {
-                  setOverlayEntryId(e.id)
-                  setOverlayName(e.name)
-                  setOverlayGender(e.gender)
-                  setCompareSheetOpen(false)
-                  setSelection(null)
-                  setYearSummary(null)
-                }}
-                  className="w-full text-left p-3.5 rounded-xl hover:bg-cp-surface flex items-center gap-3 transition-colors">
-                  <SajuCharacterAvatar gender={e.gender === 'female' ? 'female' : 'male'} element={normalizeElement(e.dayElement ?? undefined)} personId={e.id} size={32} />
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-cp-text text-sm">{e.name}</div>
-                    <div className="text-xs text-cp-muted">{e.gender === 'female' ? '여성' : '남성'} · {e.birthDate.replace(/-/g, '.')}</div>
-                  </div>
-                </button>
-              ))}
+          header={(
+            <div className="pb-3">
+              <h3 className="font-bold text-cp-text text-lg leading-tight">누구와 비교할까요?</h3>
+              <p className="text-xs text-cp-muted mt-1">
+                {shareMode
+                  ? '차트팔자에 저장된 공인과 비교해볼 수 있어요'
+                  : '저장된 사주를 골라 차트를 겹쳐 봐요'}
+              </p>
             </div>
           )}
+          footer={(
+            <button
+              type="button"
+              onClick={() => setCompareSheetOpen(false)}
+              className="w-full py-3 rounded-xl text-sm font-semibold text-cp-secondary border border-cp-borderStrong bg-cp-input hover:bg-cp-hover active:brightness-95 transition-colors"
+            >
+              닫기
+            </button>
+          )}
+        >
+          {otherEntries.length === 0 ? (
+            <div className="text-center py-10 px-2">
+              <p className="text-sm font-medium text-cp-text mb-1">비교할 다른 사주가 없어요</p>
+              <p className="text-xs text-cp-muted mb-1">
+                {shareMode
+                  ? '아직 비교할 수 있는 사주가 없어요'
+                  : '친구를 초대하거나 새 사주를 등록해 보세요'}
+              </p>
+            </div>
+          ) : (
+            <ul className="space-y-2.5 pb-2">
+              {otherEntries.map(e => (
+                <li key={e.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOverlayEntryId(e.id)
+                      setOverlayName(e.name)
+                      setOverlayGender(e.gender)
+                      setCompareSheetOpen(false)
+                      setSelection(null)
+                      setYearSummary(null)
+                    }}
+                    className="w-full text-left px-3.5 py-3.5 rounded-2xl border border-cp-border bg-cp-input hover:bg-cp-hover hover:border-cp-borderStrong active:brightness-95 flex items-center gap-3.5 transition-colors"
+                  >
+                    <SajuCharacterAvatar
+                      gender={e.gender === 'female' ? 'female' : 'male'}
+                      element={normalizeElement(e.dayElement ?? undefined)}
+                      personId={e.id}
+                      size={44}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="font-semibold text-cp-text text-base truncate">{e.name}</span>
+                        <span className="text-sm text-cp-muted shrink-0">
+                          · {e.gender === 'female' ? '여성' : '남성'}
+                        </span>
+                      </div>
+                      <div className="text-sm text-cp-muted mt-0.5 truncate">
+                        {e.birthDate.replace(/-/g, '.')}
+                        {e.dayElement ? ` · ${e.dayElement} 일간` : ''}
+                      </div>
+                    </div>
+                    <svg
+                      className="w-5 h-5 text-cp-muted shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      aria-hidden
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
           {!shareMode && entryId && (
-            <div className="mt-4 pt-4 border-t border-cp-border">
-              <p className="text-xs text-cp-muted mb-2">친구가 아직 차트팔자에 없나요?</p>
+            <div className="mt-3 pt-4 border-t border-cp-border">
+              <p className="text-xs text-cp-muted mb-2.5">친구가 아직 차트팔자에 없나요?</p>
               <button
                 type="button"
                 onClick={handleInviteFriend}
                 disabled={inviteBusy || isLocked}
-                className="w-full py-3 rounded-xl text-sm font-semibold text-cp-line bg-cp-surface border border-cp-border/70 hover:bg-cp-border/80 transition-colors disabled:opacity-50"
+                className="w-full py-3 rounded-xl text-sm font-semibold text-cp-line bg-cp-input border border-cp-borderStrong hover:bg-cp-hover active:brightness-95 transition-colors disabled:opacity-50"
               >
                 {inviteBusy ? '링크 만드는 중…' : '친구 초대하기'}
               </button>
               {inviteUrl && (
-                <p className="text-[11px] text-green-600 mt-2 text-center">초대 링크가 복사됐어요</p>
+                <p className="text-[11px] text-cp-down mt-2 text-center">초대 링크가 복사됐어요</p>
               )}
             </div>
           )}
@@ -2237,6 +2421,7 @@ function FortuneSection({
   const [aiLoading, setAiLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
+  const [showJuToast, setShowJuToast] = useState(false)
   const fetchedRef = React.useRef(false)
   const compatSectionRef = React.useRef<HTMLDivElement>(null)
 
@@ -2288,23 +2473,71 @@ function FortuneSection({
     return h
   }, [])
 
-  const fetchFortune = useCallback((regen = false) => {
+  const fetchFortune = useCallback(async (regen = false) => {
     if (!entryId) return
     if (isLocked || shareMode) return
-    setError(null); setJuShortage(null); setAiLoading(true)
+    setError(null)
+
     const url = regen ? `/api/saju/${entryId}/fortune?regenerate=true` : `/api/saju/${entryId}/fortune`
-    fetch(url, { headers: getHeaders() })
+    const headers = getHeaders()
+
+    const apply402 = (ju?: number) => {
+      setJuShortage({ needed: READING_COST.fortune, current: ju ?? 0 })
+      setShowJuToast(true)
+      clearBalanceCache()
+      void fetchBalance()
+    }
+
+    // 잔액 선확인 — 부족하면 로더 대신 부족 UI. 캐시 hit면 아래에서 풀림.
+    const bal = await fetchBalance()
+    if (bal && bal.ju < READING_COST.fortune) {
+      if (regen) {
+        apply402(bal.ju)
+        setAiLoading(false)
+        return
+      }
+      apply402(bal.ju)
+      setAiLoading(false)
+      try {
+        const r = await fetch(url, { headers })
+        const d = await r.json().catch(() => null)
+        if (r.ok && d?.items?.length) {
+          setItems(d.items)
+          fetchedRef.current = true
+          setJuShortage(null)
+          setShowJuToast(false)
+        } else if (r.status === 402) {
+          apply402((d as { ju?: number } | null)?.ju ?? bal.ju)
+        } else if (!r.ok && r.status !== 401) {
+          // 캐시 없음 + 생성 불가 — 부족 UI 유지
+        }
+      } catch { /* keep shortage UI */ }
+      return
+    }
+
+    setShowJuToast(false)
+    setJuShortage(null)
+    setAiLoading(true)
+    fetch(url, { headers })
       .then(async r => {
         const d = await r.json().catch(() => null)
         if (r.status === 401) { throw new Error('login_required') }
         if (r.status === 402) {
-          setJuShortage({ needed: READING_COST.fortune, current: (d as { ju?: number } | null)?.ju ?? 0 })
+          apply402((d as { ju?: number } | null)?.ju ?? 0)
           throw new Error('이용권 부족')
         }
         if (!r.ok) throw new Error(d?.error ?? '운세 해설을 불러오지 못했습니다')
         return d
       })
-      .then(d => { if (d?.items?.length) { setItems(d.items); fetchedRef.current = true } else setError('운세 해설 데이터가 없습니다') })
+      .then(d => {
+        if (d?.items?.length) {
+          setItems(d.items)
+          fetchedRef.current = true
+          setJuShortage(null)
+          clearBalanceCache()
+          void fetchBalance()
+        } else setError('운세 해설 데이터가 없습니다')
+      })
       .catch(e => {
         if (e?.message === 'login_required') return
         if (!e?.message?.includes('이용권')) setError(e?.message ?? '오류가 발생했습니다')
@@ -2601,23 +2834,23 @@ function FortuneSection({
     <div className="px-4 mt-6">
       <h3 className="font-bold text-cp-text mb-3">운세 해설</h3>
 
-      {juShortage && (
+      {showJuToast && juShortage && (
         <JuShortageNudge
           needed={juShortage.needed}
           current={juShortage.current}
-          onDismiss={() => setJuShortage(null)}
+          onDismiss={() => setShowJuToast(false)}
         />
       )}
 
       {compatSection}
 
-      {isLoading ? (
-        <FortuneQuoteLoader />
-      ) : juShortage ? (
+      {juShortage && !items.length ? (
         <div className="rounded-xl border border-cp-border bg-cp-surface p-4 text-center">
           <p className="text-sm text-cp-text font-medium">주(株)가 부족해요</p>
           <p className="text-xs text-cp-muted mt-1">운세 해설은 {READING_COST.fortune}주가 필요해요.</p>
         </div>
+      ) : isLoading ? (
+        <FortuneQuoteLoader />
       ) : error ? (
         <div className="rounded-xl border border-cp-border bg-cp-bg p-4 text-center">
           <p className="text-sm text-cp-muted">해설을 불러오는 중 문제가 발생했습니다.</p>

@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
-import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt, buildWeeklySummaryPrompt } from '@/lib/ai/fortune-prompt'
+import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt, buildWeeklySummaryPrompt, scrubBreakdownKeyLeakage } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { YearChartData } from '@/lib/ai/fortune-prompt'
 import { buildLifeChartData } from '@/lib/saju/life-chart-data'
@@ -11,6 +11,10 @@ import type { ChartPayload, YearlyDatum, MonthlyDatum } from '@/types/chart'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
 import { callGemini } from '@/lib/ai/gemini'
 import { kstCenteredWeekDates } from '@/lib/saju/daily-util'
+import { hydrateWeekSeries } from '@/lib/saju/hydrate-week-series'
+import { weekdayLabelFromDate } from '@/lib/saju/week-chart-data'
+
+const MAX_YEAR_RANGE = 30
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -147,10 +151,24 @@ export async function GET(
         return NextResponse.json({ error: 'invalid weekStart/weekEnd' }, { status: 400 })
       }
 
-      const cacheKey = weekStart === weekEnd ? `weekSummary_${weekStart}` : `weekSummary_${weekStart}_${weekEnd}`
+      const weekDates = kstCenteredWeekDates()
+      const selectedDates = weekDates.slice(weekStart - 1, weekEnd)
+      if (!selectedDates.length) {
+        return NextResponse.json({ error: 'invalid week range' }, { status: 400 })
+      }
+
+      // 날짜 기반 캐시 — 슬롯 인덱스(1~7)만 쓰면 날짜가 바뀌어도 옛 해설이 재사용됨
+      const cacheKey = selectedDates.length === 1
+        ? `weekSummary_${selectedDates[0]}`
+        : `weekSummary_${selectedDates[0]}_${selectedDates[selectedDates.length - 1]}`
       const cached = entry.fortuneJson as Record<string, unknown> | null
       if (cached && typeof cached === 'object' && cached[cacheKey]) {
-        return NextResponse.json({ weekStart, weekEnd: weekEnd > weekStart ? weekEnd : undefined, summary: cached[cacheKey] })
+        return NextResponse.json({
+          weekStart,
+          weekEnd: weekEnd > weekStart ? weekEnd : undefined,
+          dates: selectedDates,
+          summary: scrubBreakdownKeyLeakage(String(cached[cacheKey])),
+        })
       }
 
       const balance = await getBalance(user.id)
@@ -158,39 +176,50 @@ export async function GET(
         return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: balance.ju }, { status: 402 })
       }
 
-      const weekDates = kstCenteredWeekDates()
-      const selectedDates = weekDates.slice(weekStart - 1, weekEnd)
-      const rows = await prisma.dailyFortune.findMany({
-        where: { entryId: id, date: { in: selectedDates } },
+      // 차트와 동일하게 hydrate(엔진 backfill 포함) 후 FACT 구성
+      const weekSeries = await hydrateWeekSeries({
+        id: entry.id,
+        birthDate: entry.birthDate,
+        birthTime: entry.birthTime,
+        timeUnknown: entry.timeUnknown,
+        gender: entry.gender,
+        isLunar: entry.isLunar,
+        isLeapMonth: entry.isLeapMonth,
+        sajuReportJson: entry.sajuReportJson,
       })
-      const byDate = new Map(rows.map((r) => [r.date, r]))
-      const days = selectedDates.map((date, i) => {
+      const byDate = new Map(weekSeries.days.map((d) => [d.date, d]))
+      const days = selectedDates.map((date) => {
         const row = byDate.get(date)
-        const rawDom = (row?.domainsJson && typeof row.domainsJson === 'object')
-          ? (row.domainsJson as Record<string, unknown>)
-          : null
-        const domains: Record<string, number> | null = rawDom
-          ? Object.fromEntries(
-              Object.entries(rawDom).filter(([k, v]) => !k.startsWith('_') && typeof v === 'number'),
-            ) as Record<string, number>
-          : null
-        const x = weekStart + i
-        const weekdayLabels = ['', '월', '화', '수', '목', '금', '토', '일']
-        // 실제 요일명 — date 기준
-        const [y, m, d] = date.split('-').map(Number) as [number, number, number]
-        const full = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'] as const
-        const weekday = full[new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay()] ?? `${weekdayLabels[x]}요일`
+        const chart = row?.chart
         return {
           date,
-          weekday,
-          score: row?.score ?? 50,
+          weekday: weekdayLabelFromDate(date),
+          score: row?.score ?? null,
           grade: row?.grade,
-          domains,
+          seasonTag: row?.seasonTag,
+          seasonEmoji: row?.seasonEmoji,
+          seasonDesc: row?.seasonDesc,
+          domains: row?.domains ?? null,
+          yongshinPower: chart?.yongshinPower,
+          energyTotal: chart?.energyTotal,
+          energyDirection: chart?.energyDirection,
+          breakdown: chart?.breakdown,
+          shinsalTags: chart?.shinsalTags,
+          shinsalContextAdj: chart?.shinsalContextAdj,
+          events: chart?.events,
         }
       })
 
-      const prompt = buildWeeklySummaryPrompt(report, days, { birthYear, job: entry.job })
-      const summary = (await callGemini(prompt)).trim()
+      if (days.some((d) => d.score == null)) {
+        return NextResponse.json({ error: '일운 데이터가 아직 준비되지 않았어요. 잠시 후 다시 시도해 주세요.' }, { status: 409 })
+      }
+
+      const promptDays = days.map((d) => ({ ...d, score: d.score as number }))
+      const prompt = buildWeeklySummaryPrompt(report, promptDays, { birthYear, job: entry.job })
+      const summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
+        feature: weekStart === weekEnd ? 'period_week' : 'period_week_range',
+        meta: { entryId: id, weekStart, weekEnd, dates: selectedDates },
+      })).trim())
 
       const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>
       await prisma.sajuEntry.update({
@@ -199,18 +228,38 @@ export async function GET(
       })
       await consumeUnits(user.id, READING_COST.period, 'use:period')
 
-      return NextResponse.json({ weekStart, weekEnd: weekEnd > weekStart ? weekEnd : undefined, summary })
+      return NextResponse.json({
+        weekStart,
+        weekEnd: weekEnd > weekStart ? weekEnd : undefined,
+        dates: selectedDates,
+        summary,
+      })
     }
 
     if (isMonthlyRequest) {
       const monthStart = parseInt(monthStr!, 10)
       const monthEnd = monthEndStr ? parseInt(monthEndStr, 10) : monthStart
-      if (isNaN(monthStart)) return NextResponse.json({ error: 'invalid month' }, { status: 400 })
+      if (
+        isNaN(monthStart) || isNaN(monthEnd)
+        || monthStart < 1 || monthStart > 12
+        || monthEnd < monthStart || monthEnd > 12
+      ) {
+        return NextResponse.json({ error: 'invalid month/monthEnd' }, { status: 400 })
+      }
 
-      const cacheKey = monthStart === monthEnd ? `monthSummary_${monthStart}` : `monthSummary_${monthStart}_${monthEnd}`
+      const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
+      const targetYear = chartPayload?.['월운_타임라인']?.target_year ?? new Date().getFullYear()
+      const cacheKey = monthStart === monthEnd
+        ? `monthSummary_${targetYear}_${monthStart}`
+        : `monthSummary_${targetYear}_${monthStart}_${monthEnd}`
       const cached = entry.fortuneJson as Record<string, unknown> | null
       if (cached && typeof cached === 'object' && cached[cacheKey]) {
-        return NextResponse.json({ month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, summary: cached[cacheKey] })
+        return NextResponse.json({
+          month: monthStart,
+          monthEnd: monthEnd > monthStart ? monthEnd : undefined,
+          year: targetYear,
+          summary: scrubBreakdownKeyLeakage(String(cached[cacheKey])),
+        })
       }
 
       const balance = await getBalance(user.id)
@@ -218,8 +267,6 @@ export async function GET(
         return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: balance.ju }, { status: 402 })
       }
 
-      const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
-      const targetYear = chartPayload?.['월운_타임라인']?.target_year ?? new Date().getFullYear()
       const monthlyData: Array<{
         month: number; score: number; breakdown?: Record<string, number>;
         seasonTag?: string; seasonEmoji?: string;
@@ -228,6 +275,7 @@ export async function GET(
         relationsOrig?: string; relationsDw?: string; relationsSw?: string;
         ganzi?: string; stemElement?: string; branchElement?: string;
       }> = []
+      let missingMonths = 0
       for (let m = monthStart; m <= monthEnd; m++) {
         const md = monthlyTimeline?.find((d: MonthlyDatum) => d.month === m)
         if (md) {
@@ -248,12 +296,35 @@ export async function GET(
             ganzi: md['간지'], stemElement: md.stemElement, branchElement: md.branchElement,
           })
         } else {
-          monthlyData.push({ month: m, score: 50 })
+          missingMonths++
         }
       }
 
-      const prompt = buildMonthlySummaryPrompt(report, monthlyData, targetYear, { birthYear, job: entry.job })
-      const summary = (await callGemini(prompt)).trim()
+      if (!monthlyData.length || missingMonths > 0) {
+        return NextResponse.json({ error: '월운 데이터가 부족해요. 차트를 새로고침한 뒤 다시 시도해 주세요.' }, { status: 409 })
+      }
+
+      const yearRaw = chartPayload?.['연도별_타임라인']?.find((d) => d.year === targetYear)
+      const yearCd = chartData?.data.find((d) => d.year === targetYear)
+      const yearContextParts = [
+        yearCd?.score != null ? `종합 ${Math.round(yearCd.score)}점` : '',
+        yearCd?.seasonTag ? `시즌 ${yearCd.seasonTag}` : '',
+        yearRaw?.['세운_pillar'] ? `세운 ${pillarToHangul(yearRaw['세운_pillar'])}` : '',
+        yearCd?.daewoonPillar ? `대운 ${pillarToHangul(yearCd.daewoonPillar)}` : '',
+      ].filter(Boolean)
+      const yearContext = yearContextParts.length
+        ? `${targetYear}년 기조: ${yearContextParts.join(' · ')}`
+        : undefined
+
+      const prompt = buildMonthlySummaryPrompt(report, monthlyData, targetYear, {
+        birthYear,
+        job: entry.job,
+        yearContext,
+      })
+      const summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
+        feature: monthStart === monthEnd ? 'period_month' : 'period_month_range',
+        meta: { entryId: id, year: targetYear, monthStart, monthEnd },
+      })).trim())
 
       const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>
       await prisma.sajuEntry.update({
@@ -263,18 +334,29 @@ export async function GET(
 
       await consumeUnits(user.id, READING_COST.period, 'use:period')
 
-      return NextResponse.json({ month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, summary })
+      return NextResponse.json({
+        month: monthStart,
+        monthEnd: monthEnd > monthStart ? monthEnd : undefined,
+        year: targetYear,
+        summary,
+      })
     }
 
     const yearStart = parseInt(yearStr!, 10)
     if (isNaN(yearStart)) return NextResponse.json({ error: 'invalid year' }, { status: 400 })
     const yearEnd = yearEndStr ? parseInt(yearEndStr, 10) : yearStart
+    if (isNaN(yearEnd) || yearEnd < yearStart) {
+      return NextResponse.json({ error: 'invalid yearEnd' }, { status: 400 })
+    }
+    if (yearEnd - yearStart + 1 > MAX_YEAR_RANGE) {
+      return NextResponse.json({ error: `연도 구간은 최대 ${MAX_YEAR_RANGE}년까지 선택할 수 있어요.` }, { status: 400 })
+    }
     const isRange = yearEnd > yearStart
 
     const cacheKey = isRange ? `yearSummary_${yearStart}_${yearEnd}` : `yearSummary_${yearStart}`
     const cached = (entry.fortuneJson as Record<string, unknown> | null)
     if (cached && typeof cached === 'object' && cached[cacheKey]) {
-      return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary: cached[cacheKey] })
+      return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary: scrubBreakdownKeyLeakage(String(cached[cacheKey])) })
     }
 
     const yearBalance = await getBalance(user.id)
@@ -291,11 +373,17 @@ export async function GET(
         yearDataArr.push(buildYearChartDataFromSources(y, chartData, rawTimeline))
       }
       const prompt = buildRangeSummaryPrompt(report, yearDataArr, { birthYear, job: entry.job })
-      summary = (await callGemini(prompt)).trim()
+      summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
+        feature: 'period_year_range',
+        meta: { entryId: id, yearStart, yearEnd, years: yearEnd - yearStart + 1 },
+      })).trim())
     } else {
       const yearChartData = buildYearChartDataFromSources(yearStart, chartData, rawTimeline)
       const prompt = buildYearSummaryPrompt(report, yearChartData, { birthYear, job: entry.job })
-      summary = (await callGemini(prompt)).trim()
+      summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
+        feature: 'period_year',
+        meta: { entryId: id, year: yearStart },
+      })).trim())
     }
 
     const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>

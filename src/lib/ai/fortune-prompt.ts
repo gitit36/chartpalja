@@ -3,6 +3,7 @@ import type { ChartPayload, YearlyDatum, ScoreBreakdown, TrineHit, GongmangFacto
 import { elementToHangul, pillarToHangul, branchToHangul } from '@/lib/saju/hanja-hangul'
 import type { ChartDatum, TransitionYear, ThreeYearContext, LifetimeSummary } from '@/lib/saju/life-chart-data'
 import { extractTransitionYears, extract3YearContext, extractLifetimeSummary } from '@/lib/saju/life-chart-data'
+import { formatTipsForPrompt, selectSajuTips } from '@/lib/ai/saju-tip-cards'
 
 const TEN_GOD_KR: Record<string, string> = {
   "比肩": "비견", "劫財": "겁재", "食神": "식신", "傷官": "상관",
@@ -174,20 +175,65 @@ const BREAKDOWN_LABELS: Record<string, string> = {
   trine: '삼합/방합',
   balance: '오행균형',
   shinsal: '신살',
+  disease_resolution: '약점해소',
+  haegong: '해공',
+  structural_adj: '구조보정',
+  synergy: '시너지',
+  monthly_base: '월운기반',
+  daily_independent: '일운독립',
+  blend_mw: '월운비중',
+  blend_daily: '일운비중',
   base: '기본',
+}
+
+const BREAKDOWN_SKIP_KEYS = new Set([
+  'base', 'monthly_base', 'daily_independent', 'synergy', 'blend_mw', 'blend_daily',
+])
+
+function breakdownLabel(key: string): string {
+  if (BREAKDOWN_LABELS[key]) return BREAKDOWN_LABELS[key]!
+  // 알 수 없는 snake_case 키가 유저 문구로 새지 않도록 최소한 한글화
+  return key.includes('_') ? key.split('_').join(' ') : key
 }
 
 function formatBreakdownTop3(bd: ScoreBreakdown | undefined): string {
   if (!bd) return ''
   const entries = Object.entries(bd)
-    .filter(([k]) => k !== 'base')
+    .filter(([k]) => !BREAKDOWN_SKIP_KEYS.has(k))
     .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
     .slice(0, 3)
   if (!entries.length) return ''
   return entries.map(([k, v]) => {
-    const label = BREAKDOWN_LABELS[k] ?? k
+    const label = breakdownLabel(k)
     return `${label} ${v >= 0 ? '+' : ''}${v.toFixed(1)}`
   }).join(', ')
+}
+
+/** LLM이 breakdown 영문 키를 그대로 쓴 경우를 사후 교정 */
+export function scrubBreakdownKeyLeakage(text: string): string {
+  if (!text) return text
+  let out = text
+  const keys = Object.keys(BREAKDOWN_LABELS)
+    .filter((k) => k !== 'base')
+    .sort((a, b) => b.length - a.length)
+  for (const k of keys) {
+    out = out.replace(new RegExp(`\\b${k}\\b`, 'g'), BREAKDOWN_LABELS[k]!)
+  }
+  return out
+}
+
+/** 운세 JSON/문자열 응답 전체에 키 누출 scrub 적용 */
+export function scrubBreakdownKeyLeakageDeep(value: unknown): unknown {
+  if (typeof value === 'string') return scrubBreakdownKeyLeakage(value)
+  if (Array.isArray(value)) return value.map(scrubBreakdownKeyLeakageDeep)
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {}
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k] = scrubBreakdownKeyLeakageDeep(v)
+    }
+    return out
+  }
+  return value
 }
 
 function formatTrineHits(hits: TrineHit[] | undefined): string {
@@ -476,6 +522,17 @@ export function buildFortunePrompt(
   const gungseongBlock = extractGungseongRon(d.chartPayload)
   const daewoonSummary = extractDaewoonSummary(d.chartPayload)
   const cy = extractCurrentYearDetail(d.chartPayload, currentYear)
+  const tipCards = selectSajuTips(report, { birthYear: opts?.birthYear ?? d.birthYear, limit: 4 })
+  const tipBlock = formatTipsForPrompt(tipCards)
+  const tipSection = tipBlock
+    ? `
+## 해설 참고 팁 (원국·대운 조건으로 선별됨 — 강제 인용 금지)
+아래는 이 사주에 맞춰 고른 참고 패턴이다. 원국/breakdown과 **실제로 맞을 때만** 쓰고, 안 맞으면 무시하라.
+단정·예언·성별 비하·폭력 단정으로 확장하지 말 것. "경향/경우가 많아요" 톤.
+태그(성향/관계/개운 등)는 해당 카테고리 content에 자연스럽게 녹일 힌트다.
+${tipBlock}
+`
+    : ''
 
   // ── 3년 맥락 (작년/올해/내년) ──
   const threeYear = chartData ? extract3YearContext(chartData, currentYear) : null
@@ -526,10 +583,10 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
       cy.eventWealth > 40 ? `재물기회 ${cy.eventWealth}%` : '',
       cy.eventConflict > 40 ? `갈등 ${cy.eventConflict}%` : '',
     ].filter(Boolean).join(', ')
-    const bdEntries = Object.entries(cy.breakdown ?? {}).filter(([k]) => k !== 'base').sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+    const bdEntries = Object.entries(cy.breakdown ?? {}).filter(([k]) => !BREAKDOWN_SKIP_KEYS.has(k)).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
     const topUp = bdEntries.find(([, v]) => v > 0)
     const topDown = bdEntries.find(([, v]) => v < 0)
-    const scoreFraming = `올해 종합 ${cy.score}점${topUp ? ` (가장 큰 상승 요인: ${topUp[0]})` : ''}${topDown ? ` (가장 큰 하락 요인: ${topDown[0]})` : ''}`
+    const scoreFraming = `올해 종합 ${cy.score}점${topUp ? ` (가장 큰 상승 요인: ${breakdownLabel(topUp[0])})` : ''}${topDown ? ` (가장 큰 하락 요인: ${breakdownLabel(topDown[0])})` : ''}`
     currentYearBlock = `
 ## 올해(${currentYear}년) 상세
 - ★★ ${scoreFraming}
@@ -577,6 +634,9 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
   ⭕ "올해는 필요한 기운이 정면으로 들어와서 뭘 해도 손이 잘 맞는 느낌이 있을 거예요", "직장에서 나도 모르게 내 주장이 세지면서 윗사람이랑 부딪힐 수 있거든요", "돈이 들어올 기회는 생기는데, 가까운 사람 때문에 예상 못한 지출이 따라와요"
   ❌ "건강 점수 1.1점으로 낮은 편이고, 에너지장도 8.4로 높지만 도전 에너지가 4.5나 돼요"
   ⭕ "겉으로는 바쁘고 에너지가 넘쳐 보이지만, 속으로는 쉽게 지칠 수 있는 시기예요. 무리하지 않는 게 좋아요."
+- disease_resolution, yongshin_fit, structural_adj, unseong_context 같은 영문 변수명/키를 그대로 쓰는 것. 반드시 일상어·한글 의미로만 풀어라.
+  ❌ "disease_resolution이 플러스라서" / "yongshin_fit이 약해서"
+  ⭕ "약점이 덜 드러나는 흐름이라서" / "필요한 기운이 부족해서"
 - 한자 사용 금지. 모든 간지/오행/십성/12운성은 한글로만 쓸 것. 한자 병기가 꼭 필요한 경우에만 "한글(漢字)" 형식 허용 (예: 갑자(甲子)). 그 외에는 한자를 쓰지 마라.
   ❌ "壬水가 들어와서" / "帝旺 상태라" / "甲子 대운에서"
   ⭕ "임수가 들어와서" / "제왕 상태라" / "갑자 대운에서"
@@ -595,6 +655,7 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
 - 3~9번 카테고리마다 최소 1곳에서 "왜냐하면..." 절을 포함하여, breakdown → 원시 재료 → 현실 영향을 역추적하라.
 - 작년/올해/내년 맥락에서 반드시 연도 간 비교를 하라. 예: "작년은 대인관계 점수가 마이너스였는데, 올해는 플러스로 반등했거든요. 이유는 세운이 바뀌면서..."
 - 올해 데이터가 있으면 반드시 breakdown에서 가장 큰 상승 요인/하락 요인을 읽고, 그것이 어떤 영역(직업/재물/건강/연애/결혼)에 구체적으로 영향을 주는지 서술하라.
+- "해설 참고 팁"이 있으면 최소 2개 카테고리에 자연스럽게 반영하되, 팁만으로 단정하지 말고 반드시 원국 재료로 뒷받침하라. 결핍 리프레임·개운 구체화에 특히 활용.
 
 ## 비유 규칙 (물상 기반)
 - 비유/메타포는 반드시 이 사람의 일간 오행 + 지지 합충의 실제 물상에서 도출.
@@ -647,6 +708,7 @@ ${lifetimeBlock}
 ${transitionBlock}
 ${threeYearBlock}
 ${currentYearBlock}
+${tipSection}
 
 ## 출력 형식: JSON 배열 (9개 항목)
 각 항목: {"category": "...", "title": "...", "content": "..."}
@@ -891,6 +953,7 @@ export function buildYearSummaryPrompt(
 - breakdown 숫자/확률/점수의 단순 낭독 절대 금지. 반드시 "그래서 현실에서 뭐가 일어나는지"로 번역.
   ❌ "용신부합 +3.2입니다" / "관계(합충) -8 이에요"
   ⭕ "이 해는 필요한 기운이 딱 들어오는 해거든요" / "가까운 사람과 부딪히기 쉬운 시기예요"
+- disease_resolution, yongshin_fit, structural_adj 같은 영문 키/변수명 절대 금지. 한글 의미로만 풀어라.
 - 비유는 일간 오행 물상에서. 사주와 무관한 비유 금지.
 - 핵심 흐름 + 영역별 영향(좋은 점/조심할 점) + 실천 조언 1개.
 - 최대 300자.
@@ -913,7 +976,12 @@ export function buildMonthlySummaryPrompt(
     ganzi?: string; stemElement?: string; branchElement?: string;
   }>,
   targetYear: number,
-  opts?: { birthYear?: number; job?: string | null }
+  opts?: {
+    birthYear?: number
+    job?: string | null
+    /** 해당 연 세운·대운 한 줄 맥락 */
+    yearContext?: string
+  }
 ): string {
   const d = extractCoreData(report, opts)
 
@@ -923,10 +991,13 @@ export function buildMonthlySummaryPrompt(
       md.domainJob != null ? `직업${md.domainJob}` : '',
       md.domainWealth != null ? `재물${md.domainWealth}` : '',
       md.domainHealth != null ? `건강${md.domainHealth}` : '',
+      md.domainLove != null ? `연애${md.domainLove}` : '',
+      md.domainMarriage != null ? `결혼${md.domainMarriage}` : '',
     ].filter(Boolean).join('/')
     const trStr = formatTrineHits(md.trineHits as TrineHit[] | undefined)
     const gmStr = formatGongmang(md.gongmangFactors as GongmangFactors | undefined)
     const hgStr = formatHaegong((md as unknown as Record<string, unknown>).haegong as Parameters<typeof formatHaegong>[0])
+    const shinsalStr = formatShinsalAdj(md.shinsalContextAdj)
     const relParts = [
       md.relationsOrig ? `원국↔${md.relationsOrig}` : '',
       md.relationsDw ? `대운↔${md.relationsDw}` : '',
@@ -936,9 +1007,10 @@ export function buildMonthlySummaryPrompt(
       trStr ? `삼합:${trStr}` : '',
       gmStr || '',
       hgStr || '',
+      shinsalStr ? `신살보정:${shinsalStr}` : '',
       relParts ? `관계:${relParts}` : '',
     ].filter(Boolean).join(' | ')
-    return `- ${md.month}월${md.ganzi ? `(${pillarToHangul(md.ganzi)})` : ''}: ${md.score}점 ${md.seasonTag ?? ''}${md.seasonEmoji ?? ''}${domParts ? ` ${domParts}` : ''}${bdStr ? ` (${bdStr})` : ''}${extras ? `\n  ${extras}` : ''}`
+    return `- ${md.month}월${md.ganzi ? `(${pillarToHangul(md.ganzi)})` : ''}${md.stemElement || md.branchElement ? ` 오행:${md.stemElement ?? '?'}/${md.branchElement ?? '?'}` : ''}: ${md.score}점 ${md.seasonTag ?? ''}${md.seasonEmoji ?? ''}${domParts ? ` ${domParts}` : ''}${bdStr ? ` (${bdStr})` : ''}${extras ? `\n  ${extras}` : ''}`
   }).join('\n')
 
   const scores = monthlyData.map(m => m.score)
@@ -959,7 +1031,7 @@ export function buildMonthlySummaryPrompt(
 합충형: ${d.interactions}
 신살: ${d.shinsalNames}
 지장간: ${d.jijangganDetails}
-
+${opts?.yearContext ? `\n## ${targetYear}년 맥락\n${opts.yearContext}\n` : ''}
 ## ${targetYear}년 월운 데이터 (FACT)
 ${monthLines}
 ${isSingle ? '' : `\n평균 ${avgScore}점 / 최고 ${best.month}월(${best.score}점) / 최저 ${worst.month}월(${worst.score}점)`}
@@ -971,12 +1043,14 @@ ${isSingle ? '' : `\n평균 ${avgScore}점 / 최고 ${best.month}월(${best.scor
    예) "8월은 사주에 잘 맞는 기운이 들어와서, 막히던 일도 좀 더 풀리기 쉬운 달."
 3. 간지 해석 → "그래서 현실에서 뭐가 일어나는지" 구체적 상황으로.
 4. 삼합/공망/신살이 있으면 왜 그 달이 특별한지 반드시 서사에 녹여라.
+5. 연 맥락(세운·대운)이 있으면 월운을 그 기조 위에서 해석하라.
 
 ## 규칙
 - 카톡톤. 확신있게. 전문용어는 꼭 필요한 경우만, 반드시 일상어 번역 병기. 한자 사용 금지(한글로만 작성).
 - breakdown 숫자/확률/점수의 단순 낭독 절대 금지. 반드시 "그래서 현실에서 뭐가 일어나는지"로 번역.
   ❌ "용신부합 +3.2입니다" / "건강 점수 1.1점이에요"
   ⭕ "이 달은 필요한 기운이 잘 들어와서 몸이 가벼운 시기거든요" / "속이 답답하고 지치기 쉬운 달이에요"
+- disease_resolution, yongshin_fit, structural_adj 같은 영문 키/변수명 절대 금지. 한글 의미로만 풀어라.
 - 비유는 일간 오행 물상에서.
 - ${isSingle ? '이번 달 핵심 흐름 1문장 + 왜 그런지 breakdown 기반 설명 + 조심할 점 or 활용할 점. 최대 200자.' : '구간 전체 흐름 + 가장 좋은 달/나쁜 달 이유 + 구간별 핵심 조언. 최대 300자.'}
 - special characters 사용 금지 (*, #, $, %, &, ^, &).
@@ -994,7 +1068,24 @@ export function buildWeeklySummaryPrompt(
     weekday: string
     score: number
     grade?: string
+    seasonTag?: string
+    seasonEmoji?: string
+    seasonDesc?: string
     domains?: Record<string, number> | null
+    yongshinPower?: number
+    energyTotal?: number
+    energyDirection?: number
+    breakdown?: ScoreBreakdown
+    shinsalTags?: string[]
+    shinsalContextAdj?: Record<string, number>
+    events?: {
+      이직_전환?: number
+      연애_결혼?: number
+      건강_주의?: number
+      재물_기회?: number
+      학업_시험?: number
+      대인_갈등?: number
+    }
   }>,
   opts?: { birthYear?: number; job?: string | null }
 ): string {
@@ -1008,7 +1099,28 @@ export function buildWeeklySummaryPrompt(
           .filter(Boolean)
           .join('/')
       : ''
-    return `- ${day.weekday}(${day.date.slice(5)}): ${day.score}점${day.grade ? ` ${day.grade}` : ''}${domParts ? ` ${domParts}` : ''}`
+    const bdStr = formatBreakdownTop3(day.breakdown)
+    const shinsalStr = formatShinsalAdj(day.shinsalContextAdj)
+    const evt = day.events
+    const evtParts = evt
+      ? [
+          (evt.이직_전환 ?? 0) > 40 ? `이직${evt.이직_전환}%` : '',
+          (evt.연애_결혼 ?? 0) > 40 ? `연애${evt.연애_결혼}%` : '',
+          (evt.건강_주의 ?? 0) > 40 ? `건강주의${evt.건강_주의}%` : '',
+          (evt.재물_기회 ?? 0) > 40 ? `재물${evt.재물_기회}%` : '',
+          (evt.대인_갈등 ?? 0) > 40 ? `갈등${evt.대인_갈등}%` : '',
+        ].filter(Boolean).join('/')
+      : ''
+    const extras = [
+      day.yongshinPower != null ? `용신력 ${day.yongshinPower.toFixed(2)}` : '',
+      day.energyTotal != null
+        ? `에너지 ${day.energyTotal.toFixed(1)}(${(day.energyDirection ?? 0) >= 0 ? '긍정' : '도전'})`
+        : '',
+      day.shinsalTags?.length ? `신살 ${day.shinsalTags.join(',')}` : '',
+      shinsalStr ? `신살보정 ${shinsalStr}` : '',
+      evtParts ? `이벤트 ${evtParts}` : '',
+    ].filter(Boolean).join(' | ')
+    return `- ${day.weekday}(${day.date}): ${day.score}점${day.grade ? ` ${day.grade}` : ''}${day.seasonTag ? ` ${day.seasonTag}${day.seasonEmoji ?? ''}` : ''}${domParts ? ` ${domParts}` : ''}${bdStr ? ` (${bdStr})` : ''}${extras ? `\n  ${extras}` : ''}${day.seasonDesc ? `\n  시즌: ${day.seasonDesc}` : ''}`
   }).join('\n')
 
   const scores = days.map((x) => x.score)
@@ -1016,25 +1128,40 @@ export function buildWeeklySummaryPrompt(
   const best = days.reduce((a, b) => (a.score >= b.score ? a : b))
   const worst = days.reduce((a, b) => (a.score <= b.score ? a : b))
   const rangeLabel = isSingle
-    ? days[0]!.weekday
-    : `${days[0]!.weekday}~${days[days.length - 1]!.weekday}`
+    ? `${days[0]!.weekday}(${days[0]!.date})`
+    : `${days[0]!.weekday}~${days[days.length - 1]!.weekday}(${days[0]!.date}~${days[days.length - 1]!.date})`
 
-  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 일운 점수를 현실 조언으로 번역한다.
-사용자가 이번 주 일운 차트에서 ${rangeLabel} 구간을 선택했어요.
+  return `너는 사주명리학 전문가이자 차트 해설가. 엔진 점수는 FACT. 너의 임무는 점수와 breakdown을 "원시 재료(간지/십성/12운성/지장간/합충형/신살/공망)"로 역추적해서 원인→영향→조언 서사를 만드는 것.
+사용자가 이번 주 일운 차트에서 ${rangeLabel}을 선택했어요.
 
 ## 사주 원국 (원시 재료)
 [년] ${d.yearPillar} / [월] ${d.monthPillar} / [일] ${d.dayPillar} / [시] ${d.hourPillar}
 격국: ${d.geokguk}${d.geokgukType ? `(${d.geokgukType})` : ''}, 용신: ${d.yongStr}, 희신: ${d.heuiStr}, 기신: ${d.gishinStr}
-신강약: ${d.ssVerdict}${opts?.job ? `\n직업: ${opts.job}` : ''}
+신강약: ${d.ssVerdict}, 공망: ${d.gongmang}${opts?.job ? `\n직업: ${opts.job}` : ''}
+십성: ${d.sipseongDetails}
+12운성: ${d.unseong12Details}
+합충형: ${d.interactions}
+신살: ${d.shinsalNames}
+지장간: ${d.jijangganDetails}
 
 ## 선택 구간 일운 (FACT)
 ${dayLines}
 ${isSingle ? '' : `\n평균 ${avgScore}점 / 최고 ${best.weekday}(${best.score}점) / 최저 ${worst.weekday}(${worst.score}점)`}
 
+## 추론 방법 (반드시 따를 것)
+1. ★점수구성(breakdown)에서 가장 큰 요인 1~2개를 잡는다 — 이것이 그날의 핵심 원인.
+2. 그 요인을 원국 간지·합충형·용신과 연결해 "왜 그런 점수인지" 역추적한다.
+3. 간지 해석 → 현실 상황으로 번역: "미팅이 잘 풀리기 쉬운 날", "예민해져 말실수하기 쉬운 날" 등.
+4. 신살·이벤트가 있으면 과장 없이 흐름에 녹여라.
+
 ## 규칙
 - 카톡톤. 확신있게. 전문용어는 꼭 필요할 때만, 일상어로. 한자 금지.
-- 점수 낭독 금지. "그래서 오늘/이 구간에 뭐가 잘 되고 조심할지"로 번역.
-- ${isSingle ? '하루 핵심 흐름 1문장 + 활용/주의 1문장. 최대 180자.' : '구간 흐름 + 가장 좋은 날/주의할 날 이유 + 짧은 조언. 최대 260자.'}
+- breakdown 숫자/확률/점수의 단순 낭독 절대 금지. 반드시 "그래서 오늘/이 구간에 뭐가 잘 되고 조심할지"로 번역.
+  ❌ "용신부합 +2.1입니다"
+  ⭕ "필요한 기운이 들어와서 일이 잘 풀리기 쉬운 날이에요"
+- disease_resolution, yongshin_fit, structural_adj 같은 영문 키/변수명 절대 금지. 한글 의미로만 풀어라.
+- 비유는 일간 오행 물상에서.
+- ${isSingle ? '하루 핵심 흐름 1문장 + 왜 그런지 + 활용/주의 1문장. 최대 180자.' : '구간 흐름 + 가장 좋은 날/주의할 날 이유 + 짧은 조언. 최대 260자.'}
 - special characters 사용 금지 (*, #, $, %, &, ^).
 - 비격식체 높임말(해요체). 소개/인사말 금지.
 - 단정 예언 금지. "~하기 쉬운 흐름", "~경향" 톤.
@@ -1120,6 +1247,7 @@ ${yearLines}
 - breakdown 숫자/확률/점수의 단순 낭독 절대 금지. 반드시 "그래서 현실에서 뭐가 일어나는지"로 번역.
   ❌ "관계(합충) -8.0이에요" / "용신부합 +4.1이라서"
   ⭕ "이 시기는 필요한 기운이 딱 맞게 들어와서" / "가까운 사람과 자꾸 부딪히는 시기"
+- disease_resolution, yongshin_fit, structural_adj 같은 영문 키/변수명 절대 금지. 한글 의미로만 풀어라.
 - 전환기가 포함되면 반드시 언급.
 - 이 구간의 전체 흐름 + 가장 큰 변화 원인 + 구간별 핵심 조언.
 - 최대 300자.

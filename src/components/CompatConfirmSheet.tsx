@@ -58,15 +58,15 @@ export function CompatConfirmSheet({
       )}
       footer={(
         <div>
-          <p className="text-xs text-cp-muted text-center mb-3">
+          <p className="text-xs text-cp-dim text-center mb-3">
             궁합 해설 · {READING_COST.compat}주 차감
-            {alreadyExists && ' (이미 있는 해설은 다시 보기만 가능해요)'}
+            {alreadyExists && ' · 이미 있는 해설은 다시 보기만 가능해요'}
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-2.5">
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-muted bg-cp-surface hover:bg-cp-border transition-colors min-h-[48px]"
+              className="flex-1 py-3 rounded-xl text-sm font-semibold bg-cp-surface text-cp-secondary border border-cp-borderStrong hover:bg-cp-hover hover:text-cp-text transition-colors min-h-[48px]"
             >
               취소
             </button>
@@ -74,7 +74,7 @@ export function CompatConfirmSheet({
               <button
                 type="button"
                 onClick={() => onViewExisting(relationship)}
-                className="flex-1 py-3 rounded-xl text-sm font-bold text-cp-line bg-cp-surface border border-cp-border hover:bg-cp-border transition-colors min-h-[48px]"
+                className="flex-[1.35] py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:brightness-110 transition-all active:scale-[0.98] min-h-[48px]"
               >
                 해설 보기
               </button>
@@ -82,7 +82,7 @@ export function CompatConfirmSheet({
               <button
                 type="button"
                 onClick={() => onConfirm(relationship)}
-                className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:shadow-lg transition-all active:scale-[0.98] min-h-[48px]"
+                className="flex-[1.35] py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:brightness-110 transition-all active:scale-[0.98] min-h-[48px]"
               >
                 생성하기
               </button>
@@ -91,21 +91,24 @@ export function CompatConfirmSheet({
         </div>
       )}
     >
-      <div className="flex gap-2 pb-4">
-        {RELATIONSHIP_TYPES.map(rel => (
-          <button
-            key={rel}
-            type="button"
-            onClick={() => setRelationship(rel)}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-              relationship === rel
-                ? 'bg-cp-border text-cp-line border-2 border-cp-border'
-                : 'bg-cp-bg text-cp-muted border-2 border-transparent hover:bg-cp-surface'
-            }`}
-          >
-            {RELATIONSHIP_LABELS[rel]}
-          </button>
-        ))}
+      <div className="grid grid-cols-4 gap-2 pb-4">
+        {RELATIONSHIP_TYPES.map(rel => {
+          const selected = relationship === rel
+          return (
+            <button
+              key={rel}
+              type="button"
+              onClick={() => setRelationship(rel)}
+              className={`py-2.5 rounded-xl text-sm font-semibold transition-colors border ${
+                selected
+                  ? 'bg-cp-downMuted text-cp-accent border-cp-accent/50'
+                  : 'bg-cp-input text-cp-muted border-cp-border hover:bg-cp-hover hover:text-cp-secondary'
+              }`}
+            >
+              {RELATIONSHIP_LABELS[rel]}
+            </button>
+          )
+        })}
       </div>
     </BottomSheet>
   )

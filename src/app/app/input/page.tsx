@@ -10,7 +10,10 @@ import { ConfirmSheet } from '@/components/ConfirmSheet'
 import { AlertSheet } from '@/components/AlertSheet'
 import { getOrCreateGuestId, getGuestId } from '@/lib/auth/guest'
 import { READING_COST } from '@/lib/payment/products'
-import { JuShortageNudge } from '@/components/JuShortageNudge'
+import { Toast } from '@/components/Toast'
+
+const FORTUNE_DEFERRED_TOAST =
+  '차트·사주 정보는 바로 만들어요. 운세 해설은 주(株) 충전 후 생성돼요.'
 
 interface FormData {
   name: string
@@ -232,7 +235,15 @@ function InputPageInner() {
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
   const [prefilling, setPrefilling] = useState(!!editId)
-  const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
+  const [fortuneDeferredToast, setFortuneDeferredToast] = useState(false)
+  const initialBirthRef = useRef<{
+    birthDate: string
+    birthTime: string
+    timeUnknown: boolean
+    isLunar: boolean
+    isLeapMonth: boolean
+    gender: FormData['gender']
+  } | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const [recentEntry, setRecentEntry] = useState<{ id: string; name: string } | null>(null)
   const [bannerDismissed, setBannerDismissed] = useState(false)
@@ -312,6 +323,14 @@ function InputPageInner() {
           job: data.job ?? '',
         }
         setForm(newForm)
+        initialBirthRef.current = {
+          birthDate: newForm.birthDate,
+          birthTime: newForm.birthTime,
+          timeUnknown: newForm.timeUnknown,
+          isLunar: newForm.isLunar,
+          isLeapMonth: newForm.isLeapMonth,
+          gender: newForm.gender,
+        }
         if (bd) {
           const parts = bd.split('-')
           if (parts.length === 3) setDateDisplay(parts.join('.'))
@@ -366,19 +385,31 @@ function InputPageInner() {
 
   const canSubmit = !!form.name.trim() && !!form.birthDate && (form.timeUnknown || !!form.birthTime)
 
+  const birthFieldsChanged = () => {
+    const init = initialBirthRef.current
+    if (!editId || !init) return true
+    return (
+      form.birthDate !== init.birthDate ||
+      (form.timeUnknown ? null : form.birthTime) !== (init.timeUnknown ? null : init.birthTime) ||
+      form.timeUnknown !== init.timeUnknown ||
+      form.isLunar !== init.isLunar ||
+      form.isLeapMonth !== init.isLeapMonth ||
+      form.gender !== init.gender
+    )
+  }
+
   const handleSubmit = async () => {
     if (!canSubmit) return
 
-    // 잔액 체크는 로그인 사용자에게만 적용한다.
-    // 비로그인(게스트)은 무료로 차트 생성이 가능하며 백엔드에서 별도 한도(24h/3개)로 제한된다.
-    if (!editId && isLoggedIn === true) {
+    // 주가 부족해도 차트·사주 정보는 생성한다. 운세 해설만 미생성 — 미리 토스트로 안내.
+    // 게스트는 무료 생성(한도만 적용)이므로 이 안내를 띄우지 않는다.
+    if (isLoggedIn === true && birthFieldsChanged()) {
       try {
         const balRes = await fetch('/api/user/balance', { headers: getHeaders() })
         if (balRes.ok) {
           const bal = await balRes.json()
           if ((bal.ju ?? 0) < READING_COST.fortune) {
-            setJuShortage({ needed: READING_COST.fortune, current: bal.ju ?? 0 })
-            return
+            setFortuneDeferredToast(true)
           }
         }
       } catch { /* proceed on network error */ }
@@ -479,38 +510,46 @@ function InputPageInner() {
   if (isLoading) {
     const slide = LOADING_SLIDES[loadingStep % LOADING_SLIDES.length]
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cp-bg via-cp-bg to-cp-surface flex flex-col items-center justify-center px-6">
-        <div className="w-full max-w-sm">
-          <div className="relative mb-4">
-            <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-              <div className="w-16 h-16 rounded-full border-2 border-cp-line/30 border-t-cp-line animate-spin" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Image src="/svc_logo.png" alt="차트8자" width={28} height={26} className="animate-pulse drop-shadow-lg" />
+      <>
+        <div className="min-h-screen bg-gradient-to-br from-cp-bg via-cp-bg to-cp-surface flex flex-col items-center justify-center px-6">
+          <div className="w-full max-w-sm">
+            <div className="relative mb-4">
+              <div className="absolute -top-10 left-1/2 -translate-x-1/2">
+                <div className="w-16 h-16 rounded-full border-2 border-cp-line/30 border-t-cp-line animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Image src="/svc_logo.png" alt="차트8자" width={28} height={26} className="animate-pulse drop-shadow-lg" />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="mt-10 text-center">
-            <p className="text-white/50 text-sm mb-5">사주를 분석하는 동안 사용법을 확인해보세요</p>
-          </div>
+            <div className="mt-10 text-center">
+              <p className="text-white/50 text-sm mb-5">사주를 분석하는 동안 사용법을 확인해보세요</p>
+            </div>
 
-          <div key={loadingStep} className="animate-fade-in text-center">
-            {slide.visual}
-            <p className="text-white/90 text-lg font-semibold mb-1.5">{slide.title}</p>
-            <p className="text-white/60 text-base">{slide.desc}</p>
-          </div>
+            <div key={loadingStep} className="animate-fade-in text-center">
+              {slide.visual}
+              <p className="text-white/90 text-lg font-semibold mb-1.5">{slide.title}</p>
+              <p className="text-white/60 text-base">{slide.desc}</p>
+            </div>
 
-          <div className="flex justify-center gap-2.5 mt-8">
-            {LOADING_SLIDES.map((_, i) => (
-              <div key={i} className={`h-2 rounded-full transition-all duration-500 ${
-                i === loadingStep % LOADING_SLIDES.length ? 'w-7 bg-cp-line' : 'w-2 bg-cp-bg/20'
-              }`} />
-            ))}
-          </div>
+            <div className="flex justify-center gap-2.5 mt-8">
+              {LOADING_SLIDES.map((_, i) => (
+                <div key={i} className={`h-2 rounded-full transition-all duration-500 ${
+                  i === loadingStep % LOADING_SLIDES.length ? 'w-7 bg-cp-line' : 'w-2 bg-cp-bg/20'
+                }`} />
+              ))}
+            </div>
 
-          <div className="mt-6" />
+            <div className="mt-6" />
+          </div>
         </div>
-      </div>
+        <Toast
+          open={fortuneDeferredToast}
+          message={FORTUNE_DEFERRED_TOAST}
+          duration={4500}
+          onClose={() => setFortuneDeferredToast(false)}
+        />
+      </>
     )
   }
 
@@ -692,13 +731,6 @@ function InputPageInner() {
 
       <MinimalLegalFooter />
 
-      {juShortage && (
-        <JuShortageNudge
-          needed={juShortage.needed}
-          current={juShortage.current}
-          onDismiss={() => setJuShortage(null)}
-        />
-      )}
       <ConfirmSheet
         open={duplicateAsk.open}
         title="동일한 차트가 이미 있어요"

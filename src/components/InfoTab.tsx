@@ -651,6 +651,40 @@ function PillarGrid({ report }: { report: SajuReportJson }) {
 }
 
 /* ── 핵심 정보 (공망 제거) ── */
+
+/** "식상(식신·상관)/金" → "金(식상)" */
+function formatYongshinItem(raw: string): string {
+  const s = String(raw).trim()
+  if (!s) return "-"
+  if (/^[木火土金水]$/.test(s)) return s
+
+  const slash = s.lastIndexOf("/")
+  if (slash >= 0) {
+    const left = s.slice(0, slash).trim()
+    const elem = s.slice(slash + 1).trim()
+    const paren = left.indexOf("(")
+    const cat = (paren >= 0 ? left.slice(0, paren) : left).trim()
+    if (elem && cat) return `${elem}(${cat})`
+    if (elem) return elem
+  }
+
+  const llm = s.match(/^LLM\((.+)\)$/i)
+  if (llm) return llm[1].trim()
+
+  return s
+}
+
+function formatYongshinValue(raw: unknown): string {
+  if (raw == null) return "-"
+  if (Array.isArray(raw)) {
+    const parts = raw.map(v => formatYongshinItem(String(v))).filter(v => v && v !== "-")
+    return parts.length ? parts.join(", ") : "-"
+  }
+  const s = String(raw).trim()
+  if (!s) return "-"
+  return formatYongshinItem(s)
+}
+
 function CoreInfoCard({ report }: { report: SajuReportJson }) {
   const yh = report.용신희신
   const ss = report.신강신약
@@ -660,18 +694,9 @@ function CoreInfoCard({ report }: { report: SajuReportJson }) {
     ? (typeof gk === "string" ? gk : (gk as Record<string, string>).격국 ?? (gk as Record<string, string>).격국명 ?? cleanDisplayValue(gk))
     : "-"
   const ssVal = ss?.판정 ?? "-"
-  const yongRaw = yh?.용신
-  const yongStr = yongRaw
-    ? (typeof yongRaw === "string" && yongRaw.length === 1 ? elementToHangul(yongRaw) : hanjaToHangul(String(yongRaw)))
-    : "-"
-  const heuiRaw = yh?.희신
-  const heuiStr = !heuiRaw || (Array.isArray(heuiRaw) && !heuiRaw.length)
-    ? "-"
-    : Array.isArray(heuiRaw) ? heuiRaw.map(h => elementToHangul(h)).join(", ") : elementToHangul(String(heuiRaw))
-  const gisinRaw = yh?.기신
-  const gisinStr = !gisinRaw || (Array.isArray(gisinRaw) && !gisinRaw.length)
-    ? "-"
-    : Array.isArray(gisinRaw) ? gisinRaw.map(g => elementToHangul(g)).join(", ") : elementToHangul(String(gisinRaw))
+  const yongStr = formatYongshinValue(yh?.용신)
+  const heuiStr = formatYongshinValue(yh?.희신)
+  const gisinStr = formatYongshinValue(yh?.기신)
 
   const rows: { label: string; value: string; highlight?: boolean }[] = [
     { label: "격국", value: geokguk },
@@ -686,9 +711,9 @@ function CoreInfoCard({ report }: { report: SajuReportJson }) {
       <h3 className="font-bold text-cp-text text-sm mb-2">핵심 정보</h3>
       <div className="bg-cp-raised rounded-xl divide-y divide-cp-border">
         {rows.map(r => (
-          <div key={r.label} className="flex items-center justify-between px-3.5 py-2.5">
-            <span className="text-xs text-cp-muted">{r.label}</span>
-            <span className={`text-sm font-medium ${r.highlight ? "text-cp-line" : "text-cp-text"}`}>
+          <div key={r.label} className="flex items-start gap-3 px-3.5 py-2.5">
+            <span className="text-xs text-cp-muted shrink-0 w-[4.5rem] pt-0.5">{r.label}</span>
+            <span className={`text-sm font-medium text-right flex-1 min-w-0 break-keep ${r.highlight ? "text-cp-line" : "text-cp-text"}`}>
               {r.value}
             </span>
           </div>
@@ -806,8 +831,9 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
       <h3 className="font-bold text-cp-text text-sm mb-2">
         <InfoTip
           lift
+          wide
           label="타고난 기운의 관계"
-          text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
+          text={"사주 4개 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘\n형(刑) = 긴장, 파(破) = 깨짐, 해(害) = 방해\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
         />
       </h3>
       <p className="text-[11px] text-cp-muted mb-2 -mt-1">항목을 눌러 사주 속 글자들이 서로 주고받는 영향을 확인해보세요.</p>
@@ -825,8 +851,9 @@ function RelationsVisual({ report }: { report: SajuReportJson }) {
       <h3 className="font-bold text-cp-text text-sm mb-2">
         <InfoTip
           lift
+          wide
           label="타고난 기운의 관계"
-          text={"사주 네 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘, 형(刑) = 긴장,\n파(破) = 깨짐, 해(害) = 방해.\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
+          text={"사주 4개 기둥의 글자들이 서로 어떻게 작용하는지 보여줘요.\n합(合) = 끌어당김, 충(沖) = 부딪힘\n형(刑) = 긴장, 파(破) = 깨짐, 해(害) = 방해\n이 관계가 성격·관계·운의 흐름에 영향을 줘요."}
         />
       </h3>
       <p className="text-[11px] text-cp-muted mb-2 -mt-1">항목을 눌러 사주 속 글자들이 서로 주고받는 영향을 확인해보세요.</p>
@@ -1000,6 +1027,7 @@ function DaewoonCarousel({ report }: { report: SajuReportJson }) {
       <h3 className="font-bold text-cp-text text-sm mb-2">
         <InfoTip
           lift
+          wide
           label="대운 타임라인"
           text={"대운은 약 10년 단위로 크게 바뀌는 운의 흐름이에요.\n각 카드를 옆으로 넘겨 시기별 기운을 볼 수 있어요."}
         />

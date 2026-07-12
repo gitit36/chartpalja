@@ -118,15 +118,20 @@ export async function GET(request: NextRequest) {
         (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       )[0]?.id
 
-    // 2) 오늘 점수가 없는 엔트리는 전체 윈도우를 계산.
-    //    단, 한 요청당 MAX_COMPUTE_PER_REQUEST개로 제한 (대표 먼저, 그다음 목록 순).
-    const missing = entries.filter((e) => !cacheMap.get(e.id)?.has(today))
-    const orderedMissing = [
-      ...missing.filter((e) => e.id === repId),
-      ...missing.filter((e) => e.id !== repId),
+    // 2) 리스트 윈도우(오늘-6~오늘)에 빈 날짜가 있으면 backfill.
+    //    상세 페이지는 ±3일만 채워 두므로, "오늘만 있으면 OK"로 두면 앞쪽 null → 스파크라인 짧아짐.
+    //    한 요청당 MAX_COMPUTE_PER_REQUEST개로 제한 (대표 먼저, 그다음 목록 순).
+    const missingDatesFor = (entryId: string): string[] => {
+      const byDate = cacheMap.get(entryId)
+      return dates.filter((d) => !byDate?.has(d))
+    }
+    const incomplete = entries.filter((e) => missingDatesFor(e.id).length > 0)
+    const orderedIncomplete = [
+      ...incomplete.filter((e) => e.id === repId),
+      ...incomplete.filter((e) => e.id !== repId),
     ]
-    const needCompute = orderedMissing.slice(0, MAX_COMPUTE_PER_REQUEST)
-    const pending = missing.length > needCompute.length
+    const needCompute = orderedIncomplete.slice(0, MAX_COMPUTE_PER_REQUEST)
+    const pending = incomplete.length > needCompute.length
     if (needCompute.length > 0) {
       const computeEntries: DailyComputeEntry[] = needCompute.map((e) => ({
         id: e.id,
@@ -139,7 +144,9 @@ export async function GET(request: NextRequest) {
         yongshinOverride: extractYongshinOverride(e.sajuReportJson),
       }))
 
-      const computed = computeDailyFortunes(computeEntries, dates)
+      // 배치에 필요한 빈 날짜만 계산 (이미 있는 ±3일은 스킵)
+      const datesToCompute = [...new Set(needCompute.flatMap((e) => missingDatesFor(e.id)))]
+      const computed = computeDailyFortunes(computeEntries, datesToCompute)
 
       const rows: {
         entryId: string; date: string; score: number; grade: string
@@ -147,7 +154,10 @@ export async function GET(request: NextRequest) {
         domainsJson: object
       }[] = []
       for (const [eid, byDate] of Object.entries(computed)) {
+        const stillMissing = new Set(missingDatesFor(eid))
         for (const [date, s] of Object.entries(byDate)) {
+          // 이미 캐시에 있는 날짜는 쓰지 않음 (상세 ±3과 겹쳐도 skipDuplicates로 안전)
+          if (!stillMissing.has(date)) continue
           const domains = (s.domains ?? {}) as DomainScores
           const domainsJson: Record<string, unknown> = { ...domains }
           if (s.chart || s.seasonDesc) {

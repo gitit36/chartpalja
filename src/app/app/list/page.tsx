@@ -387,7 +387,9 @@ export default function SajuListPage() {
               return (
               <div
                 key={e.id}
-                className="relative flex items-center gap-3 bg-cp-surface border border-cp-border rounded-2xl p-4 hover:bg-cp-hover active:brightness-95 transition-colors"
+                className={`relative flex items-center gap-1 bg-cp-surface border border-cp-border rounded-2xl pl-4 pr-1.5 py-4 hover:bg-cp-hover active:brightness-95 transition-colors ${
+                  menuOpen === e.id ? 'z-50' : ''
+                }`}
               >
                 <Link
                   href={`/app/saju/${e.id}`}
@@ -419,11 +421,11 @@ export default function SajuListPage() {
                   </div>
 
                   {/* 일별 점수 블록 (주식 watchlist 느낌) */}
-                  <div className="shrink-0 flex items-center gap-2 pr-5 min-h-[40px]">
+                  <div className="shrink-0 flex items-center gap-1.5 min-h-[40px]">
                     {d?.score != null ? (
                       <>
                         <Sparkline data={d.series} trend={d.direction} />
-                        <div className="text-right min-w-[40px]">
+                        <div className="text-right min-w-[36px]">
                           <div className="flex items-center justify-end">
                             <span className="text-lg font-bold text-cp-text leading-none">{d.score}</span>
                           </div>
@@ -442,39 +444,49 @@ export default function SajuListPage() {
                 </Link>
 
                 <button
-                  onClick={(ev) => { ev.stopPropagation(); setMenuOpen(menuOpen === e.id ? null : e.id) }}
-                  className="absolute top-2 right-1 w-8 h-8 flex items-center justify-center rounded-full hover:bg-cp-surface text-cp-muted"
+                  type="button"
+                  aria-label="사주 메뉴"
+                  aria-expanded={menuOpen === e.id}
+                  onClick={(ev) => { ev.preventDefault(); ev.stopPropagation(); setMenuOpen(menuOpen === e.id ? null : e.id) }}
+                  className="shrink-0 w-8 h-10 flex items-center justify-center rounded-md text-cp-muted hover:bg-cp-hover active:bg-cp-border/50"
                 >
-                  &#x22EE;
+                  <span className="text-[20px] leading-none font-bold tracking-tighter" aria-hidden>&#x22EE;</span>
                 </button>
 
                 {menuOpen === e.id && (
-                  <>
-                    <div className="fixed inset-0 z-[5]" onClick={() => setMenuOpen(null)}/>
-                    <div className="absolute top-10 right-1 bg-cp-bg border border-cp-border rounded-xl shadow-lg z-10 overflow-hidden w-max">
-                      <button
-                        onClick={() => { if (!e.isRepresentative) handleSetRepresentative(e.id) }}
-                        disabled={e.isRepresentative}
-                        className={`block w-full text-center px-4 py-2.5 text-base ${e.isRepresentative ? 'text-amber-400 cursor-default' : 'text-cp-muted hover:bg-cp-bg'}`}
-                        aria-label={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
-                        title={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
-                      >
-                        &#x2B51;
-                      </button>
-                      <button
-                        onClick={() => { setMenuOpen(null); router.push(`/app/input?edit=${e.id}`) }}
-                        className="block w-full text-left px-4 py-2.5 text-sm text-cp-text hover:bg-cp-bg"
-                      >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => { setMenuOpen(null); setDeleteTarget(e) }}
-                        className="block w-full text-left px-4 py-2.5 text-sm text-cp-up hover:bg-cp-line/10"
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  </>
+                  <div
+                    role="menu"
+                    className="absolute top-[calc(100%-8px)] right-1.5 bg-cp-bg border border-cp-border rounded-xl shadow-lg z-50 overflow-hidden w-max"
+                    onClick={(ev) => ev.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => { if (!e.isRepresentative) handleSetRepresentative(e.id) }}
+                      disabled={e.isRepresentative}
+                      className={`block w-full text-center px-3.5 py-2.5 leading-none ${e.isRepresentative ? 'text-amber-400 cursor-default' : 'text-cp-muted hover:bg-cp-hover'}`}
+                      aria-label={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
+                      title={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
+                    >
+                      <span className="text-[22px] leading-none" aria-hidden>&#x2B51;</span>
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => { setMenuOpen(null); router.push(`/app/input?edit=${e.id}`) }}
+                      className="block w-full text-center px-3.5 py-2.5 text-sm text-cp-text hover:bg-cp-hover"
+                    >
+                      수정
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => { setMenuOpen(null); setDeleteTarget(e) }}
+                      className="block w-full text-center px-3.5 py-2.5 text-sm text-cp-up hover:bg-cp-line/10"
+                    >
+                      삭제
+                    </button>
+                  </div>
                 )}
               </div>
               )
@@ -499,6 +511,11 @@ export default function SajuListPage() {
           </Link>
         </div>
       </div>
+
+      {/* 케밥 메뉴 바깥 클릭 닫기 — 카드 밖(헤더·CTA 포함)에서도 동작하도록 페이지 레벨 백드롭 */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(null)} aria-hidden />
+      )}
 
       {/* Delete confirmation modal */}
       {deleteTarget && (

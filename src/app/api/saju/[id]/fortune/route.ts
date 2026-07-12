@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
-import { buildFortunePrompt } from '@/lib/ai/fortune-prompt'
+import { buildFortunePrompt, scrubBreakdownKeyLeakageDeep } from '@/lib/ai/fortune-prompt'
 import type { ChartSummary } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
 import type { ChartPayload } from '@/types/chart'
@@ -156,7 +156,7 @@ export async function GET(
 
     if (!regenerate && entry.fortuneJson && isValidFortuneFormat(entry.fortuneJson)) {
       const cached = entry.fortuneJson as { items: unknown[] }
-      return NextResponse.json({ items: cached.items ?? cached })
+      return NextResponse.json({ items: scrubBreakdownKeyLeakageDeep(cached.items ?? cached) })
     }
 
     const isFirstGeneration = !entry.fortuneJson || !isValidFortuneFormat(entry.fortuneJson)
@@ -181,8 +181,8 @@ export async function GET(
     const lifeChart = buildLifeChartData(chartPayloadForPrompt, report, birthYear)
     const chartData = lifeChart?.data as ChartDatum[] | undefined
     const prompt = buildFortunePrompt(report, { birthYear, chartData, job: entry.job }, chartSummary)
-    const raw = await callGemini(prompt)
-    const items = parseJsonResponse(raw)
+    const raw = await callGemini(prompt, { feature: 'fortune', meta: { entryId: id } })
+    const items = scrubBreakdownKeyLeakageDeep(parseJsonResponse(raw)) as unknown[]
 
     const existingFortune = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
       ? entry.fortuneJson as Record<string, unknown>
