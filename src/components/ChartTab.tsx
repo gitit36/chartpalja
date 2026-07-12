@@ -457,7 +457,7 @@ function CompatYearBar(props: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels }: any) {
+function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels, hideDetail }: any) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload as (MergedDatum & { dayLabel?: string }) | undefined
   if (!d) return null
@@ -518,7 +518,7 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
           ))}
         </div>
       )}
-      {(() => {
+      {!hideDetail && (() => {
         const { up, down } = breakdownFactors(d.breakdown)
         if (!up.length && !down.length) return null
         return (
@@ -528,7 +528,7 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
           </div>
         )
       })()}
-      {(() => {
+      {!hideDetail && (() => {
         const tags = getShinsalTags(d.shinsalTags, d.shinsalContextAdj)
         if (!tags.length) return null
         return <div className="mt-0.5 pt-0.5 border-t border-cp-border text-cp-muted">🏷️ {tags.join(' · ')}</div>
@@ -632,7 +632,9 @@ export function ChartTab({
   onOverlayChange, onCompatCta, expandCompatCardKey, onFortuneJsonUpdate, compatGeneration,
   entryName, myGender, initialOverlayId, initialFocus, sharePartner, weekSeries,
 }: ChartTabProps) {
-  const [period, setPeriod] = useState<PeriodKey>(initialFocus === 'today' ? 'week' : 'all')
+  const [period, setPeriod] = useState<PeriodKey>(
+    isLocked ? 'all' : (initialFocus === 'today' ? 'week' : 'all'),
+  )
   const [panelOpen, setPanelOpen] = useState(false)
   const [mainOverlays, setMainOverlays] = useState<Record<MainOverlayKey, boolean>>({ daewoon: false, candle: false, season: false })
   const [domainOverlays, setDomainOverlays] = useState<Record<DomainOverlayKey, boolean>>({ job: false, wealth: false, love: false, health: false, marriage: false })
@@ -652,6 +654,20 @@ export function ChartTab({
   const [rangeMode, setRangeMode] = useState(false)
   const rangeFirst = React.useRef<number | null>(null)
   const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
+
+  // 비로그인·공유: 이번 주/올해는 잠금 — 전체 곡선만 공개
+  useEffect(() => {
+    if (!isLocked) return
+    if (period !== 'all') {
+      setPeriod('all')
+      setClickedYear(THIS_YEAR)
+      setRangeMode(false)
+      setSelection(null)
+      setQuickPick(null)
+      rangeFirst.current = null
+    }
+  }, [isLocked, period])
+
   const [settingsBadge, setSettingsBadge] = useState(false)
   const [chartHint, setChartHint] = useState(false)
   const [summaryCache] = useState<Map<string, { text: string }>>(() => new Map())
@@ -1309,9 +1325,10 @@ export function ChartTab({
    */
   const blockIfLocked = useCallback((feature: string): boolean => {
     if (!isLocked) return false
-    onLockedClick?.(feature)
+    if (shareMode) onShareCta?.()
+    else onLockedClick?.(feature)
     return true
-  }, [isLocked, onLockedClick])
+  }, [isLocked, shareMode, onShareCta, onLockedClick])
 
   /** 해당 도메인만 켜고 기본 세운 선은 끈다 */
   const showDomainSolo = (k: DomainOverlayKey) => {
@@ -1499,7 +1516,7 @@ export function ChartTab({
                     }
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels} hideDetail={isLocked}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
               {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#2E2F36" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#8B8B93', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && !isWeekly && seasonBands.map((b: SeasonBand, i: number) => (
@@ -1569,6 +1586,7 @@ export function ChartTab({
         <div className="relative z-10 flex justify-center items-center gap-1.5 -mt-5 mb-1" ref={chartRef}>
           {([['week', '이번 주'], ['year', '올해'], ['all', '전체']] as [PeriodKey, string][]).map(([k, l]) => (
             <button key={k} onClick={() => {
+              if (k !== 'all' && blockIfLocked(k === 'week' ? '이번 주' : '올해')) return
               setPeriod(k)
               setSelection(null)
               setQuickPick(null)
@@ -1585,7 +1603,7 @@ export function ChartTab({
                 setClickedYear(THIS_YEAR)
               }
             }}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-cp-hover text-cp-text' : 'text-cp-muted hover:bg-cp-hover/60 hover:text-cp-secondary'}`}>{l}</button>
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-cp-hover text-cp-text' : 'text-cp-muted hover:bg-cp-hover/60 hover:text-cp-secondary'} ${isLocked && k !== 'all' ? 'opacity-60' : ''}`}>{l}{isLocked && k !== 'all' ? ' 🔒' : ''}</button>
           ))}
           {/* 구분선 — 비교/구간 버튼 중 하나라도 보일 때만 */}
           {(otherEntries.length > 0 || !shareMode) && (
@@ -1915,6 +1933,7 @@ export function ChartTab({
         isLocked={isLocked}
         onLockedClick={onLockedClick}
         shareMode={shareMode}
+        onShareCta={onShareCta}
         expandCompatCardKey={expandCompatCardKey}
         compatGeneration={compatGeneration}
         onFortuneJsonUpdate={onFortuneJsonUpdate}
@@ -2379,6 +2398,7 @@ interface FortuneSectionProps {
   isLocked?: boolean
   onLockedClick?: (feature: string) => void
   shareMode?: boolean
+  onShareCta?: () => void
   expandCompatCardKey?: string | null
   compatGeneration?: CompatGenerationState | null
   onFortuneJsonUpdate?: (fortuneJson: unknown) => void
@@ -2406,7 +2426,7 @@ function CompatSpinner() {
 
 function FortuneSection({
   fortuneJson, entryId, entryName, myGender, currentName,
-  isLocked = false, onLockedClick, shareMode = false,
+  isLocked = false, onLockedClick, shareMode = false, onShareCta,
   expandCompatCardKey, compatGeneration, onFortuneJsonUpdate,
   activeCompat, onCompatCta,
 }: FortuneSectionProps) {
@@ -2819,9 +2839,10 @@ function FortuneSection({
       <div className="px-4 mt-6">
         <h3 className="font-bold text-cp-text mb-3">운세 해설</h3>
         <LockedPreview
-          onUnlock={() => onLockedClick?.('운세 해설')}
-          ariaLabel="운세 해설 — 로그인하면 풀려요"
-          /* 첫 "한 줄 해설" 카드(약 130px) 하단에 배지 하단을 맞춘다(배지 ~36px). */
+          onUnlock={() => (shareMode ? onShareCta?.() : onLockedClick?.('운세 해설'))}
+          badgeText={shareMode ? '내 차트를 만들면 풀려요' : '로그인하면 풀려요'}
+          ctaText={shareMode ? '만들기 →' : '로그인 →'}
+          ariaLabel={shareMode ? '운세 해설 — 내 차트를 만들면 풀려요' : '운세 해설 — 로그인하면 풀려요'}
           badgeOffsetTop={94}
         >
           <FortunePlaceholder />

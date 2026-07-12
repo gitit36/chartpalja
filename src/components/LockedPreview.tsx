@@ -8,7 +8,7 @@ interface LockedPreviewProps {
    * 실제 유료/로그인 데이터가 아닌 가벼운 예시 JSX를 넣는다.
    */
   children: ReactNode
-  /** 클릭 시 호출. 부모에서 LoginPromptSheet를 띄운다. */
+  /** 클릭 시 호출. 부모에서 LoginPromptSheet / 공유 CTA를 띄운다. */
   onUnlock: () => void
   /**
    * 잠금 배지에 표시할 짧은 카피.
@@ -16,6 +16,8 @@ interface LockedPreviewProps {
    * "잠겨있어요" 같은 부정 문구는 사용하지 않는다.
    */
   badgeText?: string
+  /** 배지 우측 CTA. 기본 "로그인 →" / 공유 페이지는 "만들기 →" */
+  ctaText?: string
   /** 잠금 영역의 최소 높이 (px). 예시 콘텐츠가 짧을 때 시각적 안정성용. */
   minHeight?: number
   className?: string
@@ -30,23 +32,28 @@ interface LockedPreviewProps {
   badgeOffsetTop?: number
 }
 
+function LockIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 text-cp-muted">
+      <path
+        d="M7 11V8a5 5 0 0110 0v3M6 11h12v10H6V11z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 /**
- * 잠긴 콘텐츠를 "예시 콘텐츠 + blur + 🔒 오버레이" 형태로 보여주는 공통 컴포넌트.
- *
- * 디자인 의도:
- * - 연보라 통 블록이 아니라, 실제 콘텐츠가 아래에 있는 듯한 preview/teaser 느낌.
- * - 예시 콘텐츠는 children으로 받고, 블러 + pointer-events 차단으로 인터랙션을 막는다.
- * - 카드 위에는 둥근 화이트 배지(🔒 + 짧은 카피 + "로그인 →") 하나만 떠 있어
- *   시각적 노이즈를 최소화한다.
- *
- * 카피 톤:
- * - "잠겨있어요", "사용할 수 없어요" 등 부정 표현 금지.
- * - 동사: "로그인하기", 보상 명사: "운세 해설"/"프리미엄"/"모든 기능".
+ * 잠긴 콘텐츠 preview — 앱 셸(cp-raised / borderStrong) 톤의 배지 + 블러 티저.
  */
 export function LockedPreview({
   children,
   onUnlock,
   badgeText = '로그인하면 풀려요',
+  ctaText = '로그인 →',
   minHeight,
   className = '',
   ariaLabel,
@@ -65,6 +72,14 @@ export function LockedPreview({
 
   const badgeUseTopOffset = typeof badgeOffsetTop === 'number'
 
+  const badge = (
+    <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-cp-raised border border-cp-borderStrong shadow-[0_8px_28px_rgba(0,0,0,0.35)] group-hover:border-cp-line/40 transition-colors">
+      <LockIcon />
+      <span className="text-xs font-medium text-cp-secondary">{badgeText}</span>
+      <span className="text-xs font-bold text-cp-accent shrink-0">{ctaText}</span>
+    </div>
+  )
+
   return (
     <div
       role="button"
@@ -72,39 +87,29 @@ export function LockedPreview({
       aria-label={ariaLabel ?? badgeText}
       onClick={onUnlock}
       onKeyDown={handleKey}
-      className={`relative w-full block text-left group cursor-pointer rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-cp-line/40 ${className}`}
+      className={`relative w-full block text-left group cursor-pointer rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-cp-accent/40 ${className}`}
       style={minHeight ? { minHeight } : undefined}
     >
-      {/* 예시 콘텐츠 — 블러 처리 + 인터랙션 차단 */}
       <div
-        className="pointer-events-none select-none [filter:blur(5px)] opacity-70 transition-opacity group-hover:opacity-80"
+        className="pointer-events-none select-none [filter:blur(5px)] opacity-65 transition-opacity group-hover:opacity-75"
         aria-hidden
       >
         {children}
       </div>
 
-      {/* 오버레이: 항상 배경 블러 레이어는 깔되, 배지(버튼)는 옵션에 따라 표시 */}
-      <div className="absolute inset-0 bg-cp-bg/30 backdrop-blur-[2px] group-hover:bg-cp-surface/40 transition-colors rounded-2xl pointer-events-none" />
+      <div className="absolute inset-0 bg-cp-bg/40 group-hover:bg-cp-bg/50 transition-colors rounded-2xl pointer-events-none" />
 
       {showBadge && (
         badgeUseTopOffset ? (
           <div
-            className="absolute left-0 right-0 flex justify-center pointer-events-none"
+            className="absolute left-0 right-0 flex justify-center pointer-events-none px-3"
             style={{ top: badgeOffsetTop }}
           >
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-cp-bg shadow-md border border-cp-border group-hover:shadow-lg transition-shadow">
-              <span className="text-base leading-none" aria-hidden>🔒</span>
-              <span className="text-xs font-medium text-cp-text">{badgeText}</span>
-              <span className="text-xs font-bold text-cp-line">로그인 →</span>
-            </div>
+            {badge}
           </div>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-cp-bg shadow-md border border-cp-border group-hover:shadow-lg transition-shadow">
-              <span className="text-base leading-none" aria-hidden>🔒</span>
-              <span className="text-xs font-medium text-cp-text">{badgeText}</span>
-              <span className="text-xs font-bold text-cp-line">로그인 →</span>
-            </div>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-3">
+            {badge}
           </div>
         )
       )}

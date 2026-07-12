@@ -399,60 +399,131 @@ interface InfoTabProps {
   report: SajuReportJson | null
   isLocked?: boolean
   onLockedClick?: (feature: string) => void
+  /** 공유 페이지 등 — 잠금 배지 카피 오버라이드 */
+  lockBadgeText?: string
+  lockCtaText?: string
 }
 
-export function InfoTab({ report, isLocked = false, onLockedClick }: InfoTabProps) {
+export function InfoTab({
+  report,
+  isLocked = false,
+  onLockedClick,
+  lockBadgeText = '로그인하면 풀려요',
+  lockCtaText = '로그인 →',
+}: InfoTabProps) {
   if (!report) return <div className="py-12 text-center text-cp-muted text-sm">사주 정보가 없습니다.</div>
 
   const unlock = (feature: string) => onLockedClick?.(feature)
 
   return (
     <div className="px-4 py-4 space-y-5 overflow-x-hidden">
-      {/* 게스트 공개: 사주 원국 / 핵심 정보 / 오행 분포 */}
+      {/* 게스트·공유 공개: 사주 원국만 */}
       <PillarGrid report={report}/>
-      <CoreInfoCard report={report}/>
-      <OhangInlineBar report={report}/>
 
-      {/* 게스트 잠금: 사주관계 / 신살 / 대운 흐름 */}
-      {isLocked ? (
-        <LockedPreview onUnlock={() => unlock('사주관계')} ariaLabel="사주관계 — 로그인하면 풀려요">
-          <RelationsPlaceholder />
-        </LockedPreview>
-      ) : (
-        <RelationsVisual report={report}/>
-      )}
-
+      {/* 원국 이후 전부 잠금 */}
       {isLocked ? (
         <LockedPreview
-          onUnlock={() => unlock('신살')}
-          ariaLabel="신살 — 로그인하면 풀려요"
-          showBadge={false}
+          onUnlock={() => unlock('사주 정보')}
+          badgeText={lockBadgeText}
+          ctaText={lockCtaText}
+          ariaLabel={`사주 상세 — ${lockBadgeText}`}
         >
-          <ShinsalPlaceholder />
+          <div className="space-y-5">
+            <CoreInfoPlaceholder />
+            <OhangPlaceholder />
+            <RelationsPlaceholder />
+            <ShinsalPlaceholder />
+            <DaewoonPlaceholder />
+            <SewoonPlaceholder />
+          </div>
         </LockedPreview>
       ) : (
-        <ShinsalBadges report={report}/>
+        <>
+          <CoreInfoCard report={report}/>
+          <OhangInlineBar report={report}/>
+          <RelationsVisual report={report}/>
+          <ShinsalBadges report={report}/>
+          <DaewoonCarousel report={report}/>
+          <SewoonCarousel report={report}/>
+        </>
       )}
-
-      {isLocked ? (
-        <LockedPreview
-          onUnlock={() => unlock('대운 흐름')}
-          ariaLabel="대운 흐름 — 로그인하면 풀려요"
-          showBadge={false}
-        >
-          <DaewoonPlaceholder />
-        </LockedPreview>
-      ) : (
-        <DaewoonCarousel report={report}/>
-      )}
-
-      {/* 세운은 게스트에게도 공개 — 별도 잠금 카드 없음 */}
-      <SewoonCarousel report={report}/>
     </div>
   )
 }
 
 /* ── 잠금 미리보기용 placeholder들 (실제 데이터에 의존하지 않음) ── */
+
+function CoreInfoPlaceholder() {
+  const rows = [
+    { label: '격국', value: '정관격' },
+    { label: '신강신약', value: '중화신강' },
+    { label: '용신', value: '水(인성)' },
+    { label: '희신', value: '金(식상), 木(비겁)' },
+    { label: '기신', value: '火(관살)' },
+  ]
+  return (
+    <div>
+      <h3 className="font-bold text-cp-text text-sm mb-2">핵심 정보</h3>
+      <div className="bg-cp-raised rounded-xl divide-y divide-cp-border">
+        {rows.map(r => (
+          <div key={r.label} className="flex items-start gap-3 px-3.5 py-2.5">
+            <span className="text-xs text-cp-muted shrink-0 w-[4.5rem] pt-0.5">{r.label}</span>
+            <span className="text-sm font-medium text-right flex-1 text-cp-text">{r.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function OhangPlaceholder() {
+  const bars = [
+    { el: '목', pct: 70 },
+    { el: '화', pct: 45 },
+    { el: '토', pct: 90 },
+    { el: '금', pct: 55 },
+    { el: '수', pct: 35 },
+  ]
+  return (
+    <div>
+      <h3 className="font-bold text-cp-text text-sm mb-2">오행 분포</h3>
+      <div className="space-y-1.5">
+        {bars.map(b => (
+          <div key={b.el} className="flex items-center gap-2">
+            <span className="text-xs text-cp-muted w-6">{b.el}</span>
+            <div className="flex-1 h-2 rounded-full bg-cp-input overflow-hidden">
+              <div className="h-full rounded-full bg-cp-line/50" style={{ width: `${b.pct}%` }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function SewoonPlaceholder() {
+  const years = ['2024', '2025', '2026', '2027', '2028']
+  return (
+    <div>
+      <h3 className="font-bold text-cp-text text-sm mb-2">세운 (연운)</h3>
+      <div className="overflow-hidden pb-2 -mx-4 px-4">
+        <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
+          {years.map((y, i) => (
+            <div
+              key={y}
+              className={`snap-start shrink-0 w-[80px] border rounded-xl p-2.5 text-center ${
+                i === 2 ? 'bg-cp-hover border-cp-accent/40' : 'bg-cp-raised border-cp-border'
+              }`}
+            >
+              <div className="text-[11px] text-cp-muted">{y}</div>
+              <div className={`text-base font-bold ${i === 2 ? 'text-cp-line' : 'text-cp-text'}`}>갑진</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function RelationsPlaceholder() {
   const tabs = ['년월', '년일', '월일', '일시']

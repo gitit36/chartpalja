@@ -270,21 +270,23 @@ export default function SajuListPage() {
     setSortByScore(true)
   }
 
-  const handleSetRepresentative = async (id: string) => {
+  const handleToggleRepresentative = async (id: string, currentlyRep: boolean) => {
     setMenuOpen(null)
     try {
       const res = await fetch(`/api/saju/${id}`, {
         method: 'PATCH',
         headers: { ...getHeaders(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({ setRepresentative: true }),
+        body: JSON.stringify({ setRepresentative: !currentlyRep }),
       })
       if (res.ok) {
         setEntries((prev) => {
-          const next = prev.map((e) => ({ ...e, isRepresentative: e.id === id }))
+          const next = currentlyRep
+            ? prev.map((e) => (e.id === id ? { ...e, isRepresentative: false } : e))
+            : prev.map((e) => ({ ...e, isRepresentative: e.id === id }))
           saveListCache(next)
           return next
         })
-        setToastMsg('대표 사주로 설정했어요.')
+        setToastMsg(currentlyRep ? '대표사주가 해제되었어요' : '대표 사주로 설정했어요.')
         fetchDaily()
       }
     } catch (e) {
@@ -443,51 +445,52 @@ export default function SajuListPage() {
                   </div>
                 </Link>
 
-                <button
-                  type="button"
-                  aria-label="사주 메뉴"
-                  aria-expanded={menuOpen === e.id}
-                  onClick={(ev) => { ev.preventDefault(); ev.stopPropagation(); setMenuOpen(menuOpen === e.id ? null : e.id) }}
-                  className="shrink-0 w-8 h-10 flex items-center justify-center rounded-md text-cp-muted hover:bg-cp-hover active:bg-cp-border/50"
-                >
-                  <span className="text-[20px] leading-none font-bold tracking-tighter" aria-hidden>&#x22EE;</span>
-                </button>
-
-                {menuOpen === e.id && (
-                  <div
-                    role="menu"
-                    className="absolute top-[calc(100%-8px)] right-1.5 bg-cp-bg border border-cp-border rounded-xl shadow-lg z-50 overflow-hidden w-max"
-                    onClick={(ev) => ev.stopPropagation()}
+                <div className="relative shrink-0">
+                  <button
+                    type="button"
+                    aria-label="사주 메뉴"
+                    aria-expanded={menuOpen === e.id}
+                    onClick={(ev) => { ev.preventDefault(); ev.stopPropagation(); setMenuOpen(menuOpen === e.id ? null : e.id) }}
+                    className="w-8 h-10 flex items-center justify-center rounded-md text-cp-muted hover:bg-cp-hover active:bg-cp-border/50"
                   >
-                    <button
-                      type="button"
-                      role="menuitem"
-                      onClick={() => { if (!e.isRepresentative) handleSetRepresentative(e.id) }}
-                      disabled={e.isRepresentative}
-                      className={`block w-full text-center px-3.5 py-2.5 leading-none ${e.isRepresentative ? 'text-amber-400 cursor-default' : 'text-cp-muted hover:bg-cp-hover'}`}
-                      aria-label={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
-                      title={e.isRepresentative ? '현재 대표 사주' : '대표 사주로 설정'}
+                    <span className="text-[20px] leading-none font-bold tracking-tighter" aria-hidden>&#x22EE;</span>
+                  </button>
+
+                  {menuOpen === e.id && (
+                    <div
+                      role="menu"
+                      className="absolute top-0 right-full mr-1 bg-cp-bg border border-cp-border rounded-xl shadow-lg z-50 overflow-hidden w-max"
+                      onClick={(ev) => ev.stopPropagation()}
                     >
-                      <span className="text-[22px] leading-none" aria-hidden>&#x2B51;</span>
-                    </button>
-                    <button
-                      type="button"
-                      role="menuitem"
-                      onClick={() => { setMenuOpen(null); router.push(`/app/input?edit=${e.id}`) }}
-                      className="block w-full text-center px-3.5 py-2.5 text-sm text-cp-text hover:bg-cp-hover"
-                    >
-                      수정
-                    </button>
-                    <button
-                      type="button"
-                      role="menuitem"
-                      onClick={() => { setMenuOpen(null); setDeleteTarget(e) }}
-                      className="block w-full text-center px-3.5 py-2.5 text-sm text-cp-up hover:bg-cp-line/10"
-                    >
-                      삭제
-                    </button>
-                  </div>
-                )}
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => handleToggleRepresentative(e.id, !!e.isRepresentative)}
+                        className={`block w-full text-center px-3.5 py-2.5 leading-none hover:bg-cp-hover ${e.isRepresentative ? 'text-amber-400' : 'text-cp-muted'}`}
+                        aria-label={e.isRepresentative ? '대표 사주 해제' : '대표 사주로 설정'}
+                        title={e.isRepresentative ? '대표 사주 해제' : '대표 사주로 설정'}
+                      >
+                        <span className="text-[22px] leading-none" aria-hidden>&#x2B51;</span>
+                      </button>
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => { setMenuOpen(null); router.push(`/app/input?edit=${e.id}`) }}
+                        className="block w-full text-center px-3.5 py-2.5 text-sm text-cp-text hover:bg-cp-hover"
+                      >
+                        수정
+                      </button>
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => { setMenuOpen(null); setDeleteTarget(e) }}
+                        className="block w-full text-center px-3.5 py-2.5 text-sm text-cp-up hover:bg-cp-line/10"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
               )
             })}

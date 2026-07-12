@@ -1,18 +1,29 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { MobileContainer } from '@/components/MobileContainer'
 import { ChartTab } from '@/components/ChartTab'
 import { InfoTab } from '@/components/InfoTab'
 import { BottomSheet } from '@/components/BottomSheet'
-import { SummaryLine } from '@/components/SummaryLine'
+import { SummaryLine, type SummaryLineData } from '@/components/SummaryLine'
+import { LockedPreview } from '@/components/LockedPreview'
 import { CompatSummaryBar } from '@/components/CompatSummaryBar'
 import type { OverlayCompatInfo } from '@/lib/compat/types'
-import { buildShareCard } from '@/lib/share/share-card'
 import type { PublicShareEntry, ShareSample } from '@/lib/share/get-share-entry'
 
 type TabKey = 'chart' | 'info'
+
+const LOCKED_SUMMARY_PLACEHOLDER: SummaryLineData = {
+  score: 72,
+  delta: 3.2,
+  deltaPercent: 4.6,
+  label: '확장기',
+  desc: '흐름이 열리는 시기예요',
+  emoji: '',
+  sparkData: [52, 55, 58, 56, 61, 66, 64, 70, 73, 69, 67, 72],
+  currentIdx: 11,
+}
 
 export function ShareCardView({
   entry,
@@ -30,9 +41,7 @@ export function ShareCardView({
   const [activeOverlay, setActiveOverlay] = useState<OverlayCompatInfo | null>(null)
 
   const report = entry.sajuReportJson
-  const card = useMemo(() => buildShareCard(report, entry.birthYear), [report, entry.birthYear])
 
-  // 개인 사주 상세와 동일하게: 스크롤하면 요약 바가 시세 헤더 형태로 접힌다.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 120)
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -41,19 +50,25 @@ export function ShareCardView({
 
   const goMakeMine = () => router.push('/app/input')
   const onShareCta = () => setCtaSheet(true)
+  const lockBadge = '내 차트를 만들면 풀려요'
+  const lockCta = '만들기 →'
 
   return (
     <MobileContainer>
-      <div className="min-h-screen flex flex-col bg-cp-bg">
-        {/* 헤더 + 탭 (app/saju 와 동일한 형태 — 이름·성별·생년만) */}
-        <div className="sticky top-0 z-30 bg-cp-bg border-b border-cp-border">
-          <div className="px-4 pt-3 pb-2">
-            <div className="flex items-center justify-center gap-1.5">
-              <span className="font-bold text-cp-text">{entry.name}</span>
-              <span className="text-xs text-cp-muted">&middot;</span>
-              <span className="text-sm text-cp-muted">{entry.gender === 'female' ? '여성' : '남성'}</span>
-              <span className="text-xs text-cp-muted">&middot;</span>
-              <span className="text-sm text-cp-muted">{entry.birthYear}년생</span>
+      <div className="min-h-screen flex flex-col">
+        <div className="sticky top-0 z-30 bg-cp-raised/95 backdrop-blur border-b border-cp-border">
+          <div className="px-4 pt-3 pb-2 flex items-center">
+            <div className="flex-1 text-center min-w-0">
+              <div className="flex items-center justify-center gap-1.5 mb-0.5">
+                <span className="font-bold text-cp-text">{entry.name}</span>
+                <span className="text-xs text-cp-muted">&middot;</span>
+                <span className="text-sm text-cp-muted">{entry.gender === 'female' ? '여성' : '남성'}</span>
+                <span className="text-xs text-cp-muted">&middot;</span>
+                <span className="text-sm text-cp-muted">{entry.birthYear}년생</span>
+              </div>
+              <p className="text-xs text-cp-muted">
+                {isOwner ? '내가 공유 중인 인생 차트' : `${entry.name}님이 공유한 인생 차트`}
+              </p>
             </div>
           </div>
           <div className="flex border-t border-cp-border">
@@ -77,27 +92,31 @@ export function ShareCardView({
               shareMode
               onCta={onShareCta}
             />
-          ) : tab === 'chart' && card ? (
-            <SummaryLine data={card} isUp={card.isUp} scrolled={scrolled} />
+          ) : tab === 'chart' ? (
+            <LockedPreview
+              onUnlock={onShareCta}
+              badgeText={lockBadge}
+              ctaText={lockCta}
+              ariaLabel={`올해 요약 — ${lockBadge}`}
+              className="rounded-none"
+            >
+              <SummaryLine data={LOCKED_SUMMARY_PLACEHOLDER} isUp scrolled={scrolled} />
+            </LockedPreview>
           ) : null}
         </div>
 
-        {/* 사주 정보 탭: 요약 바는 스크롤되도록 sticky 밖에 둔다 */}
-        {tab === 'info' && card && (
-          <SummaryLine data={card} isUp={card.isUp} scrolled={false} />
+        {tab === 'info' && (
+          <LockedPreview
+            onUnlock={onShareCta}
+            badgeText={lockBadge}
+            ctaText={lockCta}
+            showBadge={false}
+            className="rounded-none"
+          >
+            <SummaryLine data={LOCKED_SUMMARY_PLACEHOLDER} isUp scrolled={false} />
+          </LockedPreview>
         )}
 
-        {/* 공유 출처 안내 (슬림) */}
-        <div className="px-4 pt-2">
-          <div className="rounded-xl bg-cp-surface border border-cp-border px-3.5 py-2 flex items-center gap-2.5">
-            <span className="text-base leading-none" aria-hidden>🔗</span>
-            <p className="text-[12px] text-cp-line/90 leading-snug flex-1">
-              {isOwner ? '내가 공유 중인 인생 차트예요' : `${entry.name}님이 공유한 인생 차트예요`}
-            </p>
-          </div>
-        </div>
-
-        {/* 본문 — 전체 공개 (블러 없음) */}
         <div className="flex-1 pb-28">
           <div className={tab === 'chart' ? '' : 'hidden'}>
             <ChartTab
@@ -107,70 +126,89 @@ export function ShareCardView({
               currentName={entry.name}
               currentGender={entry.gender}
               overlayEntries={samples}
-              isLocked={false}
+              isLocked
               shareMode
+              onLockedClick={onShareCta}
               onShareCta={onShareCta}
               onOverlayChange={setActiveOverlay}
             />
           </div>
           <div className={tab === 'info' ? '' : 'hidden'}>
-            <InfoTab report={report} isLocked={false} />
+            <InfoTab
+              report={report}
+              isLocked
+              onLockedClick={onShareCta}
+              lockBadgeText={lockBadge}
+              lockCtaText={lockCta}
+            />
           </div>
         </div>
 
-        {/* 하단 고정 self-CTA */}
         <div className="fixed bottom-0 left-0 right-0 z-20">
-          <div className="mx-auto max-w-[446px] px-4 py-3 bg-cp-surface/95 backdrop-blur-sm border-t border-cp-border">
+          <div className="mx-auto max-w-[446px] flex gap-2 px-4 py-2.5 bg-cp-raised/95 backdrop-blur-sm border-t border-cp-borderStrong">
             {isOwner ? (
               <button
                 onClick={() => router.push(`/app/saju/${entry.id}`)}
-                className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
+                className="flex-1 py-2.5 rounded-xl text-xs font-semibold bg-cp-accent text-white hover:brightness-110 transition-colors"
               >
-                내 사주 페이지에서 관리하기 →
+                내 사주 페이지에서 관리하기
               </button>
             ) : (
-              <>
-                <button
-                  onClick={goMakeMine}
-                  className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
-                >
-                  나도 내 인생 차트 만들기 →
-                </button>
-                <p className="text-center text-[11px] text-cp-muted mt-2">내 사주팔자는 몇 점일까? · 30초면 끝나요</p>
-              </>
+              <button
+                onClick={goMakeMine}
+                className="flex-1 py-2.5 rounded-xl text-xs font-semibold bg-cp-accent text-white hover:brightness-110 transition-colors"
+              >
+                나도 내 인생 차트 만들기
+              </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* 잠긴 기능(구간·운세 생성) 탭 시 self-CTA 시트 */}
       {ctaSheet && (
         <BottomSheet
           onClose={() => setCtaSheet(false)}
+          header={(
+            <div className="pb-3 text-center">
+              <h3 className="font-bold text-cp-text text-lg leading-tight">내 차트를 만들면 열려요</h3>
+              <p className="text-xs text-cp-muted mt-1.5 leading-relaxed">
+                지표·상세 해석·구간 해설은 내 사주로 차트를 만든 뒤 볼 수 있어요
+              </p>
+            </div>
+          )}
           footer={(
-            <button
-              onClick={() => setCtaSheet(false)}
-              className="w-full py-3 rounded-xl text-sm font-medium text-cp-muted hover:text-cp-muted transition-colors"
-            >
-              그냥 둘러볼래요
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setCtaSheet(false)}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold text-cp-secondary border border-cp-borderStrong bg-cp-input hover:bg-cp-hover active:brightness-95 transition-colors"
+              >
+                둘러보기
+              </button>
+              <button
+                type="button"
+                onClick={goMakeMine}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold text-white bg-cp-accent hover:brightness-110 active:brightness-95 transition-colors"
+              >
+                차트 만들기
+              </button>
+            </div>
           )}
         >
-          <div className="text-center px-2 pb-2">
-            <div className="text-4xl mb-3">✨</div>
-            <h3 className="font-bold text-cp-text text-base mb-1.5">내 차트를 만들면 열려요</h3>
-            <p className="text-sm text-cp-muted leading-relaxed mb-5">
-              연도·구간별 상세 해설은 내 사주로 차트를 만든 뒤
-              <br />
-              이용권으로 볼 수 있어요.
-            </p>
-            <button
-              onClick={goMakeMine}
-              className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-md hover:shadow-lg transition-all active:scale-[0.99]"
-            >
-              내 차트 만들기 →
-            </button>
-          </div>
+          <ul className="text-sm text-cp-muted space-y-2.5 pb-2 px-1">
+            <li className="flex items-start gap-2.5">
+              <span className="text-cp-accent font-bold shrink-0">·</span>
+              <span>대운·시즌·도메인 등 전체 지표</span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <span className="text-cp-accent font-bold shrink-0">·</span>
+              <span>이번 주·올해 흐름과 점수 요인</span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <span className="text-cp-accent font-bold shrink-0">·</span>
+              <span>용신·신살·운세 해설</span>
+            </li>
+          </ul>
         </BottomSheet>
       )}
     </MobileContainer>

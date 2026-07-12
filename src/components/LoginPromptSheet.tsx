@@ -27,47 +27,46 @@ export function LoginPromptSheet({ open, onClose, feature, returnTo }: Props) {
     <BottomSheet
       onClose={onClose}
       header={(
-        <div className="pt-1 pb-2 text-center">
-          <div className="text-4xl mb-3" aria-hidden>🔓</div>
-          <h3 className="text-lg font-bold text-cp-text mb-1">
-            로그인하면 모든 기능이 열려요
-          </h3>
-          {feature && (
-            <p className="text-xs text-cp-muted">{feature}도 함께 풀려요</p>
-          )}
+        <div className="pb-3 text-center">
+          <h3 className="font-bold text-cp-text text-lg leading-tight">로그인하면 열려요</h3>
+          <p className="text-xs text-cp-muted mt-1.5 leading-relaxed">
+            {feature
+              ? `${feature} 포함해 지표·상세 해석을 볼 수 있어요`
+              : '지표·상세 해석·운세 해설을 볼 수 있어요'}
+          </p>
         </div>
       )}
       footer={(
-        <div>
+        <div className="flex flex-col gap-2">
           <button
             type="button"
             onClick={handleLogin}
-            className="w-full py-4 rounded-2xl text-base font-bold bg-[#FEE500] text-[#3C1E1E] hover:brightness-95 active:scale-[0.98] transition-all"
+            className="w-full py-3.5 rounded-xl text-sm font-bold bg-[#FEE500] text-[#3C1E1E] hover:brightness-95 active:scale-[0.98] transition-all"
           >
             카카오로 로그인
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-3 mt-1 text-sm text-cp-muted hover:text-cp-text transition-colors min-h-[44px]"
+            className="w-full py-3 rounded-xl text-sm font-semibold text-cp-secondary border border-cp-borderStrong bg-cp-input hover:bg-cp-hover transition-colors"
           >
             다음에
           </button>
         </div>
       )}
     >
-      <ul className="text-sm text-cp-muted text-left space-y-2 pb-4 px-2 max-w-xs mx-auto">
-        <li className="flex items-center gap-2.5">
-          <span className="text-cp-line font-bold">✓</span>
-          <span>대운·시즌·캔들 등 전체 시각화</span>
+      <ul className="text-sm text-cp-muted space-y-2.5 pb-2 px-1">
+        <li className="flex items-start gap-2.5">
+          <span className="text-cp-accent font-bold shrink-0">·</span>
+          <span>대운·시즌·도메인 등 전체 지표</span>
         </li>
-        <li className="flex items-center gap-2.5">
-          <span className="text-cp-line font-bold">✓</span>
-          <span>비교·구간 분석</span>
+        <li className="flex items-start gap-2.5">
+          <span className="text-cp-accent font-bold shrink-0">·</span>
+          <span>이번 주·올해 흐름과 점수 요인</span>
         </li>
-        <li className="flex items-center gap-2.5">
-          <span className="text-cp-line font-bold">✓</span>
-          <span>운세 해설</span>
+        <li className="flex items-start gap-2.5">
+          <span className="text-cp-accent font-bold shrink-0">·</span>
+          <span>용신·신살·운세 해설</span>
         </li>
       </ul>
     </BottomSheet>

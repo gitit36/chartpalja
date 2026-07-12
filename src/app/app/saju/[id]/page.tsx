@@ -7,6 +7,7 @@ import { MobileContainer } from '@/components/MobileContainer'
 import { MinimalLegalFooter } from '@/components/MinimalLegalFooter'
 import { InfoTab } from '@/components/InfoTab'
 import { SummaryLine } from '@/components/SummaryLine'
+import { LockedPreview } from '@/components/LockedPreview'
 import { CompatSummaryBar } from '@/components/CompatSummaryBar'
 import { CompatConfirmSheet } from '@/components/CompatConfirmSheet'
 import { JuShortageNudge } from '@/components/JuShortageNudge'
@@ -192,6 +193,17 @@ function buildStockLine(report: SajuReportJson | null, birthYear: number | null)
   return { score, label: match.label, desc: match.desc, ticker: match.ticker, emoji: match.emoji, delta, deltaPercent, sparkData, currentIdx }
 }
 
+const LOCKED_SUMMARY_PLACEHOLDER: StockTypeLine = {
+  score: 72,
+  label: '확장기',
+  desc: '흐름이 열리는 시기예요',
+  ticker: '—',
+  emoji: '',
+  delta: 3.2,
+  deltaPercent: 4.6,
+  sparkData: [52, 55, 58, 56, 61, 66, 64, 70, 73, 69, 67, 72],
+  currentIdx: 11,
+}
 
 type TabKey = 'chart' | 'info'
 
@@ -667,14 +679,38 @@ function PersonalSajuPageInner() {
               scrolled={scrolled}
               onCta={handleCompatCta}
             />
-          ) : tab === 'chart' && stockLine ? (
-            <SummaryLine data={stockLine} isUp={isUp} scrolled={scrolled} />
+          ) : tab === 'chart' && (stockLine || isLoggedIn === false) ? (
+            isLoggedIn === false ? (
+              <LockedPreview
+                onUnlock={() => setLoginSheet({ open: true, feature: '올해 요약' })}
+                badgeText="로그인하면 풀려요"
+                ctaText="로그인 →"
+                ariaLabel="올해 요약 — 로그인하면 풀려요"
+                className="rounded-none"
+              >
+                <SummaryLine data={LOCKED_SUMMARY_PLACEHOLDER} isUp scrolled={scrolled} />
+              </LockedPreview>
+            ) : stockLine ? (
+              <SummaryLine data={stockLine} isUp={isUp} scrolled={scrolled} />
+            ) : null
           ) : null}
         </div>
 
         {/* Summary line: scrollable for info tab (not inside sticky header) */}
-        {tab === 'info' && stockLine && (
-          <SummaryLine data={stockLine} isUp={isUp} scrolled={false} />
+        {tab === 'info' && (stockLine || isLoggedIn === false) && (
+          isLoggedIn === false ? (
+            <LockedPreview
+              onUnlock={() => setLoginSheet({ open: true, feature: '올해 요약' })}
+              badgeText="로그인하면 풀려요"
+              ctaText="로그인 →"
+              showBadge={false}
+              className="rounded-none"
+            >
+              <SummaryLine data={LOCKED_SUMMARY_PLACEHOLDER} isUp scrolled={false} />
+            </LockedPreview>
+          ) : stockLine ? (
+            <SummaryLine data={stockLine} isUp={isUp} scrolled={false} />
+          ) : null
         )}
 
         {/* 상단 슬림 배너 — 통일된 카피, 닫기 가능, 스크롤 시 자연스럽게 사라짐. */}
@@ -685,14 +721,13 @@ function PersonalSajuPageInner() {
             }`}
           >
             <div className="rounded-xl bg-cp-surface border border-cp-border px-3.5 py-2.5 flex items-center gap-2.5 animate-fade-in">
-              <span className="text-base leading-none" aria-hidden>🔓</span>
-              <p className="text-[12px] text-cp-line/90 leading-snug flex-1">
-                로그인하면 모든 기능이 열려요
+              <p className="text-[12px] text-cp-secondary leading-snug flex-1">
+                로그인하면 지표·상세 해석이 열려요
               </p>
               <button
                 type="button"
                 onClick={() => setLoginSheet({ open: true })}
-                className="text-[12px] font-semibold text-cp-line px-2.5 py-1.5 rounded-md hover:bg-cp-border transition-colors min-h-[36px]"
+                className="text-[12px] font-semibold text-cp-accent px-2.5 py-1.5 rounded-lg bg-cp-input border border-cp-borderStrong hover:bg-cp-hover transition-colors min-h-[36px]"
               >
                 로그인 →
               </button>

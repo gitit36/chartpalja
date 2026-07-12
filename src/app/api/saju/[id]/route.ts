@@ -83,6 +83,12 @@ export async function PATCH(
       return NextResponse.json({ ok: true, id, isRepresentative: true })
     }
 
+    // 대표 사주 해제: 이 사주의 대표 플래그만 끈다 (목록은 생성순 폴백).
+    if (body.setRepresentative === false) {
+      await prisma.sajuEntry.update({ where: { id }, data: { isRepresentative: false } })
+      return NextResponse.json({ ok: true, id, isRepresentative: false })
+    }
+
     // 공유 공개/비공개 토글: 소유자가 공유하기를 누르면 isShared=true 로 올려
     // 비로그인 수신자도 /share/[id] 로 볼 수 있게 한다.
     if (body.share === true || body.share === false) {
