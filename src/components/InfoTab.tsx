@@ -427,6 +427,7 @@ export function InfoTab({
           badgeText={lockBadgeText}
           ctaText={lockCtaText}
           ariaLabel={`사주 상세 — ${lockBadgeText}`}
+          badgeOffsetTop={28}
         >
           <div className="space-y-5">
             <CoreInfoPlaceholder />

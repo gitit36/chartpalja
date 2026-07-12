@@ -98,6 +98,7 @@ export function ShareCardView({
               badgeText={lockBadge}
               ctaText={lockCta}
               ariaLabel={`올해 요약 — ${lockBadge}`}
+              showBadge={false}
               className="rounded-none"
             >
               <SummaryLine data={LOCKED_SUMMARY_PLACEHOLDER} isUp scrolled={scrolled} />

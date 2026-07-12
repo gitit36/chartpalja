@@ -2843,7 +2843,7 @@ function FortuneSection({
           badgeText={shareMode ? '내 차트를 만들면 풀려요' : '로그인하면 풀려요'}
           ctaText={shareMode ? '만들기 →' : '로그인 →'}
           ariaLabel={shareMode ? '운세 해설 — 내 차트를 만들면 풀려요' : '운세 해설 — 로그인하면 풀려요'}
-          badgeOffsetTop={94}
+          badgeOffsetTop={36}
         >
           <FortunePlaceholder />
         </LockedPreview>

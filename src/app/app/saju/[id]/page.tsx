@@ -686,6 +686,7 @@ function PersonalSajuPageInner() {
                 badgeText="로그인하면 풀려요"
                 ctaText="로그인 →"
                 ariaLabel="올해 요약 — 로그인하면 풀려요"
+                showBadge={false}
                 className="rounded-none"
               >
                 <SummaryLine data={LOCKED_SUMMARY_PLACEHOLDER} isUp scrolled={scrolled} />
@@ -944,8 +945,8 @@ function PersonalSajuPageInner() {
           >
             {regenModal === 'confirm' ? (
               <>
-                <p className="text-base font-semibold text-cp-text mb-1.5 text-center">운세 풀이를 다시 생성할까요?</p>
-                <p className="text-sm text-cp-muted text-center mb-5">운세 해설 {READING_COST.fortune}주가 차감됩니다.</p>
+                <p className="text-base font-semibold text-cp-text mb-1.5 text-center">운세 해설을 다시 생성할까요?</p>
+                <p className="text-sm text-cp-muted text-center mb-5">{READING_COST.fortune}주가 차감됩니다.</p>
                 <div className="flex gap-3">
                   <button onClick={() => setRegenModal(null)}
                     className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-secondary bg-cp-surface border border-cp-border hover:bg-cp-hover transition-colors">
@@ -953,14 +954,14 @@ function PersonalSajuPageInner() {
                   </button>
                   <button onClick={handleRegenerateConfirm}
                     className="flex-1 py-3 rounded-xl text-sm font-bold text-white bg-cp-accent hover:brightness-110 transition-all active:scale-[0.98]">
-                    운세 풀이 재생성
+                    운세 해설 재생성
                   </button>
                 </div>
               </>
             ) : regenModal === 'failed' ? (
               <>
                 <p className="text-base font-semibold text-cp-text mb-1.5 text-center">재생성에 실패했습니다.</p>
-                <p className="text-sm text-cp-muted text-center mb-5">이용권은 차감되지 않았습니다.</p>
+                <p className="text-sm text-cp-muted text-center mb-5">주(株)가 차감되지 않았습니다.</p>
                 <div className="flex gap-3">
                   <button onClick={() => setRegenModal(null)}
                     className="flex-1 py-3 rounded-xl text-sm font-medium text-cp-secondary bg-cp-surface border border-cp-border hover:bg-cp-hover transition-colors">
