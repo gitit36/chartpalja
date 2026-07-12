@@ -246,16 +246,19 @@ export default function SajuListPage() {
   const repSeries = repId ? daily[repId]?.series : undefined
   const heroSignals = useMemo(() => {
     if (!representative) return []
-    if (representative.signals?.length) return representative.signals
-    return buildDailySignals({
-      score: representative.score,
-      delta: representative.delta,
-      bestDomain: representative.bestDomain,
-      bestScore: representative.bestScore,
-      worstDomain: representative.worstDomain,
-      worstScore: representative.worstScore,
-      series: repSeries,
-    })
+    const raw = representative.signals?.length
+      ? representative.signals
+      : buildDailySignals({
+          score: representative.score,
+          delta: representative.delta,
+          bestDomain: representative.bestDomain,
+          bestScore: representative.bestScore,
+          worstDomain: representative.worstDomain,
+          worstScore: representative.worstScore,
+          series: repSeries,
+        })
+    // 히어로: 점수 옆 ▲▼로 변화를 이미 보여 주므로 '변화' 칩은 제외
+    return raw.filter((s) => s.kind !== 'delta')
   }, [representative, repSeries])
   const heroWeekRange = useMemo(() => {
     if (!representative) return null
