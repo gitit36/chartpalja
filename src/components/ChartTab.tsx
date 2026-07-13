@@ -19,6 +19,7 @@ import { pillarToHangul } from '@/lib/saju/hanja-hangul'
 import { getGuestId } from '@/lib/auth/guest'
 import { LockedPreview } from '@/components/LockedPreview'
 import { JuShortageNudge } from '@/components/JuShortageNudge'
+import { Toast } from '@/components/Toast'
 import { InfoTip } from '@/components/InfoTip'
 import { READING_COST } from '@/lib/payment/products'
 import { fetchBalance, clearBalanceCache } from '@/lib/hooks/useBalance'
@@ -593,6 +594,13 @@ interface ChartTabProps {
    * 구간 해설/운세 자동 생성과 비교 같은 소유자 전용 인터랙션은 차단한다.
    */
   shareMode?: boolean
+  /** 공유 페이지에서 비교·궁합 버튼(및 오버레이 해제 칩)을 숨긴다. */
+  hideCompareUi?: boolean
+  /**
+   * 궁합 전용 공유 페이지. 해당 궁합 카드만 펼쳐 보여주고 운세 해설은 숨긴다.
+   * expandCompatCardKey 와 함께 쓴다.
+   */
+  compatShareOnly?: boolean
   /** shareMode 에서 잠긴 액션을 누르면 호출 — 보통 "내 차트 만들기" CTA. */
   onShareCta?: () => void
   /** 비교 오버레이 활성 시 요약바용 정보 상향 */
@@ -630,7 +638,7 @@ interface ChartTabProps {
 
 export function ChartTab({
   report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
-  isLocked = false, onLockedClick, shareMode = false, onShareCta,
+  isLocked = false, onLockedClick, shareMode = false, hideCompareUi = false, compatShareOnly = false, onShareCta,
   onOverlayChange, onCompatCta, expandCompatCardKey, fortuneScrollToken, onFortuneJsonUpdate, compatGeneration,
   entryName, myGender, initialOverlayId, initialFocus, sharePartner, weekSeries,
 }: ChartTabProps) {
@@ -1608,11 +1616,11 @@ export function ChartTab({
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${period === k && !rangeMode ? 'bg-cp-hover text-cp-text' : 'text-cp-muted hover:bg-cp-hover/60 hover:text-cp-secondary'} ${isLocked && k !== 'all' ? 'opacity-60' : ''}`}>{l}{isLocked && k !== 'all' ? ' 🔒' : ''}</button>
           ))}
           {/* 구분선 — 비교/구간 버튼 중 하나라도 보일 때만 */}
-          {(otherEntries.length > 0 || !shareMode) && (
+          {((!hideCompareUi && otherEntries.length > 0) || !shareMode) && (
             <span className="w-px h-4 bg-cp-border mx-1"/>
           )}
-          {/* 비교: 공유 뷰에서도 예시 인물과 비교 가능 (크레딧 무소모) */}
-          {otherEntries.length > 0 && (
+          {/* 비교·궁합: 공개 공유 페이지에서는 숨김 */}
+          {!hideCompareUi && otherEntries.length > 0 && (
             overlayActive ? (
               <button onClick={clearOverlay}
                 className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-cp-surface border border-cp-border text-cp-down text-[10px] font-medium hover:bg-cp-border transition-all">
@@ -1935,6 +1943,7 @@ export function ChartTab({
         isLocked={isLocked}
         onLockedClick={onLockedClick}
         shareMode={shareMode}
+        compatShareOnly={compatShareOnly}
         onShareCta={onShareCta}
         expandCompatCardKey={expandCompatCardKey}
         fortuneScrollToken={fortuneScrollToken}
@@ -2401,6 +2410,8 @@ interface FortuneSectionProps {
   isLocked?: boolean
   onLockedClick?: (feature: string) => void
   shareMode?: boolean
+  /** 궁합 전용 공유 — 해당 카드만 펼쳐 표시, 운세 해설 숨김 */
+  compatShareOnly?: boolean
   onShareCta?: () => void
   expandCompatCardKey?: string | null
   /** 운세 해설 섹션으로 스크롤 트리거 (값 변경 시) */
@@ -2431,18 +2442,21 @@ function CompatSpinner() {
 
 function FortuneSection({
   fortuneJson, entryId, entryName, myGender, currentName,
-  isLocked = false, onLockedClick, shareMode = false, onShareCta,
+  isLocked = false, onLockedClick, shareMode = false, compatShareOnly = false, onShareCta,
   expandCompatCardKey, fortuneScrollToken, compatGeneration, onFortuneJsonUpdate,
   activeCompat, onCompatCta,
 }: FortuneSectionProps) {
   const [shareBusyKey, setShareBusyKey] = useState<string | null>(null)
   const [shareCopiedKey, setShareCopiedKey] = useState<string | null>(null)
+  const [shareToast, setShareToast] = useState(false)
   const [menuOpenKey, setMenuOpenKey] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<CompatReportEntry | null>(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
   const [items, setItems] = useState<FortuneItem[]>([])
   const [openIds, setOpenIds] = useState<Set<number>>(new Set())
-  const [openCompatIds, setOpenCompatIds] = useState<Set<string>>(new Set())
+  const [openCompatIds, setOpenCompatIds] = useState<Set<string>>(() =>
+    compatShareOnly && expandCompatCardKey ? new Set([expandCompatCardKey]) : new Set(),
+  )
   const [aiLoading, setAiLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
@@ -2461,8 +2475,18 @@ function FortuneSection({
   }, [])
 
   const compatCards = useMemo(() => {
-    if (shareMode) return [] as Array<{ key: string; entry: CompatReportEntry }>
     let base = listCompatEntries(fortuneJson)
+
+    if (compatShareOnly && expandCompatCardKey) {
+      return base.filter(
+        c => compatCardKey(c.entry.partnerId, c.entry.relationship) === expandCompatCardKey && !!c.entry.text,
+      )
+    }
+
+    // 일반 공개 공유: 궁합 카드·비교 UI 없음 (궁합은 /share/.../compat 전용)
+    if (shareMode) {
+      return [] as Array<{ key: string; entry: CompatReportEntry }>
+    }
 
     // 생성 중 플레이스홀더
     if (compatGeneration) {
@@ -2499,7 +2523,7 @@ function FortuneSection({
     }
 
     return base
-  }, [fortuneJson, shareMode, compatGeneration, activeCompat])
+  }, [fortuneJson, shareMode, compatShareOnly, expandCompatCardKey, compatGeneration, activeCompat])
 
   const getHeaders = useCallback(() => {
     const h: Record<string, string> = {}
@@ -2667,6 +2691,7 @@ function FortuneSection({
       const siteUrl = typeof window !== 'undefined' ? window.location.origin : ''
       const url = `${siteUrl}/share/${entryId}/compat/${ce.partnerId}?rel=${ce.relationship}`
       await navigator.clipboard.writeText(url)
+      setShareToast(true)
     } catch { /* ignore */ }
     setShareBusyKey(null)
   }, [entryId, getHeaders, fortuneJson, onFortuneJsonUpdate])
@@ -2675,6 +2700,7 @@ function FortuneSection({
     setShareBusyKey(cardKey)
     await handleCompatShare(ce, cardKey)
     setShareCopiedKey(cardKey)
+    setMenuOpenKey(null)
     window.setTimeout(() => setShareCopiedKey(k => (k === cardKey ? null : k)), 2000)
   }, [handleCompatShare])
 
@@ -2872,7 +2898,9 @@ function FortuneSection({
 
   return (
     <div className="px-4 mt-6">
-      <h3 ref={fortuneHeadingRef} className="font-bold text-cp-text mb-3">운세 해설</h3>
+      <h3 ref={fortuneHeadingRef} className="font-bold text-cp-text mb-3">
+        {compatShareOnly ? '궁합 해설' : '운세 해설'}
+      </h3>
 
       {showJuToast && juShortage && (
         <JuShortageNudge
@@ -2884,7 +2912,7 @@ function FortuneSection({
 
       {compatSection}
 
-      {juShortage && !items.length ? (
+      {!compatShareOnly && (juShortage && !items.length ? (
         <div className="rounded-xl border border-cp-border bg-cp-surface p-4 text-center">
           <p className="text-sm text-cp-text font-medium">주(株)가 부족해요</p>
           <p className="text-xs text-cp-muted mt-1">운세 해설은 {READING_COST.fortune}주가 필요해요.</p>
@@ -2900,7 +2928,9 @@ function FortuneSection({
           <button onClick={() => fetchFortune()} className="mt-3 px-4 py-2 text-sm font-medium text-cp-line bg-cp-surface rounded-lg hover:bg-cp-border transition-colors">다시 시도</button>
         </div>
       ) : items.length === 0 ? (
-        <div className="text-center text-cp-muted text-sm py-6">운세 해설을 불러오는 중...</div>
+        shareMode ? null : (
+          <div className="text-center text-cp-muted text-sm py-6">운세 해설을 불러오는 중...</div>
+        )
       ) : (
         <div className="space-y-2">
           {topCards.map((card, i) => {
@@ -2936,7 +2966,14 @@ function FortuneSection({
             )
           })}
         </div>
-      )}
+      ))}
+
+      <Toast
+        open={shareToast}
+        message="클립보드에 링크가 복사되었어요"
+        onClose={() => setShareToast(false)}
+        bottomClass="bottom-28"
+      />
 
       {deleteTarget && (
         <div

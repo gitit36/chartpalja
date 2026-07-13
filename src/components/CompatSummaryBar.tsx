@@ -21,7 +21,7 @@ export function CompatSummaryBar({ info, myName, scrolled, shareMode = false, on
   return (
     <div
       className={`px-3 h-[36px] flex items-center gap-2 transition-colors ${
-        scrolled ? 'bg-cp-surface border-t border-cp-border' : 'bg-cp-bg'
+        scrolled ? 'bg-cp-surface border-t border-cp-border' : 'bg-cp-raised'
       }`}
     >
       <p className="flex-1 min-w-0 text-[11px] text-cp-text font-medium whitespace-nowrap overflow-hidden text-ellipsis">

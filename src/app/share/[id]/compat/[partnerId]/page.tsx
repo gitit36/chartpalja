@@ -47,7 +47,7 @@ export default async function ShareCompatPage({
 
   if (!ctx) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-rose-50 to-white px-6 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-cp-bg to-cp-surface px-6 text-center">
         <div className="text-5xl mb-4">🔒</div>
         <h1 className="text-xl font-bold text-cp-text mb-2">비공개 궁합이에요</h1>
         <p className="text-sm text-cp-muted mb-8 leading-relaxed">
@@ -55,7 +55,7 @@ export default async function ShareCompatPage({
         </p>
         <Link
           href="/app/input"
-          className="px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-lg"
+          className="px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-lg hover:shadow-xl transition-all"
         >
           내 차트 만들기 →
         </Link>

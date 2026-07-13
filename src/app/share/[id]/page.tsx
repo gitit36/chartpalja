@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getPublicShareEntry, getShareSamples } from '@/lib/share/get-share-entry'
+import { getPublicShareEntry } from '@/lib/share/get-share-entry'
 import { buildShareCard } from '@/lib/share/share-card'
 import { getUserFromSession } from '@/lib/auth/session'
 import { prisma } from '@/lib/db/prisma'
@@ -74,8 +74,5 @@ export default async function SharePage({
     isOwner = owned?.userId === user.id
   }
 
-  // 비교용 공개 예시 인물(자기 자신은 제외)
-  const samples = await getShareSamples(entry.id)
-
-  return <ShareCardView entry={entry} isOwner={isOwner} samples={samples} />
+  return <ShareCardView entry={entry} isOwner={isOwner} />
 }

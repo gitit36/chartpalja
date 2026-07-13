@@ -7,7 +7,7 @@ import { ChartTab } from '@/components/ChartTab'
 import { CompatSummaryBar } from '@/components/CompatSummaryBar'
 import { SummaryLine } from '@/components/SummaryLine'
 import { buildShareCard } from '@/lib/share/share-card'
-import { RELATIONSHIP_LABELS } from '@/lib/compat/relationship'
+import { compatCardKey, RELATIONSHIP_LABELS } from '@/lib/compat/relationship'
 import type { CompatShareSnapshot, RelationshipType } from '@/lib/compat/types'
 import type { PublicShareEntry } from '@/lib/share/get-share-entry'
 import type { OverlayCompatInfo } from '@/lib/compat/types'
@@ -36,6 +36,8 @@ export function ShareCompatView({
     dayElement: partner.dayElement,
   }], [partner])
 
+  const expandKey = compatCardKey(partner.id, relationship)
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 120)
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -47,10 +49,10 @@ export function ShareCompatView({
 
   return (
     <MobileContainer>
-      <div className="min-h-screen flex flex-col bg-cp-bg">
-        <div className="sticky top-0 z-30 bg-cp-bg border-b border-cp-border">
+      <div className="min-h-screen flex flex-col">
+        <div className="sticky top-0 z-30 bg-cp-raised/95 backdrop-blur border-b border-cp-border">
           <div className="px-4 pt-3 pb-2 text-center">
-            <p className="text-xs text-rose-500 font-semibold mb-1">{relLabel} 궁합</p>
+            <p className="text-xs text-cp-down font-semibold mb-1">{relLabel} 궁합</p>
             <div className="flex items-center justify-center gap-1.5 flex-wrap">
               <span className="font-bold text-cp-text">{entry.name}</span>
               <span className="text-xs text-cp-muted">·</span>
@@ -75,37 +77,43 @@ export function ShareCompatView({
           ) : null}
         </div>
 
-        <div className="flex-1 pb-8">
-          <ChartTab
-            report={entry.sajuReportJson}
-            birthYear={entry.birthYear}
-            fortuneJson={entry.fortuneJson}
-            entryId={entry.id}
-            currentName={entry.name}
-            currentGender={entry.gender}
-            overlayEntries={partnerSamples}
-            shareMode
-            onShareCta={() => router.push('/app/input')}
-            onOverlayChange={setActiveOverlay}
-            initialOverlayId={partner.id}
-            sharePartner={{
-              id: partner.id,
-              name: partner.name,
-              gender: partner.gender,
-              birthYear: partner.birthYear,
-              report: partner.sajuReportJson!,
-            }}
-          />
+        <div className="flex-1 pb-28">
+          {entry.sajuReportJson && partner.sajuReportJson && (
+            <ChartTab
+              report={entry.sajuReportJson}
+              birthYear={entry.birthYear}
+              fortuneJson={entry.fortuneJson}
+              entryId={entry.id}
+              currentName={entry.name}
+              currentGender={entry.gender}
+              overlayEntries={partnerSamples}
+              shareMode
+              hideCompareUi
+              compatShareOnly
+              expandCompatCardKey={expandKey}
+              onOverlayChange={setActiveOverlay}
+              initialOverlayId={partner.id}
+              sharePartner={{
+                id: partner.id,
+                name: partner.name,
+                gender: partner.gender,
+                birthYear: partner.birthYear,
+                report: partner.sajuReportJson,
+              }}
+            />
+          )}
         </div>
 
-        <div className="px-4 pb-6">
-          <button
-            type="button"
-            onClick={() => router.push('/app/input')}
-            className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-cp-accent shadow-lg"
-          >
-            나도 궁합 보기 →
-          </button>
+        <div className="fixed bottom-0 left-0 right-0 z-20">
+          <div className="mx-auto max-w-[446px] px-4 py-2.5 bg-cp-raised/95 backdrop-blur-sm border-t border-cp-borderStrong">
+            <button
+              type="button"
+              onClick={() => router.push('/app/input')}
+              className="w-full py-2.5 rounded-xl text-xs font-semibold bg-cp-accent text-white hover:brightness-110 transition-colors"
+            >
+              나도 궁합 보기 →
+            </button>
+          </div>
         </div>
       </div>
     </MobileContainer>
