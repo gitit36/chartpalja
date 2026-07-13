@@ -61,7 +61,7 @@ export default function CompatJoinPage() {
             </p>
             <p className="text-xs text-cp-muted mb-10">
               {meta.inviterGender === 'female' ? '여성' : '남성'}
-              {meta.inviterAge != null ? ` · ${meta.inviterAge}세` : ''}
+              {meta.inviterAge != null ? ` · 만 ${meta.inviterAge}세` : ''}
             </p>
             <button
               type="button"

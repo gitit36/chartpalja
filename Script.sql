@@ -2,13 +2,14 @@
 SELECT
   B.nickname,
   A.name,
-  A."birthDate"
+  A."birthDate",
+  A."updatedAt"
 FROM "SajuEntry" AS A
 JOIN "User" AS B
   ON A."userId" = B.id
 WHERE B.nickname IS NOT NULL
   AND B.nickname <> '이상진'
-order by A."createdAt" DESC;
+order by A."updatedAt" DESC;
 
 '''
 select * from "SajuEntry" where name = '이상진';
@@ -51,3 +52,40 @@ JOIN "User" AS B
 ;
 
 select * from "SajuEntry" t order by "updatedAt" DESC;
+
+
+SELECT
+  c.code,
+  c.ju,
+  c.active,
+  c."maxRedemptions"                         AS max_limit,      -- NULL = 무제한
+  c."redeemedCount"                          AS used_cached,    -- Coupon에 캐시된 사용 수
+  COUNT(r.id)                                AS used_actual,    -- Redemption 실측
+  CASE
+    WHEN c."maxRedemptions" IS NULL THEN NULL
+    ELSE GREATEST(c."maxRedemptions" - COUNT(r.id), 0)
+  END                                        AS remaining,      -- 남은 수량 (무제한이면 NULL)
+  c."expiresAt",
+  c.note,
+  c."createdAt"
+FROM "Coupon" c
+LEFT JOIN "CouponRedemption" r
+  ON r."couponId" = c.id
+GROUP BY
+  c.id, c.code, c.ju, c.active, c."maxRedemptions",
+  c."redeemedCount", c."expiresAt", c.note, c."createdAt"
+ORDER BY c."createdAt" DESC;
+
+-- 특정 코드만
+SELECT
+  c.code,
+  c."maxRedemptions" AS max_limit,
+  COUNT(r.id) AS used,
+  CASE
+    WHEN c."maxRedemptions" IS NULL THEN NULL
+    ELSE GREATEST(c."maxRedemptions" - COUNT(r.id), 0)
+  END AS remaining
+FROM "Coupon" c
+LEFT JOIN "CouponRedemption" r ON r."couponId" = c.id
+WHERE c.code = 'EARLY15'   -- 원하는 코드
+GROUP BY c.id, c.code, c."maxRedemptions";

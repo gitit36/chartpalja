@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-
-function calcAge(birthDate: string): number | null {
-  const y = parseInt(birthDate.slice(0, 4), 10)
-  if (!Number.isFinite(y)) return null
-  return new Date().getFullYear() - y + 1
-}
+import { calcManAge } from '@/lib/saju/man-age'
 
 export async function GET(
   _request: Request,
@@ -36,7 +31,7 @@ export async function GET(
       token,
       status: invite.status,
       inviterName: inviterEntry.name,
-      inviterAge: calcAge(inviterEntry.birthDate),
+      inviterAge: calcManAge(inviterEntry.birthDate),
       inviterGender: inviterEntry.gender,
       expiresAt: invite.expiresAt.toISOString(),
     })

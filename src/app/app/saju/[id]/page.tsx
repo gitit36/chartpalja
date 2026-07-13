@@ -22,6 +22,7 @@ import { HamburgerMenu } from '@/components/HamburgerMenu'
 import { SajuCharacterAvatar, normalizeElement } from '@/components/SajuCharacterAvatar'
 import { BottomSheet } from '@/components/BottomSheet'
 import { LoginPromptSheet } from '@/components/LoginPromptSheet'
+import { calcManAge } from '@/lib/saju/man-age'
 import { AlertSheet } from '@/components/AlertSheet'
 import { Toast } from '@/components/Toast'
 import { getGuestId } from '@/lib/auth/guest'
@@ -81,11 +82,6 @@ function getHeaders(): Record<string, string> {
   const gid = getGuestId()
   if (gid) h['x-guest-id'] = gid
   return h
-}
-
-function calcAge(birthDate: string): number {
-  const y = parseInt(birthDate.slice(0, 4), 10)
-  return new Date().getFullYear() - y
 }
 
 function formatBirthLine(e: SajuEntryData): string {
@@ -640,7 +636,7 @@ function PersonalSajuPageInner() {
                 <span className="font-bold text-cp-text">{displayName}</span>
                 {displayBirth && (
                   <>
-                    <span className="text-sm text-cp-muted">(만 {calcAge(displayBirth)}세)</span>
+                    <span className="text-sm text-cp-muted">(만 {calcManAge(displayBirth) ?? '—'}세)</span>
                     <span className="text-xs text-cp-muted">&middot;</span>
                     <span className="text-sm text-cp-muted">{displayGender === 'female' ? '여성' : '남성'}</span>
                   </>

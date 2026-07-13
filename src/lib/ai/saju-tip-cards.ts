@@ -4,6 +4,7 @@
  */
 import type { SajuReportJson } from '@/types/saju-report'
 import type { ChartPayload, DaewoonBlock } from '@/types/chart'
+import { calcManAgeOrYearDiff } from '@/lib/saju/man-age'
 
 export type TipUseFor =
   | '성향'
@@ -365,8 +366,8 @@ function strengthBucket(verdict: string | undefined): TipMatchContext['strength'
   return ''
 }
 
-function currentDaewoon(report: SajuReportJson, birthYear: number): DaewoonBlock | null {
-  const age = new Date().getFullYear() - birthYear
+function currentDaewoon(report: SajuReportJson, birthYear: number, birthDate?: string | null): DaewoonBlock | null {
+  const age = calcManAgeOrYearDiff(birthDate, birthYear)
   const fromChart = (report.chartData as ChartPayload | undefined)?.대운기둥10
   const blocks = fromChart?.length
     ? fromChart
@@ -384,7 +385,8 @@ export function buildTipMatchContext(
   const month = won?.월주 ?? ''
   const inp = report.입력정보 ?? {}
   const rawBd = (inp as Record<string, unknown>).birth_date
-  const bdSlice = typeof rawBd === 'string' ? rawBd.slice(0, 4) : '1990'
+  const bdStr = typeof rawBd === 'string' ? rawBd : ''
+  const bdSlice = bdStr ? bdStr.slice(0, 4) : '1990'
   const birthYear = opts?.birthYear
     ?? parseInt(String((inp as Record<string, unknown>).year ?? bdSlice), 10)
 
@@ -397,7 +399,7 @@ export function buildTipMatchContext(
     水: Number(ohangRaw['水'] ?? ohangRaw['수'] ?? 0) || 0,
   }
 
-  const dw = currentDaewoon(report, birthYear)
+  const dw = currentDaewoon(report, birthYear, bdStr || null)
   const shinsal = report.신살길성
   const shinsalText = shinsal && typeof shinsal === 'object'
     ? Object.keys(shinsal).join(' ')

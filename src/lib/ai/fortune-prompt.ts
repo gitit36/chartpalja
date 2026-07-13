@@ -4,6 +4,7 @@ import { elementToHangul, pillarToHangul, branchToHangul } from '@/lib/saju/hanj
 import type { ChartDatum, TransitionYear, ThreeYearContext, LifetimeSummary } from '@/lib/saju/life-chart-data'
 import { extractTransitionYears, extract3YearContext, extractLifetimeSummary } from '@/lib/saju/life-chart-data'
 import { formatTipsForPrompt, selectSajuTips } from '@/lib/ai/saju-tip-cards'
+import { calcManAgeOrYearDiff, manAgeInCalendarYear } from '@/lib/saju/man-age'
 
 const TEN_GOD_KR: Record<string, string> = {
   "比肩": "비견", "劫財": "겁재", "食神": "식신", "傷官": "상관",
@@ -446,9 +447,10 @@ function extractCoreData(report: SajuReportJson, opts?: { birthYear?: number }) 
   const daewoon = report.대운?.대운기둥10
   const inp = report.입력정보 ?? {}
   const rawBd = (inp as Record<string, unknown>).birth_date
-  const bdSlice = typeof rawBd === 'string' ? rawBd.slice(0, 4) : '1990'
+  const bdStr = typeof rawBd === 'string' ? rawBd : ''
+  const bdSlice = bdStr ? bdStr.slice(0, 4) : '1990'
   const birthYear = opts?.birthYear ?? parseInt(String((inp as Record<string, unknown>).year ?? bdSlice), 10)
-  const currentAge = new Date().getFullYear() - birthYear
+  const currentAge = calcManAgeOrYearDiff(bdStr || null, birthYear)
   const currentDW = daewoon?.find(b =>
     (b.start_age_years ?? 0) <= currentAge && currentAge <= (b.end_age_years ?? 0)
   )
@@ -893,7 +895,7 @@ export function buildYearSummaryPrompt(
   opts?: { birthYear?: number; job?: string | null }
 ): string {
   const d = extractCoreData(report, opts)
-  const age = yearData.year - d.birthYear
+  const age = manAgeInCalendarYear(yearData.year, d.birthYear)
 
   const domainStr = [
     yearData.domainJob != null ? `직업 ${yearData.domainJob}` : '',
@@ -1177,11 +1179,11 @@ export function buildRangeSummaryPrompt(
   const d = extractCoreData(report, opts)
   const startYear = yearDataArr[0]!.year
   const endYear = yearDataArr[yearDataArr.length - 1]!.year
-  const startAge = startYear - d.birthYear
-  const endAge = endYear - d.birthYear
+  const startAge = manAgeInCalendarYear(startYear, d.birthYear)
+  const endAge = manAgeInCalendarYear(endYear, d.birthYear)
 
   const yearLines = yearDataArr.map(yd => {
-    const age = yd.year - d.birthYear
+    const age = manAgeInCalendarYear(yd.year, d.birthYear)
     const domParts = [
       yd.domainJob != null ? `직업${yd.domainJob}` : '',
       yd.domainWealth != null ? `재물${yd.domainWealth}` : '',
