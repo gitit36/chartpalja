@@ -23,7 +23,7 @@ const COLORS = {
  * (overshoot) svg 위/아래로 잘리는 일이 없도록 보장한다.
  * seg 는 시작 M 을 뺀 곡선 명령들 — area path 재사용을 위해 별도로 반환한다.
  */
-function buildSmoothPath(pts: { x: number; y: number }[]): { line: string; seg: string } {
+export function buildSmoothPath(pts: { x: number; y: number }[]): { line: string; seg: string } {
   const n = pts.length
   if (n < 2) return { line: '', seg: '' }
   const f = (v: number) => v.toFixed(1)

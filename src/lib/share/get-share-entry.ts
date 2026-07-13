@@ -7,6 +7,7 @@
  */
 import { prisma } from '@/lib/db/prisma'
 import type { SajuReportJson } from '@/types/saju-report'
+import { hydrateWeekSeries, type WeekSeriesPayload } from '@/lib/saju/hydrate-week-series'
 
 export interface PublicShareEntry {
   id: string
@@ -17,6 +18,8 @@ export interface PublicShareEntry {
   dayElement: string | null
   sajuReportJson: SajuReportJson | null
   fortuneJson: unknown | null
+  /** 이번 주 일운 — 공유 페이지 ChartTab용 (생시 등 민감정보는 포함하지 않음) */
+  weekSeries: WeekSeriesPayload | null
 }
 
 /** 공유 페이지에서 "비교" 대상으로 노출할 공개 예시 인물(차트팔자에 저장된 공인). */
@@ -60,6 +63,13 @@ export async function getPublicShareEntry(id: string): Promise<PublicShareEntry 
   if (!entry || !entry.isShared) return null
 
   const birthYear = parseInt(String(entry.birthDate).slice(0, 4), 10)
+  let weekSeries: WeekSeriesPayload | null = null
+  try {
+    weekSeries = await hydrateWeekSeries(entry)
+  } catch (e) {
+    console.error('getPublicShareEntry weekSeries hydrate failed:', e)
+  }
+
   return {
     id: entry.id,
     name: entry.name,
@@ -68,5 +78,6 @@ export async function getPublicShareEntry(id: string): Promise<PublicShareEntry 
     dayElement: entry.dayElement ?? null,
     sajuReportJson: (entry.sajuReportJson as SajuReportJson | null) ?? null,
     fortuneJson: entry.fortuneJson ?? null,
+    weekSeries,
   }
 }

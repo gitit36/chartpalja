@@ -14,6 +14,7 @@ export type GeminiUsageFeature =
   | 'period_month_range'
   | 'period_week'
   | 'period_week_range'
+  | 'period_compat'
   | 'fortune'
   | 'compat'
   | 'measure'

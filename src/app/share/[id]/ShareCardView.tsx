@@ -93,6 +93,7 @@ export function ShareCardView({
                 entryId={entry.id}
                 currentName={entry.name}
                 currentGender={entry.gender}
+                weekSeries={entry.weekSeries}
                 shareMode
                 hideCompareUi
                 onOverlayChange={setActiveOverlay}

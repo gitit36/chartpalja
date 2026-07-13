@@ -87,6 +87,7 @@ export function ShareCompatView({
               currentName={entry.name}
               currentGender={entry.gender}
               overlayEntries={partnerSamples}
+              weekSeries={entry.weekSeries}
               shareMode
               hideCompareUi
               compatShareOnly
@@ -99,6 +100,7 @@ export function ShareCompatView({
                 gender: partner.gender,
                 birthYear: partner.birthYear,
                 report: partner.sajuReportJson,
+                weekSeries: partner.weekSeries,
               }}
             />
           )}

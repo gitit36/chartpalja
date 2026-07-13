@@ -4,6 +4,7 @@ import { parseRelationshipParam } from '@/lib/compat/access'
 import type { CompatShareSnapshot, RelationshipType } from '@/lib/compat/types'
 import type { PublicShareEntry } from './get-share-entry'
 import { getPublicShareEntry } from './get-share-entry'
+import { hydrateWeekSeries } from '@/lib/saju/hydrate-week-series'
 
 export interface CompatShareContext {
   entry: PublicShareEntry
@@ -34,6 +35,12 @@ export async function getCompatShareContext(
   if (!partnerRow?.sajuReportJson) return null
 
   const partnerBirthYear = parseInt(String(partnerRow.birthDate).slice(0, 4), 10)
+  let partnerWeekSeries: PublicShareEntry['weekSeries'] = null
+  try {
+    partnerWeekSeries = await hydrateWeekSeries(partnerRow)
+  } catch (e) {
+    console.error('getCompatShareContext partner weekSeries hydrate failed:', e)
+  }
 
   const partner: PublicShareEntry = {
     id: partnerRow.id,
@@ -43,6 +50,7 @@ export async function getCompatShareContext(
     dayElement: partnerRow.dayElement ?? null,
     sajuReportJson: partnerRow.sajuReportJson as PublicShareEntry['sajuReportJson'],
     fortuneJson: null,
+    weekSeries: partnerWeekSeries,
   }
 
   return { entry, partner, relationship, snapshot }

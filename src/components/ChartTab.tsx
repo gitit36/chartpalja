@@ -4,7 +4,7 @@ import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import {
   ResponsiveContainer, ComposedChart, LineChart, BarChart, AreaChart,
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
-  Line, Bar, Area, XAxis, YAxis, Tooltip,
+  Line, Bar, Area, XAxis, YAxis, Tooltip, LabelList,
   ReferenceArea, ReferenceLine, Cell, Customized,
 } from 'recharts'
 import type { SajuReportJson } from '@/types/saju-report'
@@ -79,6 +79,14 @@ const DOMAIN_OVERLAYS = [
   { key: 'marriage', label: '결혼운', color: '#9c27b0', field: 'domainMarriage' },
 ] as const
 
+/** 궁합(비교) 시 인물 색 — 기본 세운 비교와 동일 */
+const COMPAT_ME_COLOR = '#F04452'
+const COMPAT_PARTNER_COLOR = '#3182F6'
+/** 궁합 모드에서 비활성 보조지표 */
+const COMPAT_DISABLED_AUX = new Set(['energy', 'noble'] as const)
+/** 궁합 모드에서 비활성 메인 오버레이 (두 사람 선으로 대응 불가) */
+const COMPAT_DISABLED_MAIN = new Set(['candle', 'season'] as const)
+
 type PeriodKey = 'week' | 'year' | 'all'
 type MainOverlayKey = (typeof MAIN_OVERLAYS)[number]['key']
 type AuxKey = (typeof AUX_PANELS)[number]['key']
@@ -89,6 +97,28 @@ function domainValue(d: Record<string, unknown>, field: string): number | null {
   const v = d?.[field]
   if (typeof v !== 'number') return null
   return Math.max(0, Math.min(100, Math.round(v * DOMAIN_SCORE_SCALE)))
+}
+
+function domainOvField(field: string): string {
+  return `${field}Ov`
+}
+
+function pickOverlayFields(ov: ChartDatum) {
+  return {
+    scoreOv: ov.score,
+    trendOv: ov.trend,
+    daewoonPillarOv: ov.daewoonPillar,
+    yongshinPowerOv: ov.yongshinPower,
+    energyTotalOv: ov.energyTotal,
+    energyDirectionOv: ov.energyDirection,
+    noblePowerOv: ov.noblePower,
+    ohangBalanceOv: ov.ohangBalance,
+    domainJobOv: ov.domainJob,
+    domainWealthOv: ov.domainWealth,
+    domainHealthOv: ov.domainHealth,
+    domainLoveOv: ov.domainLove,
+    domainMarriageOv: ov.domainMarriage,
+  }
 }
 
 const BD_LABEL_POS: Record<string, string> = {
@@ -242,7 +272,7 @@ function ThisYearMarker(props: any) {
     const sx = xAxis.scale(startYear)
     if (typeof sx === 'number' && !isNaN(sx)) {
       elements.push(
-        <line key="sel-s-line" x1={sx} y1={yTop} x2={sx} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
+        <line key="sel-s-line" x1={sx} y1={yTop} x2={sx} y2={yBottom} stroke="#F04452" strokeWidth={1.5} strokeOpacity={0.85}/>,
       )
       labels.push({
         key: 'sel-s',
@@ -259,7 +289,7 @@ function ThisYearMarker(props: any) {
       const ex = xAxis.scale(endYear)
       if (typeof ex === 'number' && !isNaN(ex)) {
         elements.push(
-          <line key="sel-e-line" x1={ex} y1={yTop} x2={ex} y2={yBottom} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.6}/>,
+          <line key="sel-e-line" x1={ex} y1={yTop} x2={ex} y2={yBottom} stroke="#F04452" strokeWidth={1.5} strokeOpacity={0.85}/>,
         )
         labels.push({
           key: 'sel-e',
@@ -270,6 +300,25 @@ function ThisYearMarker(props: any) {
           fill: '#F04452',
           bold: true,
           // 시작 연도와 같은 높이로 맞춤
+          preferTop: true,
+        })
+      }
+    } else if (markerYear != null && markerYear !== startYear) {
+      // 시작만 고른 뒤 끝 지점 고르는 중 — hover 연도 실선+라벨
+      // (Recharts cursor 는 라벨이 없어서, 여기서 반드시 연도 텍스트를 그림)
+      const hx = xAxis.scale(markerYear)
+      if (typeof hx === 'number' && !isNaN(hx)) {
+        elements.push(
+          <line key="sel-preview-line" x1={hx} y1={yTop} x2={hx} y2={yBottom} stroke="#F04452" strokeWidth={1.5} strokeOpacity={0.9}/>,
+        )
+        labels.push({
+          key: 'sel-preview',
+          x: hx,
+          text: isWeekly
+            ? (typeof weekLabelAt === 'function' ? weekLabelAt(markerYear) : String(markerYear))
+            : isMonthly ? `${markerYear}월` : String(markerYear),
+          fill: '#F04452',
+          bold: true,
           preferTop: true,
         })
       }
@@ -458,7 +507,7 @@ function CompatYearBar(props: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels, hideDetail }: any) {
+function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels, hideDetail, baseLineVisible }: any) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload as (MergedDatum & { dayLabel?: string }) | undefined
   if (!d) return null
@@ -468,12 +517,21 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
   const dom = domainOverlays as Record<DomainOverlayKey, boolean> | undefined
   const activeDomains = dom
     ? DOMAIN_OVERLAYS.filter(o => dom[o.key])
-        .map(o => ({ label: o.label, color: o.color, val: domainValue(d as unknown as Record<string, unknown>, o.field) }))
-        .filter(x => x.val != null)
+        .map(o => ({
+          label: o.label,
+          color: o.color,
+          val: domainValue(d as unknown as Record<string, unknown>, o.field),
+          valOv: domainValue(d as unknown as Record<string, unknown>, domainOvField(o.field)),
+        }))
+        .filter(x => x.val != null || x.valOv != null)
     : []
 
-  if (overlayActive && d.scoreOv != null) {
+  if (overlayActive) {
     const level = yearLevels?.get?.(d.year) as YearCompatLevel | undefined
+    const meLabel = currentName || '나'
+    const partnerLabel = overlayName || '상대'
+    const showBase = baseLineVisible !== false && (activeDomains.length === 0) && !ov?.daewoon
+    const showDaewoon = !!ov?.daewoon
     return (
       <div className="bg-cp-surface border border-cp-border rounded-lg text-[10px] leading-tight overflow-hidden min-w-[150px]">
         <div className="font-bold text-cp-text px-2.5 py-1 flex items-center gap-1.5">
@@ -485,16 +543,35 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
             </>
           )}
         </div>
-        <div className="px-2.5 py-1 border-t border-cp-border flex items-center justify-between gap-3">
-          <span className="font-semibold text-cp-line">{currentName || '나'} {Math.round(d.score)}</span>
-          <span className="font-semibold text-cp-down">{overlayName || '상대'} {Math.round(d.scoreOv)}</span>
-        </div>
-        {ov?.daewoon && (d.trend != null || d.trendOv != null) && (
-          <div className="px-2.5 py-1 border-t border-cp-border flex items-center justify-between gap-3 text-[9px] text-cp-muted">
-            <span>{d.trend != null ? `대운 ${Math.round(d.trend)}` : ''}</span>
-            <span>{d.trendOv != null ? `대운 ${Math.round(d.trendOv)}` : ''}</span>
+        {showBase && d.scoreOv != null && (
+          <div className="px-2.5 py-1 border-t border-cp-border flex items-center justify-between gap-3">
+            <span className="font-semibold" style={{ color: COMPAT_ME_COLOR }}>{meLabel} {Math.round(d.score)}</span>
+            <span className="font-semibold" style={{ color: COMPAT_PARTNER_COLOR }}>{partnerLabel} {Math.round(d.scoreOv)}</span>
           </div>
         )}
+        {showDaewoon && (d.trend != null || d.trendOv != null) && (
+          <div className="px-2.5 py-1 border-t border-cp-border flex items-center justify-between gap-3">
+            <span className="font-semibold" style={{ color: COMPAT_ME_COLOR }}>
+              {d.trend != null ? `${meLabel} ${Math.round(d.trend)}` : meLabel}
+            </span>
+            <span className="font-semibold" style={{ color: COMPAT_PARTNER_COLOR }}>
+              {d.trendOv != null ? `${partnerLabel} ${Math.round(d.trendOv)}` : partnerLabel}
+            </span>
+          </div>
+        )}
+        {activeDomains.map(x => (
+          <div key={x.label} className="px-2.5 py-1 border-t border-cp-border">
+            <div className="text-[9px] text-cp-muted mb-0.5">{x.label}</div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-semibold" style={{ color: COMPAT_ME_COLOR }}>
+                {meLabel} {x.val != null ? Math.round(x.val) : '—'}
+              </span>
+              <span className="font-semibold" style={{ color: COMPAT_PARTNER_COLOR }}>
+                {partnerLabel} {x.valOv != null ? Math.round(x.valOv) : '—'}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
     )
   }
@@ -539,19 +616,58 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function SubTooltip({ active, payload, decimals = 2, monthly = false }: any) {
+function SubTooltip({
+  active,
+  payload,
+  decimals = 2,
+  monthly = false,
+  meLabel,
+  partnerLabel,
+}: any) {
   if (!active || !payload?.length) return null
   const entry = payload[0]
   if (!entry) return null
   const dec = typeof decimals === 'number' ? decimals : 2
-  const val = typeof entry.value === 'number' ? (dec === 0 ? Math.round(entry.value) : entry.value.toFixed(dec)) : entry.value
+  const fmt = (v: unknown): string | number => {
+    if (typeof v !== 'number') return String(v ?? '')
+    return dec === 0 ? Math.round(v) : v.toFixed(dec)
+  }
   const label = entry.payload?.dayLabel
     ? String(entry.payload.dayLabel).replace('요일', '')
     : `${entry.payload?.year ?? ''}${monthly ? '월' : ''}`
+
+  const rows = (payload as Array<{ dataKey?: string; name?: string; value?: unknown; color?: string; stroke?: string }>)
+    .filter(p => p.value != null && typeof p.value === 'number')
+    .map(p => {
+      const key = String(p.dataKey ?? '')
+      const isOv = key.endsWith('Ov')
+      return {
+        name: p.name || (isOv ? (partnerLabel || '상대') : (meLabel || '나')),
+        color: isOv ? COMPAT_PARTNER_COLOR : (p.color || p.stroke || COMPAT_ME_COLOR),
+        val: fmt(p.value),
+      }
+    })
+
+  if (rows.length > 1) {
+    return (
+      <div className="bg-cp-surface/95 backdrop-blur border border-cp-border rounded-lg px-2.5 py-1.5 shadow-sm text-[10px] min-w-[120px]">
+        <div className="font-bold text-cp-text mb-0.5">{label}</div>
+        <div className="space-y-0.5">
+          {rows.map(r => (
+            <div key={r.name} className="flex items-center justify-between gap-3">
+              <span className="font-medium" style={{ color: r.color }}>{r.name}</span>
+              <span className="font-semibold tabular-nums text-cp-text">{r.val}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-cp-surface/95 backdrop-blur border border-cp-border rounded-lg px-2 py-1 shadow-sm text-[10px]">
       <span className="text-cp-muted">{label}: </span>
-      <span className="font-semibold text-cp-text tabular-nums">{val}</span>
+      <span className="font-semibold text-cp-text tabular-nums">{rows[0]?.val ?? fmt(entry.value)}</span>
     </div>
   )
 }
@@ -569,6 +685,8 @@ type MergedDatum = ChartDatum & {
   scoreOv?: number; trendOv?: number; daewoonPillarOv?: string
   yongshinPowerOv?: number; energyTotalOv?: number; energyDirectionOv?: number
   noblePowerOv?: number; ohangBalanceOv?: number
+  domainJobOv?: number; domainWealthOv?: number; domainHealthOv?: number
+  domainLoveOv?: number; domainMarriageOv?: number
   compatFlow?: number
 }
 
@@ -633,6 +751,7 @@ interface ChartTabProps {
     gender: string
     birthYear: number
     report: SajuReportJson
+    weekSeries?: { dates: string[]; scores: (number | null)[] } | null
   }
 }
 
@@ -686,6 +805,8 @@ export function ChartTab({
   const pendingAuxScroll = React.useRef(false)
   const lastHapticYear = React.useRef<number | null>(null)
   const hasAnimated = React.useRef(false)
+  /** 보조지표 L→R 애니메이션 — 세션당 최초 1회만 */
+  const hasAuxAnimated = React.useRef(false)
   const [lineAnimDone, setLineAnimDone] = useState(false)
   const [extremesOpaque, setExtremesOpaque] = useState(false)
   const isTouchRef = React.useRef(false)
@@ -816,7 +937,7 @@ export function ChartTab({
       setOverlayName(sharePartner.name)
       setOverlayGender(sharePartner.gender)
       overlayFetchedRef.current = overlayEntryId
-      setWeekDataOv([])
+      setWeekDataOv(buildWeekChartFromHydrated(sharePartner.weekSeries))
       return
     }
     if (overlayEntryId === overlayFetchedRef.current) return
@@ -1058,7 +1179,7 @@ export function ChartTab({
       const ovMap = new Map(weekDataOv.map(d => [d.year, d]))
       return filteredData.map(d => {
         const ov = ovMap.get(d.year)
-        return ov ? { ...d, scoreOv: ov.score } : d
+        return ov ? { ...d, ...pickOverlayFields(ov) } : d
       })
     }
     const ovSrc = isMonthly ? overlayChartData!.monthlyData : overlayChartData!.data
@@ -1066,11 +1187,7 @@ export function ChartTab({
     const ovMap = new Map(ovSrc.map(d => [d.year, d]))
     return filteredData.map(d => {
       const ov = ovMap.get(d.year)
-      const base = ov
-        ? { ...d, scoreOv: ov.score, trendOv: ov.trend, daewoonPillarOv: ov.daewoonPillar,
-          yongshinPowerOv: ov.yongshinPower, energyTotalOv: ov.energyTotal,
-          energyDirectionOv: ov.energyDirection, noblePowerOv: ov.noblePower, ohangBalanceOv: ov.ohangBalance }
-        : d
+      const base = ov ? { ...d, ...pickOverlayFields(ov) } : d
       return { ...base, compatFlow: relMap.get(d.year) }
     })
   }, [filteredData, overlayActive, overlayChartData, isMonthly, isWeekly, weekDataOv, relationshipSeries])
@@ -1091,8 +1208,12 @@ export function ChartTab({
       for (const o of DOMAIN_OVERLAYS) {
         if (!domainOverlays[o.key]) continue
         bump(domainValue(d as unknown as Record<string, unknown>, o.field))
+        if (overlayActive) bump(domainValue(d as unknown as Record<string, unknown>, domainOvField(o.field)))
       }
-      if (mainOverlays.daewoon) bump(d.trend)
+      if (mainOverlays.daewoon) {
+        bump(d.trend)
+        if (overlayActive) bump(d.trendOv)
+      }
     }
     if (!isFinite(lo)) return [0, 110]
     const pad = Math.max(5, (hi - lo) * 0.15)
@@ -1162,15 +1283,19 @@ export function ChartTab({
     if (shareMode) { onShareCta?.(); return }
     if (!entryId) return
 
-    // 서버가 overlay를 쓰지 않으므로 클라 캐시도 본인 차트 기준만 유지
+    const overlayId = overlayActive ? overlayEntryId : null
+    if (overlayActive && !overlayId) return
+
     const prefix = weekly ? 'w_' : monthly ? 'm_' : ''
-    const cacheKey = startYear === endYear ? `${prefix}${startYear}` : `${prefix}${startYear}_${endYear}`
+    const ovPrefix = overlayId ? `c_${overlayId}_` : ''
+    const cacheKey = startYear === endYear
+      ? `${ovPrefix}${prefix}${startYear}`
+      : `${ovPrefix}${prefix}${startYear}_${endYear}`
     const cached = summaryCache.get(cacheKey)
     if (cached) { setYearSummary({ startYear, endYear, ...cached }); return }
 
     const run = async () => {
       const bal = await fetchBalance()
-      // 잔액 부족이어도 서버 캐시 hit 가능 → API는 호출. Gemini는 서버에서 잔액 검사 후 스킵.
       if (bal && bal.ju < READING_COST.period) {
         setJuShortage({ needed: READING_COST.period, current: bal.ju })
       }
@@ -1179,8 +1304,22 @@ export function ChartTab({
       const gid = getGuestId()
       const headers: Record<string, string> = {}
       if (gid) headers['x-guest-id'] = gid
+
       let url: string
-      if (weekly) {
+      if (overlayId) {
+        const qs = new URLSearchParams({ overlayId })
+        if (weekly) {
+          qs.set('weekStart', String(startYear))
+          if (endYear !== startYear) qs.set('weekEnd', String(endYear))
+        } else if (monthly) {
+          qs.set('month', String(startYear))
+          if (endYear !== startYear) qs.set('monthEnd', String(endYear))
+        } else {
+          qs.set('year', String(startYear))
+          if (endYear !== startYear) qs.set('yearEnd', String(endYear))
+        }
+        url = `/api/saju/${entryId}/fortune/compat?${qs.toString()}`
+      } else if (weekly) {
         url = startYear === endYear
           ? `/api/saju/${entryId}/fortune/year?weekStart=${startYear}`
           : `/api/saju/${entryId}/fortune/year?weekStart=${startYear}&weekEnd=${endYear}`
@@ -1194,13 +1333,15 @@ export function ChartTab({
           : `/api/saju/${entryId}/fortune/year?year=${startYear}&yearEnd=${endYear}`
       }
 
-      // 잔액 부족 + 캐시 미스가 확실하면 Gemini 경로를 아예 안 탈 수 있게 early stop
-      // → 서버 캐시 가능성을 위해 API는 유지하되, 잔액 0이면 로딩을 짧게만 유지
       try {
         const r = await fetch(url, { headers })
         const d = await r.json().catch(() => null)
         if (r.status === 401) {
-          setYearSummary({ startYear, endYear, text: '구간 해설을 보려면 로그인이 필요해요.' })
+          setYearSummary({
+            startYear,
+            endYear,
+            text: overlayId ? '궁합 해설을 보려면 로그인이 필요해요.' : '구간 해설을 보려면 로그인이 필요해요.',
+          })
           return
         }
         if (r.status === 402) {
@@ -1239,7 +1380,7 @@ export function ChartTab({
       }
     }
     void run()
-  }, [entryId, summaryCache, shareMode, onShareCta])
+  }, [entryId, summaryCache, shareMode, onShareCta, overlayActive, overlayEntryId])
 
   const dragStartYear = React.useRef<number | null>(null)
   const didDrag = React.useRef(false)
@@ -1299,15 +1440,55 @@ export function ChartTab({
     }
   }, [mergedData, rangeMode, shareMode])
 
-  const toggleMain = (k: MainOverlayKey) => setMainOverlays(p => ({ ...p, [k]: !p[k] }))
+  const toggleMain = (k: MainOverlayKey) => {
+    if (overlayActive) {
+      if (COMPAT_DISABLED_MAIN.has(k as 'candle' | 'season')) return
+      if (k === 'daewoon') {
+        // 궁합: 대운만 (이미 켜져 있으면 유지)
+        setBaseLineVisible(false)
+        setMainOverlays({ daewoon: true, candle: false, season: false })
+        setDomainOverlays({ job: false, wealth: false, love: false, health: false, marriage: false })
+      }
+      return
+    }
+    setMainOverlays(p => ({ ...p, [k]: !p[k] }))
+  }
   const toggleAux = (k: AuxKey) => {
+    if (overlayActive && COMPAT_DISABLED_AUX.has(k as 'energy' | 'noble')) return
     setAuxPanels(p => {
       const next = !p[k]
       if (next) pendingAuxScroll.current = true
       return { ...p, [k]: next }
     })
   }
-  const toggleDomain = (k: DomainOverlayKey) => setDomainOverlays(p => ({ ...p, [k]: !p[k] }))
+  const toggleDomain = (k: DomainOverlayKey) => {
+    if (overlayActive) {
+      setBaseLineVisible(false)
+      setMainOverlays({ daewoon: false, candle: false, season: false })
+      setDomainOverlays({
+        job: k === 'job',
+        wealth: k === 'wealth',
+        love: k === 'love',
+        health: k === 'health',
+        marriage: k === 'marriage',
+      })
+      return
+    }
+    setDomainOverlays(p => ({ ...p, [k]: !p[k] }))
+  }
+
+  const selectCompatBase = useCallback(() => {
+    setBaseLineVisible(true)
+    setMainOverlays({ daewoon: false, candle: false, season: false })
+    setDomainOverlays({ job: false, wealth: false, love: false, health: false, marriage: false })
+  }, [])
+
+  // 궁합 진입 시: 기본 세운만 + 비활성 보조지표 끄기
+  useEffect(() => {
+    if (!overlayActive) return
+    selectCompatBase()
+    setAuxPanels(p => ({ ...p, energy: false, noble: false }))
+  }, [overlayActive, selectCompatBase])
 
   const anyDomainOn = Object.values(domainOverlays).some(Boolean)
   const canHideBase = anyDomainOn || mainOverlays.daewoon || mainOverlays.candle || overlayActive
@@ -1353,12 +1534,29 @@ export function ChartTab({
     setBaseLineVisible(false)
   }
 
+  const anyAux = (Object.keys(auxPanels) as AuxKey[]).some(k => {
+    if (overlayActive && (k === 'energy' || k === 'noble')) return false
+    return auxPanels[k]
+  })
+
+  // 보조지표가 처음 켜질 때 애니메이션 1회 후 고정
+  useEffect(() => {
+    if (!anyAux || hasAuxAnimated.current) return
+    const t = window.setTimeout(() => { hasAuxAnimated.current = true }, 1600)
+    return () => window.clearTimeout(t)
+  }, [anyAux])
+
   if (!fullChartData) {
     return <div className="py-12 text-center text-cp-muted text-sm">차트 데이터가 없습니다.</div>
   }
 
-  const anyAux = Object.values(auxPanels).some(Boolean)
   const otherEntries = overlayEntries?.filter(e => e.id !== entryId) ?? []
+  const auxAnimActive = anyAux && !hasAuxAnimated.current
+  const subTooltipProps = {
+    monthly: isMonthly || isWeekly,
+    meLabel: currentName || '나',
+    partnerLabel: overlayName || '상대',
+  }
 
   const formatPeriodLabel = (start: number, end: number) => {
     if (isWeekly) {
@@ -1408,23 +1606,28 @@ export function ChartTab({
               <span className="w-4 h-0.5 bg-cp-line rounded inline-block" /> {isWeekly ? '일운' : isMonthly ? '월운' : '세운'}
             </span>
           )}
-          {mainOverlays.daewoon && (
+          {mainOverlays.daewoon && !overlayActive && (
             <span className="flex items-center gap-1 text-[10px] font-semibold text-amber-600">
               <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: '#ffd700' }} /> 대운
             </span>
           )}
-          {overlayActive && (<>
-            {baseLineVisible && (
-              <span className="flex items-center gap-1 text-[10px] text-cp-muted">
-                <span className="w-4 h-0.5 bg-cp-line rounded inline-block" /> {currentName || '나'}
-              </span>
-            )}
-            <span className="flex items-center gap-1 text-[10px] text-cp-muted">
-              <span className="w-4 h-0.5 bg-cp-down rounded inline-block" /> {overlayName}
-            </span>
-          </>)}
           {overlayActive && (
             <>
+              <span className="flex items-center gap-1 text-[10px] text-cp-muted">
+                <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: COMPAT_ME_COLOR }} /> {currentName || '나'}
+              </span>
+              <span className="flex items-center gap-1 text-[10px] text-cp-muted">
+                <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: COMPAT_PARTNER_COLOR }} /> {overlayName}
+              </span>
+              {mainOverlays.daewoon && (
+                <span className="text-[10px] text-cp-muted">대운</span>
+              )}
+              {DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
+                <span key={o.key} className="text-[10px] text-cp-muted">{o.label}</span>
+              ))}
+              {baseLineVisible && !mainOverlays.daewoon && !anyDomainOn && (
+                <span className="text-[10px] text-cp-muted">{isWeekly ? '일운' : isMonthly ? '월운' : '세운'}</span>
+              )}
               <span className="flex items-center gap-1 text-[10px] text-cp-muted">
                 <span className="w-3 h-2 rounded-sm inline-block" style={{ backgroundColor: YEAR_LEVEL_COLORS.good }} /> 좋음
               </span>
@@ -1436,7 +1639,7 @@ export function ChartTab({
               </span>
             </>
           )}
-          {DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
+          {!overlayActive && DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
             <span key={o.key} className="flex items-center gap-1 text-[10px] text-cp-muted">
               <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: o.color }} /> {o.label}
             </span>
@@ -1526,14 +1729,27 @@ export function ChartTab({
                     }
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels} hideDetail={isLocked}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
-              {rangeMode && <Tooltip content={() => null} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels} hideDetail={isLocked} baseLineVisible={baseLineVisible}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
+              {/* 구간 모드: 시작만 고른 뒤에는 ThisYearMarker 가 실선+연도 라벨을 그리므로 cursor 는 끈다 */}
+              {rangeMode && (
+                <Tooltip
+                  content={() => null}
+                  cursor={
+                    hoverYear != null
+                    && !(selection && selection.startYear === selection.endYear)
+                      ? { stroke: '#F04452', strokeWidth: 1.5, strokeOpacity: 0.55 }
+                      : false
+                  }
+                />
+              )}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#2E2F36" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#8B8B93', offset: 4 }}/>}
-              {mainOverlays.season && hasEngineData && !isWeekly && seasonBands.map((b: SeasonBand, i: number) => (
+              {mainOverlays.season && hasEngineData && !isWeekly && !overlayActive && seasonBands.map((b: SeasonBand, i: number) => (
                 <ReferenceArea key={i} x1={b.startYear} x2={b.endYear} fill={SEASON_COLORS[b.tag] ?? 'rgba(0,0,0,0.03)'} fillOpacity={1}/>
               ))}
               {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#A78BFA" fillOpacity={0.16} stroke="#A78BFA" strokeOpacity={0.45} strokeWidth={1}/>}
-              {mainOverlays.daewoon && !isWeekly && <Line type="stepAfter" dataKey="trend" stroke="#ffd700" strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>}
+              {mainOverlays.daewoon && !isWeekly && (
+                <Line type="stepAfter" dataKey="trend" stroke={overlayActive ? COMPAT_ME_COLOR : '#ffd700'} strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>
+              )}
               {baseLineVisible && (
                 <Area
                   type="monotone"
@@ -1548,19 +1764,27 @@ export function ChartTab({
                 />
               )}
               {baseLineVisible && (
-                <Line type="monotone" dataKey="score" stroke="#F04452" strokeWidth={2} dot={false} name={isWeekly ? '일운' : isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
+                <Line type="monotone" dataKey="score" stroke={COMPAT_ME_COLOR} strokeWidth={2} dot={false} name={isWeekly ? '일운' : isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
               )}
               {DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
                 <Line key={o.key} type="monotone"
                   dataKey={(d: Record<string, unknown>) => domainValue(d, o.field)}
-                  stroke={o.color} strokeWidth={1.5} dot={false} name={o.label}
-                  strokeDasharray={baseLineVisible ? '3 2' : undefined} isAnimationActive={false} connectNulls={false}/>
+                  stroke={overlayActive ? COMPAT_ME_COLOR : o.color} strokeWidth={overlayActive ? 2 : 1.5} dot={false} name={o.label}
+                  strokeDasharray={overlayActive || !baseLineVisible ? undefined : '3 2'} isAnimationActive={false} connectNulls={false}/>
               ) : null)}
-              {overlayActive && mainOverlays.daewoon && !isWeekly && <Line type="stepAfter" dataKey="trendOv" stroke="#4B8FF7" strokeWidth={2} dot={false} name="대운(비교)" strokeDasharray="6 3" isAnimationActive={false} connectNulls={false}/>}
-              {overlayActive && baseLineVisible && (
-                <Line type="monotone" dataKey="scoreOv" stroke="#3182F6" strokeWidth={1.5} dot={false} name={isWeekly ? '일운(비교)' : isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>
+              {overlayActive && DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
+                <Line key={`${o.key}-ov`} type="monotone"
+                  dataKey={(d: Record<string, unknown>) => domainValue(d, domainOvField(o.field))}
+                  stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} name={`${o.label}(비교)`}
+                  isAnimationActive={false} connectNulls={false}/>
+              ) : null)}
+              {overlayActive && mainOverlays.daewoon && !isWeekly && (
+                <Line type="stepAfter" dataKey="trendOv" stroke={COMPAT_PARTNER_COLOR} strokeWidth={2} dot={false} name="대운(비교)" isAnimationActive={false} connectNulls={false}/>
               )}
-              {mainOverlays.candle && !isWeekly && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
+              {overlayActive && baseLineVisible && (
+                <Line type="monotone" dataKey="scoreOv" stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} name={isWeekly ? '일운(비교)' : isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>
+              )}
+              {mainOverlays.candle && !isWeekly && !overlayActive && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
               {overlayActive && !isWeekly && (
                 <Customized component={(p: any) => (
                   <CompatYearBar {...p} yearLevels={isMonthly ? monthLevels : yearLevels} isMonthly={isMonthly} />
@@ -1675,6 +1899,16 @@ export function ChartTab({
                 const yds = mergedData.filter(d => d.year >= selection.startYear && d.year <= selection.endYear)
                 if (!yds.length) return null
                 const avg = Math.round(yds.reduce((a, b) => a + b.score, 0) / yds.length)
+                if (overlayActive) {
+                  const ovVals = yds.map(d => d.scoreOv).filter((v): v is number => typeof v === 'number')
+                  const avgOv = ovVals.length ? Math.round(ovVals.reduce((a, b) => a + b, 0) / ovVals.length) : null
+                  return (
+                    <span className="text-[11px] text-cp-muted truncate min-w-0">
+                      {currentName || '나'} {avg}점
+                      {avgOv != null ? ` · ${overlayName} ${avgOv}점` : ''}
+                    </span>
+                  )
+                }
                 return <span className="text-[11px] text-cp-muted truncate min-w-0">평균 {avg}점</span>
               })()}
               <button
@@ -1686,11 +1920,12 @@ export function ChartTab({
             </div>
             <button
               onClick={() => {
-                if (blockIfLocked('구간 해설')) return
+                if (blockIfLocked(overlayActive ? '궁합 해설' : '구간 해설')) return
                 fetchSummary(selection.startYear, selection.endYear, isMonthly, isWeekly)
               }}
               className="w-full py-2.5 rounded-xl text-[13px] sm:text-sm font-semibold bg-cp-violetMuted text-cp-violet border border-cp-violetBorder hover:brightness-110 transition-colors truncate">
-              {formatPeriodLabel(selection.startYear, selection.endYear)} 해설 보기
+              {formatPeriodLabel(selection.startYear, selection.endYear)}
+              {overlayActive ? ' 궁합 해설 보기' : ' 해설 보기'}
             </button>
           </div>
         </div>
@@ -1708,11 +1943,20 @@ export function ChartTab({
                 if (!yd) return null
                 return (
                   <div className="flex items-center gap-1.5 min-w-0">
-                    <span className="text-[11px] text-cp-muted">{Math.round(yd.score)}점</span>
-                    {!isWeekly && yd.seasonTag && (
+                    {overlayActive ? (
+                      <span className="text-[11px] text-cp-muted truncate">
+                        {currentName || '나'} {Math.round(yd.score)}점
+                        {yd.scoreOv != null ? ` · ${overlayName} ${Math.round(yd.scoreOv)}점` : ''}
+                      </span>
+                    ) : (
                       <>
-                        <span className="w-1 h-1 rounded-full bg-cp-border flex-shrink-0" />
-                        <span className="text-[11px] text-cp-muted truncate">{yd.seasonTag}</span>
+                        <span className="text-[11px] text-cp-muted">{Math.round(yd.score)}점</span>
+                        {!isWeekly && yd.seasonTag && (
+                          <>
+                            <span className="w-1 h-1 rounded-full bg-cp-border flex-shrink-0" />
+                            <span className="text-[11px] text-cp-muted truncate">{yd.seasonTag}</span>
+                          </>
+                        )}
                       </>
                     )}
                   </div>
@@ -1727,11 +1971,12 @@ export function ChartTab({
             </div>
             <button
               onClick={() => {
-                if (blockIfLocked('구간 해설')) return
+                if (blockIfLocked(overlayActive ? '궁합 해설' : '구간 해설')) return
                 fetchSummary(quickPick, quickPick, isMonthly, isWeekly)
               }}
               className="w-full py-2.5 rounded-xl text-[13px] sm:text-sm font-semibold bg-cp-violetMuted text-cp-violet border border-cp-violetBorder hover:brightness-110 transition-colors truncate">
-              {formatPeriodLabel(quickPick, quickPick)} 해설 보기
+              {formatPeriodLabel(quickPick, quickPick)}
+              {overlayActive ? ' 궁합 해설 보기' : ' 해설 보기'}
             </button>
           </div>
         </div>
@@ -1827,14 +2072,14 @@ export function ChartTab({
               <div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label="필요한 기운" text={"내게 가장 필요한 기운(용신)이 얼마나 들어오는지 보여줘요.\n양수 → 좋은 기운이 충분한 시기\n음수 → 기운이 부족한 시기"} /></div>
               <div className="h-[80px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-1,1]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip monthly={isMonthly}/>} cursor={{ stroke: 'rgba(255,255,255,0.12)', strokeWidth: 1 }}/><ReferenceLine y={0} stroke="#3A3942"/>
+              <Tooltip content={<SubTooltip {...subTooltipProps} />} cursor={{ stroke: 'rgba(255,255,255,0.12)', strokeWidth: 1 }}/><ReferenceLine y={0} stroke="#3A3942"/>
               {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
-              <Area dataKey="yongshinPower" stroke="#9b59b6" fill="#9b59b6" fillOpacity={0.2} dot={false}/>
-              {overlayActive && <Area dataKey="yongshinPowerOv" stroke="#3182F6" fill="#3182F6" fillOpacity={0.15} dot={false} strokeDasharray="4 2"/>}
+              <Area dataKey="yongshinPower" name={currentName || '나'} stroke={overlayActive ? COMPAT_ME_COLOR : '#9b59b6'} fill={overlayActive ? COMPAT_ME_COLOR : '#9b59b6'} fillOpacity={0.2} dot={false} isAnimationActive={auxAnimActive} animationDuration={1400} animationEasing="ease-out"/>
+              {overlayActive && <Area dataKey="yongshinPowerOv" name={overlayName || '상대'} stroke={COMPAT_PARTNER_COLOR} fill={COMPAT_PARTNER_COLOR} fillOpacity={0.15} dot={false} isAnimationActive={auxAnimActive} animationDuration={1400} animationEasing="ease-out"/>}
             </AreaChart></ResponsiveContainer></div>
             </div>
           )}
-          {auxPanels.energy && (
+          {auxPanels.energy && !overlayActive && (
             <div><div className="flex items-center justify-between px-2 mb-0.5">
               <div className="flex items-center gap-2 text-[9px] ml-7">
                 <span className="flex items-center gap-0.5"><span className="inline-block w-2 h-2 rounded-sm" style={{background:'#27ae60',opacity:0.7}}/><span className="text-cp-muted">길한 변화</span></span>
@@ -1844,16 +2089,16 @@ export function ChartTab({
             </div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,8]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip decimals={1} monthly={isMonthly}/>} cursor={{ fill: 'rgba(255,255,255,0.06)' }}/>
+              <Tooltip content={<SubTooltip {...subTooltipProps} decimals={1} />} cursor={{ fill: 'rgba(255,255,255,0.06)' }}/>
               {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Bar dataKey="energyTotal" isAnimationActive={false}>{mergedData.map((d,i) => <Cell key={i} fill={d.energyDirection>=0?'#27ae60':'#e74c3c'} fillOpacity={0.7}/>)}</Bar>
             </BarChart></ResponsiveContainer></div></div>
           )}
-          {auxPanels.noble && (
+          {auxPanels.noble && !overlayActive && (
             <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label="귀인의 도움" text={"주변 사람과의 관계 에너지예요.\n양수 → 도움을 주는 인연이 활성화\n음수 → 관계에서 마찰이 생기기 쉬운 시기"} /></div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[-15,15]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip decimals={0} monthly={isMonthly}/>} cursor={{ fill: 'rgba(255,255,255,0.06)' }}/><ReferenceLine y={0} stroke="#3A3942"/>
+              <Tooltip content={<SubTooltip {...subTooltipProps} decimals={0} />} cursor={{ fill: 'rgba(255,255,255,0.06)' }}/><ReferenceLine y={0} stroke="#3A3942"/>
               {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
               <Bar dataKey="noblePower" isAnimationActive={false}>{mergedData.map((d,i) => <Cell key={i} fill={d.noblePower>=0?'#f39c12':'#8e44ad'} fillOpacity={0.7}/>)}</Bar>
             </BarChart></ResponsiveContainer></div></div>
@@ -1862,10 +2107,10 @@ export function ChartTab({
             <div><div className="text-[10px] text-cp-muted text-right pr-2 mb-0.5"><InfoTip align="right" label="오행 균형도" text={"목·화·토·금·수 다섯 기운의 균형 정도예요.\n0.5에 가까울수록 균형이 잘 맞고,\n0이나 1에 가까우면 특정 기운이 치우쳐 있다는 뜻이에요."} /></div>
             <div className="h-[70px]"><ResponsiveContainer width="100%" height="100%"><LineChart data={mergedData} syncId="lc" margin={SUB_MARGIN}>
               <XAxis dataKey="year" type="number" domain={xDomain} hide padding={{left: 8, right: 8}}/><YAxis domain={[0,1]} hide={true} width={0}/>
-              <Tooltip content={<SubTooltip monthly={isMonthly}/>} cursor={{ stroke: 'rgba(255,255,255,0.12)', strokeWidth: 1 }}/><ReferenceLine y={0.5} stroke="#3A3942" strokeDasharray="3 3"/>
+              <Tooltip content={<SubTooltip {...subTooltipProps} />} cursor={{ stroke: 'rgba(255,255,255,0.12)', strokeWidth: 1 }}/><ReferenceLine y={0.5} stroke="#3A3942" strokeDasharray="3 3"/>
               {markerYear != null && <ReferenceLine x={markerYear} stroke="#F04452" strokeWidth={1} strokeDasharray="4 2" strokeOpacity={0.5}/>}
-              <Line dataKey="ohangBalance" stroke="#3498db" dot={false} strokeWidth={1.5}/>
-              {overlayActive && <Line dataKey="ohangBalanceOv" stroke="#3182F6" dot={false} strokeWidth={1.5} strokeDasharray="4 2"/>}
+              <Line dataKey="ohangBalance" name={currentName || '나'} stroke={overlayActive ? COMPAT_ME_COLOR : '#3498db'} dot={false} strokeWidth={1.5} isAnimationActive={auxAnimActive} animationDuration={1400} animationEasing="ease-out"/>
+              {overlayActive && <Line dataKey="ohangBalanceOv" name={overlayName || '상대'} stroke={COMPAT_PARTNER_COLOR} dot={false} strokeWidth={1.5} isAnimationActive={auxAnimActive} animationDuration={1400} animationEasing="ease-out"/>}
             </LineChart></ResponsiveContainer></div></div>
           )}
           {auxPanels.tengo && (
@@ -1874,25 +2119,27 @@ export function ChartTab({
               const rd = [{a:'자아',v:selectedData['tengo비겁'],vO:selectedOverlayData?.['tengo비겁']},{a:'표현',v:selectedData['tengo식상'],vO:selectedOverlayData?.['tengo식상']},{a:'재물',v:selectedData['tengo재성'],vO:selectedOverlayData?.['tengo재성']},{a:'직업',v:selectedData['tengo관살'],vO:selectedOverlayData?.['tengo관살']},{a:'학업',v:selectedData['tengo인성'],vO:selectedOverlayData?.['tengo인성']}]
               const allVals = rd.flatMap(d => [d.v, d.vO]).filter((v): v is number => typeof v === 'number')
               const radarMax = Math.max(Math.ceil(Math.max(...allVals, 1) * 1.3), 2)
+              const meStroke = overlayActive ? COMPAT_ME_COLOR : '#1abc9c'
+              const partnerStroke = COMPAT_PARTNER_COLOR
               return (<>
                 <div className="flex justify-center"><div className="w-[220px] h-[170px]"><ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={rd}>
                     <PolarGrid/><PolarAngleAxis dataKey="a" tick={{fontSize:9, fill:'#8A898C'}}/><PolarRadiusAxis domain={[0, radarMax]} tick={{fontSize:7, fill:'#8A898C'}}/>
-                    <Radar dataKey="v" stroke="#1abc9c" fill="#1abc9c" fillOpacity={0.3} name={currentName || '나'}/>
-                    {overlayActive && <Radar dataKey="vO" stroke="#3182F6" fill="#3182F6" fillOpacity={0.2} name={overlayName}/>}
+                    <Radar dataKey="v" stroke={meStroke} fill={meStroke} fillOpacity={0.3} name={currentName || '나'} isAnimationActive={auxAnimActive}/>
+                    {overlayActive && <Radar dataKey="vO" stroke={partnerStroke} fill={partnerStroke} fillOpacity={0.2} name={overlayName} isAnimationActive={auxAnimActive}/>}
                   </RadarChart>
                 </ResponsiveContainer></div></div>
                 <div className="flex justify-center gap-3 mt-1">
                   {rd.map(d => (
-                    <span key={d.a} className="text-[9px] text-cp-muted">{d.a} <span className="font-semibold text-teal-600">{d.v?.toFixed(1)}</span>
-                      {overlayActive && d.vO != null && <span className="text-cp-down ml-0.5">/{d.vO.toFixed(1)}</span>}
+                    <span key={d.a} className="text-[9px] text-cp-muted">{d.a} <span className="font-semibold" style={{ color: meStroke }}>{d.v?.toFixed(1)}</span>
+                      {overlayActive && d.vO != null && <span className="ml-0.5" style={{ color: partnerStroke }}>/{d.vO.toFixed(1)}</span>}
                     </span>
                   ))}
                 </div>
                 {overlayActive && (
                   <div className="flex justify-center gap-3 mt-0.5 text-[9px]">
-                    <span className="text-teal-600">■ {currentName || '나'}</span>
-                    <span className="text-cp-down">■ {overlayName}</span>
+                    <span style={{ color: meStroke }}>■ {currentName || '나'}</span>
+                    <span style={{ color: partnerStroke }}>■ {overlayName}</span>
                   </div>
                 )}
               </>)
@@ -1910,18 +2157,43 @@ export function ChartTab({
                 {n:'학업', p:selectedData.eventStudy, pO:selectedOverlayData?.eventStudy ?? 0},
                 {n:'대인', p:selectedData.eventConflict, pO:selectedOverlayData?.eventConflict ?? 0},
               ]
+              const pctLabel = (v: number) => `${Math.round(v)}%`
               return (
-                <div style={{ height: overlayActive ? 140 : 120 }}><ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={evData} layout="vertical" margin={{left:4,right:24,top:4,bottom:0}}>
-                    <XAxis type="number" domain={[0,100]} tick={{fontSize:8, fill:'#8A898C'}}/>
-                    <YAxis type="category" dataKey="n" tick={{fontSize:9, fill:'#8A898C'}} width={32} interval={0}/>
-                    <Bar dataKey="p" isAnimationActive={false} barSize={overlayActive ? 6 : 10} name={currentName || '나'}
-                      label={!overlayActive ? {position:'right',fontSize:9,fill:'#666',formatter:(v:number)=>`${v}%`} : undefined}>
-                      {['#e74c3c','#e91e63','#ff9800','#4caf50','#2196f3','#9c27b0'].map((c,i)=><Cell key={i} fill={c} fillOpacity={0.8}/>)}
+                <div style={{ height: overlayActive ? 168 : 120 }}><ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={evData}
+                    layout="vertical"
+                    margin={{ left: 4, right: 40, top: 4, bottom: 0 }}
+                    barGap={overlayActive ? 1 : 4}
+                    barCategoryGap={overlayActive ? '22%' : '18%'}
+                  >
+                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 8, fill: '#8A898C' }}/>
+                    <YAxis type="category" dataKey="n" tick={{ fontSize: 9, fill: '#8A898C' }} width={32} interval={0}/>
+                    <Bar
+                      dataKey="p"
+                      isAnimationActive={false}
+                      barSize={overlayActive ? 7 : 10}
+                      name={currentName || '나'}
+                    >
+                      {overlayActive
+                        ? evData.map((_, i) => <Cell key={i} fill={COMPAT_ME_COLOR} fillOpacity={0.85}/>)
+                        : ['#e74c3c','#e91e63','#ff9800','#4caf50','#2196f3','#9c27b0'].map((c,i)=><Cell key={i} fill={c} fillOpacity={0.8}/>)}
+                      <LabelList
+                        dataKey="p"
+                        position="right"
+                        formatter={pctLabel as never}
+                        style={{ fontSize: 9, fill: '#8B8B93' }}
+                      />
                     </Bar>
                     {overlayActive && (
-                      <Bar dataKey="pO" isAnimationActive={false} barSize={6} name={overlayName}>
-                        {evData.map((_,i)=><Cell key={i} fill="#3182F6" fillOpacity={0.6}/>)}
+                      <Bar dataKey="pO" isAnimationActive={false} barSize={7} name={overlayName}>
+                        {evData.map((_,i)=><Cell key={i} fill={COMPAT_PARTNER_COLOR} fillOpacity={0.75}/>)}
+                        <LabelList
+                          dataKey="pO"
+                          position="right"
+                          formatter={pctLabel as never}
+                          style={{ fontSize: 9, fill: '#8B8B93' }}
+                        />
                       </Bar>
                     )}
                   </BarChart>
@@ -1959,7 +2231,12 @@ export function ChartTab({
           <div className="absolute inset-0 bg-black/30"/>
           <div className="relative w-[280px] max-w-[80vw] bg-cp-bg h-full shadow-xl overflow-y-auto animate-slide-in-right" onClick={e => e.stopPropagation()}>
             <div className="p-5">
-              <h3 className="font-bold text-cp-text mb-4">차트 지표 설정</h3>
+              <h3 className={`font-bold text-cp-text ${overlayActive ? 'mb-1' : 'mb-4'}`}>차트 지표 설정</h3>
+              {overlayActive && (
+                <p className="text-[11px] text-cp-muted leading-relaxed mb-4">
+                  궁합을 볼땐 한번에 하나의 지표 설정만 가능해요.
+                </p>
+              )}
               <div className="mb-5">
                 <div className="text-xs font-semibold text-cp-muted mb-2">메인 차트 선</div>
                 <div className={isLocked ? '' : 'stagger-fade-in'}>
@@ -1967,6 +2244,10 @@ export function ChartTab({
                     type="button"
                     onClick={() => {
                       if (blockIfLocked(isMonthly ? '월운' : '세운')) return
+                      if (overlayActive) {
+                        selectCompatBase()
+                        return
+                      }
                       if (!canHideBase && baseLineVisible) return
                       setBaseLineVisible(v => !v)
                     }}
@@ -1977,28 +2258,33 @@ export function ChartTab({
                         type="checkbox"
                         checked={!isLocked && baseLineVisible}
                         readOnly
-                        disabled={isLocked || (!canHideBase && baseLineVisible)}
+                        disabled={isLocked || (!overlayActive && !canHideBase && baseLineVisible)}
                         className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
                       />
                       <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-cp-muted' : 'text-cp-text'}`}>
-                        <span className="w-3 h-0.5 rounded bg-cp-line" />
+                        <span
+                          className="w-3 h-0.5 rounded"
+                          style={{ backgroundColor: overlayActive ? COMPAT_ME_COLOR : '#F04452' }}
+                        />
                         기본 {isWeekly ? '일운' : isMonthly ? '월운' : '세운'}
                       </span>
                     </span>
                     {isLocked ? (
                       <span className="text-cp-border text-sm leading-none">🔒</span>
-                    ) : !canHideBase ? (
+                    ) : !overlayActive && !canHideBase ? (
                       <span className="text-[10px] text-cp-border">필수</span>
                     ) : null}
                   </button>
                   {MAIN_OVERLAYS.map(o => {
                     const weeklyUnsupported = isWeekly && (o.key === 'daewoon' || o.key === 'candle' || o.key === 'season')
+                    const compatDisabled = overlayActive && COMPAT_DISABLED_MAIN.has(o.key as 'candle' | 'season')
+                    const disabled = isLocked || weeklyUnsupported || compatDisabled
                     return (
                     <button
                       key={o.key}
                       type="button"
                       onClick={() => {
-                        if (weeklyUnsupported) return
+                        if (disabled && !isLocked) return
                         if (blockIfLocked(o.label)) return
                         toggleMain(o.key)
                       }}
@@ -2007,14 +2293,15 @@ export function ChartTab({
                       <span className="flex items-center gap-3">
                         <input
                           type="checkbox"
-                          checked={!isLocked && !weeklyUnsupported && mainOverlays[o.key]}
+                          checked={!disabled && mainOverlays[o.key]}
                           readOnly
-                          disabled={isLocked || weeklyUnsupported}
+                          disabled={disabled}
                           className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
                         />
-                        <span className={`text-sm ${isLocked || weeklyUnsupported ? 'text-cp-muted' : 'text-cp-text'}`}>
+                        <span className={`text-sm ${disabled ? 'text-cp-muted' : 'text-cp-text'}`}>
                           {o.label}
                           {weeklyUnsupported ? <span className="text-[10px] text-cp-border ml-1">이번 주 미지원</span> : null}
+                          {compatDisabled ? <span className="text-[10px] text-cp-border ml-1">궁합 미지원</span> : null}
                         </span>
                       </span>
                       {isLocked && <span className="text-cp-border text-sm leading-none">🔒</span>}
@@ -2025,7 +2312,10 @@ export function ChartTab({
               </div>
               <div className="mb-5">
                 <div className="text-xs font-semibold text-cp-muted mb-0.5">도메인 운세 선 (메인 차트)</div>
-                <div className="text-[10px] text-cp-muted mb-2">「만」을 누르면 그 운만 단독으로 봐요</div>
+                {!overlayActive && (
+                  <div className="text-[10px] text-cp-muted mb-2">「만」을 누르면 그 운만 단독으로 봐요</div>
+                )}
+                {overlayActive && <div className="mb-2" />}
                 <div className={isLocked ? '' : 'stagger-fade-in'}>
                   {DOMAIN_OVERLAYS.map(o => (
                     <div
@@ -2048,13 +2338,16 @@ export function ChartTab({
                           className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
                         />
                         <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-cp-muted' : 'text-cp-text'}`}>
-                          <span className="w-3 h-0.5 rounded" style={{ backgroundColor: o.color, opacity: isLocked ? 0.4 : 1 }} />
+                          <span
+                            className="w-3 h-0.5 rounded"
+                            style={{ backgroundColor: overlayActive ? COMPAT_ME_COLOR : o.color, opacity: isLocked ? 0.4 : 1 }}
+                          />
                           {o.label}
                         </span>
                       </button>
                       {isLocked ? (
                         <span className="text-cp-border text-sm leading-none pr-1">🔒</span>
-                      ) : (
+                      ) : !overlayActive ? (
                         <button
                           type="button"
                           onClick={() => showDomainSolo(o.key)}
@@ -2066,7 +2359,7 @@ export function ChartTab({
                         >
                           만
                         </button>
-                      )}
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -2074,11 +2367,15 @@ export function ChartTab({
               <div className="mb-5">
                 <div className="text-xs font-semibold text-cp-muted mb-2">보조지표 (차트 아래)</div>
                 <div className={isLocked ? '' : 'stagger-fade-in'}>
-                  {AUX_PANELS.map(o => (
+                  {AUX_PANELS.map(o => {
+                    const compatDisabled = overlayActive && COMPAT_DISABLED_AUX.has(o.key as 'energy' | 'noble')
+                    const disabled = isLocked || compatDisabled
+                    return (
                     <button
                       key={o.key}
                       type="button"
                       onClick={() => {
+                        if (compatDisabled) return
                         if (blockIfLocked(o.label)) return
                         toggleAux(o.key)
                       }}
@@ -2087,19 +2384,27 @@ export function ChartTab({
                       <span className="flex items-center gap-3">
                         <input
                           type="checkbox"
-                          checked={!isLocked && auxPanels[o.key]}
+                          checked={!disabled && auxPanels[o.key]}
                           readOnly
-                          disabled={isLocked}
+                          disabled={disabled}
                           className="w-4 h-4 rounded border-cp-border text-cp-line focus:ring-cp-line pointer-events-none"
                         />
-                        <span className={`text-sm flex items-center gap-2 ${isLocked ? 'text-cp-muted' : 'text-cp-text'}`}>
-                          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: o.color, opacity: isLocked ? 0.4 : 1 }} />
+                        <span className={`text-sm flex items-center gap-2 ${disabled ? 'text-cp-muted' : 'text-cp-text'}`}>
+                          <span
+                            className="w-2 h-2 rounded-full"
+                            style={{
+                              backgroundColor: overlayActive && !compatDisabled ? COMPAT_ME_COLOR : o.color,
+                              opacity: disabled ? 0.4 : 1,
+                            }}
+                          />
                           {o.label}
+                          {compatDisabled ? <span className="text-[10px] text-cp-border ml-1">궁합 미지원</span> : null}
                         </span>
                       </span>
                       {isLocked && <span className="text-cp-border text-sm leading-none">🔒</span>}
                     </button>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
               <button onClick={applyPanelAndScroll}

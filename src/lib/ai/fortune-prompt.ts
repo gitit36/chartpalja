@@ -1270,14 +1270,25 @@ export function buildCompatibilitySummaryPrompt(
   nameB: string,
   startYear: number,
   endYear: number,
-  opts?: { birthYearA?: number; birthYearB?: number }
+  opts?: {
+    birthYearA?: number
+    birthYearB?: number
+    periodLabel?: string
+    /** 선택 기간의 세운/월운/일운 FACT 라인 (없으면 기간 특화 분석이 약해짐) */
+    periodFacts?: string
+  }
 ): string {
   const a = extractCoreData(reportA, { birthYear: opts?.birthYearA })
   const b = extractCoreData(reportB, { birthYear: opts?.birthYearB })
   const isSameGender = genderA === genderB
   const focusArea = isSameGender ? '업무/파트너십 궁합, 서로의 장단점 보완, 팀워크' : '연애/결혼 궁합, 감정적 케미, 장기 관계 안정성'
+  const periodText = opts?.periodLabel
+    ?? (startYear === endYear ? `${startYear}년` : `${startYear}~${endYear}년`)
+  const factsBlock = opts?.periodFacts?.trim()
+    ? `\n## ${periodText} 기간 FACT (엔진 점수 — 반드시 이 구간에 특화해 해석)\n${opts.periodFacts.trim()}\n`
+    : ''
   return `너는 사주명리학 전문가이자 궁합 해설가. 엔진 점수는 FACT. 원시 재료로 역추적하여 서사로 풀어라.
-두 사람의 ${startYear}~${endYear}년 궁합을 봐줘요.
+사용자가 차트에서 「${periodText}」만 골랐어요. 평생 궁합이 아니라, 이 구간에 한정된 두 사람의 흐름·케미·주의점을 봐줘요.
 
 ## ${nameA}의 사주
 [년] ${a.yearPillar} / [월] ${a.monthPillar} / [일] ${a.dayPillar} / [시] ${a.hourPillar}
@@ -1290,23 +1301,24 @@ export function buildCompatibilitySummaryPrompt(
 격국: ${b.geokguk}, 용신: ${b.yongStr}, 기신: ${b.gishinStr}
 신강약: ${b.ssVerdict}, 공망: ${b.gongmang}
 성별: ${genderB === 'female' ? '여성' : '남성'}
-
+${factsBlock}
 ## 궁합 분석 포인트
 - 비교적 집중 분야: ${focusArea}
+- 반드시 「${periodText}」에만 초점. 선택 밖 시기·평생 총평으로 흐르지 말 것.
 - 두 사람의 관계가 어떤 유형이든(연인/부부/가족/친구/비즈니스) 사주 재료에서 자연스럽게 읽어라. 성별만으로 관계를 단정짓지 말 것.
 - 일주 궁합: ${a.dayPillar} vs ${b.dayPillar} (간지 상생/상극/합충 분석)
 - 용신 보완: ${nameA}의 용신(${a.yongStr})이 ${nameB}에게 어떤 의미인지, 그 역도
 - 오행 균형: 둘이 합쳐졌을 때 오행이 어떻게 변하는지
-- 기간: ${startYear}~${endYear}년 동안 두 사람의 세운이 서로에게 미치는 영향
+- FACT에 점수·시즌·세운/월운/일운이 있으면 그걸 근거로 "이 구간에서" 무엇이 달라지는지 설명해라.
 
 ## 규칙
 - 카톡톤. 확신있게. 전문용어는 꼭 필요한 경우만, 반드시 일상어 번역 병기. 한자 사용 금지(한글로만 작성).
 - 인사, 자기소개, 역할 선언 없이 바로 해석부터 시작.
 - 감성적·과장된 표현 없이, 담백한 설명형 문체로 작성.
 - 간지 조합에서 구체적으로 읽어줘. "어떤 기둥이 어떻게 작용하는지" 역추적.
-- 숫자/확률 낭독 금지.
+- 숫자/확률 낭독 금지. 점수를 그대로 읽지 말고 현실 영향으로 번역.
 - ${isSameGender ? '업무/파트너십' : '연애/결혼'}
-- 궁합 해설은 다음 3가지를 균형있게 다뤄: ① 서로의 에너지가 합쳐졌을 때 시너지 (장점) ② 부딪히기 쉬운 지점 (주의점) ③ 이 기간에 특히 신경 쓸 포인트.
+- 궁합 해설은 다음 3가지를 균형있게 다뤄: ① 이 구간 시너지 ② 이 구간 주의점 ③ 이 구간에 특히 신경 쓸 포인트.
 - 각 포인트를 구체적 간지 조합·오행·합충 근거와 함께 풍부하게 서술해줘.
 - 최대 500자.
 - special characters 사용 금지 (*, #, $, %, &, ^, &).
