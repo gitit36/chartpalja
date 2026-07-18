@@ -97,7 +97,7 @@ export default function LandingClient() {
           <Link
             href="/app/input"
             prefetch
-            className="block w-full py-3 rounded-2xl text-sm font-semibold text-white/65 border border-white/20 bg-transparent hover:bg-white/8 hover:text-white/85 active:scale-[0.98] transition-all text-center"
+            className="block w-full py-3.5 rounded-2xl text-sm font-bold text-white bg-slate-500/55 border border-slate-300/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] hover:bg-slate-400/55 hover:border-slate-200/50 active:scale-[0.98] transition-all text-center"
           >
             차트만 먼저 보기
           </Link>
