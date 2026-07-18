@@ -101,6 +101,9 @@ export default function LandingClient() {
           >
             차트만 먼저 보기
           </Link>
+          <p className="text-white/50 text-[11px] leading-relaxed text-center">
+            카카오로 보면 모든 기능이 열려요
+          </p>
         </div>
       </div>
 
