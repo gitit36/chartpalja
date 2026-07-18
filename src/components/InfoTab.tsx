@@ -795,6 +795,30 @@ function CoreInfoCard({ report }: { report: SajuReportJson }) {
   )
 }
 
+/** 오행별 한 줄 함축 — 의미 + 상대 강약 */
+const OHANG_MEANING: Record<string, string> = {
+  목: '성장·확장',
+  화: '열정·표현',
+  토: '안정·중심',
+  금: '결단·정리',
+  수: '지혜·유연',
+  木: '성장·확장',
+  火: '열정·표현',
+  土: '안정·중심',
+  金: '결단·정리',
+  水: '지혜·유연',
+}
+
+function ohangPhrase(el: string, count: number, maxVal: number): string {
+  const meaning = OHANG_MEANING[el] ?? OHANG_MEANING[elementToHangul(el)] ?? '기운'
+  if (count <= 0) return `${meaning} 기운이 거의 없어요`
+  const ratio = maxVal > 0 ? count / maxVal : 0
+  if (ratio >= 0.98) return `${meaning} 기운이 가장 커요`
+  if (ratio >= 0.7) return `${meaning} 기운이 넉넉해요`
+  if (ratio >= 0.4) return `${meaning} 기운이 무난해요`
+  return `${meaning} 기운이 적어요`
+}
+
 /* ── 오행 분포 ── */
 function OhangInlineBar({ report }: { report: SajuReportJson }) {
   const ohang = report.오행분포
@@ -805,21 +829,32 @@ function OhangInlineBar({ report }: { report: SajuReportJson }) {
 
   return (
     <div>
-      <h3 className="font-bold text-cp-text text-sm mb-2">
+      <h3 className="font-bold text-cp-text text-sm mb-1">
         <InfoTip lift label="오행 분포" text="사주원국의 8글자(천간4+지지4)에 포함된 오행의 개수예요. 지지 안에 숨어있는 지장간의 가중치까지 포함하기 때문에, 단순히 글자 수를 세는 것과 숫자가 다를 수 있어요." />
       </h3>
-      <div className="space-y-1.5">
+      <div className="space-y-2.5">
         {entries.map(([el, count]) => {
           const pct = Math.round((count / maxVal) * 100)
           const hg = elementToHangul(el)
+          const phrase = ohangPhrase(el, count, maxVal)
           return (
-            <div key={el} className="flex items-center gap-2">
-              <span className="text-[11px] text-cp-muted w-8 shrink-0">{hg}</span>
-              <div className="flex-1 bg-cp-surface rounded-full h-4 overflow-hidden">
-                {count > 0 && <div className={`h-full rounded-full ${ELEMENT_BAR_COLORS[el] ?? "bg-cp-muted"} transition-all`}
-                  style={{ width: `${Math.max(pct, 8)}%` }}/>}
+            <div key={el}>
+              <div className="flex items-baseline justify-between gap-2 mb-1">
+                <p className="text-[12px] text-cp-secondary min-w-0 truncate">
+                  <span className="font-semibold text-cp-text">{hg}</span>
+                  <span className="text-cp-dim mx-1">·</span>
+                  <span className="text-cp-muted">{phrase}</span>
+                </p>
+                <span className="text-[11px] text-cp-muted tabular-nums shrink-0">{count}</span>
               </div>
-              <span className="text-[11px] text-cp-muted w-6 text-right">{count}</span>
+              <div className="bg-cp-surface rounded-full h-3.5 overflow-hidden">
+                {count > 0 && (
+                  <div
+                    className={`h-full rounded-full ${ELEMENT_BAR_COLORS[el] ?? "bg-cp-muted"} transition-all`}
+                    style={{ width: `${Math.max(pct, 8)}%` }}
+                  />
+                )}
+              </div>
             </div>
           )
         })}

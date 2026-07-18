@@ -94,6 +94,15 @@ body {
   animation: slideUp 0.3s ease-out;
 }
 
+/* 사주 생성 로딩 — 링 프로그레스 soft shimmer (느리게) */
+@keyframes cpRingShimmer {
+  0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 0 transparent); }
+  50% { opacity: 1; filter: drop-shadow(0 0 6px rgba(240, 68, 82, 0.4)); }
+}
+.animate-cp-ring-shimmer {
+  animation: cpRingShimmer 3s ease-in-out infinite;
+}
+
 .stagger-fade-in > * {
   animation: fadeIn 0.4s ease-out both;
 }

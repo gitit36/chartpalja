@@ -210,6 +210,9 @@ function PersonalSajuPageInner() {
   const id = params.id as string
   const initialOverlayId = searchParams.get('overlay')
   const initialFocus = searchParams.get('focus') === 'today' ? 'today' as const : null
+  /** list 궁합 선택 진입 — 운세 해설로 스크롤 + 궁합 카드 펼침 */
+  const focusCompatPartnerId =
+    searchParams.get('focus') === 'compat' && initialOverlayId ? initialOverlayId : null
   const [entry, setEntry] = useState<SajuEntryData | null>(null)
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState<TabKey>('chart')
@@ -784,6 +787,7 @@ function PersonalSajuPageInner() {
                 myGender={entry.gender}
                 initialOverlayId={initialOverlayId}
                 initialFocus={initialFocus}
+                focusCompatPartnerId={focusCompatPartnerId}
                 weekSeries={entry.weekSeries}
                 onFortuneJsonUpdate={(fj) => {
                   setEntry(prev => {

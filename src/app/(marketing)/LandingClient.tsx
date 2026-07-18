@@ -80,20 +80,13 @@ export default function LandingClient() {
         </div>
       </main>
 
-      {/* 하단: 1차 CTA 2개 + 마이크로 카피 (카드 width와 동일) */}
+      {/* 하단: 카카오 Primary(유도) → 차트 Secondary */}
       <div className="relative z-10 px-6 pt-3 pb-3">
         <div
-          className={`max-w-[312px] mx-auto space-y-3 transition-opacity duration-200 ${
+          className={`max-w-[312px] mx-auto space-y-2.5 transition-opacity duration-200 ${
             mounted ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <Link
-            href="/app/input"
-            prefetch
-            className="block w-full py-4 rounded-2xl text-base font-bold bg-white/95 text-slate-900 shadow-lg hover:bg-white active:scale-[0.98] transition-all text-center"
-          >
-            차트 먼저 보기
-          </Link>
           <button
             type="button"
             onClick={handleKakaoLogin}
@@ -101,9 +94,13 @@ export default function LandingClient() {
           >
             카카오로 모두 보기
           </button>
-          <p className="text-white/45 text-[11px] pt-1 leading-relaxed text-center">
-            카카오로 로그인하면 모든 기능이 열려요
-          </p>
+          <Link
+            href="/app/input"
+            prefetch
+            className="block w-full py-3 rounded-2xl text-sm font-semibold text-white/65 border border-white/20 bg-transparent hover:bg-white/8 hover:text-white/85 active:scale-[0.98] transition-all text-center"
+          >
+            차트만 먼저 보기
+          </Link>
         </div>
       </div>
 

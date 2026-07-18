@@ -119,6 +119,25 @@ function getHeaders(): Record<string, string> {
   return h
 }
 
+/** 로딩 중 실제 계산처럼 보이는 랜덤 정체 구간 */
+function buildLoadingStalls(): Array<{ start: number; end: number; factor: number }> {
+  const count = 2 + Math.floor(Math.random() * 2) // 2~3회
+  const stalls: Array<{ start: number; end: number; factor: number }> = []
+  let cursor = 12 + Math.random() * 10
+  for (let i = 0; i < count; i++) {
+    const start = cursor + Math.random() * 10
+    if (start > 80) break
+    const span = 4 + Math.random() * 8
+    stalls.push({
+      start,
+      end: Math.min(86, start + span),
+      factor: 0.05 + Math.random() * 0.1, // 속도 5~15%
+    })
+    cursor = start + span + 6 + Math.random() * 10
+  }
+  return stalls
+}
+
 const LOADING_SLIDES = [
   {
     icon: '📈',
@@ -234,6 +253,8 @@ function InputPageInner() {
   const [timeError, setTimeError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStep, setLoadingStep] = useState(0)
+  /** 생성 대기 중 soft fill — 90%까지 올린 뒤 아주 천천히 97% */
+  const [loadingProgress, setLoadingProgress] = useState(8)
   const [prefilling, setPrefilling] = useState(!!editId)
   const [fortuneDeferredToast, setFortuneDeferredToast] = useState(false)
   const initialBirthRef = useRef<{
@@ -254,6 +275,31 @@ function InputPageInner() {
   useEffect(() => {
     return () => { if (loadingInterval.current) clearInterval(loadingInterval.current) }
   }, [])
+
+  useEffect(() => {
+    if (!isLoading) return
+    const stalls = buildLoadingStalls()
+    let p = 8
+    const DT = 0.16
+    const tick = window.setInterval(() => {
+      if (p < 90) {
+        // 기본 속도 + 진행될수록 더 완만, 정체 구간에서 거의 멈춤 (현재 대비 ~1.5배)
+        let speed = 6 * (1.08 - p / 105)
+        for (const s of stalls) {
+          if (p >= s.start && p < s.end) {
+            speed *= s.factor
+            break
+          }
+        }
+        p = Math.min(90, p + speed * DT)
+      } else {
+        // 90→97 천천히
+        p = Math.min(97, p + 0.1 * DT)
+      }
+      setLoadingProgress(p)
+    }, Math.round(DT * 1000))
+    return () => clearInterval(tick)
+  }, [isLoading])
 
   // 게스트 ID 보장: 입력 페이지 진입 즉시 localStorage에 saju_guest_id를 생성한다.
   // 백엔드 sajuEntry는 user 또는 guest 둘 중 하나에 소유되어야 한다.
@@ -416,6 +462,7 @@ function InputPageInner() {
     }
 
     setIsLoading(true)
+    setLoadingProgress(8)
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0)
     }
@@ -512,38 +559,79 @@ function InputPageInner() {
 
   if (isLoading) {
     const slide = LOADING_SLIDES[loadingStep % LOADING_SLIDES.length]
+    const ringSize = 96
+    const ringR = 40
+    const ringC = 2 * Math.PI * ringR
+    const ringOffset = ringC * (1 - loadingProgress / 100)
     return (
       <>
         <div className="fixed inset-0 z-40 overflow-hidden bg-gradient-to-br from-cp-bg via-cp-bg to-cp-surface flex flex-col items-center justify-center px-6">
-          <div className="w-full max-w-sm">
-            <div className="relative mb-4">
-              <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-                <div className="w-16 h-16 rounded-full border-2 border-cp-line/30 border-t-cp-line animate-spin" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Image src="/svc_logo.png" alt="차트8자" width={28} height={26} className="animate-pulse drop-shadow-lg" />
-                </div>
+          <div className="w-full max-w-sm flex flex-col items-center justify-center">
+            <div
+              className="relative mb-6"
+              style={{ width: ringSize, height: ringSize }}
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(loadingProgress)}
+              aria-label="사주 분석 진행"
+            >
+              <svg
+                width={ringSize}
+                height={ringSize}
+                viewBox={`0 0 ${ringSize} ${ringSize}`}
+                className="block"
+                aria-hidden
+              >
+                <defs>
+                  <linearGradient id="cpLoadRingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#F04452" stopOpacity="0.45" />
+                    <stop offset="42%" stopColor="#FF8A95" stopOpacity="1" />
+                    <stop offset="100%" stopColor="#F04452" stopOpacity="0.55" />
+                  </linearGradient>
+                </defs>
+                <circle
+                  cx={ringSize / 2}
+                  cy={ringSize / 2}
+                  r={ringR}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.12)"
+                  strokeWidth={3}
+                />
+                <g className="animate-cp-ring-shimmer">
+                  <circle
+                    cx={ringSize / 2}
+                    cy={ringSize / 2}
+                    r={ringR}
+                    fill="none"
+                    stroke="url(#cpLoadRingGrad)"
+                    strokeWidth={3}
+                    strokeLinecap="round"
+                    strokeDasharray={ringC}
+                    strokeDashoffset={ringOffset}
+                    transform={`rotate(-90 ${ringSize / 2} ${ringSize / 2})`}
+                    className="transition-[stroke-dashoffset] duration-300 ease-out"
+                  />
+                </g>
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Image
+                  src="/svc_logo.png"
+                  alt="차트8자"
+                  width={36}
+                  height={33}
+                  className="drop-shadow-lg opacity-95"
+                />
               </div>
             </div>
 
-            <div className="mt-10 text-center">
-              <p className="text-white/50 text-sm mb-5">사주를 분석하는 동안 사용법을 확인해보세요</p>
-            </div>
+            <p className="text-white/50 text-sm mb-6 text-center">사주를 분석하는 중이에요</p>
 
-            <div key={loadingStep} className="animate-fade-in text-center">
+            <div key={loadingStep} className="animate-fade-in text-center w-full">
               {slide.visual}
               <p className="text-white/90 text-lg font-semibold mb-1.5">{slide.title}</p>
               <p className="text-white/60 text-base">{slide.desc}</p>
             </div>
-
-            <div className="flex justify-center gap-2.5 mt-8">
-              {LOADING_SLIDES.map((_, i) => (
-                <div key={i} className={`h-2 rounded-full transition-all duration-500 ${
-                  i === loadingStep % LOADING_SLIDES.length ? 'w-7 bg-cp-line' : 'w-2 bg-white/30'
-                }`} />
-              ))}
-            </div>
-
-            <div className="mt-6" />
           </div>
         </div>
         <Toast

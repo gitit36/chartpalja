@@ -740,6 +740,11 @@ interface ChartTabProps {
   /** 리스트 '오늘' 카드 진입 — 올해 월운 + 이번 달 포커스 */
   initialFocus?: 'today' | null
   /**
+   * list 궁합 선택 등 — 해당 상대 궁합 카드를 펼치고 운세 해설로 스크롤.
+   * `?overlay=&focus=compat` 진입 시 partnerId.
+   */
+  focusCompatPartnerId?: string | null
+  /**
    * GET /api/saju/[id] 가 hydrate 한 이번 주(월~일) 일운.
    * 있으면 /api/saju/daily 재호출 없이 바로 그린다.
    */
@@ -759,7 +764,7 @@ export function ChartTab({
   report, birthYear, fortuneJson, entryId, currentName, currentGender, overlayEntries,
   isLocked = false, onLockedClick, shareMode = false, hideCompareUi = false, compatShareOnly = false, onShareCta,
   onOverlayChange, onCompatCta, expandCompatCardKey, fortuneScrollToken, onFortuneJsonUpdate, compatGeneration,
-  entryName, myGender, initialOverlayId, initialFocus, sharePartner, weekSeries,
+  entryName, myGender, initialOverlayId, initialFocus, focusCompatPartnerId, sharePartner, weekSeries,
 }: ChartTabProps) {
   const [period, setPeriod] = useState<PeriodKey>(
     isLocked ? 'all' : (initialFocus === 'today' ? 'week' : 'all'),
@@ -2223,6 +2228,7 @@ export function ChartTab({
         onFortuneJsonUpdate={onFortuneJsonUpdate}
         activeCompat={activeCompat}
         onCompatCta={onCompatCta}
+        focusCompatPartnerId={focusCompatPartnerId}
       />
 
       {/* Sliding Panel — indicator settings */}
@@ -2727,6 +2733,8 @@ interface FortuneSectionProps {
   activeCompat?: ActiveCompat | null
   /** 궁합 해설 생성 CTA — 부모의 handleCompatCta */
   onCompatCta?: () => void
+  /** list→차트 진입 시 이 상대의 궁합 카드를 펼치고 운세 해설로 스크롤 */
+  focusCompatPartnerId?: string | null
 }
 
 function CompatSpinner() {
@@ -2749,7 +2757,7 @@ function FortuneSection({
   fortuneJson, entryId, entryName, myGender, currentName,
   isLocked = false, onLockedClick, shareMode = false, compatShareOnly = false, onShareCta,
   expandCompatCardKey, fortuneScrollToken, compatGeneration, onFortuneJsonUpdate,
-  activeCompat, onCompatCta,
+  activeCompat, onCompatCta, focusCompatPartnerId,
 }: FortuneSectionProps) {
   const [shareBusyKey, setShareBusyKey] = useState<string | null>(null)
   const [shareCopiedKey, setShareCopiedKey] = useState<string | null>(null)
@@ -2769,6 +2777,7 @@ function FortuneSection({
   const fetchedRef = React.useRef(false)
   const compatSectionRef = React.useRef<HTMLDivElement>(null)
   const fortuneHeadingRef = React.useRef<HTMLHeadingElement>(null)
+  const focusCompatDoneRef = React.useRef(false)
 
   const scrollToFortuneHeading = React.useCallback(() => {
     const el = fortuneHeadingRef.current
@@ -3053,6 +3062,11 @@ function FortuneSection({
 
   useEffect(() => {
     if (!expandCompatCardKey) return
+    if (expandCompatCardKey.startsWith('active_')) {
+      setOpenCompatIds(prev => new Set(prev).add(expandCompatCardKey))
+      const t = window.setTimeout(scrollToFortuneHeading, 160)
+      return () => clearTimeout(t)
+    }
     const saved = listCompatEntries(fortuneJson).find(
       c => compatCardKey(c.entry.partnerId, c.entry.relationship) === expandCompatCardKey,
     )
@@ -3061,6 +3075,28 @@ function FortuneSection({
     const t = window.setTimeout(scrollToFortuneHeading, 160)
     return () => clearTimeout(t)
   }, [expandCompatCardKey, fortuneJson, scrollToFortuneHeading])
+
+  // list「궁합」→ 차트: 운세 해설을 상단에 두고 해당 상대 궁합 카드를 펼침
+  useEffect(() => {
+    if (!focusCompatPartnerId || focusCompatDoneRef.current || shareMode || isLocked) return
+
+    const saved = listCompatEntries(fortuneJson).find(
+      c => c.entry.partnerId === focusCompatPartnerId && !!c.entry.text,
+    )
+    let cardKey: string | null = null
+    if (saved) {
+      cardKey = compatCardKey(saved.entry.partnerId, saved.entry.relationship)
+    } else if (activeCompat?.partnerId === focusCompatPartnerId) {
+      cardKey = `active_${focusCompatPartnerId}`
+    }
+    if (!cardKey) return
+
+    focusCompatDoneRef.current = true
+    setOpenCompatIds(prev => new Set(prev).add(cardKey!))
+    const delays = [120, 360, 720, 1200]
+    const timers = delays.map((ms) => window.setTimeout(scrollToFortuneHeading, ms))
+    return () => { timers.forEach(clearTimeout) }
+  }, [focusCompatPartnerId, fortuneJson, activeCompat, shareMode, isLocked, scrollToFortuneHeading])
 
   useEffect(() => {
     const handleExpandAll = () => setOpenIds(new Set(items.map((_, i) => i)))
