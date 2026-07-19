@@ -61,49 +61,54 @@ export default function LandingClient() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex flex-col relative overflow-hidden">
       <AbstractCurve />
 
-      {/* 상단: 작은 로고 (브랜드 인지만 빠르게) */}
-      <header className="pt-6 pb-2 flex justify-center relative z-10">
-        <Image
-          src="/svc_logo_with_slogan_vertical.png"
-          alt="차트8자 — 사주팔자, 차트로 읽다."
-          width={110}
-          height={126}
-          className="drop-shadow-lg"
-          priority
-        />
-      </header>
+      {/*
+        모바일: 로고 위 / 팁 flex-1 중앙 / 버튼 아래 (기존 리듬)
+        md+: 세 영역을 한 클러스터로 묶어 화면 중앙 + 좁은 gap
+      */}
+      <div className="flex-1 flex flex-col min-h-0 relative z-10 md:justify-center md:py-10">
+        <div className="flex flex-col flex-1 md:flex-none items-center min-h-0 md:gap-5 w-full">
+          <header className="pt-6 pb-2 md:pt-0 md:pb-0 flex justify-center shrink-0">
+            <Image
+              src="/svc_logo_with_slogan_vertical.png"
+              alt="차트8자 — 사주팔자, 차트로 읽다."
+              width={110}
+              height={126}
+              className="drop-shadow-lg"
+              priority
+            />
+          </header>
 
-      {/* 중앙: 카루셀 3장 */}
-      <main className="flex-1 flex flex-col justify-center relative z-10 min-h-0 py-4">
-        <div className="w-full max-w-[360px] mx-auto">
-          <LandingHeroCarousel />
-        </div>
-      </main>
+          <main className="flex-1 md:flex-none flex flex-col justify-center min-h-0 py-4 md:py-0 w-full">
+            <div className="w-full max-w-[360px] mx-auto px-0">
+              <LandingHeroCarousel />
+            </div>
+          </main>
 
-      {/* 하단: 카카오 Primary(유도) → 차트 Secondary */}
-      <div className="relative z-10 px-6 pt-3 pb-3">
-        <div
-          className={`max-w-[312px] mx-auto space-y-2.5 transition-opacity duration-200 ${
-            mounted ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <button
-            type="button"
-            onClick={handleKakaoLogin}
-            className="w-full py-4 rounded-2xl text-base font-bold bg-[#FEE500] text-[#3C1E1E] shadow-lg hover:brightness-95 active:scale-[0.98] transition-all"
-          >
-            카카오로 모두 보기
-          </button>
-          <Link
-            href="/app/input"
-            prefetch
-            className="block w-full py-3.5 rounded-2xl text-sm font-bold text-white bg-slate-500/55 border border-slate-300/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] hover:bg-slate-400/55 hover:border-slate-200/50 active:scale-[0.98] transition-all text-center"
-          >
-            차트만 먼저 보기
-          </Link>
-          <p className="text-white/50 text-[11px] leading-relaxed text-center">
-            카카오로 보면 모든 기능이 열려요
-          </p>
+          <div className="w-full px-6 pt-3 pb-3 md:pt-0 md:pb-0 shrink-0">
+            <div
+              className={`max-w-[312px] mx-auto space-y-2.5 transition-opacity duration-200 ${
+                mounted ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={handleKakaoLogin}
+                className="w-full py-4 rounded-2xl text-base font-bold bg-[#FEE500] text-[#3C1E1E] shadow-lg hover:brightness-95 active:scale-[0.98] transition-all"
+              >
+                카카오로 모두 보기
+              </button>
+              <Link
+                href="/app/input"
+                prefetch
+                className="block w-full py-3.5 rounded-2xl text-sm font-bold text-white bg-slate-500/55 border border-slate-300/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] hover:bg-slate-400/55 hover:border-slate-200/50 active:scale-[0.98] transition-all text-center"
+              >
+                차트만 먼저 보기
+              </Link>
+              <p className="text-white/50 text-[11px] leading-relaxed text-center">
+                카카오로 보면 모든 기능이 열려요
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
