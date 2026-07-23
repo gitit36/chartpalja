@@ -8,12 +8,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.chartpalja.com
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: '차트팔자 — 내 인생의 리듬',
-  description: '100년의 흐름을 하나의 차트로. 사주 기반 인생 운세 시각화 서비스.',
+  title: '차트팔자 — 사주팔자, 차트로 읽다',
+  description: '100년 사주를 주식처럼 분석해요. 궁금한 시기, 궁합까지.',
   openGraph: {
-    title: '차트팔자 — 내 인생의 리듬',
-    description: '100년의 흐름을 하나의 차트로',
+    title: '차트팔자 — 사주팔자, 차트로 읽다',
+    description: '100년 사주를 주식처럼',
     type: 'website',
+  },
+  other: {
+    'google-adsense-account': 'ca-pub-7378543375213987',
   },
 }
 
