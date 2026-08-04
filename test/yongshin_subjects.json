@@ -10,7 +10,7 @@
       "h": 3,
       "min": 25,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -24,7 +24,7 @@
       "note": "예시값. 실제 값으로 교체 필요."
     },
     "source_quality": "unknown",
-    "source_note": "sample placeholder",
+    "source_note": "sample placeholder; life_events are examples and excluded from validation",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -32,25 +32,29 @@
           "year": 2007,
           "label": "예시 good year",
           "weight": 1.0,
-          "confidence": "high"
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2012,
           "label": "예시 good year",
           "weight": 1.0,
-          "confidence": "high"
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2016,
           "label": "예시 good year",
           "weight": 1.0,
-          "confidence": "high"
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2019,
           "label": "예시 good year",
           "weight": 1.0,
-          "confidence": "high"
+          "confidence": "low",
+          "exclude_from_validation": true
         }
       ],
       "bad": [
@@ -58,18 +62,20 @@
           "year": 2009,
           "label": "예시 bad year",
           "weight": 1.0,
-          "confidence": "high"
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2018,
           "label": "예시 bad year",
           "weight": 1.0,
-          "confidence": "high"
+          "confidence": "low",
+          "exclude_from_validation": true
         }
       ]
     },
     "yongshin_override": null,
-    "validation_tier": "core"
+    "validation_tier": "candidate"
   },
   {
     "name": "Donald Trump",
@@ -79,10 +85,10 @@
       "y": 1946,
       "m": 6,
       "d": 14,
-      "h": 23,
-      "min": 54,
+      "h": 9,
+      "min": 59,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -96,10 +102,16 @@
       "note": "EDT, UTC-4"
     },
     "source_quality": "A_birth_record",
-    "source_note": "public birth record / Astro-Databank-type source",
+    "source_note": "public birth record / Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
+        {
+          "year": 1977,
+          "label": "Ivana Trump와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1983,
           "label": "Trump Tower 완공으로 부동산 사업가 이미지 강화",
@@ -117,6 +129,12 @@
           "label": "The Apprentice 성공",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2005,
+          "label": "Melania Trump와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
         },
         {
           "year": 2016,
@@ -151,6 +169,25 @@
           "confidence": "high"
         },
         {
+          "year": 1991,
+          "label": "Ivana Trump와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1992,
+          "label": "Marla Maples와 결혼 전후 사생활 논란·사업 위기 지속",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 1999,
+          "label": "Marla Maples와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2019,
           "label": "1차 탄핵소추",
           "weight": 1.0,
@@ -176,6 +213,12 @@
         },
         {
           "year": 2024,
+          "label": "대선 유세 중 총격 피격·부상",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
           "label": "형사 유죄 평결 등 사법 리스크",
           "weight": 1.0,
           "confidence": "high"
@@ -192,11 +235,11 @@
       "calendar": "solar",
       "y": 1961,
       "m": 8,
-      "d": 5,
-      "h": 13,
-      "min": 54,
+      "d": 4,
+      "h": 18,
+      "min": 46,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -210,14 +253,32 @@
       "note": "HST, UTC-10. 당시 한국은 UTC+8:30."
     },
     "source_quality": "A_birth_record",
-    "source_note": "long-form birth certificate",
+    "source_note": "long-form birth certificate; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
         {
+          "year": 1992,
+          "label": "Michelle Robinson과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1996,
           "label": "일리노이 주 상원의원 당선",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1998,
+          "label": "첫째 딸 Malia 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2001,
+          "label": "둘째 딸 Sasha 출생",
+          "weight": 0.5,
           "confidence": "high"
         },
         {
@@ -265,6 +326,12 @@
           "confidence": "medium"
         },
         {
+          "year": 2013,
+          "label": "의료보험 개혁 시행 초기 웹사이트 장애와 지지율 타격",
+          "weight": 0.6,
+          "confidence": "medium"
+        },
+        {
           "year": 2014,
           "label": "중간선거 패배로 레임덕 심화",
           "weight": 1.0,
@@ -282,11 +349,11 @@
       "calendar": "solar",
       "y": 1958,
       "m": 8,
-      "d": 30,
-      "h": 10,
-      "min": 3,
+      "d": 29,
+      "h": 18,
+      "min": 42,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -300,7 +367,7 @@
       "note": "CDT, UTC-5. 당시 한국은 DST로 UTC+9:30."
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -341,10 +408,28 @@
           "confidence": "medium"
         },
         {
+          "year": 1994,
+          "label": "Lisa Marie Presley와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1995,
           "label": "HIStory 발매",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1997,
+          "label": "첫째 아들 Prince 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1998,
+          "label": "딸 Paris 출생",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -361,8 +446,26 @@
           "confidence": "low"
         },
         {
+          "year": 1996,
+          "label": "Lisa Marie Presley와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1999,
+          "label": "Debbie Rowe와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2002,
+          "label": "호텔 발코니에서 아기를 내보인 행동으로 거센 비판",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
           "year": 2005,
-          "label": "형사재판 국면 및 무죄 평결",
+          "label": "아동 성추행 혐의 형사재판·평판 및 재정 타격(무죄 평결)",
           "weight": 1.0,
           "confidence": "high"
         },
@@ -385,10 +488,10 @@
       "y": 1994,
       "m": 3,
       "d": 1,
-      "h": 14,
-      "min": 56,
+      "h": 0,
+      "min": 18,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -402,7 +505,7 @@
       "note": "EST, UTC-5"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -431,10 +534,22 @@
           "confidence": "medium"
         },
         {
+          "year": 2018,
+          "label": "Hailey Baldwin과 결혼",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
           "year": 2021,
           "label": "Justice 발매",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2024,
+          "label": "첫아들 Jack Blues Bieber 출생",
+          "weight": 0.6,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -442,6 +557,18 @@
           "year": 2014,
           "label": "체포 및 대중 이미지 악화",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "Purpose World Tour 잔여 일정 취소와 활동 소진 논란",
+          "weight": 0.7,
+          "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "라임병 진단 사실 공개",
+          "weight": 0.7,
           "confidence": "high"
         },
         {
@@ -462,11 +589,11 @@
       "calendar": "solar",
       "y": 1989,
       "m": 5,
-      "d": 6,
-      "h": 1,
-      "min": 30,
+      "d": 5,
+      "h": 11,
+      "min": 26,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -480,7 +607,7 @@
       "note": "EDT, UTC-4"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -507,6 +634,12 @@
           "label": "그래미 수상",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2015,
+          "label": "딸 Royalty의 존재를 공개하고 부친 역할 시작",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -527,6 +660,24 @@
           "label": "구금/법적 리스크",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "전 연인 Karrueche Tran에 대한 접근금지명령",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "영국에서 중상해 혐의로 체포·기소",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2026,
+          "label": "런던 나이트클럽 사건 관련 affray(공공장소 폭력) 혐의 유죄 인정",
+          "weight": 1.0,
+          "confidence": "high"
         }
       ]
     },
@@ -540,11 +691,11 @@
       "calendar": "solar",
       "y": 1947,
       "m": 10,
-      "d": 27,
-      "h": 9,
-      "min": 45,
+      "d": 26,
+      "h": 19,
+      "min": 10,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -558,10 +709,22 @@
       "note": "CST, UTC-6"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
+        {
+          "year": 1975,
+          "label": "Bill Clinton과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1980,
+          "label": "딸 Chelsea 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1992,
           "label": "Bill Clinton 대통령 당선으로 First Lady 예정자 부상",
@@ -597,9 +760,21 @@
           "label": "미국 주요 정당 첫 여성 대선후보",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "미국 대통령 자유훈장 수훈",
+          "weight": 0.7,
+          "confidence": "high"
         }
       ],
       "bad": [
+        {
+          "year": 1994,
+          "label": "건강보험 개혁안 좌절로 정치적 타격",
+          "weight": 0.7,
+          "confidence": "high"
+        },
         {
           "year": 1998,
           "label": "Lewinsky 스캔들 국면",
@@ -642,11 +817,11 @@
       "calendar": "solar",
       "y": 1964,
       "m": 10,
-      "d": 21,
-      "h": 13,
-      "min": 28,
+      "d": 20,
+      "h": 20,
+      "min": 34,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -660,7 +835,7 @@
       "note": "PDT, UTC-7"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -674,6 +849,12 @@
           "year": 2010,
           "label": "California Attorney General 당선",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2014,
+          "label": "Douglas Emhoff와 결혼",
+          "weight": 0.5,
           "confidence": "high"
         },
         {
@@ -709,6 +890,13 @@
           "confidence": "high"
         },
         {
+          "year": 2021,
+          "label": "부통령 취임 초기 이민·국경 대응을 둘러싼 정치적 압박 확대",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
           "year": 2024,
           "label": "대선 패배",
           "weight": 1.0,
@@ -725,12 +913,12 @@
     "birth": {
       "calendar": "solar",
       "y": 1948,
-      "m": 4,
-      "d": 1,
-      "h": 2,
-      "min": 53,
+      "m": 3,
+      "d": 31,
+      "h": 12,
+      "min": 40,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -744,10 +932,16 @@
       "note": "EST, UTC-5"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
+        {
+          "year": 1970,
+          "label": "Tipper Gore와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1976,
           "label": "미국 하원의원 당선",
@@ -789,6 +983,12 @@
           "label": "노벨평화상 수상",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "미국 대통령 자유훈장 수훈",
+          "weight": 0.7,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -799,9 +999,21 @@
           "confidence": "high"
         },
         {
+          "year": 1989,
+          "label": "아들이 교통사고로 중상을 입어 가족 위기",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
           "year": 2000,
           "label": "미국 대선 패배 및 재검표 분쟁",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2010,
+          "label": "Tipper Gore와 별거 발표",
+          "weight": 0.5,
           "confidence": "high"
         }
       ]
@@ -816,11 +1028,11 @@
       "calendar": "solar",
       "y": 1960,
       "m": 5,
-      "d": 25,
-      "h": 15,
-      "min": 26,
+      "d": 24,
+      "h": 23,
+      "min": 46,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -834,13 +1046,19 @@
       "note": "CDT, UTC-5. 당시 한국은 DST로 UTC+9:30."
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
         {
+          "year": 1993,
+          "label": "John Bessler와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1998,
-          "label": "Hennepin County Attorney 재선",
+          "label": "Hennepin County Attorney 당선",
           "weight": 1.0,
           "confidence": "high"
         },
@@ -861,6 +1079,18 @@
           "label": "상원의원 재선",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "유방암 초기 치료 후 완치 판정 공개",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "미국 상원의원 4선",
+          "weight": 1.0,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -868,12 +1098,19 @@
           "year": 2019,
           "label": "대선 출마 초반 참모진 대우 논란 보도",
           "weight": 0.8,
-          "confidence": "low"
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2020,
           "label": "대선 경선 중도 하차",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "초기 유방암 진단과 치료",
+          "weight": 0.7,
           "confidence": "high"
         }
       ]
@@ -888,11 +1125,11 @@
       "calendar": "solar",
       "y": 1973,
       "m": 7,
-      "d": 24,
-      "h": 4,
-      "min": 21,
+      "d": 23,
+      "h": 11,
+      "min": 4,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -906,7 +1143,7 @@
       "note": "PDT, UTC-7"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -927,6 +1164,12 @@
           "label": "반사이버불링 활동과 미디어 재평가 확대",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "드라마 Impeachment: American Crime Story 제작 참여",
+          "weight": 0.7,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -937,10 +1180,17 @@
           "confidence": "medium"
         },
         {
+          "year": 1998,
+          "label": "대배심 증언과 면책 합의 과정으로 극심한 언론 노출",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
           "year": 1999,
           "label": "상원 탄핵심판·스캔들 후폭풍 지속",
           "weight": 1.0,
-          "confidence": "low"
+          "confidence": "low",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -955,10 +1205,10 @@
       "y": 1958,
       "m": 8,
       "d": 16,
-      "h": 21,
-      "min": 35,
+      "h": 6,
+      "min": 24,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -972,7 +1222,7 @@
       "note": "EDT, UTC-5. 당시 한국은 DST로 UTC+9:30."
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -981,6 +1231,12 @@
           "label": "Like a Virgin 성공",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1985,
+          "label": "Sean Penn과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
         },
         {
           "year": 1989,
@@ -995,10 +1251,22 @@
           "confidence": "medium"
         },
         {
+          "year": 1996,
+          "label": "딸 Lourdes 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1998,
           "label": "Ray of Light로 음악적 재평가",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2000,
+          "label": "아들 Rocco 출생 및 Guy Ritchie와 결혼",
+          "weight": 0.6,
+          "confidence": "high"
         },
         {
           "year": 2008,
@@ -1008,6 +1276,12 @@
         }
       ],
       "bad": [
+        {
+          "year": 1989,
+          "label": "Sean Penn과 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1992,
           "label": "Erotica/Sex 논란",
@@ -1019,6 +1293,12 @@
           "label": "American Life 상업적 부진",
           "weight": 1.0,
           "confidence": "low"
+        },
+        {
+          "year": 2008,
+          "label": "Guy Ritchie와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
         },
         {
           "year": 2023,
@@ -1039,10 +1319,10 @@
       "y": 1932,
       "m": 2,
       "d": 27,
-      "h": 11,
-      "min": 30,
+      "h": 2,
+      "min": 16,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1056,7 +1336,7 @@
       "note": "GMT, UTC+0"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1085,9 +1365,27 @@
           "confidence": "medium"
         },
         {
+          "year": 1964,
+          "label": "Richard Burton과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1967,
           "label": "두 번째 아카데미 여우주연상 수상",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1975,
+          "label": "Richard Burton과 재혼",
+          "weight": 0.4,
+          "confidence": "high"
+        },
+        {
+          "year": 1985,
+          "label": "HIV/AIDS 인식 개선·모금 활동 본격화",
+          "weight": 0.8,
           "confidence": "high"
         }
       ],
@@ -1102,6 +1400,24 @@
           "year": 1961,
           "label": "중증 폐렴·기관절개 등 건강 위기",
           "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 1974,
+          "label": "Richard Burton과 첫 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1976,
+          "label": "Richard Burton과 두 번째 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1997,
+          "label": "뇌종양 제거 수술",
+          "weight": 0.7,
           "confidence": "high"
         },
         {
@@ -1123,10 +1439,10 @@
       "y": 1986,
       "m": 10,
       "d": 24,
-      "h": 15,
-      "min": 31,
+      "h": 1,
+      "min": 29,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1140,7 +1456,7 @@
       "note": "EDT, UTC-4"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1175,6 +1491,12 @@
           "confidence": "medium"
         },
         {
+          "year": 2017,
+          "label": "아들 Adonis 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2018,
           "label": "Scorpion 성공",
           "weight": 1.0,
@@ -1196,6 +1518,12 @@
         },
         {
           "year": 2018,
+          "label": "Pusha T 디스곡을 통해 숨겨졌던 아들의 존재가 공개됨",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2018,
           "label": "Pusha T 디스전 및 사생활 공개 논란",
           "weight": 1.0,
           "confidence": "medium"
@@ -1210,7 +1538,8 @@
           "year": 2025,
           "label": "Kendrick Lamar 디스전 후폭풍 지속",
           "weight": 0.7,
-          "confidence": "low"
+          "confidence": "low",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -1224,11 +1553,11 @@
       "calendar": "solar",
       "y": 1944,
       "m": 3,
-      "d": 27,
-      "h": 12,
-      "min": 46,
+      "d": 26,
+      "h": 22,
+      "min": 7,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1242,7 +1571,7 @@
       "note": "EWT/war time equivalent, UTC-4"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1259,6 +1588,12 @@
           "confidence": "medium"
         },
         {
+          "year": 1971,
+          "label": "첫째 딸 Rhonda 출생 및 Robert Ellis Silberstein과 결혼",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
           "year": 1972,
           "label": "Lady Sings the Blues 성공",
           "weight": 1.0,
@@ -1269,14 +1604,38 @@
           "label": "Upside Down 등 솔로 히트",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1986,
+          "label": "Arne Næss Jr.와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2012,
+          "label": "Grammy 평생공로상 수훈",
+          "weight": 0.8,
+          "confidence": "high"
         }
       ],
       "bad": [
         {
+          "year": 1977,
+          "label": "Robert Ellis Silberstein과 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2000,
+          "label": "Arne Næss Jr.와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2002,
-          "label": "법적/개인적 논란",
-          "weight": 1.0,
-          "confidence": "low"
+          "label": "DUI 체포 및 재활 치료 공개",
+          "weight": 0.8,
+          "confidence": "high"
         },
         {
           "year": 2004,
@@ -1296,11 +1655,11 @@
       "calendar": "solar",
       "y": 1961,
       "m": 5,
-      "d": 13,
-      "h": 12,
-      "min": 40,
+      "d": 12,
+      "h": 23,
+      "min": 14,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1314,7 +1673,7 @@
       "note": "EDT, UTC-4. 당시 한국은 UTC+8:30."
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1350,8 +1709,20 @@
         },
         {
           "year": 1998,
+          "label": "Carmen Electra와 결혼",
+          "weight": 0.4,
+          "confidence": "high"
+        },
+        {
+          "year": 1998,
           "label": "Chicago Bulls 우승",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2003,
+          "label": "Michelle Moyer와 결혼",
+          "weight": 0.4,
           "confidence": "high"
         },
         {
@@ -1370,9 +1741,21 @@
         },
         {
           "year": 1999,
+          "label": "Carmen Electra와 혼인 무효·결별",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1999,
           "label": "Lakers 방출 및 경기 외 논란 누적 국면",
           "weight": 0.7,
           "confidence": "medium"
+        },
+        {
+          "year": 2012,
+          "label": "Michelle Moyer와 이혼 확정",
+          "weight": 0.5,
+          "confidence": "high"
         },
         {
           "year": 2014,
@@ -1392,11 +1775,11 @@
       "calendar": "solar",
       "y": 1954,
       "m": 3,
-      "d": 2,
-      "h": 0,
-      "min": 3,
+      "d": 1,
+      "h": 8,
+      "min": 18,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1410,7 +1793,7 @@
       "note": "CST, UTC-6"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1427,6 +1810,18 @@
           "confidence": "medium"
         },
         {
+          "year": 1975,
+          "label": "고교 동창 Cheryl Alley와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1981,
+          "label": "딸 Bryce Dallas Howard 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1995,
           "label": "Apollo 13 성공",
           "weight": 1.0,
@@ -1441,16 +1836,25 @@
       ],
       "bad": [
         {
+          "year": 2000,
+          "label": "How the Grinch Stole Christmas의 평단 혹평",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
           "year": 2011,
           "label": "The Dilemma 혹평·상업적 부진",
           "weight": 0.5,
-          "confidence": "low"
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2018,
           "label": "Solo: A Star Wars Story 흥행 기대치 하회",
           "weight": 0.7,
-          "confidence": "low"
+          "confidence": "low",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -1465,10 +1869,10 @@
       "y": 1948,
       "m": 9,
       "d": 17,
-      "h": 23,
-      "min": 59,
+      "h": 7,
+      "min": 11,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1482,10 +1886,16 @@
       "note": "PDT, UTC-7"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
+        {
+          "year": 1977,
+          "label": "Nancy Morgan과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1977,
           "label": "Three's Company 성공",
@@ -1496,6 +1906,12 @@
           "year": 1984,
           "label": "Emmy/Golden Globe 수상",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1999,
+          "label": "Amy Yasbeck과 재혼",
+          "weight": 0.5,
           "confidence": "high"
         },
         {
@@ -1511,6 +1927,12 @@
           "label": "Three's a Crowd 조기 종영",
           "weight": 0.6,
           "confidence": "medium"
+        },
+        {
+          "year": 1996,
+          "label": "Nancy Morgan과 이혼",
+          "weight": 0.5,
+          "confidence": "high"
         },
         {
           "year": 2003,
@@ -1530,11 +1952,11 @@
       "calendar": "solar",
       "y": 1960,
       "m": 8,
-      "d": 18,
-      "h": 7,
-      "min": 47,
+      "d": 17,
+      "h": 14,
+      "min": 19,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1548,7 +1970,7 @@
       "note": "PDT, UTC-7. 당시 한국은 DST로 UTC+9:30."
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1557,6 +1979,18 @@
           "label": "Fast Times at Ridgemont High로 주목",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1985,
+          "label": "Madonna와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1996,
+          "label": "Robin Wright와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
         },
         {
           "year": 2003,
@@ -1569,6 +2003,12 @@
           "label": "Milk 아카데미 남우주연상",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "Leila George와 결혼",
+          "weight": 0.4,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -1579,10 +2019,28 @@
           "confidence": "high"
         },
         {
+          "year": 1989,
+          "label": "Madonna와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2010,
+          "label": "Robin Wright와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2016,
           "label": "El Chapo 인터뷰 논란",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2022,
+          "label": "Leila George와 이혼 확정",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ]
     },
@@ -1597,10 +2055,10 @@
       "y": 1965,
       "m": 11,
       "d": 21,
-      "h": 18,
-      "min": 10,
+      "h": 7,
+      "min": 56,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1614,10 +2072,16 @@
       "note": "UTC-1 historical offset"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
+        {
+          "year": 1986,
+          "label": "아들 Sindri 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1993,
           "label": "Debut 성공",
@@ -1641,6 +2105,18 @@
           "label": "Vespertine 발매",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2002,
+          "label": "딸 Ísadóra 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2015,
+          "label": "Vulnicura 발매로 개인적 상실을 작품화해 호평",
+          "weight": 0.8,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -1655,6 +2131,12 @@
           "label": "상하이 공연 Tibet 발언 논란",
           "weight": 0.8,
           "confidence": "medium"
+        },
+        {
+          "year": 2013,
+          "label": "Matthew Barney와 장기 관계 종료",
+          "weight": 0.6,
+          "confidence": "high"
         }
       ]
     },
@@ -1668,11 +2150,11 @@
       "calendar": "solar",
       "y": 1997,
       "m": 8,
-      "d": 11,
-      "h": 9,
-      "min": 25,
+      "d": 10,
+      "h": 16,
+      "min": 26,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1686,7 +2168,7 @@
       "note": "PDT, UTC-7"
     },
     "source_quality": "A_rodden_AA",
-    "source_note": "Astro-Databank-type source",
+    "source_note": "Astro-Databank-type source; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1703,10 +2185,22 @@
           "confidence": "medium"
         },
         {
+          "year": 2018,
+          "label": "딸 Stormi 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2019,
           "label": "사업가로 대중적 정점",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2022,
+          "label": "아들 Aire 출생",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -1714,7 +2208,8 @@
           "year": 2018,
           "label": "Forbes 'self-made billionaire' 표현 관련 여론 반발",
           "weight": 0.7,
-          "confidence": "low"
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2020,
@@ -1726,7 +2221,15 @@
           "year": 2021,
           "label": "Astroworld 참사 관련 여론 부담",
           "weight": 0.5,
-          "confidence": "low"
+          "confidence": "low",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2023,
+          "label": "Travis Scott과 결별 보도",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -1742,9 +2245,9 @@
       "m": 12,
       "d": 18,
       "h": 22,
-      "min": 0,
+      "min": 1,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1758,7 +2261,7 @@
       "note": "공개 아카이브에 22시 출생으로 기재"
     },
     "source_quality": "A_official",
-    "source_note": "presidential transition / public archive",
+    "source_note": "presidential transition / public archive; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": true,
     "life_events": {
       "good": [
@@ -1766,6 +2269,12 @@
           "year": 1991,
           "label": "사법시험 합격",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2012,
+          "label": "김건희와 결혼",
+          "weight": 0.5,
           "confidence": "high"
         },
         {
@@ -1820,6 +2329,18 @@
         },
         {
           "year": 2025,
+          "label": "내란 우두머리 혐의 수사·구속 등 중대한 사법 위기",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "대통령직 파면 이후 형사재판 지속",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
           "label": "헌법재판소 탄핵 인용 및 파면",
           "weight": 1.2,
           "confidence": "high"
@@ -1840,7 +2361,7 @@
       "h": null,
       "min": null,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "lunar",
@@ -1854,7 +2375,7 @@
       "note": "본인 인터뷰성 자료에 '새벽' 언급. 寅시/卯시 논쟁 있음."
     },
     "source_quality": "B_interview_or_broadcast",
-    "source_note": "interview-based but exact hour disputed",
+    "source_note": "interview-based but exact hour disputed; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -1871,6 +2392,12 @@
           "confidence": "high"
         },
         {
+          "year": 2017,
+          "label": "행정안전부 장관 취임",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
           "year": 2021,
           "label": "국무총리 취임",
           "weight": 1.0,
@@ -1878,6 +2405,18 @@
         }
       ],
       "bad": [
+        {
+          "year": 2012,
+          "label": "대구 수성갑 총선 도전에서 낙선",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2014,
+          "label": "대구시장 선거 낙선",
+          "weight": 0.6,
+          "confidence": "high"
+        },
         {
           "year": 2020,
           "label": "총선 낙선",
@@ -1899,8 +2438,8 @@
       "d": 4,
       "h": null,
       "min": null,
-      "branch": "寅",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -1914,7 +2453,7 @@
       "note": "명리 블로그/방송 언급 기반. 1차 출처 확인 필요."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju blog / compilation",
+    "source_note": "saju blog / compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -1922,6 +2461,12 @@
           "year": 1998,
           "label": "딴지일보 창간",
           "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2008,
+          "label": "라디오 김어준의 뉴욕타임스 진행으로 방송 영향력 확대",
+          "weight": 0.6,
           "confidence": "medium"
         },
         {
@@ -1935,19 +2480,39 @@
           "label": "뉴스공장 진행 시작",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2023,
+          "label": "TBS 하차 직후 독립 유튜브 방송으로 재기",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2023,
+          "label": "유튜브 겸손은 힘들다 뉴스공장 출범·대규모 구독자 확보",
+          "weight": 0.8,
+          "confidence": "medium"
         }
       ],
       "bad": [
         {
-          "year": 2022,
-          "label": "방송 편향성 논란 확대",
-          "weight": 1.0,
-          "confidence": "medium"
+          "year": 2018,
+          "label": "미투 운동 관련 발언으로 비판과 논쟁",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
         },
         {
-          "year": 2023,
-          "label": "뉴스공장 하차 이후 전환기",
-          "weight": 1.0,
+          "year": 2021,
+          "label": "서울시장 보궐선거 편파방송 논란과 법정제재 누적",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2022,
+          "label": "TBS 뉴스공장 종영·하차 및 편향성 논란",
+          "weight": 0.8,
           "confidence": "medium"
         }
       ]
@@ -1963,24 +2528,24 @@
       "y": 1985,
       "m": 10,
       "d": 25,
-      "h": null,
-      "min": null,
-      "branch": "子",
-      "timezone_basis": "KST"
+      "h": 0,
+      "min": 30,
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
       "y": 1985,
       "m": 10,
       "d": 25,
-      "h": null,
-      "min": null,
+      "h": 0,
+      "min": 30,
       "place": "Korea",
       "timezone": "Asia/Seoul",
-      "note": "방송에서 자시 언급. 00:30설은 보조자료 수준."
+      "note": "사용자 제공 출생시각 00:30. 정확 출생지는 제공되지 않아 진태양시 보정하지 않음."
     },
-    "source_quality": "B_interview_or_broadcast",
-    "source_note": "broadcast mention, branch-level time only",
+    "source_quality": "unknown",
+    "source_note": "exact time supplied by user; exact birthplace/source document not supplied",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -1997,18 +2562,50 @@
           "confidence": "medium"
         },
         {
+          "year": 2017,
+          "label": "MBC 방송연예대상 최우수상·나 혼자 산다 핵심 멤버로 자리매김",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
           "year": 2019,
           "label": "MBC 방송연예대상 대상",
           "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "나래바 캐릭터와 다수 예능으로 전성기 지속",
+          "weight": 0.5,
           "confidence": "medium"
         }
       ],
       "bad": [
         {
           "year": 2021,
-          "label": "방송 관련 성희롱 논란",
+          "label": "웹예능 헤이나래의 부적절한 성적 표현 논란으로 사과·프로그램 폐지 및 방송 하차",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2022,
+          "label": "십자인대 파열로 수술·재활",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "전 매니저와의 갈등·갑질 의혹 및 민형사 법적 공방으로 방송 활동 중단",
+          "weight": 0.7,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2026,
+          "label": "전 매니저 관련 사건과 별개로 본인에 대한 수사·법적 공방 지속",
+          "weight": 0.5,
+          "confidence": "low",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -2026,7 +2623,7 @@
       "h": null,
       "min": null,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2040,10 +2637,16 @@
       "note": "寅시설/巳시설 등 상충 자료 존재"
     },
     "source_quality": "D_disputed",
-    "source_note": "conflicting saju columns/forums",
+    "source_note": "conflicting saju columns/forums; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1950,
+          "label": "육영수와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1961,
           "label": "5.16 군사정변으로 권력 장악",
@@ -2057,6 +2660,13 @@
           "confidence": "high"
         },
         {
+          "year": 1965,
+          "label": "한일기본조약 체결로 경제개발 자금 기반 확보",
+          "weight": 0.6,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
           "year": 1972,
           "label": "유신체제 출범으로 권력 재편",
           "weight": 1.0,
@@ -2064,6 +2674,25 @@
         }
       ],
       "bad": [
+        {
+          "year": 1948,
+          "label": "남로당 관련 혐의로 군법회의 사형 선고 후 감형·군 퇴출",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 1971,
+          "label": "3선 대선과 장기집권을 둘러싼 정치적 갈등 심화",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 1974,
+          "label": "배우자 육영수 피살로 가족적 충격",
+          "weight": 0.9,
+          "confidence": "high"
+        },
         {
           "year": 1974,
           "label": "육영수 여사 피살",
@@ -2091,8 +2720,8 @@
       "d": 4,
       "h": null,
       "min": null,
-      "branch": "子",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2106,7 +2735,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -2139,6 +2768,12 @@
           "label": "서울시장 재선",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2026,
+          "label": "서울시장 선거 승리로 사상 첫 5선 서울시장",
+          "weight": 0.9,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -2147,6 +2782,25 @@
           "label": "무상급식 주민투표 이후 서울시장 사퇴",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2016,
+          "label": "종로 국회의원 선거 낙선",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "광진을 국회의원 선거 낙선",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2026,
+          "label": "정치자금법 위반 사건 1심 유죄 판결로 사법 리스크 확대",
+          "weight": 0.6,
+          "confidence": "medium",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -2164,7 +2818,7 @@
       "h": 2,
       "min": 40,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2178,13 +2832,13 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
         {
-          "year": 1995,
-          "label": "검사 시절 슬롯머신 사건 수사로 주목",
+          "year": 1993,
+          "label": "슬롯머신 사건 수사로 주목",
           "weight": 1.0,
           "confidence": "medium"
         },
@@ -2195,10 +2849,22 @@
           "confidence": "high"
         },
         {
+          "year": 2012,
+          "label": "경상남도지사 보궐선거 당선",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
           "year": 2017,
           "label": "대선 후보",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2017,
+          "label": "자유한국당 대표 선출",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 2022,
@@ -2209,10 +2875,28 @@
       ],
       "bad": [
         {
+          "year": 2015,
+          "label": "성완종 리스트 의혹으로 기소·정치적 위기",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "대통령 선거 패배",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
           "year": 2018,
           "label": "지방선거 패배 후 당대표 사퇴",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "국민의힘 대통령 후보 경선 패배",
+          "weight": 0.7,
+          "confidence": "high"
         }
       ]
     },
@@ -2229,8 +2913,8 @@
       "d": 24,
       "h": null,
       "min": null,
-      "branch": "子",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2244,10 +2928,22 @@
       "note": "사주 compilation 기반. branch-only."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1975,
+          "label": "김정숙과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1982,
+          "label": "노무현과 합동법률사무소를 열고 인권변호사 활동",
+          "weight": 0.7,
+          "confidence": "high"
+        },
         {
           "year": 2012,
           "label": "대선 후보",
@@ -2265,14 +2961,33 @@
           "label": "대통령 당선 및 취임",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2018,
+          "label": "세 차례 남북정상회담과 한반도 평화 국면 주도",
+          "weight": 0.9,
+          "confidence": "high"
         }
       ],
       "bad": [
+        {
+          "year": 2009,
+          "label": "노무현 전 대통령 사망으로 개인적·정치적 충격",
+          "weight": 0.9,
+          "confidence": "high"
+        },
         {
           "year": 2012,
           "label": "대선 패배",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "부동산 가격 급등과 정책 논란으로 국정 부담 확대",
+          "weight": 0.6,
+          "confidence": "medium",
+          "exclude_from_validation": true
         },
         {
           "year": 2022,
@@ -2295,8 +3010,8 @@
       "d": 2,
       "h": null,
       "min": null,
-      "branch": "丑",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2310,7 +3025,7 @@
       "note": "축시생 언급/사주 compilation 기반. 정확 출처 약함."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation / weak public references",
+    "source_note": "saju compilation / weak public references; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -2325,6 +3040,13 @@
           "label": "한나라당 대표 및 총선 국면에서 정치적 부상",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2007,
+          "label": "한나라당 대통령 후보 경선에서 근소한 패배 후 유력 대권주자 입지 유지",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
         },
         {
           "year": 2012,
@@ -2343,6 +3065,12 @@
           "label": "특별사면 결정",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2022,
+          "label": "특별사면 후 대구 사저로 귀환",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -2365,6 +3093,12 @@
           "confidence": "medium"
         },
         {
+          "year": 2007,
+          "label": "한나라당 대통령 후보 경선 패배",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
           "year": 2016,
           "label": "국정농단 사태 및 탄핵소추",
           "weight": 1.0,
@@ -2381,6 +3115,12 @@
           "label": "국정농단 사건 1심 실형 선고",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "대법원에서 징역 20년형 확정",
+          "weight": 0.9,
+          "confidence": "high"
         }
       ]
     },
@@ -2397,8 +3137,8 @@
       "d": 9,
       "h": null,
       "min": null,
-      "branch": "巳",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2412,7 +3152,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -2429,6 +3169,18 @@
           "confidence": "medium"
         },
         {
+          "year": 1996,
+          "label": "국제올림픽위원회 IOC 위원 선출",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
+          "year": 2009,
+          "label": "특별사면",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
           "year": 2010,
           "label": "경영 복귀",
           "weight": 1.0,
@@ -2437,10 +3189,23 @@
       ],
       "bad": [
         {
+          "year": 1996,
+          "label": "에버랜드 전환사채 저가 발행 논란 시작",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
           "year": 2008,
           "label": "특검 및 퇴진",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2009,
+          "label": "배임·조세포탈 유죄 확정",
+          "weight": 0.8,
+          "confidence": "high"
         },
         {
           "year": 2014,
@@ -2470,7 +3235,7 @@
       "h": null,
       "min": null,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2484,10 +3249,16 @@
       "note": "생시는 미확인"
     },
     "source_quality": "unknown",
-    "source_note": "date known, birth time unknown",
+    "source_note": "date known, birth time unknown; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1998,
+          "label": "임세령과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 2012,
           "label": "삼성전자 부회장 승진",
@@ -2499,6 +3270,13 @@
           "label": "이건희 회장 와병 이후 사실상 그룹 리더십 강화",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2015,
+          "label": "삼성물산·제일모직 합병으로 지배력 강화",
+          "weight": 0.7,
+          "confidence": "medium",
+          "exclude_from_validation": true
         },
         {
           "year": 2021,
@@ -2527,9 +3305,21 @@
       ],
       "bad": [
         {
+          "year": 2009,
+          "label": "임세령과 이혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2017,
           "label": "국정농단 관련 구속 및 1심 실형",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "부친 이건희 사망과 경영 승계 부담",
+          "weight": 0.8,
           "confidence": "high"
         },
         {
@@ -2560,7 +3350,7 @@
       "h": null,
       "min": null,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2574,10 +3364,16 @@
       "note": "생시는 미확인"
     },
     "source_quality": "unknown",
-    "source_note": "date known, birth time unknown",
+    "source_note": "date known, birth time unknown; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1995,
+          "label": "시나리오 작가 정선영과 결혼",
+          "weight": 0.5,
+          "confidence": "medium"
+        },
         {
           "year": 2003,
           "label": "살인의 추억 성공",
@@ -2619,6 +3415,12 @@
           "label": "기생충 아카데미 4관왕",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "아카데미 작품상·감독상 수상으로 세계적 정점",
+          "weight": 1.0,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -2629,10 +3431,18 @@
           "confidence": "low"
         },
         {
+          "year": 2017,
+          "label": "옥자 국내 극장 배급 방식을 둘러싼 멀티플렉스 보이콧 논란",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
           "year": 2025,
           "label": "Mickey 17 흥행·평가 혼재로 기대 대비 부담",
           "weight": 0.5,
-          "confidence": "medium"
+          "confidence": "medium",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -2650,7 +3460,7 @@
       "h": null,
       "min": null,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2664,7 +3474,7 @@
       "note": "생시는 미확인"
     },
     "source_quality": "unknown",
-    "source_note": "date known, birth time unknown",
+    "source_note": "date known, birth time unknown; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -2673,6 +3483,12 @@
           "label": "시니어 무대 본격 진입",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2007,
+          "label": "그랑프리 파이널 2연패",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 2009,
@@ -2697,6 +3513,18 @@
           "label": "소치 올림픽 은메달",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2018,
+          "label": "평창 동계올림픽 최종 성화 점화",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "성악가 고우림과 결혼",
+          "weight": 0.6,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -2705,6 +3533,12 @@
           "label": "부상/성장통 국면",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2007,
+          "label": "허리 디스크·꼬리뼈 부상으로 훈련 차질",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 2014,
@@ -2728,7 +3562,7 @@
       "h": null,
       "min": null,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2742,10 +3576,16 @@
       "note": "생시는 미확인"
     },
     "source_quality": "unknown",
-    "source_note": "date known, birth time unknown",
+    "source_note": "date known, birth time unknown; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 2010,
+          "label": "함부르크 1군 데뷔 및 분데스리가 첫 골",
+          "weight": 0.7,
+          "confidence": "high"
+        },
         {
           "year": 2015,
           "label": "토트넘 홋스퍼 이적",
@@ -2772,6 +3612,12 @@
         },
         {
           "year": 2022,
+          "label": "대한민국 대표팀 월드컵 16강 진출을 주장으로 이끔",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
           "label": "아시아 선수 최초 EPL 득점왕",
           "weight": 1.0,
           "confidence": "high"
@@ -2791,10 +3637,22 @@
       ],
       "bad": [
         {
+          "year": 2017,
+          "label": "오른팔 골절로 장기 결장",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
           "year": 2019,
           "label": "고메스 부상 장면 관련 퇴장·심리적 충격",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "오른팔 재골절로 수술",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 2022,
@@ -2806,7 +3664,22 @@
           "year": 2024,
           "label": "대표팀 내분 논란",
           "weight": 1.0,
-          "confidence": "medium"
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2024,
+          "label": "전 에이전트와 계약 분쟁 소송 지속",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2026,
+          "label": "사생활을 이용한 공갈 피해 사건이 공개돼 심리·평판 부담",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -2824,7 +3697,7 @@
       "h": 12,
       "min": 0,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2838,7 +3711,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -2846,6 +3719,12 @@
           "year": 1976,
           "label": "영화계 데뷔 및 주목",
           "weight": 1.0,
+          "confidence": "medium"
+        },
+        {
+          "year": 1978,
+          "label": "백상예술대상 등 주요 연기상 수상으로 전성기 확립",
+          "weight": 0.8,
           "confidence": "medium"
         },
         {
@@ -2859,14 +3738,27 @@
           "label": "중견 배우로 재조명",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2008,
+          "label": "드라마 엄마가 뿔났다로 성공적 복귀",
+          "weight": 0.8,
+          "confidence": "high"
         }
       ],
       "bad": [
         {
           "year": 1990,
+          "label": "장기간 미국 체류로 국내 활동 공백",
+          "weight": 0.4,
+          "confidence": "low",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2007,
           "label": "학력 위조 논란으로 활동 타격",
           "weight": 0.8,
-          "confidence": "medium"
+          "confidence": "high"
         }
       ]
     },
@@ -2874,7 +3766,7 @@
     "validation_tier": "candidate"
   },
   {
-    "name": "기안84",
+    "name": "김희민",
     "gender": "male",
     "birth": {
       "calendar": "solar",
@@ -2884,7 +3776,7 @@
       "h": 10,
       "min": 0,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -2895,10 +3787,10 @@
       "min": 0,
       "place": "Korea",
       "timezone": "Asia/Seoul",
-      "note": "사주 compilation 기반"
+      "note": "사용자 제공 출생시각 10:00. 기안84의 본명 김희민으로 정규화. 정확 출생지는 제공되지 않아 진태양시 보정하지 않음."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "same person as 기안84; date/time supplied by user; exact birthplace/source document not supplied",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -2915,10 +3807,28 @@
           "confidence": "medium"
         },
         {
+          "year": 2014,
+          "label": "복학왕 연재 시작",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
           "year": 2016,
           "label": "나 혼자 산다 출연으로 예능 인지도 확대",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2021,
+          "label": "복학왕 완결로 장기 웹툰 연재 마무리",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "첫 개인전 개최로 순수미술 활동 본격화",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 2023,
@@ -2930,15 +3840,36 @@
       "bad": [
         {
           "year": 2018,
-          "label": "웹툰/방송 관련 누적 논란",
+          "label": "예명 유래가 화성연쇄살인사건을 희화화했다는 비판",
           "weight": 0.5,
-          "confidence": "medium"
+          "confidence": "high",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2018,
+          "label": "예명 유래와 과거 웹툰 표현을 둘러싼 비판 재점화",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2019,
+          "label": "웹툰의 청각장애인 묘사 논란과 사과",
+          "weight": 0.6,
+          "confidence": "high"
         },
         {
           "year": 2020,
-          "label": "웹툰 관련 논란",
-          "weight": 1.0,
-          "confidence": "medium"
+          "label": "복학왕 여성혐오 논란으로 작품 수정·사과와 방송 하차 요구",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "유튜브의 성 역할 관련 발언으로 논란",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -2956,7 +3887,7 @@
       "h": 15,
       "min": 50,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "lunar",
@@ -2970,7 +3901,7 @@
       "note": "음력 날짜. 사주 compilation 기반. 양력 변환 검증 필요."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -2979,6 +3910,12 @@
           "label": "MLB 진출",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1996,
+          "label": "한국인 최초 MLB 승리투수",
+          "weight": 0.8,
+          "confidence": "high"
         },
         {
           "year": 1997,
@@ -2993,10 +3930,22 @@
           "confidence": "medium"
         },
         {
+          "year": 2005,
+          "label": "박리혜와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2010,
           "label": "아시아 투수 MLB 최다승 기록",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2012,
+          "label": "한화 이글스에서 한국 프로야구 무대 출전",
+          "weight": 0.6,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -3007,10 +3956,17 @@
           "confidence": "low"
         },
         {
+          "year": 2006,
+          "label": "장 출혈로 부상자명단 등재",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
           "year": 2012,
           "label": "현역 은퇴",
           "weight": 1.0,
-          "confidence": "medium"
+          "confidence": "medium",
+          "exclude_from_validation": true
         }
       ]
     },
@@ -3028,7 +3984,7 @@
       "h": 20,
       "min": 0,
       "branch": null,
-      "timezone_basis": "KST"
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "lunar",
@@ -3042,7 +3998,7 @@
       "note": "음력 날짜. 사주 compilation 기반. 양력 변환 검증 필요."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3063,18 +4019,37 @@
           "label": "LPGA Hall of Fame 입회",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2016,
+          "label": "리우 올림픽 여자골프 국가대표 감독으로 금메달 지도",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "도쿄 올림픽 여자골프 국가대표 감독 선임",
+          "weight": 0.6,
+          "confidence": "high"
         }
       ],
       "bad": [
         {
-          "year": 2016,
-          "label": "은퇴",
-          "weight": 1.0,
+          "year": 2005,
+          "label": "손가락 부상·슬럼프로 투어 성적 급락",
+          "weight": 0.7,
           "confidence": "medium"
         },
         {
+          "year": 2016,
+          "label": "은퇴",
+          "weight": 1.0,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
           "year": 2024,
-          "label": "부친 관련 채무·법적 논란 공개",
+          "label": "박세리희망재단의 부친 사문서위조 고소와 가족·채무 갈등 공개",
           "weight": 0.7,
           "confidence": "medium"
         }
@@ -3093,8 +4068,8 @@
       "d": 19,
       "h": null,
       "min": null,
-      "branch": "卯",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3108,10 +4083,16 @@
       "note": "사주 compilation 기반. branch-only."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1970,
+          "label": "김윤옥과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
         {
           "year": 1977,
           "label": "현대건설 사장 취임",
@@ -3141,18 +4122,42 @@
           "label": "대통령 취임",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2010,
+          "label": "서울 G20 정상회의 개최",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "특별사면·복권",
+          "weight": 0.6,
+          "confidence": "high"
         }
       ],
       "bad": [
         {
+          "year": 1998,
+          "label": "선거법 위반 유죄 확정 전 국회의원직 사퇴",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "미국산 쇠고기 수입 반대 촛불집회로 취임 초기 국정 위기",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
           "year": 2018,
-          "label": "구속",
+          "label": "다스 횡령·뇌물 혐의 등으로 구속",
           "weight": 1.0,
           "confidence": "high"
         },
         {
           "year": 2020,
-          "label": "징역형 확정",
+          "label": "대법원에서 징역 17년형 확정",
           "weight": 1.0,
           "confidence": "medium"
         }
@@ -3171,8 +4176,8 @@
       "d": 21,
       "h": null,
       "min": null,
-      "branch": "戌",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3186,7 +4191,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3209,10 +4214,28 @@
           "confidence": "medium"
         },
         {
+          "year": 1994,
+          "label": "안진현과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2003,
+          "label": "데뷔 35주년 잠실주경기장 공연",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
           "year": 2013,
           "label": "Bounce로 대중적 재조명",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2023,
+          "label": "데뷔 55주년 공연으로 장기 흥행력 재확인",
+          "weight": 0.7,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -3220,7 +4243,14 @@
           "year": 1988,
           "label": "저작권·음반 계약 관련 장기 부담 국면",
           "weight": 0.5,
-          "confidence": "medium"
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2003,
+          "label": "배우자 안진현 사망",
+          "weight": 0.9,
+          "confidence": "high"
         }
       ]
     },
@@ -3237,8 +4267,8 @@
       "d": 8,
       "h": null,
       "min": null,
-      "branch": "戌",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3252,7 +4282,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3267,9 +4297,33 @@
           "label": "맨발의 청춘 등 스타덤",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1964,
+          "label": "엄앵란과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2000,
+          "label": "국회의원 당선",
+          "weight": 0.7,
+          "confidence": "high"
         }
       ],
       "bad": [
+        {
+          "year": 2003,
+          "label": "대구 하계유니버시아드 광고물 비리 사건으로 구속",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "폐암 진단",
+          "weight": 0.8,
+          "confidence": "high"
+        },
         {
           "year": 2018,
           "label": "사망",
@@ -3291,8 +4345,8 @@
       "d": 21,
       "h": null,
       "min": null,
-      "branch": "酉",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3306,7 +4360,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3317,19 +4371,50 @@
           "confidence": "medium"
         },
         {
+          "year": 1968,
+          "label": "해병대 입대 후 베트남전 파병",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1971,
           "label": "가요계 전성기",
           "weight": 1.0,
           "confidence": "medium"
         },
         {
+          "year": 1971,
+          "label": "윤복희와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 1974,
           "label": "군 복무 이후 복귀",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1980,
+          "label": "가요계 복귀와 공연 활동 재개",
+          "weight": 0.6,
+          "confidence": "medium"
         }
       ],
-      "bad": []
+      "bad": [
+        {
+          "year": 1974,
+          "label": "윤복희와 이혼",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 1975,
+          "label": "괴한 피습으로 부상",
+          "weight": 0.8,
+          "confidence": "medium"
+        }
+      ]
     },
     "yongshin_override": null,
     "validation_tier": "candidate"
@@ -3344,8 +4429,8 @@
       "d": 14,
       "h": null,
       "min": null,
-      "branch": "申",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3359,10 +4444,16 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1998,
+          "label": "금강산 관광사업 시작을 주도",
+          "weight": 0.8,
+          "confidence": "high"
+        },
         {
           "year": 1998,
           "label": "현대그룹 대북사업 국면",
@@ -3374,13 +4465,31 @@
           "label": "남북경협 상징성 확대",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2000,
+          "label": "남북정상회담과 대북사업 확대에 관여",
+          "weight": 0.8,
+          "confidence": "high"
         }
       ],
       "bad": [
         {
+          "year": 2001,
+          "label": "부친 정주영 사망 후 그룹 승계 부담 확대",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
           "year": 2003,
-          "label": "사망",
+          "label": "대북송금 사건 수사 국면 중 사망",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2003,
+          "label": "대북송금 사건 수사·재판 압박",
+          "weight": 0.9,
           "confidence": "high"
         }
       ]
@@ -3398,8 +4507,8 @@
       "d": 19,
       "h": null,
       "min": null,
-      "branch": "巳",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3413,7 +4522,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3434,6 +4543,18 @@
           "label": "현대차그룹 글로벌 성장 부각",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2020,
+          "label": "현대자동차그룹 명예회장 추대",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "미국 자동차 명예의 전당 헌액",
+          "weight": 0.8,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -3441,6 +4562,18 @@
           "year": 2006,
           "label": "구속/사법 리스크",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2007,
+          "label": "횡령·배임 혐의 1심 실형 선고",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "항소심 집행유예 확정",
+          "weight": 0.6,
           "confidence": "high"
         }
       ]
@@ -3458,8 +4591,8 @@
       "d": 19,
       "h": null,
       "min": null,
-      "branch": "卯",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3473,7 +4606,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3484,10 +4617,22 @@
           "confidence": "medium"
         },
         {
+          "year": 1969,
+          "label": "대우실업 수출 급성장으로 무역업계 두각",
+          "weight": 0.6,
+          "confidence": "medium"
+        },
+        {
           "year": 1980,
           "label": "대우그룹 성장",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1984,
+          "label": "대우자동차 경영권 인수로 그룹 확장",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 1993,
@@ -3504,9 +4649,21 @@
           "confidence": "medium"
         },
         {
+          "year": 1999,
+          "label": "해외 체류·도피 논란",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
           "year": 2005,
           "label": "귀국 후 구속",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2006,
+          "label": "분식회계·사기대출 등 혐의 중형 선고",
+          "weight": 0.9,
           "confidence": "high"
         },
         {
@@ -3530,8 +4687,8 @@
       "d": 14,
       "h": null,
       "min": null,
-      "branch": "戌",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3545,7 +4702,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3553,6 +4710,12 @@
           "year": 1954,
           "label": "최연소 국회의원 당선",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1983,
+          "label": "23일 단식투쟁으로 민주화 운동의 구심점 부상",
+          "weight": 0.8,
           "confidence": "high"
         },
         {
@@ -3572,6 +4735,13 @@
           "label": "대통령 취임 및 금융실명제",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 1995,
+          "label": "전두환·노태우 비자금 수사와 역사 바로 세우기 추진",
+          "weight": 0.7,
+          "confidence": "medium",
+          "exclude_from_validation": true
         }
       ],
       "bad": [
@@ -3580,6 +4750,12 @@
           "label": "국회의원직 제명",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1997,
+          "label": "아들 김현철 비리 사건으로 도덕성·국정 장악력 타격",
+          "weight": 0.8,
+          "confidence": "high"
         },
         {
           "year": 1997,
@@ -3608,8 +4784,8 @@
       "d": 17,
       "h": null,
       "min": null,
-      "branch": "丑",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3623,10 +4799,16 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1987,
+          "label": "6·29 선언으로 대통령 직선제 수용",
+          "weight": 0.8,
+          "confidence": "high"
+        },
         {
           "year": 1987,
           "label": "대통령 당선",
@@ -3644,6 +4826,18 @@
           "label": "북방외교 성과 확대",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1992,
+          "label": "중국과 수교",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 1997,
+          "label": "특별사면",
+          "weight": 0.6,
+          "confidence": "high"
         }
       ],
       "bad": [
@@ -3651,6 +4845,12 @@
           "year": 1995,
           "label": "구속",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 1996,
+          "label": "내란·뇌물죄로 징역형 선고",
+          "weight": 0.9,
           "confidence": "high"
         },
         {
@@ -3674,8 +4874,8 @@
       "d": 6,
       "h": null,
       "min": null,
-      "branch": "戌",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3689,7 +4889,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3710,14 +4910,32 @@
           "label": "대통령 취임",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 1997,
+          "label": "특별사면으로 석방",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ],
       "bad": [
+        {
+          "year": 1979,
+          "label": "12·12 군사반란",
+          "weight": 0.9,
+          "confidence": "high"
+        },
         {
           "year": 1980,
           "label": "5.18 광주민주화운동 유혈진압 책임 논란",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1988,
+          "label": "퇴임 후 백담사 은둔",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 1995,
@@ -3730,6 +4948,18 @@
           "label": "사형 선고",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1997,
+          "label": "내란·뇌물죄 무기징역 확정",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2020,
+          "label": "5·18 관련 사자명예훼손 1심 유죄",
+          "weight": 0.8,
+          "confidence": "high"
         },
         {
           "year": 2021,
@@ -3752,8 +4982,8 @@
       "d": 25,
       "h": null,
       "min": null,
-      "branch": "丑",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3767,15 +4997,27 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1938,
+          "label": "경일상회 쌀가게 경영권 인수",
+          "weight": 0.6,
+          "confidence": "high"
+        },
         {
           "year": 1947,
           "label": "현대토건 설립",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1967,
+          "label": "현대자동차 설립",
+          "weight": 0.9,
+          "confidence": "high"
         },
         {
           "year": 1972,
@@ -3784,10 +5026,16 @@
           "confidence": "medium"
         },
         {
-          "year": 1988,
-          "label": "서울올림픽 유치·경제계 위상 부각",
+          "year": 1981,
+          "label": "서울올림픽 유치위원장으로 유치 성공에 기여",
           "weight": 1.0,
-          "confidence": "medium"
+          "confidence": "high"
+        },
+        {
+          "year": 1992,
+          "label": "통일국민당 창당·국회의원 당선",
+          "weight": 0.6,
+          "confidence": "high"
         },
         {
           "year": 1998,
@@ -3801,6 +5049,12 @@
           "year": 1992,
           "label": "대선 패배",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2000,
+          "label": "현대그룹 경영권을 둘러싼 형제 간 왕자의 난",
+          "weight": 0.8,
           "confidence": "high"
         },
         {
@@ -3824,8 +5078,8 @@
       "d": 12,
       "h": null,
       "min": null,
-      "branch": "戌",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3839,7 +5093,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3854,6 +5108,18 @@
           "label": "삼성물산 설립",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 1953,
+          "label": "제일제당 설립으로 제조업 진출",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
+          "year": 1954,
+          "label": "제일모직 설립",
+          "weight": 0.7,
+          "confidence": "high"
         },
         {
           "year": 1969,
@@ -3876,6 +5142,12 @@
           "confidence": "medium"
         },
         {
+          "year": 1966,
+          "label": "한국비료 사카린 밀수 사건과 차남 이창희 구속",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
           "year": 1987,
           "label": "사망",
           "weight": 1.0,
@@ -3896,8 +5168,8 @@
       "d": 6,
       "h": null,
       "min": null,
-      "branch": "午",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3911,7 +5183,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3932,19 +5204,38 @@
           "label": "음악·방송 활동 확장",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2002,
+          "label": "윤원희와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2004,
+          "label": "첫째 딸 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2006,
+          "label": "둘째 아들 출생",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ],
       "bad": [
         {
-          "year": 2014,
-          "label": "사망",
-          "weight": 1.0,
-          "confidence": "high"
+          "year": 2007,
+          "label": "MBC 라디오 고스트스테이션 종영과 방송 활동 변동",
+          "weight": 0.3,
+          "confidence": "low",
+          "exclude_from_validation": true
         },
         {
           "year": 2014,
-          "label": "의료사고 논란 속 사망",
-          "weight": 1.0,
+          "label": "수술 후 의료사고 논란 속 사망",
+          "weight": 1.2,
           "confidence": "high"
         }
       ]
@@ -3962,8 +5253,8 @@
       "d": 2,
       "h": null,
       "min": null,
-      "branch": "亥",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "solar",
@@ -3977,7 +5268,7 @@
       "note": "사주 compilation 기반"
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
@@ -3994,22 +5285,53 @@
           "confidence": "medium"
         },
         {
+          "year": 1997,
+          "label": "이지아와 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
           "year": 2000,
           "label": "솔로 복귀",
           "weight": 1.0,
           "confidence": "medium"
+        },
+        {
+          "year": 2013,
+          "label": "이은성과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2014,
+          "label": "딸 출생",
+          "weight": 0.5,
+          "confidence": "high"
         }
       ],
       "bad": [
         {
           "year": 1996,
           "label": "은퇴 선언",
-          "weight": 1.0,
-          "confidence": "medium"
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2006,
+          "label": "이지아와 이혼",
+          "weight": 0.5,
+          "confidence": "high"
         },
         {
           "year": 2011,
-          "label": "사생활 이슈 공개",
+          "label": "비밀 결혼·이혼 및 위자료 소송 사실 공개로 큰 파장",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
+          "year": 2011,
+          "label": "이지아와의 비밀 결혼·이혼 및 재산분할 소송 사실 공개",
           "weight": 1.0,
           "confidence": "medium"
         }
@@ -4028,8 +5350,8 @@
       "d": 6,
       "h": null,
       "min": null,
-      "branch": "辰",
-      "timezone_basis": "KST"
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
     },
     "original_birth": {
       "calendar": "lunar",
@@ -4043,10 +5365,28 @@
       "note": "음력 날짜. 사주 compilation 기반. 양력 변환 검증 필요."
     },
     "source_quality": "C_saju_compilation",
-    "source_note": "saju compilation",
+    "source_note": "saju compilation; life_events reviewed/curated 2026-07-26",
     "include_in_strict_validation": false,
     "life_events": {
       "good": [
+        {
+          "year": 1973,
+          "label": "권양숙과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 1975,
+          "label": "사법시험 합격",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 1981,
+          "label": "부림사건 변론을 계기로 인권변호사·민주화운동 참여",
+          "weight": 0.8,
+          "confidence": "high"
+        },
         {
           "year": 1988,
           "label": "5공 청문회 스타로 부상",
@@ -4064,9 +5404,27 @@
           "label": "대통령 취임",
           "weight": 1.0,
           "confidence": "high"
+        },
+        {
+          "year": 2004,
+          "label": "헌법재판소 탄핵 기각·대통령 직무 복귀",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2007,
+          "label": "남북정상회담 개최",
+          "weight": 0.8,
+          "confidence": "high"
         }
       ],
       "bad": [
+        {
+          "year": 2000,
+          "label": "부산 총선 낙선",
+          "weight": 0.7,
+          "confidence": "high"
+        },
         {
           "year": 2004,
           "label": "탄핵소추",
@@ -4075,8 +5433,546 @@
         },
         {
           "year": 2009,
-          "label": "사망",
+          "label": "검찰 수사 국면 중 사망",
           "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2009,
+          "label": "박연차 게이트 관련 검찰 수사와 공개 소환",
+          "weight": 0.9,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "전소연",
+    "gender": "female",
+    "birth": {
+      "calendar": "solar",
+      "y": 1998,
+      "m": 8,
+      "d": 26,
+      "h": 17,
+      "min": 20,
+      "branch": null,
+      "timezone_basis": "LOCAL_CIVIL"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1998,
+      "m": 8,
+      "d": 26,
+      "h": 17,
+      "min": 20,
+      "place": "Korea",
+      "timezone": "Asia/Seoul",
+      "note": "사용자 제공 출생시각 17:20 및 한국 출생. 정확 출생지가 제공되지 않아 진태양시 보정하지 않음."
+    },
+    "source_quality": "unknown",
+    "source_note": "birth date/time/country supplied by user; exact birthplace/source document not supplied",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2016,
+          "label": "Unpretty Rapstar 3 준우승으로 대중 인지도 상승",
+          "weight": 0.7,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "Jelly로 솔로 데뷔",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2018,
+          "label": "(여자)아이들 리더로 데뷔·LATATA 성공 및 K/DA Pop/Stars 참여",
+          "weight": 1.1,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "첫 솔로 EP Windy·Beam Beam 발표",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2022,
+          "label": "I NEVER DIE·TOMBOY·Nxde 흥행으로 프로듀서 역량 정점",
+          "weight": 1.2,
+          "confidence": "high"
+        },
+        {
+          "year": 2023,
+          "label": "Queencard 흥행 및 그룹 대중성 확대",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "Super Lady·Klaxon 활동과 월드투어로 그룹 성장 지속",
+          "weight": 0.7,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2016,
+          "label": "Produce 101 최종 20위로 I.O.I 데뷔 무산",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2019,
+          "label": "불법 복제 소프트웨어 사용 논란 및 사과",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2021,
+          "label": "멤버 탈퇴와 그룹 활동 공백",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2024,
+          "label": "공연 중 계약 종료 시점을 언급해 재계약·그룹 존속 논란",
+          "weight": 0.4,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "강호동",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1970,
+      "m": 7,
+      "d": 14,
+      "h": 5,
+      "min": 58,
+      "branch": null,
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1970,
+      "m": 7,
+      "d": 14,
+      "h": 6,
+      "min": 30,
+      "place": "경남 마산",
+      "timezone": "Asia/Seoul",
+      "note": "사용자 제공 계산값. 공개 프로필에는 1970-06-11·진양군/진주 출생 표기가 널리 쓰이며, 일부 자료는 1970-07-14를 음력 6월 11일의 양력 환산일로 기재해 날짜·달력 기준이 충돌함."
+    },
+    "source_quality": "D_disputed",
+    "source_note": "user-provided solar 1970-07-14 06:30 Masan; public date/place records conflict; life_events reviewed/curated 2026-07-26",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 1989,
+          "label": "첫 천하장사 등극",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 1989,
+          "label": "프로 씨름 무대에서 백두장사로 부상",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 1990,
+          "label": "최연소 천하장사 등극·한 해 천하장사 3연패",
+          "weight": 1.2,
+          "confidence": "high"
+        },
+        {
+          "year": 1993,
+          "label": "방송인 데뷔",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2003,
+          "label": "이효진과 결혼",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2006,
+          "label": "아들 출생",
+          "weight": 0.5,
+          "confidence": "high"
+        },
+        {
+          "year": 2008,
+          "label": "백상예술대상 TV부문 대상 등 국민 MC 전성기",
+          "weight": 1.1,
+          "confidence": "high"
+        },
+        {
+          "year": 2012,
+          "label": "잠정 은퇴 후 방송 복귀",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2015,
+          "label": "신서유기 등으로 예능 커리어 재확장",
+          "weight": 0.8,
+          "confidence": "medium"
+        }
+      ],
+      "bad": [
+        {
+          "year": 1992,
+          "label": "씨름계 전격 은퇴",
+          "weight": 0.5,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2011,
+          "label": "세금 과소납부 논란과 방송 잠정 은퇴",
+          "weight": 1.1,
+          "confidence": "high"
+        },
+        {
+          "year": 2018,
+          "label": "부친상",
+          "weight": 0.8,
+          "confidence": "high"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "candidate"
+  },
+  {
+    "name": "Lionel Messi",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1987,
+      "m": 6,
+      "d": 24,
+      "h": 19,
+      "min": 25,
+      "branch": null,
+      "timezone_basis": "LOCAL_TRUE_SOLAR"
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1987,
+      "m": 6,
+      "d": 24,
+      "h": 20,
+      "min": 30,
+      "place": "Rosario, Santa Fe, Argentina",
+      "timezone": "America/Argentina/Cordoba",
+      "note": "출생증명서 공개 자료에 20:30 기재. 1987년 Rosario는 DST 미시행."
+    },
+    "source_quality": "A_birth_record",
+    "source_note": "Astro-Databank cites a birth certificate obtained in 2021 stating 20:30; life_events reviewed/curated 2026-07-26",
+    "include_in_strict_validation": true,
+    "life_events": {
+      "good": [
+        {
+          "year": 2004,
+          "label": "FC Barcelona 1군 공식 데뷔",
+          "weight": 0.8,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2005,
+          "label": "FIFA U-20 월드컵 우승·골든볼·골든슈",
+          "weight": 1.0,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2008,
+          "label": "베이징 올림픽 금메달",
+          "weight": 1.0,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2009,
+          "label": "바르셀로나 트레블·첫 Ballon d’Or",
+          "weight": 1.2,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2011,
+          "label": "UEFA Champions League 우승·세 번째 Ballon d’Or",
+          "weight": 1.0,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2012,
+          "label": "공식전 연간 91골·네 번째 Ballon d’Or",
+          "weight": 1.1,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2012,
+          "label": "첫아들 Thiago 출생",
+          "weight": 0.5,
+          "confidence": "high",
+          "axis": "relationship"
+        },
+        {
+          "year": 2015,
+          "label": "둘째 아들 Mateo 출생",
+          "weight": 0.5,
+          "confidence": "high",
+          "axis": "relationship"
+        },
+        {
+          "year": 2015,
+          "label": "바르셀로나 트레블·다섯 번째 Ballon d’Or",
+          "weight": 1.1,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2017,
+          "label": "Antonela Roccuzzo와 결혼",
+          "weight": 0.6,
+          "confidence": "high",
+          "axis": "relationship"
+        },
+        {
+          "year": 2018,
+          "label": "셋째 아들 Ciro 출생",
+          "weight": 0.5,
+          "confidence": "high",
+          "axis": "relationship"
+        },
+        {
+          "year": 2019,
+          "label": "여섯 번째 Ballon d’Or",
+          "weight": 0.9,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2021,
+          "label": "아르헨티나 Copa América 우승·일곱 번째 Ballon d’Or",
+          "weight": 1.2,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2022,
+          "label": "FIFA 월드컵 우승·골든볼",
+          "weight": 1.2,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2023,
+          "label": "여덟 번째 Ballon d’Or·Inter Miami Leagues Cup 우승",
+          "weight": 1.0,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2024,
+          "label": "아르헨티나 Copa América 2연패",
+          "weight": 1.0,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2025,
+          "label": "미국 대통령 자유훈장 수훈",
+          "weight": 0.6,
+          "confidence": "high",
+          "axis": "career"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2006,
+          "label": "중족골 골절로 시즌 후반 이탈·Champions League 결승 결장",
+          "weight": 0.8,
+          "confidence": "high",
+          "axis": "health"
+        },
+        {
+          "year": 2013,
+          "label": "반복된 햄스트링 부상으로 장기 결장",
+          "weight": 0.8,
+          "confidence": "medium",
+          "axis": "health"
+        },
+        {
+          "year": 2014,
+          "label": "FIFA 월드컵 결승 패배",
+          "weight": 1.0,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2016,
+          "label": "Copa América 결승 패배·대표팀 은퇴 선언",
+          "weight": 1.0,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2016,
+          "label": "스페인 법원에서 세금사기 유죄 판결",
+          "weight": 0.8,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2020,
+          "label": "바르셀로나 구단과 갈등·이적 요청",
+          "weight": 0.9,
+          "confidence": "high",
+          "axis": "career"
+        },
+        {
+          "year": 2021,
+          "label": "재정·등록 문제로 FC Barcelona와 원치 않은 결별",
+          "weight": 0.8,
+          "confidence": "high",
+          "axis": "career"
+        }
+      ]
+    },
+    "yongshin_override": null,
+    "validation_tier": "core"
+  },
+  {
+    "name": "권지용",
+    "gender": "male",
+    "birth": {
+      "calendar": "solar",
+      "y": 1988,
+      "m": 8,
+      "d": 18,
+      "h": null,
+      "min": null,
+      "branch": null,
+      "timezone_basis": null
+    },
+    "original_birth": {
+      "calendar": "solar",
+      "y": 1988,
+      "m": 8,
+      "d": 18,
+      "h": null,
+      "min": null,
+      "place": null,
+      "timezone": null,
+      "note": "생년월일은 사용자 제공. 출생시각과 출생지는 미상으로 h/min/branch/place/timezone을 null 처리."
+    },
+    "source_quality": "unknown",
+    "source_note": "birth date supplied by user; exact birth time and birthplace unknown; public career events reviewed",
+    "include_in_strict_validation": false,
+    "life_events": {
+      "good": [
+        {
+          "year": 2006,
+          "label": "BIGBANG 멤버로 공식 데뷔",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2009,
+          "label": "첫 솔로 정규앨범 Heartbreaker 성공",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2012,
+          "label": "EP One of a Kind 발표 및 솔로 활동 확대",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
+          "year": 2013,
+          "label": "정규앨범 Coup d’Etat 및 첫 솔로 월드투어",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2017,
+          "label": "EP Kwon Ji Yong 및 대규모 솔로 월드투어",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2019,
+          "label": "군 복무를 마치고 전역",
+          "weight": 0.6,
+          "confidence": "high"
+        },
+        {
+          "year": 2023,
+          "label": "마약 투약 혐의 없음으로 불송치·명예 회복",
+          "weight": 0.8,
+          "confidence": "high"
+        },
+        {
+          "year": 2024,
+          "label": "POWER·HOME SWEET HOME으로 장기 공백 후 음악 활동 복귀",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2025,
+          "label": "정규앨범 Übermensch 발매 및 월드투어",
+          "weight": 1.0,
+          "confidence": "high"
+        }
+      ],
+      "bad": [
+        {
+          "year": 2009,
+          "label": "Heartbreaker·Butterfly 표절 의혹과 소니ATV의 문제 제기로 창작자로서 큰 평판 부담",
+          "weight": 0.9,
+          "confidence": "high"
+        },
+        {
+          "year": 2011,
+          "label": "대마초 흡연 사실 확인 및 기소유예로 활동·이미지 타격",
+          "weight": 1.0,
+          "confidence": "high"
+        },
+        {
+          "year": 2018,
+          "label": "군 입대 후 발목 수술·특혜 입원 의혹 등 군 복무 논란",
+          "weight": 0.6,
+          "confidence": "medium",
+          "exclude_from_validation": true
+        },
+        {
+          "year": 2023,
+          "label": "마약 투약 의혹 경찰 수사와 대규모 평판 부담; 정밀검사 음성 후 무혐의 종결",
+          "weight": 0.8,
           "confidence": "high"
         }
       ]

@@ -939,6 +939,26 @@ def _johu_importance_score(day_stem: str, month_branch: str,
 
 JOHU_OVERRIDE_THRESHOLD = 1.2  # 이 이상이면 조후가 억부를 대체
 
+# 조후↔억부 우선순위 정책 (A/B·캘리브레이션용).
+# env SAJU_JOHU_POLICY 로 런타임 전환 가능.
+#   default       : 현재 동작 (병인/시급도/민감도로 조후 전환)
+#   eokbu_only    : 조후 전환 금지 — 억부(또는 병인 non-한서)만 사용
+#   johu_as_hee   : 억부를 주용신으로 유지하고 조후 주용신을 희신에만 편입
+#   high_threshold: 조후 민감도 임계를 높여 전환을 까다롭게 (2.4)
+#   johu_slim     : 조후 주용신 전환은 유지, 희·기만 축소
+#                   (희신=보조조후 또는 용신父母 1개, 기신=용신 극자 1개 · 식상 기신 제외)
+#   johu_slim_gi  : 조후 전환·희신은 default, 기신에서 식상(설기)만 제거
+YONGSHIN_JOHU_POLICY = os.environ.get("SAJU_JOHU_POLICY", "default").strip().lower()
+_JOHU_POLICY_ALLOWED = frozenset({
+    "default", "eokbu_only", "johu_as_hee", "high_threshold",
+    "johu_slim", "johu_slim_gi",
+})
+
+
+def get_johu_policy() -> str:
+    p = (YONGSHIN_JOHU_POLICY or "default").strip().lower()
+    return p if p in _JOHU_POLICY_ALLOWED else "default"
+
 # ── 9-5c: 병인 진단 ──────────────────────────
 # 명리학 원칙: 용신은 "부족 오행"이 아니라 "사주의 가장 큰 병(불균형)을 해결하는 오행"이다.
 # 병인을 먼저 정의한 뒤 해결 오행을 선택해야 정확한 용신이 나온다.
@@ -1497,15 +1517,27 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
     # 2) 조후 시급도가 억부 시급도를 넘으면 조후 전환
     # 3) 그 외에는 억부 유지
 
+    johu_policy = get_johu_policy()
+    johu_threshold = 2.4 if johu_policy == "high_threshold" else JOHU_OVERRIDE_THRESHOLD
+    # eokbu_only / johu_as_hee: 조후가 주용신을 덮지 않음
+    # johu_slim / johu_slim_gi: 전환은 default와 동일, 희·기 폭만 조절
+    allow_johu_override = johu_policy in (
+        "default", "high_threshold", "johu_slim", "johu_slim_gi",
+    )
+
     use_disease = False
     if disease_resolved:
         # 병인 시급도가 충분히 높고, 조후 한서 병인이면 조후 전환도 고려
         if primary["유형"] == "한서":
-            johu_override = True
+            if allow_johu_override:
+                johu_override = True
+            else:
+                # 한서 병인이어도 정책상 조후 전환 금지 → 병인 해결 오행을 그대로 사용
+                use_disease = True
         else:
             use_disease = True
 
-    if not use_disease and not johu_override:
+    if allow_johu_override and not use_disease and not johu_override:
         de = STEM_ELEMENT[day_stem]
         if eokbu["용신_cat"] == "균형" and johu_main_elem:
             # v6.1: 중화→조후 override 전 검증
@@ -1529,7 +1561,7 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         elif johu and eokbu["용신_오행"] != johu_main_elem:
             if diag["조후_시급도"] > diag["억부_시급도"]:
                 johu_override = True
-            elif johu_importance >= JOHU_OVERRIDE_THRESHOLD:
+            elif johu_importance >= johu_threshold:
                 johu_override = True
 
     # ── 용신 확정 ────────────────────────────
@@ -1565,37 +1597,52 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         hui_cats = []
         hui_elems = []
         ke_of_de = {v: k for k, v in KE_MAP.items()}.get(STEM_ELEMENT[day_stem], "")
+        slim = johu_policy == "johu_slim"
+        slim_gi = johu_policy in ("johu_slim", "johu_slim_gi")
+
         # 조후 보조용신 → 일간을 극하는 관살이면 희신에서 제외
         if johu_sub_elem and johu_sub_elem != johu_main_elem:
             if johu_sub_elem != ke_of_de:
                 hui_cats.append(johu_sub_cat)
                 hui_elems.append(johu_sub_elem)
-        # 용신이 생하는 오행 = 직접적 수혜 오행 (인성→비겁, 식상→재성 등)
-        gen_of_yong = GEN_MAP.get(johu_main_elem, "")
-        gen_of_yong_cat = _elem_to_cat(gen_of_yong)
-        if gen_of_yong and gen_of_yong not in hui_elems:
-            hui_cats.append(gen_of_yong_cat)
-            hui_elems.append(gen_of_yong)
-        # 용신을 생하는 오행 = 용신 강화 (부가 희신)
-        # 단, 해당 오행이 일간을 극하는(관살) 관계면 희신에서 제외
+
         gen_inv = {v: k for k, v in GEN_MAP.items()}
         gen_elem = gen_inv.get(johu_main_elem, "")
         gen_cat = _elem_to_cat(gen_elem)
-        if gen_elem and gen_elem != johu_main_elem and gen_elem not in hui_elems:
-            if gen_elem != ke_of_de:
-                hui_cats.append(gen_cat)
-                hui_elems.append(gen_elem)
+
+        if slim:
+            # 희신 1개만: 보조조후가 없으면 용신을 생하는 오행(父母)
+            if not hui_elems and gen_elem and gen_elem != johu_main_elem:
+                if gen_elem != ke_of_de:
+                    hui_cats.append(gen_cat)
+                    hui_elems.append(gen_elem)
+        else:
+            # 용신이 생하는 오행 = 직접적 수혜 오행 (인성→비겁, 식상→재성 등)
+            gen_of_yong = GEN_MAP.get(johu_main_elem, "")
+            gen_of_yong_cat = _elem_to_cat(gen_of_yong)
+            if gen_of_yong and gen_of_yong not in hui_elems:
+                hui_cats.append(gen_of_yong_cat)
+                hui_elems.append(gen_of_yong)
+            # 용신을 생하는 오행 = 용신 강화 (부가 희신)
+            # 단, 해당 오행이 일간을 극하는(관살) 관계면 희신에서 제외
+            if gen_elem and gen_elem != johu_main_elem and gen_elem not in hui_elems:
+                if gen_elem != ke_of_de:
+                    hui_cats.append(gen_cat)
+                    hui_elems.append(gen_elem)
+
         ke_inv = {v: k for k, v in KE_MAP.items()}
         gi_elem = ke_inv.get(johu_main_elem, "")
         gi_cat = _elem_to_cat(gi_elem)
         gi_cats = [gi_cat] if gi_elem else []
         gi_elems = [gi_elem] if gi_elem else []
         # 식상(일간의 설기)도 용신 효과를 상쇄하므로 기신에 포함
-        siksang_elem = tmap.get("식상", "")
-        siksang_cat = "식상"
-        if siksang_elem and siksang_elem not in gi_elems:
-            gi_cats.append(siksang_cat)
-            gi_elems.append(siksang_elem)
+        # johu_slim / johu_slim_gi: 식상 기신 팽창 제거 (Messi 火기신 역전 완화)
+        if not slim_gi:
+            siksang_elem = tmap.get("식상", "")
+            siksang_cat = "식상"
+            if siksang_elem and siksang_elem not in gi_elems:
+                gi_cats.append(siksang_cat)
+                gi_elems.append(siksang_elem)
 
         if eokbu["용신_cat"] == "균형":
             yong_label = f"조후용신({johu_main_elem})"
@@ -1605,6 +1652,10 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             yong_label = _cat_label(johu_cat) if johu_cat else f"조후({johu_main_elem})"
             confidence = f"높음(조후 우선: 시급도 {diag['조후_시급도']})"
             bigo = f"억부({eokbu['용신_오행']})→조후({johu_main_elem}) 전환 (조후시급도 {diag['조후_시급도']})"
+        if slim:
+            bigo = f"{bigo}; 정책 johu_slim→희·기 축소"
+        elif johu_policy == "johu_slim_gi":
+            bigo = f"{bigo}; 정책 johu_slim_gi→식상기신 제외"
 
         result.update({
             "용신": yong_label, "용신_오행": final_elem,
@@ -1685,7 +1736,13 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
     # 조후 보조용신 → 희신 편입 (관살이어도 조후적으로 필요한 오행)
     # 명리학 원칙: 조후 보조용신은 용신을 생(生)하는 오행으로, 관살이더라도
     # 기후 조절에 필요하므로 희신으로 인정한다 (기신과 충돌하지 않는 한).
-    if johu_sub_elem and johu_sub_elem != result.get("용신_오행"):
+    # johu_slim + 조후전환: 이미 희신을 1개로 좁혔으므로 이 후처리를 건너뛴다.
+    # (조후 미전환 경로에서는 default와 동일하게 보조조후 희신 편입 유지)
+    if (
+        not (johu_policy == "johu_slim" and johu_override)
+        and johu_sub_elem
+        and johu_sub_elem != result.get("용신_오행")
+    ):
         _cur_hee = list(result.get("희신_오행", []))
         _cur_gi = set(result.get("기신_오행", []))
         if johu_sub_elem not in _cur_hee and johu_sub_elem not in _cur_gi:
@@ -1693,6 +1750,22 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
             _sub_cat = _elem_to_cat(johu_sub_elem)
             _sub_label = _cat_label(_sub_cat) if _sub_cat else f"조후보조({johu_sub_elem})"
             result.setdefault("희신", []).append(_sub_label)
+
+    # johu_as_hee: 주용신은 억부 유지, 조후 주용신만 희신으로 편입
+    if (
+        johu_policy == "johu_as_hee"
+        and johu_main_elem
+        and johu_main_elem != result.get("용신_오행")
+    ):
+        _cur_hee = list(result.get("희신_오행", []))
+        _cur_gi = set(result.get("기신_오행", []))
+        if johu_main_elem not in _cur_hee and johu_main_elem not in _cur_gi:
+            result["희신_오행"] = _cur_hee + [johu_main_elem]
+            _jcat = _elem_to_cat(johu_main_elem)
+            _jlabel = _cat_label(_jcat) if _jcat else f"조후({johu_main_elem})"
+            result.setdefault("희신", []).append(f"조후희신({_jlabel})")
+            bigo = f"{bigo}; 정책 johu_as_hee→조후 {johu_main_elem}를 희신 편입"
+            confidence = f"{confidence}+조후희신"
 
     result.update({
         "억부용신": eokbu,
@@ -1702,6 +1775,7 @@ def determine_yongshin(geok_info: Dict, verdict: str, day_stem: str,
         "판정확신도": confidence,
         "조후민감도": johu_importance,
         "조후전환": johu_override,
+        "조후정책": johu_policy,
         "통관적용": tonggwan_applied,
         "비고": bigo,
     })

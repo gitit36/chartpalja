@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { buildSparkPath } from '@/lib/share/share-card'
 
 export const runtime = 'nodejs'
-export const alt = '차트팔자 — 사주도 주식처럼 차트로'
+export const alt = '차트팔자 — 사주팔자, 차트로 읽다'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 

@@ -14,11 +14,17 @@ enum SessionStatus {
   GEMINI_READY
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
   id          String   @id @default(cuid())
   kakaoId     String   @unique
   email       String?
   nickname    String?
+  role        UserRole @default(USER)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   sessions    AnalysisSession[]
@@ -27,6 +33,7 @@ model User {
   sajuEntries SajuEntry[]
   balance     UserBalance?
   ledger      EntitlementLedger[]
+  adminAuditLogs AdminAuditLog[]
 }
 
 model SajuEntry {
@@ -183,6 +190,26 @@ model CompatInvite {
   @@index([token])
 }
 
+// 마케팅 캠페인. 쿠폰·UTM·기간을 묶는 상위 단위.
+model Campaign {
+  id          String    @id @default(cuid())
+  name        String
+  status      String    @default("draft") // draft | active | ended
+  channel     String?                     // Instagram | Threads | Kakao | Offline | Partner
+  startsAt    DateTime?
+  endsAt      DateTime?
+  goal        String?
+  note        String?
+  utmSource   String?
+  utmMedium   String?
+  utmContent  String?
+  landingUrl  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  coupons     Coupon[]
+  @@index([status, createdAt])
+}
+
 // 쿠폰(프로모션 코드). 공유형(전체 한도) + 1인 1회 지급.
 model Coupon {
   id             String   @id @default(cuid())
@@ -193,9 +220,12 @@ model Coupon {
   expiresAt      DateTime?
   active         Boolean  @default(true)
   note           String?                    // 캠페인 메모
+  campaignId     String?
+  campaign       Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   redemptions    CouponRedemption[]
+  @@index([campaignId])
 }
 
 // 쿠폰 사용 기록. (couponId, userId) 유니크 = 1인 1회 강제.
@@ -212,18 +242,37 @@ model CouponRedemption {
 
 // 사용자 문의(1:1 문의). 접수 시 DB 적재 + 운영자 이메일 알림.
 model Inquiry {
-  id        String   @id @default(cuid())
-  userId    String?
-  guestId   String?
-  email     String?                       // 회신 받을 이메일(선택)
-  category  String   @default("general")  // general | payment | bug | account | etc
-  message   String
-  page      String?                       // 문의 발생 경로
-  userAgent String?
-  status    String   @default("open")     // open | resolved
-  createdAt DateTime @default(now())
+  id         String    @id @default(cuid())
+  userId     String?
+  guestId    String?
+  email      String?                       // 회신 받을 이메일(선택)
+  category   String    @default("general")  // general | payment | bug | account | etc
+  message    String
+  page       String?                       // 문의 발생 경로
+  userAgent  String?
+  status     String    @default("open")     // open | resolved
+  adminNote  String?                       // 운영자 내부 메모
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
   @@index([status, createdAt])
   @@index([userId])
+}
+
+// 관리자 변경 감사 로그.
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String
+  actor       User     @relation(fields: [actorUserId], references: [id])
+  action      String                       // coupon.create | inquiry.resolve | ...
+  targetType  String                       // coupon | campaign | inquiry | user
+  targetId    String?
+  before      Json?
+  after       Json?
+  note        String?
+  createdAt   DateTime @default(now())
+  @@index([createdAt])
+  @@index([actorUserId])
+  @@index([targetType, targetId])
 }
 
 model CompatLink {

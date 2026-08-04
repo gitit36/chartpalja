@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12121A"/>
+      <stop offset="0.55" stop-color="#171624"/>
+      <stop offset="1" stop-color="#241331"/>
+    </linearGradient>
+    <linearGradient id="redGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F04452" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#4B82EF" stop-opacity=".08"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="26" flood-color="#000" flood-opacity=".38"/>
+    </filter>
+    <clipPath id="screen"><rect x="82" y="435" width="916" height="680" rx="34"/></clipPath>
+  </defs>
+  <rect width="1080" height="1350" fill="url(#bg)"/>
+  <circle cx="970" cy="90" r="230" fill="#FFE64A" opacity=".07"/>
+  <circle cx="80" cy="1210" r="290" fill="#4B82EF" opacity=".05"/>
+  <rect x="104" y="70" width="24" height="6" rx="3" fill="#393944"/><rect x="138" y="70" width="24" height="6" rx="3" fill="#393944"/><rect x="172" y="70" width="24" height="6" rx="3" fill="#393944"/><rect x="206" y="70" width="24" height="6" rx="3" fill="#393944"/><rect x="240" y="70" width="24" height="6" rx="3" fill="#393944"/><rect x="274" y="70" width="24" height="6" rx="3" fill="#393944"/><rect x="308" y="70" width="24" height="6" rx="3" fill="#393944"/>
+  <text x="1010" y="79" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="700" fill="#A3A3B2" text-anchor="end" opacity="1">1/7</text>
+  <text x="70" y="142" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="700" fill="#FFE64A" text-anchor="start" opacity="1">LAUNCH DAY 01</text>
+  <text x="70" y="215" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="58" font-weight="800" fill="#F7F7FA"><tspan x="70" dy="0">하루 만에,</tspan><tspan x="70" dy="72">이만큼 열어봤습니다</tspan></text>
+  <text x="70" y="390" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="27" font-weight="500" fill="#A3A3B2" text-anchor="start" opacity="1">무료 이용자를 포함한 실제 사주 입력 기준</text>
+  
+  <rect x="70" y="455" width="940" height="635" rx="44" fill="url(#redGlow)" stroke="#3A3546"/>
+  <text x="120" y="575" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="34" font-weight="650" fill="#A3A3B2" text-anchor="start" opacity="1">출시 하루 만에</text>
+  <text x="120" y="735" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="138" font-weight="850" fill="#F7F7FA" text-anchor="start" opacity="1">133</text>
+  <text x="120" y="785" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="30" font-weight="700" fill="#F7F7FA" text-anchor="start" opacity="1">명의 이용자</text>
+  <text x="120" y="925" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="138" font-weight="850" fill="#FFE64A" text-anchor="start" opacity="1">270</text>
+  <text x="120" y="975" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="30" font-weight="700" fill="#F7F7FA" text-anchor="start" opacity="1">개의 사주 차트</text>
+  <rect x="570" y="830" width="18" height="120" rx="7" fill="#4B82EF" opacity="0.65"/><rect x="597" y="765" width="18" height="185" rx="7" fill="#F04452" opacity="0.73"/><rect x="624" y="805" width="18" height="145" rx="7" fill="#F04452" opacity="0.81"/><rect x="651" y="710" width="18" height="240" rx="7" fill="#4B82EF" opacity="0.89"/><rect x="678" y="770" width="18" height="180" rx="7" fill="#F04452" opacity="0.65"/><rect x="705" y="650" width="18" height="300" rx="7" fill="#F04452" opacity="0.73"/><rect x="732" y="732" width="18" height="218" rx="7" fill="#4B82EF" opacity="0.81"/><rect x="759" y="600" width="18" height="350" rx="7" fill="#F04452" opacity="0.89"/><rect x="786" y="675" width="18" height="275" rx="7" fill="#F04452" opacity="0.65"/><rect x="813" y="560" width="18" height="390" rx="7" fill="#4B82EF" opacity="0.73"/><rect x="840" y="640" width="18" height="310" rx="7" fill="#F04452" opacity="0.81"/><rect x="867" y="520" width="18" height="430" rx="7" fill="#F04452" opacity="0.89"/><rect x="894" y="580" width="18" height="370" rx="7" fill="#4B82EF" opacity="0.65"/><rect x="921" y="480" width="18" height="470" rx="7" fill="#F04452" opacity="0.73"/>
+  <text x="540" y="1038" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="25" font-weight="600" fill="#F7F7FA" text-anchor="middle" opacity="1">한 사람이 평균 2개 이상의 차트를 열어봤어요</text>
+
+  <rect x="70" y="1188" width="940" height="92" rx="28" fill="#20202A" stroke="#343442"/>
+  <text x="105" y="1245" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="22" font-weight="800" fill="#FFE64A" text-anchor="start" opacity="1">다음</text>
+  <text x="188" y="1245" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="24" font-weight="600" fill="#F7F7FA" text-anchor="start" opacity="1">왜 한 사람당 2개 넘게 만들었을까?</text>
+  <text x="955" y="1246" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="34" font-weight="600" fill="#FFE64A" text-anchor="end" opacity="1">→</text>
+  <text x="70" y="1320" font-family="Pretendard, Apple SD Gothic Neo, sans-serif" font-size="19" font-weight="600" fill="#A3A3B2" text-anchor="start" opacity="1">차트팔자  ·  사주팔자, 차트로 읽다</text>
+</svg>

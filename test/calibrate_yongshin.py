@@ -19,10 +19,11 @@
 
 life_events (JSON):
   "good"/"bad": [ {"year":2016, "label":"...", "weight":1.0, "confidence":"high|medium|low",
-                   "exclude_from_validation":false} ]
+                   "exclude_from_validation":false, "axis":"career|health|relationship|general"} ]
       - weight 없으면 1.0 (분리도 계산은 weight만 사용)
       - confidence 없으면 "medium"
       - exclude_from_validation(=context_only) true면 리포트엔 표시하되 평균계산에서 제외 (기본 false)
+      - axis 없으면 라벨 키워드로 추론 가능 (proto_multiaxis.py)
       - 같은 해가 good·bad에 동시에 있으면 collision으로 감지·표시 (자동 제외는 안 함)
 
 CLI:
@@ -35,6 +36,8 @@ CLI:
   --sensitivity-yongshin NAME  용신 오행(木火土金水) 가정별 분리도 비교 (단독)
   --export-events PATH         평가 대상 전원의 이벤트 단위 결과를 CSV로 저장 (단독)
   --top-failures N             분리도 낮은 순으로 실패자 N명 출력 (기본 10)
+  --exclude-collisions         same-year good/bad 해를 분리도 평균에서 제외
+  --with-hee-gi                --sensitivity-yongshin 시 희신/기신 동반 가정
 """
 from __future__ import annotations
 
@@ -70,6 +73,7 @@ _BRANCH_REP_HOUR = {
 }
 _TIME_LABEL = {"known": "시각(분)", "branch": "시지중앙", "unknown": "시각미상→정오"}
 _CONF_VALUES = {"high", "medium", "low"}
+_AXIS_VALUES = {"career", "health", "relationship", "general"}
 
 _TEMPLATE = [
     {
@@ -104,10 +108,11 @@ def event_years(events):
 
 
 def _events(events):
-    """[{year:int, weight:float, label:str, confidence:str, exclude:bool}] 정규화.
+    """[{year, weight, label, confidence, exclude, axis}] 정규화.
 
     exclude_from_validation(또는 alias context_only)=true 이면 리포트에는 표시하되
     good/bad 평균 계산에서는 제외한다. 기본 False.
+    axis는 career|health|relationship|general (없거나 미허용이면 None).
     """
     out = []
     for e in events or []:
@@ -116,14 +121,19 @@ def _events(events):
             if conf not in _CONF_VALUES:
                 conf = "medium"
             exclude = bool(e.get("exclude_from_validation", False) or e.get("context_only", False))
+            axis_raw = e.get("axis")
+            axis = None
+            if isinstance(axis_raw, str) and axis_raw.strip().lower() in _AXIS_VALUES:
+                axis = axis_raw.strip().lower()
             out.append({"year": int(e["year"]),
                         "weight": float(e.get("weight", 1.0)),
                         "label": e.get("label", ""),
                         "confidence": conf,
-                        "exclude": exclude})
+                        "exclude": exclude,
+                        "axis": axis})
         elif isinstance(e, int):
             out.append({"year": e, "weight": 1.0, "label": "", "confidence": "medium",
-                        "exclude": False})
+                        "exclude": False, "axis": None})
     return out
 
 
@@ -387,10 +397,24 @@ def detect_collisions(n, scores):
     return out
 
 
-def evaluate(n, keep_meta=False):
+def _mark_collision_exclude(events, coll_years):
+    """collision 연도를 exclude=True로 표시한 이벤트 복사본."""
+    return [
+        {**e, "exclude": bool(e.get("exclude") or e["year"] in coll_years)}
+        for e in events
+    ]
+
+
+def evaluate(n, keep_meta=False, exclude_collisions=False):
     r, scores, meta = _year_scores(n)
-    g_avg, g_used = _wavg(n["good"], scores)   # 같은 해 중복 제거 안 함, weight 기반
-    b_avg, b_used = _wavg(n["bad"], scores)
+    collisions = detect_collisions(n, scores)
+    good_ev, bad_ev = n["good"], n["bad"]
+    if exclude_collisions and collisions:
+        coll_years = {c["year"] for c in collisions}
+        good_ev = _mark_collision_exclude(good_ev, coll_years)
+        bad_ev = _mark_collision_exclude(bad_ev, coll_years)
+    g_avg, g_used = _wavg(good_ev, scores)   # 같은 해 중복 제거 안 함, weight 기반
+    b_avg, b_used = _wavg(bad_ev, scores)
     yong = r["용신"]
     info = {
         "용신": f'{yong.get("용신","?")} (오행 {yong.get("용신_오행","?")})',
@@ -401,12 +425,13 @@ def evaluate(n, keep_meta=False):
         "원국": r.get("원국", {}),
         "good_avg": g_avg, "bad_avg": b_avg,
         "good_used": g_used, "bad_used": b_used,
-        "good_detail": _detail(n["good"], scores),
-        "bad_detail": _detail(n["bad"], scores),
+        "good_detail": _detail(good_ev, scores),
+        "bad_detail": _detail(bad_ev, scores),
         "allmin": min(scores.values()) if scores else None,
         "allmax": max(scores.values()) if scores else None,
         "tags": event_tags(n),
-        "collisions": detect_collisions(n, scores),
+        "collisions": collisions,
+        "exclude_collisions": bool(exclude_collisions),
     }
     if keep_meta:
         ev_years = {e["year"] for e in n["good"] + n["bad"]}
@@ -479,16 +504,68 @@ def _year_breakdown(meta):
     }
 
 
-def yongshin_sensitivity(n):
-    """용신 오행을 木/火/土/金/水로 각각 가정했을 때 good_avg/bad_avg/separation 비교."""
+def _companions_for_yong(day_stem: str, yong_elem: str):
+    """용신 오행 가정 시 희신/기신 오행 동반 세트 (엔진 조후 분기와 유사한 휴리스틱).
+
+    - 희신: 용신이 생하는 오행, 용신을 생하는 오행 (일간 관살 오행은 제외)
+    - 기신: 용신을 극하는 오행, 일간 식상(설기)
+    """
+    tmap = se.day_tengo_ohaeng(day_stem)
+    ke_of_de = {v: k for k, v in se.KE_MAP.items()}.get(se.STEM_ELEMENT[day_stem], "")
+    hee, gi = [], []
+
+    gen_of_yong = se.GEN_MAP.get(yong_elem, "")
+    if gen_of_yong and gen_of_yong != ke_of_de:
+        hee.append(gen_of_yong)
+
+    gen_inv = {v: k for k, v in se.GEN_MAP.items()}
+    parent = gen_inv.get(yong_elem, "")
+    if parent and parent != yong_elem and parent != ke_of_de and parent not in hee:
+        hee.append(parent)
+
+    ke_inv = {v: k for k, v in se.KE_MAP.items()}
+    attacker = ke_inv.get(yong_elem, "")
+    if attacker:
+        gi.append(attacker)
+
+    siksang = tmap.get("식상", "")
+    if siksang and siksang not in gi and siksang != yong_elem:
+        gi.append(siksang)
+
+    return hee, gi
+
+
+def yongshin_sensitivity(n, with_hee_gi=False, exclude_collisions=False):
+    """용신 오행을 木/火/土/金/水로 각각 가정했을 때 good_avg/bad_avg/separation 비교.
+
+    with_hee_gi=True 이면 희신/기신도 동반 가정 (기본은 빈 리스트 — 기존 동작).
+    """
+    # day stem + collision years: natal compute 1회
+    r0, scores0, _ = _year_scores(n)
+    day_gz = (r0.get("원국") or {}).get("day") or ""
+    day_stem = day_gz[0] if day_gz else "甲"
+    coll_years = ({c["year"] for c in detect_collisions(n, scores0)}
+                  if exclude_collisions else set())
+
     rows = []
     for elem in _ELEMENTS:
-        override = {"용신_오행": elem, "희신_오행": [], "기신_오행": [], "구신_오행": []}
+        if with_hee_gi:
+            hee, gi = _companions_for_yong(day_stem, elem)
+        else:
+            hee, gi = [], []
+        override = {"용신_오행": elem, "희신_오행": hee, "기신_오행": gi, "구신_오행": []}
         _, scores, _ = _year_scores(n, override=override)
-        g, gu = _wavg(n["good"], scores)
-        b, bu = _wavg(n["bad"], scores)
+        good_ev, bad_ev = n["good"], n["bad"]
+        if coll_years:
+            good_ev = _mark_collision_exclude(good_ev, coll_years)
+            bad_ev = _mark_collision_exclude(bad_ev, coll_years)
+        g, gu = _wavg(good_ev, scores)
+        b, bu = _wavg(bad_ev, scores)
         sep = (g - b) if (gu >= MIN_EVENTS and bu >= MIN_EVENTS) else float("nan")
-        rows.append({"elem": elem, "good_avg": g, "bad_avg": b, "sep": sep})
+        rows.append({
+            "elem": elem, "good_avg": g, "bad_avg": b, "sep": sep,
+            "hee": hee, "gi": gi,
+        })
     return rows
 
 
@@ -545,13 +622,13 @@ def _find_subject(raw, name):
     return None
 
 
-def explain(raw, name):
+def explain(raw, name, exclude_collisions=False):
     """특정 인물 1명 상세 진단 출력 (연도별 점수 구성요소 breakdown 포함)."""
     n = _find_subject(raw, name)
     if n is None:
         print(f"[--explain] '{name}' 인물을 찾을 수 없습니다.")
         return 1
-    ev = evaluate(n, keep_meta=True)
+    ev = evaluate(n, keep_meta=True, exclude_collisions=exclude_collisions)
     meta = ev.get("year_meta", {})
     print(f"══════════ 상세 진단: {n['name']} ══════════")
     print(f"  gender                          : {n['gender']}")
@@ -609,22 +686,28 @@ def explain(raw, name):
     return 0
 
 
-def sensitivity_yongshin(raw, name):
+def sensitivity_yongshin(raw, name, with_hee_gi=False, exclude_collisions=False):
     """특정 인물의 용신 오행 가정별 분리도 민감도 출력."""
     n = _find_subject(raw, name)
     if n is None:
         print(f"[--sensitivity-yongshin] '{name}' 인물을 찾을 수 없습니다.")
         return 1
-    ev = evaluate(n)
+    ev = evaluate(n, exclude_collisions=exclude_collisions)
     cur_elem = ev.get("용신_오행")
+    mode = "희신/기신 동반" if with_hee_gi else "용신만(희·기 비움)"
+    coll = " · collision 제외" if exclude_collisions else ""
     print(f"══════════ 용신 민감도: {n['name']} ══════════")
     print(f"  현재 용신(엔진): {ev['용신']}  → separation {_fnum(ev['sep'], 2)}")
-    print(f"  (가정: 용신 오행만 교체, 희신/기신/구신 비움 · 점수 산식 미수정)")
-    rows = yongshin_sensitivity(n)
+    print(f"  (가정: {mode}{coll} · 점수 산식 미수정)")
+    rows = yongshin_sensitivity(n, with_hee_gi=with_hee_gi,
+                                exclude_collisions=exclude_collisions)
     for s in rows:
         mark = "  ← 현재" if s["elem"] == cur_elem else ""
+        extra = ""
+        if with_hee_gi:
+            extra = f"  hee={s['hee'] or '-'} gi={s['gi'] or '-'}"
         print(f"   if {s['elem']}:  good_avg {_fnum(s['good_avg'])}  "
-              f"bad_avg {_fnum(s['bad_avg'])}  separation {_fnum(s['sep'], 2)}{mark}")
+              f"bad_avg {_fnum(s['bad_avg'])}  separation {_fnum(s['sep'], 2)}{mark}{extra}")
     valid = [s for s in rows if s["sep"] == s["sep"]]
     if valid:
         best = max(valid, key=lambda s: s["sep"])
@@ -688,6 +771,8 @@ def main(argv=None):
     strict = "--strict" in argv or core_strict
     include_candidates = "--include-candidates" in argv
     show_skipped = "--show-skipped" in argv
+    exclude_collisions = "--exclude-collisions" in argv
+    with_hee_gi = "--with-hee-gi" in argv
     explain_name = _opt_value(argv, "--explain")
     sensitivity_name = _opt_value(argv, "--sensitivity-yongshin")
     export_path = _opt_value(argv, "--export-events")
@@ -710,9 +795,13 @@ def main(argv=None):
 
     # ── 단독 진단 모드 ──
     if explain_name:
-        return explain(raw, explain_name)
+        return explain(raw, explain_name, exclude_collisions=exclude_collisions)
     if sensitivity_name:
-        return sensitivity_yongshin(raw, sensitivity_name)
+        return sensitivity_yongshin(
+            raw, sensitivity_name,
+            with_hee_gi=with_hee_gi,
+            exclude_collisions=exclude_collisions,
+        )
 
     if core_strict:
         mode = "core-strict (A급·검증대상·tier=core·이벤트≥2)"
@@ -724,13 +813,15 @@ def main(argv=None):
         mode = "전체"
     print("══════════ 용신·타임라인 캘리브레이션 (v4) ══════════")
     print(f"모드: {mode}   표본 {len(raw)}명   (KST 그대로 사용 · geocoding 없음)")
+    if exclude_collisions:
+        print("옵션: --exclude-collisions (same-year good/bad 해를 분리도에서 제외)")
 
     # 요약은 모드와 무관하게 일관 산출하기 위해 전원 평가
     all_records = []
     skipped = []
     for subj in raw:
         n = normalize(subj)
-        all_records.append((n, evaluate(n)))
+        all_records.append((n, evaluate(n, exclude_collisions=exclude_collisions)))
 
     # ── CSV 내보내기 (단독 동작) ──
     if export_path:

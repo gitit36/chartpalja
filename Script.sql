@@ -1,7 +1,7 @@
 -- 누가 누굴 조회했는지
 SELECT
-  B.nickname,
-  A.name,
+  B.nickname as "고객명",
+  A.name as "기입이름",
   A."birthDate",
   A."updatedAt",
   B.email
@@ -25,6 +25,25 @@ select * from "SajuEntry" where "guestId" = 'g_erh99jd7k2mm3rp9mn';
 select * from "SajuEntry" where id = 'cmm3rpnsz0004fdposlu6mquy';
 '''
 
+-- 카카오로그인 한 사람들만
+SELECT
+  A.id,
+  A."kakaoId",
+  A.email,
+  A.nickname,
+  B."birthDate",
+  A."createdAt"
+FROM "User" as A
+left join "SajuEntry" AS B
+	ON B."userId" = A.id 
+WHERE A."kakaoId" <> 'test_reviewer_account'
+ORDER BY A."createdAt" DESC;
+
+-- 카카오로그인 몇명?
+SELECT COUNT(*) AS kakao_users
+FROM "User"
+WHERE "kakaoId" <> 'test_reviewer_account';
+
 -- 쿠폰 누가썼는지
 SELECT
   B.nickname
@@ -34,6 +53,20 @@ JOIN "User" AS B
 WHERE B.nickname IS NOT NULL
   AND B.nickname <> '이상진';
 
+-- 엔트리 몇개씩?
+SELECT
+  u.id,
+  u.email,
+  u.nickname,
+  u."updatedAt",
+  COUNT(e.id) AS entry_count
+FROM "User" u
+LEFT JOIN "SajuEntry" e 
+	ON e."userId" = u.id
+WHERE u."kakaoId" <> 'test_reviewer_account'
+GROUP BY u.id
+ORDER BY u."updatedAt" DESC;
+
 -- 사람별 잔액
 SELECT
   B.nickname,
@@ -41,8 +74,52 @@ SELECT
 FROM "UserBalance" AS A
 JOIN "User" AS B
   ON A."userId" = B.id
-WHERE B.nickname IS NOT NULL
-  AND B.nickname <> '이상진';
+JOIN "SajuEntry" as C
+  ON C."userId" = B.id
+where 1=1
+	and B.nickname IS NOT NULL
+    AND B.nickname <> '이상진'
+order by C."updatedAt" DESC;
+
+
+-- 게스트별 요약
+SELECT
+  "guestId",
+  COUNT(*) AS entry_count,
+  MIN("createdAt") AS first_entry_at,
+  MAX("createdAt") AS last_entry_at,
+  ARRAY_AGG(name ORDER BY "createdAt") AS names
+FROM "SajuEntry"
+WHERE "guestId" IS NOT NULL
+  AND "userId" IS NULL
+GROUP BY "guestId"
+ORDER BY first_entry_at DESC;
+
+-- 인원 수 (고유 게스트)
+SELECT COUNT(DISTINCT "guestId") AS guest_users
+FROM "SajuEntry"
+WHERE "guestId" IS NOT NULL
+  AND "userId" IS NULL;
+
+-- 게스트 엔트리 목록
+SELECT id, name, gender, "birthDate", "createdAt", "guestId"
+FROM "SajuEntry"
+WHERE "guestId" IS NOT NULL
+  AND "userId" IS NULL
+ORDER BY "createdAt" DESC;
+
+-- 카카오 vs 비로그인 한눈에
+SELECT
+--  CASE
+--    WHEN "userId" IS NOT NULL THEN 'logged_in'
+--    WHEN "guestId" IS NOT NULL THEN 'guest'
+--    ELSE 'orphan'
+--  END AS owner_type,
+  COUNT(*) AS entries,
+  COUNT(DISTINCT COALESCE("userId", "guestId")) AS people
+FROM "SajuEntry"
+-- GROUP BY 1
+;
 
 -- 누가 초대 링크 생성했는지
 SELECT DISTINCT
@@ -52,7 +129,6 @@ JOIN "User" AS B
   ON A."inviterUserId" = B.id
 ;
 
-select * from "SajuEntry" t order by "updatedAt" DESC;
 
 -- 쿠폰 캠페인 
 SELECT
