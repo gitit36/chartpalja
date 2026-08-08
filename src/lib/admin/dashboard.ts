@@ -35,11 +35,17 @@ function parseBirthYear(birthDate: string): number | null {
   return y
 }
 
-function ageBucket(birthDate: string, nowYear: number): (typeof AGE_BUCKETS)[number] | null {
+function estimateAge(birthDate: string, nowYear: number): number | null {
   const by = parseBirthYear(birthDate)
   if (by == null) return null
   const age = nowYear - by
   if (age < 0 || age > 120) return null
+  return age
+}
+
+function ageBucket(birthDate: string, nowYear: number): (typeof AGE_BUCKETS)[number] | null {
+  const age = estimateAge(birthDate, nowYear)
+  if (age == null) return null
   if (age < 20) return '~19'
   if (age < 30) return '20대'
   if (age < 40) return '30대'
@@ -58,6 +64,40 @@ function genderLabel(g: string): '남' | '여' | '기타' {
 function pct(part: number, total: number): number {
   if (total <= 0) return 0
   return Math.round((part / total) * 1000) / 10
+}
+
+function mean(nums: number[]): number | null {
+  if (!nums.length) return null
+  return Math.round((nums.reduce((a, b) => a + b, 0) / nums.length) * 10) / 10
+}
+
+function median(nums: number[]): number | null {
+  if (!nums.length) return null
+  const sorted = [...nums].sort((a, b) => a - b)
+  const mid = Math.floor(sorted.length / 2)
+  if (sorted.length % 2 === 0) {
+    return Math.round(((sorted[mid - 1]! + sorted[mid]!) / 2) * 10) / 10
+  }
+  return sorted[mid]!
+}
+
+function runningSum(daily: number[]): number[] {
+  let acc = 0
+  return daily.map((n) => {
+    acc += n
+    return acc
+  })
+}
+
+function funnelRates(step1: number, step2: number, step3: number) {
+  return {
+    step1,
+    step2,
+    step3,
+    rate12: pct(step2, step1),
+    rate13: pct(step3, step1),
+    rate23: pct(step3, step2),
+  }
 }
 
 export async function getDashboardData(range: AdminRangeKey) {
@@ -80,15 +120,14 @@ export async function getDashboardData(range: AdminRangeKey) {
     usersToday,
     entriesToday,
     paidToday,
-    // composition (기간 내 생성된 사주)
     compositionEntries,
     juUsageRows,
     paymentMethods,
     sharedInRange,
-    payingUserIds,
-    entryCountsByUser,
-    balances,
-    usersWithEntryInRange,
+    entryCountsInPeriod,
+    // 기간 이전 누적 베이스라인 (전체 누적 차트용)
+    signupsBefore,
+    entriesBefore,
   ] = await Promise.all([
     prisma.user.findMany({
       where: { createdAt: { gte: since }, role: UserRole.USER },
@@ -103,7 +142,7 @@ export async function getDashboardData(range: AdminRangeKey) {
     }),
     prisma.paymentOrder.findMany({
       where: { status: 'paid', paidAt: { gte: since } },
-      select: { amount: true, currency: true, paidAt: true, productCode: true, userId: true },
+      select: { amount: true, currency: true, paidAt: true, productCode: true, userId: true, paymentMethod: true },
     }),
     prisma.couponRedemption.count({
       where: { createdAt: { gte: since } },
@@ -119,6 +158,7 @@ export async function getDashboardData(range: AdminRangeKey) {
     prisma.inquiry.count({ where: { status: 'open' } }),
     prisma.sajuEntry.findMany({
       where: {
+        updatedAt: { gte: since },
         userId: { not: null },
         user: {
           nickname: { not: null },
@@ -136,9 +176,7 @@ export async function getDashboardData(range: AdminRangeKey) {
         birthTime: true,
         updatedAt: true,
         createdAt: true,
-        user: {
-          select: { id: true, nickname: true, email: true },
-        },
+        user: { select: { id: true, nickname: true, email: true } },
       },
     }),
     prisma.user.count({ where: { createdAt: { gte: todayStart }, role: UserRole.USER } }),
@@ -167,29 +205,67 @@ export async function getDashboardData(range: AdminRangeKey) {
     prisma.sajuEntry.count({
       where: { createdAt: { gte: since }, isShared: true },
     }),
-    prisma.paymentOrder.findMany({
-      where: { status: 'paid', paidAt: { gte: since } },
-      select: { userId: true },
-      distinct: ['userId'],
-    }),
     prisma.sajuEntry.groupBy({
       by: ['userId'],
       where: {
         userId: { not: null },
+        createdAt: { gte: since },
         user: { role: UserRole.USER },
       },
       _count: { _all: true },
     }),
-    prisma.userBalance.findMany({
-      where: { user: { role: UserRole.USER } },
-      select: { ju: true },
-    }),
-    prisma.sajuEntry.findMany({
-      where: { createdAt: { gte: since }, userId: { not: null } },
-      select: { userId: true },
-      distinct: ['userId'],
-    }),
+    prisma.user.count({ where: { createdAt: { lt: since }, role: UserRole.USER } }),
+    prisma.sajuEntry.count({ where: { createdAt: { lt: since } } }),
   ])
+
+  const signupIds = usersInRange.map((u) => u.id)
+
+  // ── 코호트 퍼널: 기간 내 가입자 → (현재까지) 엔트리 보유 → (현재까지) 결제 ──
+  const [cohortEntryUsers, cohortPaidUsers] = signupIds.length
+    ? await Promise.all([
+        prisma.sajuEntry.findMany({
+          where: { userId: { in: signupIds } },
+          select: { userId: true },
+          distinct: ['userId'],
+        }),
+        prisma.paymentOrder.findMany({
+          where: { userId: { in: signupIds }, status: 'paid' },
+          select: { userId: true },
+          distinct: ['userId'],
+        }),
+      ])
+    : [[], []]
+
+  const cohortSignup = signupIds.length
+  const cohortWithEntry = cohortEntryUsers.length
+  const cohortPaid = cohortPaidUsers.length
+
+  // ── 활성 퍼널: 기간 내 사주 생성 유저 → 기간 내 결제 유저 ──
+  const activeEntryUserIds = [
+    ...new Set(
+      entriesInRange.map((e) => e.userId).filter((id): id is string => !!id),
+    ),
+  ]
+  const activePaidInRange = new Set(paidOrdersInRange.map((o) => o.userId))
+  const activeEntryUsers = activeEntryUserIds.length
+  const activePaidAmongEntry = activeEntryUserIds.filter((id) => activePaidInRange.has(id)).length
+  const activePaidUsers = activePaidInRange.size
+
+  // 기간 활성 유저의 현재 잔액 (가입 or 엔트리 or 결제)
+  const activeUserIdSet = new Set<string>([
+    ...signupIds,
+    ...activeEntryUserIds,
+    ...paidOrdersInRange.map((o) => o.userId),
+  ])
+  const activeUserIds = [...activeUserIdSet]
+  const balances = activeUserIds.length
+    ? await prisma.userBalance.findMany({
+        where: { userId: { in: activeUserIds } },
+        select: { userId: true, ju: true },
+      })
+    : []
+  // balance row 없는 활성 유저는 아직 getBalance 안 탄 경우 → 기본 5주로 간주하지 않고 제외(실잔액만)
+  const balanceValues = balances.map((b) => b.ju)
 
   const signupByDay: Record<string, number> = Object.fromEntries(dateKeys.map((k) => [k, 0]))
   for (const u of usersInRange) {
@@ -215,12 +291,20 @@ export async function getDashboardData(range: AdminRangeKey) {
     }
   }
 
+  const dailySignups = dateKeys.map((k) => signupByDay[k] ?? 0)
+  const dailyEntries = dateKeys.map((k) => entryByDay[k] ?? 0)
+  const dailyRevenue = dateKeys.map((k) => revenueByDay[k] ?? 0)
+  const periodCumSignups = runningSum(dailySignups)
+  const periodCumEntries = runningSum(dailyEntries)
+  const periodCumRevenue = runningSum(dailyRevenue)
+  const totalCumSignups = periodCumSignups.map((n) => n + signupsBefore)
+  const totalCumEntries = periodCumEntries.map((n) => n + entriesBefore)
+
   const productMix: Record<string, number> = {}
   for (const o of paidOrdersInRange) {
     productMix[o.productCode] = (productMix[o.productCode] ?? 0) + 1
   }
 
-  // ── 구성 통계 (기간 내 사주) ──
   const genderCounts = { 남: 0, 여: 0, 기타: 0 }
   const ageCounts: Record<(typeof AGE_BUCKETS)[number], number> = {
     '~19': 0,
@@ -230,20 +314,16 @@ export async function getDashboardData(range: AdminRangeKey) {
     '50대': 0,
     '60대+': 0,
   }
-  const elementCounts: Record<string, number> = {
-    木: 0,
-    火: 0,
-    土: 0,
-    金: 0,
-    水: 0,
-    기타: 0,
-  }
+  const elementCounts: Record<string, number> = { 木: 0, 火: 0, 土: 0, 金: 0, 水: 0, 기타: 0 }
   let memberEntries = 0
   let guestOnlyEntries = 0
+  const ages: number[] = []
   for (const e of compositionEntries) {
     genderCounts[genderLabel(e.gender)] += 1
     const bucket = ageBucket(e.birthDate, nowYear)
     if (bucket) ageCounts[bucket] += 1
+    const age = estimateAge(e.birthDate, nowYear)
+    if (age != null) ages.push(age)
     const el = e.dayElement?.trim() ?? ''
     if (el && el in elementCounts && el !== '기타') elementCounts[el] += 1
     else if (el) elementCounts['기타'] += 1
@@ -252,7 +332,6 @@ export async function getDashboardData(range: AdminRangeKey) {
   }
   const compositionTotal = compositionEntries.length
 
-  // 주 사용처
   const juByReason = { fortune: 0, period: 0, compat: 0 }
   for (const row of juUsageRows) {
     const used = Math.abs(row.delta)
@@ -261,40 +340,40 @@ export async function getDashboardData(range: AdminRangeKey) {
     else if (row.reason === 'use:compat') juByReason.compat += used
   }
 
-  // 결제수단
   const methodCounts: Record<string, number> = {}
   for (const o of paymentMethods) {
     const m = o.paymentMethod || 'unknown'
     methodCounts[m] = (methodCounts[m] ?? 0) + 1
   }
 
-  // 유저당 사주 수 (전체 누적, USER만)
+  // 기간 내 엔트리 생성 유저별 건수
+  const entryCountValues: number[] = []
   const entryPerUser = { one: 0, twoThree: 0, fourPlus: 0 }
-  for (const g of entryCountsByUser) {
+  for (const g of entryCountsInPeriod) {
+    if (!g.userId) continue
     const n = g._count._all
+    entryCountValues.push(n)
     if (n <= 1) entryPerUser.one += 1
     else if (n <= 3) entryPerUser.twoThree += 1
     else entryPerUser.fourPlus += 1
   }
-  const usersWithEntries = entryCountsByUser.length
+  const usersWithEntriesInPeriod = entryCountValues.length
 
-  // 잔액 분포
   let zeroBalance = 0
-  let lowBalance = 0 // 1~4
-  let midBalance = 0 // 5+
-  for (const b of balances) {
-    if (b.ju <= 0) zeroBalance += 1
-    else if (b.ju < 5) lowBalance += 1
+  let lowBalance = 0
+  let midBalance = 0
+  for (const ju of balanceValues) {
+    if (ju <= 0) zeroBalance += 1
+    else if (ju < 5) lowBalance += 1
     else midBalance += 1
   }
-  const balanceTotal = balances.length
+  const balanceTotal = balanceValues.length
 
-  // 퍼널 (기간 내)
-  const signups = usersInRange.length
-  const usersWithEntry = usersWithEntryInRange.length
-  const payingUsers = payingUserIds.length
+  const signups = cohortSignup
   const juUsed = Math.abs(juUsedInRange._sum.delta ?? 0)
-  const arpu = payingUsers > 0 ? Math.round(revenueKrw / payingUsers) : 0
+  const arpu = activePaidUsers > 0 ? Math.round(revenueKrw / activePaidUsers) : 0
+
+  const cohort = funnelRates(cohortSignup, cohortWithEntry, cohortPaid)
 
   return {
     range,
@@ -308,12 +387,14 @@ export async function getDashboardData(range: AdminRangeKey) {
       couponRedeems: couponRedeemsInRange,
       juUsed,
       openInquiries,
-      payingUsers,
+      payingUsers: activePaidUsers,
+      cohortPayingUsers: cohortPaid,
       arpu,
       sharedEntries: sharedInRange,
       shareRate: pct(sharedInRange, compositionTotal),
-      payConvertRate: pct(payingUsers, signups),
-      entryConvertRate: pct(usersWithEntry, signups),
+      /** 코호트 기준 결제 전환율 */
+      payConvertRate: cohort.rate13,
+      entryConvertRate: cohort.rate12,
       zeroBalanceRate: pct(zeroBalance, balanceTotal),
       today: {
         signups: usersToday,
@@ -323,18 +404,45 @@ export async function getDashboardData(range: AdminRangeKey) {
       },
     },
     funnel: {
-      signups,
-      usersWithEntry,
-      payingUsers,
-      entryRate: pct(usersWithEntry, signups),
-      payRate: pct(payingUsers, signups),
-      payGivenEntry: pct(payingUsers, usersWithEntry),
+      cohort: {
+        ...cohort,
+        labels: ['신규 가입', '사주 보유', '결제'],
+        description: '기간 내 가입한 유저만 추적 · 엔트리/결제는 가입 이후 현재까지',
+      },
+      active: {
+        step1: activeEntryUsers,
+        step2: activePaidAmongEntry,
+        step3: activePaidUsers,
+        rate12: pct(activePaidAmongEntry, activeEntryUsers),
+        rate13: pct(activePaidUsers, activeEntryUsers),
+        rate23: pct(activePaidAmongEntry, activePaidUsers),
+        labels: ['사주 생성 유저', '그중 결제', '기간 결제 유저'],
+        description: '기간 내 활동 기준 · 기존 가입자도 포함 (가입 수와 직접 비교 불가)',
+      },
+    },
+    stats: {
+      age: { avg: mean(ages), median: median(ages), n: ages.length },
+      entriesPerUser: {
+        avg: mean(entryCountValues),
+        median: median(entryCountValues),
+        n: usersWithEntriesInPeriod,
+      },
+      balance: {
+        avg: mean(balanceValues),
+        median: median(balanceValues),
+        n: balanceTotal,
+      },
     },
     charts: {
       dates: dateKeys,
-      signups: dateKeys.map((k) => signupByDay[k] ?? 0),
-      entries: dateKeys.map((k) => entryByDay[k] ?? 0),
-      revenue: dateKeys.map((k) => revenueByDay[k] ?? 0),
+      signups: dailySignups,
+      entries: dailyEntries,
+      revenue: dailyRevenue,
+      signupsPeriodCum: periodCumSignups,
+      entriesPeriodCum: periodCumEntries,
+      revenuePeriodCum: periodCumRevenue,
+      signupsTotalCum: totalCumSignups,
+      entriesTotalCum: totalCumEntries,
       productMix: Object.entries(productMix)
         .map(([code, count]) => ({ code, count }))
         .sort((a, b) => b.count - a.count),
@@ -375,9 +483,9 @@ export async function getDashboardData(range: AdminRangeKey) {
         { key: 'guest', label: '게스트', count: guestOnlyEntries, pct: pct(guestOnlyEntries, compositionTotal) },
       ],
       entriesPerUser: [
-        { key: '1', label: '1개', count: entryPerUser.one, pct: pct(entryPerUser.one, usersWithEntries) },
-        { key: '2-3', label: '2~3개', count: entryPerUser.twoThree, pct: pct(entryPerUser.twoThree, usersWithEntries) },
-        { key: '4+', label: '4개+', count: entryPerUser.fourPlus, pct: pct(entryPerUser.fourPlus, usersWithEntries) },
+        { key: '1', label: '1개', count: entryPerUser.one, pct: pct(entryPerUser.one, usersWithEntriesInPeriod) },
+        { key: '2-3', label: '2~3개', count: entryPerUser.twoThree, pct: pct(entryPerUser.twoThree, usersWithEntriesInPeriod) },
+        { key: '4+', label: '4개+', count: entryPerUser.fourPlus, pct: pct(entryPerUser.fourPlus, usersWithEntriesInPeriod) },
       ],
       balance: [
         { key: '0', label: '0주', count: zeroBalance, pct: pct(zeroBalance, balanceTotal) },

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { getDashboardData } from '@/lib/admin/dashboard'
 import { parseRangeKey, type AdminRangeKey } from '@/lib/admin/dates'
-import { MetricCard, StatusBadge } from '@/components/admin/AdminUi'
+import { MetricCard, MetricGroup, StatusBadge } from '@/components/admin/AdminUi'
 import { DashboardCharts, FunnelStrip } from '@/components/admin/DashboardCharts'
 
 export const dynamic = 'force-dynamic'
@@ -15,6 +15,12 @@ const RANGES: { key: AdminRangeKey; label: string }[] = [
   { key: '7d', label: '7일' },
   { key: '30d', label: '30일' },
 ]
+
+const RANGE_LABEL: Record<AdminRangeKey, string> = {
+  '1d': '오늘',
+  '7d': '최근 7일',
+  '30d': '최근 30일',
+}
 
 export default async function AdminDashboardPage({
   searchParams,
@@ -34,7 +40,9 @@ export default async function AdminDashboardPage({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-xl font-bold">대시보드</h1>
-          <p className="mt-1 text-sm text-cp-muted">가입 · 사주 · 결제 · 구성 통계 · 최근 조회</p>
+          <p className="mt-1 text-sm text-cp-muted">
+            {RANGE_LABEL[range]} 기준 · 상단 기간을 바꾸면 아래 수치가 함께 갱신됩니다
+          </p>
         </div>
         <div className="flex gap-1 rounded-xl border border-cp-border bg-cp-raised p-1">
           {RANGES.map((r) => (
@@ -51,66 +59,80 @@ export default async function AdminDashboardPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <MetricCard label="신규 가입" value={s.signups} hint={`오늘 ${s.today.signups}`} />
-        <MetricCard
-          label="사주 생성"
-          value={s.entries}
-          hint={`게스트 ${s.guestEntries} · 오늘 ${s.today.entries}`}
-        />
-        <MetricCard
-          label="결제 건수"
-          value={s.paidOrders}
-          hint={`오늘 ${s.today.paidOrders}`}
-        />
-        <MetricCard
-          label="매출 (KRW)"
-          value={formatWon(s.revenueKrw)}
-          hint={`오늘 ${formatWon(s.today.revenueKrw)}`}
-        />
-        <MetricCard
-          label="결제 전환율"
-          value={`${s.payConvertRate}%`}
-          hint={`결제 유저 ${s.payingUsers}명 · ARPU ${formatWon(s.arpu)}`}
-        />
-        <MetricCard label="쿠폰 사용" value={s.couponRedeems} />
-        <MetricCard label="주 사용량" value={`${s.juUsed}주`} hint="use:* 합계" />
-        <MetricCard
-          label="잔액 0주 비율"
-          value={`${s.zeroBalanceRate}%`}
-          hint="전체 회원 잔액 기준"
-        />
-        <MetricCard
-          label="공유 사주"
-          value={s.sharedEntries}
-          hint={`기간 내 생성분 · ${s.shareRate}%`}
-        />
-        <MetricCard
-          label="미처리 문의"
-          value={s.openInquiries}
-          hint={s.openInquiries > 0 ? '확인 필요' : '없음'}
-        />
-        <MetricCard
-          label="성비 TOP"
-          value={topGender && topGender.count > 0 ? `${topGender.label} ${topGender.pct}%` : '-'}
-          hint={topGender ? `${topGender.count}건` : '기간 내 사주 없음'}
-        />
-        <MetricCard
-          label="연령 TOP"
-          value={topAge && topAge.count > 0 ? topAge.label : '-'}
-          hint={topAge && topAge.count > 0 ? `${topAge.count}건 (${topAge.pct}%)` : '기간 내 사주 없음'}
-        />
+      <div className="space-y-3">
+        <MetricGroup title="성장">
+          <MetricCard label="신규 가입" value={s.signups} hint={`오늘 ${s.today.signups}`} />
+          <MetricCard
+            label="사주 생성"
+            value={s.entries}
+            hint={`게스트 ${s.guestEntries} · 오늘 ${s.today.entries}`}
+          />
+          <MetricCard
+            label="코호트 전환"
+            value={`${s.payConvertRate}%`}
+            hint={`가입→결제 · 엔트리 ${s.entryConvertRate}%`}
+          />
+          <MetricCard
+            label="공유 사주"
+            value={s.sharedEntries}
+            hint={`기간 내 생성 · ${s.shareRate}%`}
+          />
+        </MetricGroup>
+
+        <MetricGroup title="매출">
+          <MetricCard label="결제 건수" value={s.paidOrders} hint={`오늘 ${s.today.paidOrders}`} />
+          <MetricCard
+            label="매출 (KRW)"
+            value={formatWon(s.revenueKrw)}
+            hint={`오늘 ${formatWon(s.today.revenueKrw)}`}
+          />
+          <MetricCard
+            label="결제 유저"
+            value={s.payingUsers}
+            hint={`ARPU ${formatWon(s.arpu)} · 기간 활성`}
+          />
+          <MetricCard label="쿠폰 사용" value={s.couponRedeems} hint="기간 내 redemption" />
+        </MetricGroup>
+
+        <MetricGroup title="이용 · 리스크">
+          <MetricCard label="주 사용량" value={`${s.juUsed}주`} hint="기간 내 use:*" />
+          <MetricCard
+            label="잔액 0주 비율"
+            value={`${s.zeroBalanceRate}%`}
+            hint="기간 활성 유저 기준"
+          />
+          <MetricCard
+            label="미처리 문의"
+            value={s.openInquiries}
+            hint={s.openInquiries > 0 ? '현재 open 전체' : '없음'}
+          />
+          <MetricCard
+            label="구성 TOP"
+            value={
+              topGender && topGender.count > 0
+                ? `${topGender.label} ${topGender.pct}%`
+                : '-'
+            }
+            hint={
+              topAge && topAge.count > 0
+                ? `연령 ${topAge.label} ${topAge.pct}%`
+                : '기간 내 사주 없음'
+            }
+          />
+        </MetricGroup>
       </div>
 
       <FunnelStrip data={data} />
 
       <DashboardCharts data={data} />
 
-      {(data.charts.productMix.length > 0 || data.charts.paymentMethods.length > 0 || data.charts.ownership.some((o) => o.count > 0)) ? (
+      {(data.charts.productMix.length > 0 ||
+        data.charts.paymentMethods.length > 0 ||
+        data.charts.ownership.some((o) => o.count > 0)) && (
         <div className="grid gap-4 lg:grid-cols-3">
           {data.charts.productMix.length > 0 ? (
             <div className="rounded-2xl border border-cp-border bg-cp-raised p-4">
-              <p className="text-sm font-semibold mb-3">상품별 판매</p>
+              <p className="text-[11px] font-semibold tracking-wide text-cp-dim uppercase mb-3">상품별 판매</p>
               <div className="flex flex-wrap gap-2">
                 {data.charts.productMix.map((p) => (
                   <span
@@ -126,7 +148,7 @@ export default async function AdminDashboardPage({
 
           {data.charts.paymentMethods.length > 0 ? (
             <div className="rounded-2xl border border-cp-border bg-cp-raised p-4">
-              <p className="text-sm font-semibold mb-3">결제수단</p>
+              <p className="text-[11px] font-semibold tracking-wide text-cp-dim uppercase mb-3">결제수단</p>
               <div className="flex flex-wrap gap-2">
                 {data.charts.paymentMethods.map((p) => (
                   <span
@@ -141,7 +163,7 @@ export default async function AdminDashboardPage({
           ) : null}
 
           <div className="rounded-2xl border border-cp-border bg-cp-raised p-4">
-            <p className="text-sm font-semibold mb-3">회원 · 게스트 사주</p>
+            <p className="text-[11px] font-semibold tracking-wide text-cp-dim uppercase mb-3">회원 · 게스트 사주</p>
             <div className="flex flex-wrap gap-2">
               {data.charts.ownership.map((o) => (
                 <span
@@ -154,14 +176,14 @@ export default async function AdminDashboardPage({
             </div>
           </div>
         </div>
-      ) : null}
+      )}
 
       <section className="rounded-2xl border border-cp-border bg-cp-raised overflow-hidden">
         <div className="flex items-center justify-between gap-3 border-b border-cp-border px-4 py-3">
           <div>
             <p className="text-sm font-semibold">최근 사주 조회</p>
             <p className="text-[11px] text-cp-dim mt-0.5">
-              누가(고객) 누구(조회 인물)를 등록·갱신했는지 · updatedAt 기준
+              {RANGE_LABEL[range]} 내 갱신분 · updatedAt 기준
             </p>
           </div>
           <StatusBadge tone="muted">최신 40건</StatusBadge>
@@ -183,7 +205,7 @@ export default async function AdminDashboardPage({
               {data.recentLookups.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-4 py-8 text-center text-cp-muted">
-                    표시할 조회 기록이 없습니다.
+                    해당 기간에 표시할 조회 기록이 없습니다.
                   </td>
                 </tr>
               ) : (

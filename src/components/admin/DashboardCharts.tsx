@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo, useState } from 'react'
 import {
   ResponsiveContainer,
   AreaChart,
@@ -13,8 +14,10 @@ import {
   PieChart,
   Pie,
   Cell,
+  Legend,
 } from 'recharts'
 import type { DashboardData } from '@/lib/admin/dashboard'
+import { SegmentedControl } from '@/components/admin/AdminUi'
 
 const TOOLTIP_STYLE = {
   background: '#1f1e25',
@@ -43,20 +46,31 @@ const JU_COLORS: Record<string, string> = {
   compat: '#f04452',
 }
 
+type TrendMode = 'daily' | 'periodCum' | 'totalCum'
+type FunnelMode = 'cohort' | 'active'
+
 function ChartCard({
   title,
   hint,
+  stat,
+  action,
   children,
 }: {
   title: string
   hint?: string
+  stat?: string | null
+  action?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
     <div className="rounded-2xl border border-cp-border bg-cp-raised p-4">
-      <div className="mb-3">
-        <p className="text-sm font-semibold">{title}</p>
-        {hint ? <p className="text-[11px] text-cp-dim mt-0.5">{hint}</p> : null}
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold">{title}</p>
+          {hint ? <p className="text-[11px] text-cp-dim mt-0.5">{hint}</p> : null}
+          {stat ? <p className="text-[11px] text-cp-secondary mt-1 tabular-nums">{stat}</p> : null}
+        </div>
+        {action}
       </div>
       {children}
     </div>
@@ -67,24 +81,68 @@ function EmptyChart() {
   return <div className="h-48 flex items-center justify-center text-sm text-cp-muted">데이터 없음</div>
 }
 
+function formatStat(avg: number | null, median: number | null, unit = '') {
+  if (avg == null && median == null) return null
+  const a = avg != null ? `평균 ${avg}${unit}` : null
+  const m = median != null ? `중앙값 ${median}${unit}` : null
+  return [a, m].filter(Boolean).join(' · ')
+}
+
 export function DashboardCharts({ data }: { data: DashboardData }) {
-  const series = data.charts.dates.map((date, i) => ({
-    date: date.slice(5),
-    signups: data.charts.signups[i] ?? 0,
-    entries: data.charts.entries[i] ?? 0,
-    revenue: data.charts.revenue[i] ?? 0,
-  }))
+  const [trendMode, setTrendMode] = useState<TrendMode>('daily')
+  const [revenueMode, setRevenueMode] = useState<'daily' | 'periodCum'>('daily')
+
+  const series = useMemo(() => {
+    return data.charts.dates.map((date, i) => {
+      const signups =
+        trendMode === 'daily'
+          ? data.charts.signups[i] ?? 0
+          : trendMode === 'periodCum'
+            ? data.charts.signupsPeriodCum[i] ?? 0
+            : data.charts.signupsTotalCum[i] ?? 0
+      const entries =
+        trendMode === 'daily'
+          ? data.charts.entries[i] ?? 0
+          : trendMode === 'periodCum'
+            ? data.charts.entriesPeriodCum[i] ?? 0
+            : data.charts.entriesTotalCum[i] ?? 0
+      const revenue =
+        revenueMode === 'daily'
+          ? data.charts.revenue[i] ?? 0
+          : data.charts.revenuePeriodCum[i] ?? 0
+      return { date: date.slice(5), signups, entries, revenue }
+    })
+  }, [data, trendMode, revenueMode])
 
   const genderData = data.charts.gender.filter((g) => g.count > 0)
   const elementData = data.charts.dayElement.filter((e) => e.count > 0)
   const juData = data.charts.juUsage.filter((j) => j.count > 0)
-  const ageData = data.charts.age
   const hasComposition = data.charts.compositionTotal > 0
+  const trendHint =
+    trendMode === 'daily'
+      ? '일별 신규'
+      : trendMode === 'periodCum'
+        ? '선택 기간 내 누적'
+        : '전체 누적 (기간 이전 포함)'
 
   return (
     <div className="space-y-4">
       <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="가입 · 사주 입력">
+        <ChartCard
+          title="가입 · 사주 입력"
+          hint={trendHint}
+          action={
+            <SegmentedControl<TrendMode>
+              value={trendMode}
+              onChange={setTrendMode}
+              options={[
+                { value: 'daily', label: '신규' },
+                { value: 'periodCum', label: '기간누적' },
+                { value: 'totalCum', label: '전체누적' },
+              ]}
+            />
+          }
+        >
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={series}>
@@ -92,6 +150,13 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
                 <XAxis dataKey="date" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
                 <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#e8e8ed' }} />
+                <Legend
+                  verticalAlign="top"
+                  height={28}
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ fontSize: 11, color: '#8b8b93' }}
+                />
                 <Area type="monotone" dataKey="entries" name="사주" stroke="#f04452" fill="rgba(240,68,82,0.18)" strokeWidth={2} />
                 <Area type="monotone" dataKey="signups" name="가입" stroke="#3182f6" fill="rgba(49,130,246,0.15)" strokeWidth={2} />
               </AreaChart>
@@ -99,7 +164,20 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
           </div>
         </ChartCard>
 
-        <ChartCard title="매출 (KRW)">
+        <ChartCard
+          title="매출 (KRW)"
+          hint={revenueMode === 'daily' ? '일별 신규' : '선택 기간 내 누적'}
+          action={
+            <SegmentedControl<'daily' | 'periodCum'>
+              value={revenueMode}
+              onChange={setRevenueMode}
+              options={[
+                { value: 'daily', label: '신규' },
+                { value: 'periodCum', label: '기간누적' },
+              ]}
+            />
+          }
+        >
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={series}>
@@ -111,6 +189,13 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
                   labelStyle={{ color: '#e8e8ed' }}
                   formatter={(v: number) => [`${v.toLocaleString('ko-KR')}원`, '매출']}
                 />
+                <Legend
+                  verticalAlign="top"
+                  height={28}
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ fontSize: 11, color: '#8b8b93' }}
+                />
                 <Bar dataKey="revenue" name="매출" fill="#3182f6" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -119,23 +204,14 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <ChartCard title="남녀 성비" hint="기간 내 등록 사주 기준 (유저 성비 ≠ 사주 성비)">
+        <ChartCard title="남녀 성비" hint="기간 내 등록 사주 기준">
           {!hasComposition || genderData.length === 0 ? (
             <EmptyChart />
           ) : (
             <div className="h-48 relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
-                    data={genderData}
-                    dataKey="count"
-                    nameKey="label"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={48}
-                    outerRadius={72}
-                    paddingAngle={2}
-                  >
+                  <Pie data={genderData} dataKey="count" nameKey="label" cx="50%" cy="50%" innerRadius={48} outerRadius={72} paddingAngle={2}>
                     {genderData.map((g) => (
                       <Cell key={g.key} fill={GENDER_COLORS[g.key] ?? '#8b8b93'} />
                     ))}
@@ -158,10 +234,7 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
               <div className="flex justify-center gap-4 -mt-1">
                 {genderData.map((g) => (
                   <span key={g.key} className="text-xs text-cp-muted flex items-center gap-1.5">
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ background: GENDER_COLORS[g.key] ?? '#8b8b93' }}
-                    />
+                    <span className="w-2 h-2 rounded-full" style={{ background: GENDER_COLORS[g.key] ?? '#8b8b93' }} />
                     {g.label} {g.pct}%
                   </span>
                 ))}
@@ -170,13 +243,17 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
           )}
         </ChartCard>
 
-        <ChartCard title="연령대" hint="생년월일 → 만 나이 추정">
+        <ChartCard
+          title="연령대"
+          hint="기간 내 사주 · 생년 추정"
+          stat={formatStat(data.stats.age.avg, data.stats.age.median, '세')}
+        >
           {!hasComposition ? (
             <EmptyChart />
           ) : (
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={ageData} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
+                <BarChart data={data.charts.age} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
                   <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
                   <XAxis dataKey="label" tick={{ fill: '#8b8b93', fontSize: 10 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
@@ -194,7 +271,7 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
           )}
         </ChartCard>
 
-        <ChartCard title="일간 오행" hint="dayElement 분포">
+        <ChartCard title="일간 오행" hint="기간 내 사주 dayElement">
           {!hasComposition || elementData.length === 0 ? (
             <EmptyChart />
           ) : (
@@ -222,7 +299,7 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
           )}
         </ChartCard>
 
-        <ChartCard title="주 사용처" hint="use:fortune / period / compat">
+        <ChartCard title="주 사용처" hint="기간 내 use:fortune / period / compat">
           {juData.length === 0 ? (
             <EmptyChart />
           ) : (
@@ -232,10 +309,7 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
                   <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
                   <XAxis dataKey="label" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                  <Tooltip
-                    contentStyle={TOOLTIP_STYLE}
-                    formatter={(v: number) => [`${v}주`, '사용']}
-                  />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${v}주`, '사용']} />
                   <Bar dataKey="count" name="주" radius={[6, 6, 0, 0]}>
                     {juData.map((j) => (
                       <Cell key={j.key} fill={JU_COLORS[j.key] ?? '#8b8b93'} />
@@ -247,44 +321,60 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
           )}
         </ChartCard>
 
-        <ChartCard title="유저당 사주 수" hint="전체 누적 · 회원만">
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.charts.entriesPerUser} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
-                <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
-                <XAxis dataKey="label" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
-                  formatter={(v: number, _n, item) => {
-                    const p = (item?.payload as { pct?: number } | undefined)?.pct
-                    return [`${v}명 (${p ?? 0}%)`, '유저']
-                  }}
-                />
-                <Bar dataKey="count" name="유저" fill="#c4b5fd" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <ChartCard
+          title="유저당 사주 수"
+          hint="기간 내 엔트리 생성 유저 · 기간 내 건수"
+          stat={formatStat(data.stats.entriesPerUser.avg, data.stats.entriesPerUser.median, '개')}
+        >
+          {data.stats.entriesPerUser.n === 0 ? (
+            <EmptyChart />
+          ) : (
+            <div className="h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data.charts.entriesPerUser} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
+                  <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(v: number, _n, item) => {
+                      const p = (item?.payload as { pct?: number } | undefined)?.pct
+                      return [`${v}명 (${p ?? 0}%)`, '유저']
+                    }}
+                  />
+                  <Bar dataKey="count" name="유저" fill="#c4b5fd" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </ChartCard>
 
-        <ChartCard title="잔액 분포" hint="전체 회원 UserBalance">
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data.charts.balance} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
-                <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
-                <XAxis dataKey="label" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip
-                  contentStyle={TOOLTIP_STYLE}
-                  formatter={(v: number, _n, item) => {
-                    const p = (item?.payload as { pct?: number } | undefined)?.pct
-                    return [`${v}명 (${p ?? 0}%)`, '유저']
-                  }}
-                />
-                <Bar dataKey="count" name="유저" fill="#f5a524" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <ChartCard
+          title="잔액 분포"
+          hint="기간 활성 유저(가입·엔트리·결제) 현재 잔액"
+          stat={formatStat(data.stats.balance.avg, data.stats.balance.median, '주')}
+        >
+          {data.stats.balance.n === 0 ? (
+            <EmptyChart />
+          ) : (
+            <div className="h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data.charts.balance} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
+                  <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    formatter={(v: number, _n, item) => {
+                      const p = (item?.payload as { pct?: number } | undefined)?.pct
+                      return [`${v}명 (${p ?? 0}%)`, '유저']
+                    }}
+                  />
+                  <Bar dataKey="count" name="유저" fill="#f5a524" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </ChartCard>
       </div>
     </div>
@@ -292,20 +382,44 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
 }
 
 export function FunnelStrip({ data }: { data: DashboardData }) {
-  const f = data.funnel
+  const [mode, setMode] = useState<FunnelMode>('cohort')
+  const f = mode === 'cohort' ? data.funnel.cohort : data.funnel.active
   const steps = [
-    { label: '가입', value: f.signups, sub: null as string | null },
-    { label: '사주 보유', value: f.usersWithEntry, sub: `${f.entryRate}%` },
-    { label: '결제 유저', value: f.payingUsers, sub: `가입 대비 ${f.payRate}% · 엔트리 대비 ${f.payGivenEntry}%` },
+    { label: f.labels[0]!, value: f.step1, sub: null as string | null },
+    {
+      label: f.labels[1]!,
+      value: f.step2,
+      sub: `${f.rate12}%`,
+    },
+    {
+      label: f.labels[2]!,
+      value: f.step3,
+      sub:
+        mode === 'cohort'
+          ? `가입 대비 ${f.rate13}% · 엔트리 대비 ${f.rate23}%`
+          : `엔트리 대비 결제 ${f.rate12}% · 기간 결제 유저 ${f.step3}명`,
+    },
   ]
 
   return (
     <div className="rounded-2xl border border-cp-border bg-cp-raised p-4">
-      <p className="text-sm font-semibold mb-1">전환 퍼널</p>
-      <p className="text-[11px] text-cp-dim mb-4">기간 내 신규 가입 → 사주 생성 유저 → 결제 유저</p>
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div>
+          <p className="text-sm font-semibold">전환 퍼널</p>
+          <p className="text-[11px] text-cp-dim mt-0.5 max-w-xl">{f.description}</p>
+        </div>
+        <SegmentedControl
+          value={mode}
+          onChange={setMode}
+          options={[
+            { value: 'cohort', label: '코호트' },
+            { value: 'active', label: '활성' },
+          ]}
+        />
+      </div>
       <div className="grid gap-3 sm:grid-cols-3">
         {steps.map((step, i) => (
-          <div key={step.label} className="relative rounded-xl border border-cp-border bg-cp-surface/50 px-4 py-3">
+          <div key={`${mode}-${step.label}`} className="relative rounded-xl border border-cp-border bg-cp-surface/50 px-4 py-3">
             {i > 0 ? (
               <span className="hidden sm:block absolute -left-2.5 top-1/2 -translate-y-1/2 text-cp-dim text-xs">→</span>
             ) : null}
