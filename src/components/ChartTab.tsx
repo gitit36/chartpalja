@@ -247,12 +247,15 @@ function staggerLabelYs(
   return ys
 }
 
+type FocusDot = { key: string; value: number; color: string }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ThisYearMarker(props: any) {
   const {
     formattedGraphicalItems, xAxisMap, yAxisMap, period, markerYear, selection, rangeMode, isMonthly, isWeekly, weekLen, weekLabelAt,
     peak, low, showExtremes, extremesOpaque,
     birthYear,
+    focusDots,
   } = props
   if (!formattedGraphicalItems?.length || !xAxisMap || !yAxisMap) return null
   const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
@@ -366,6 +369,30 @@ function ThisYearMarker(props: any) {
           fill: '#6b7280',
           preferTop: true,
         })
+      }
+    }
+  }
+
+  // 세로 포커스선 × 그래프 접점 — hover/시크바 공통 (Recharts activeDot 대체)
+  const dots = focusDots as FocusDot[] | undefined
+  if (markerYear != null && dots?.length) {
+    const hx = xAxis.scale(markerYear)
+    if (typeof hx === 'number' && !isNaN(hx)) {
+      for (const d of dots) {
+        const hy = yAxis.scale(d.value)
+        if (typeof hy !== 'number' || isNaN(hy)) continue
+        elements.push(
+          <circle
+            key={`focus-dot-${d.key}`}
+            cx={hx}
+            cy={hy}
+            r={4}
+            fill={d.color}
+            stroke="#ffffff"
+            strokeWidth={2}
+            style={{ pointerEvents: 'none' }}
+          />,
+        )
       }
     }
   }
@@ -1502,6 +1529,41 @@ export function ChartTab({
     return focusYear != null ? mergedData.find(d => d.year === focusYear) ?? null : null
   }, [focusYear, mergedData])
 
+  /** 세로선×그래프 접점 마커 — hover·시크바 모두 markerYear 기준으로 갱신 */
+  const focusDots = useMemo<FocusDot[]>(() => {
+    if (markerYear == null) return []
+    const d = mergedData.find(x => x.year === markerYear)
+    if (!d) return []
+    const dots: FocusDot[] = []
+    const rec = d as unknown as Record<string, unknown>
+    if (baseLineVisible && typeof d.score === 'number') {
+      dots.push({ key: 'score', value: d.score, color: COMPAT_ME_COLOR })
+    }
+    if (mainOverlays.daewoon && !isWeekly && typeof d.trend === 'number') {
+      dots.push({ key: 'trend', value: d.trend, color: overlayActive ? COMPAT_ME_COLOR : '#ffd700' })
+    }
+    for (const o of DOMAIN_OVERLAYS) {
+      if (!domainOverlays[o.key]) continue
+      const v = domainValue(rec, o.field)
+      if (v != null) {
+        dots.push({ key: o.key, value: v, color: overlayActive ? COMPAT_ME_COLOR : o.color })
+      }
+      if (overlayActive) {
+        const vOv = domainValue(rec, domainOvField(o.field))
+        if (vOv != null) {
+          dots.push({ key: `${o.key}-ov`, value: vOv, color: COMPAT_PARTNER_COLOR })
+        }
+      }
+    }
+    if (overlayActive && baseLineVisible && typeof d.scoreOv === 'number') {
+      dots.push({ key: 'scoreOv', value: d.scoreOv, color: COMPAT_PARTNER_COLOR })
+    }
+    if (overlayActive && mainOverlays.daewoon && !isWeekly && typeof d.trendOv === 'number') {
+      dots.push({ key: 'trendOv', value: d.trendOv, color: COMPAT_PARTNER_COLOR })
+    }
+    return dots
+  }, [markerYear, mergedData, baseLineVisible, mainOverlays.daewoon, domainOverlays, overlayActive, isWeekly])
+
   const selectedOverlayData = useMemo(() => {
     if (!overlayActive || focusYear == null) return null
     if (isWeekly) return weekDataOv.find(d => d.year === focusYear) ?? null
@@ -2114,7 +2176,7 @@ export function ChartTab({
               ))}
               {rangeMode && selection && <ReferenceArea x1={selection.startYear} x2={selection.endYear} fill="#A78BFA" fillOpacity={0.16} stroke="#A78BFA" strokeOpacity={0.45} strokeWidth={1}/>}
               {mainOverlays.daewoon && !isWeekly && (
-                <Line type="stepAfter" dataKey="trend" stroke={overlayActive ? COMPAT_ME_COLOR : '#ffd700'} strokeWidth={2} dot={false} name="대운" isAnimationActive={false}/>
+                <Line type="stepAfter" dataKey="trend" stroke={overlayActive ? COMPAT_ME_COLOR : '#ffd700'} strokeWidth={2} dot={false} activeDot={false} name="대운" isAnimationActive={false}/>
               )}
               {baseLineVisible && (
                 <Area
@@ -2127,28 +2189,29 @@ export function ChartTab({
                   animationDuration={2000}
                   animationEasing="ease-in-out"
                   legendType="none"
+                  activeDot={false}
                 />
               )}
               {baseLineVisible && (
-                <Line type="monotone" dataKey="score" stroke={COMPAT_ME_COLOR} strokeWidth={2} dot={false} name={isWeekly ? '일운' : isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
+                <Line type="monotone" dataKey="score" stroke={COMPAT_ME_COLOR} strokeWidth={2} dot={false} activeDot={false} name={isWeekly ? '일운' : isMonthly ? '월운' : '세운'} isAnimationActive={!hasAnimated.current} animationDuration={2000} animationEasing="ease-in-out"/>
               )}
               {DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
                 <Line key={o.key} type="monotone"
                   dataKey={(d: Record<string, unknown>) => domainValue(d, o.field)}
-                  stroke={overlayActive ? COMPAT_ME_COLOR : o.color} strokeWidth={overlayActive ? 2 : 1.5} dot={false} name={o.label}
+                  stroke={overlayActive ? COMPAT_ME_COLOR : o.color} strokeWidth={overlayActive ? 2 : 1.5} dot={false} activeDot={false} name={o.label}
                   strokeDasharray={overlayActive || !baseLineVisible ? undefined : '3 2'} isAnimationActive={false} connectNulls={false}/>
               ) : null)}
               {overlayActive && DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
                 <Line key={`${o.key}-ov`} type="monotone"
                   dataKey={(d: Record<string, unknown>) => domainValue(d, domainOvField(o.field))}
-                  stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} name={`${o.label}(비교)`}
+                  stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} activeDot={false} name={`${o.label}(비교)`}
                   isAnimationActive={false} connectNulls={false}/>
               ) : null)}
               {overlayActive && mainOverlays.daewoon && !isWeekly && (
-                <Line type="stepAfter" dataKey="trendOv" stroke={COMPAT_PARTNER_COLOR} strokeWidth={2} dot={false} name="대운(비교)" isAnimationActive={false} connectNulls={false}/>
+                <Line type="stepAfter" dataKey="trendOv" stroke={COMPAT_PARTNER_COLOR} strokeWidth={2} dot={false} activeDot={false} name="대운(비교)" isAnimationActive={false} connectNulls={false}/>
               )}
               {overlayActive && baseLineVisible && (
-                <Line type="monotone" dataKey="scoreOv" stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} name={isWeekly ? '일운(비교)' : isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>
+                <Line type="monotone" dataKey="scoreOv" stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} activeDot={false} name={isWeekly ? '일운(비교)' : isMonthly ? '월운(비교)' : '세운(비교)'} isAnimationActive={true} animationDuration={1800} animationEasing="ease-in-out" connectNulls={false}/>
               )}
               {mainOverlays.candle && !isWeekly && !overlayActive && <Bar dataKey="close" name="캔들" shape={<CandleShape/>} isAnimationActive={false}/>}
               {overlayActive && !isWeekly && (
@@ -2166,6 +2229,7 @@ export function ChartTab({
                   {...p}
                   period={period}
                   markerYear={markerYear}
+                  focusDots={focusDots}
                   selection={selection}
                   rangeMode={rangeMode}
                   isMonthly={isMonthly}
