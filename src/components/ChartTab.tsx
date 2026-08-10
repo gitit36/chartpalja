@@ -1642,6 +1642,8 @@ export function ChartTab({
   /** 구간: 손 떼는 순간 확정. 1회=시작, 2회=끝. 드래그 중엔 프리뷰만. */
   const onScrubberPointerDown = useCallback(() => {
     setScrubbing(true)
+    // 차트 클릭/hover 툴팁이 시크바 툴팁과 겹치지 않도록 즉시 해제
+    setHoverYear(null)
     if (!rangeMode) return
     // 이미 완성된 구간이면 이번 제스처부터 새로 시작
     if (selection && selection.startYear !== selection.endYear) {
@@ -1918,26 +1920,6 @@ export function ChartTab({
     : Math.min(scrubMax, Math.max(scrubMin, scrubValueRaw))
   // 세로선·썸 위치 = 차트 XAxis domain 비율 (월/주 0.5 패딩 포함)
   const scrubPct = scrubPctInDomain(scrubValue, xDomain)
-  const scrubFocusLabel = (() => {
-    if (isWeekly) {
-      if (scrubValue === WEEK_TODAY_X) return null
-      return weekFullLabel(scrubValue, mergedData)
-    }
-    if (isMonthly) {
-      if (scrubValue === THIS_MONTH) return null
-      return formatTimeWithAge(scrubValue, { monthly: true, birthYear })
-    }
-    if (scrubValue === THIS_YEAR) return null
-    const age = mergedData.find(d => d.year === scrubValue)?.age
-    return formatTimeWithAge(scrubValue, { birthYear, age })
-  })()
-  const scrubAtCurrent = isWeekly
-    ? scrubValue === WEEK_TODAY_X
-    : isMonthly
-      ? scrubValue === THIS_MONTH
-      : scrubValue === THIS_YEAR
-  /** 연도·나이(또는 올해) 라벨과 세로 점선이 겹치지 않도록 */
-  const SCRUB_LABEL_GAP = scrubFocusLabel || scrubAtCurrent ? 14 : 0
   const scrubDatum = mergedData.find(d => d.year === scrubValue) ?? null
   const scrubTooltipPayload = scrubDatum ? [{ payload: scrubDatum }] : null
   const rangePhase: 'idle' | 'start' | 'end' | 'done' = !rangeMode
@@ -2062,6 +2044,8 @@ export function ChartTab({
                 onClick={handleChartClick}
                 onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}
                 onMouseMove={(state: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+                  // 시크바 드래그 중에는 차트 hover 툴팁/포커스를 갱신하지 않음
+                  if (scrubbing) return
                   if (state?.activeTooltipIndex != null) {
                     const yr = mergedData[state.activeTooltipIndex]?.year ?? null
                     setHoverYear(yr)
@@ -2073,6 +2057,7 @@ export function ChartTab({
                   }
                 }}
                 onMouseLeave={() => {
+                  if (scrubbing) return
                   setHoverYear(null); lastHapticYear.current = null
                 }}>
               <defs>
@@ -2111,10 +2096,17 @@ export function ChartTab({
                     }
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels} hideDetail={isLocked} baseLineVisible={baseLineVisible} birthYear={birthYear}/>} cursor={false}/>}
-              {/* 구간 모드: 시크바 HTML 세로선이 따라가므로 Recharts cursor 는 끔 */}
-              {rangeMode && (
-                <Tooltip content={() => null} cursor={false} />
+              {/* 시크바 드래그 중에는 Recharts 툴팁을 내려 시크바 툴팁만 보이게 */}
+              {!rangeMode && !scrubbing && (
+                <Tooltip
+                  content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels} hideDetail={isLocked} baseLineVisible={baseLineVisible} birthYear={birthYear}/>}
+                  cursor={false}
+                  wrapperStyle={{ zIndex: 40, outline: 'none' }}
+                />
+              )}
+              {/* 구간 모드 / 시크바 중: Recharts cursor·툴팁 끔 */}
+              {(rangeMode || scrubbing) && (
+                <Tooltip content={() => null} cursor={false} active={false} />
               )}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#2E2F36" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#8B8B93', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && !isWeekly && !overlayActive && seasonBands.map((b: SeasonBand, i: number) => (
@@ -2185,16 +2177,15 @@ export function ChartTab({
                   showExtremes={lineAnimDone}
                   extremesOpaque={extremesOpaque}
                   birthYear={birthYear}
-                  hideFocusMarker
                 />
               )}/>
             </ComposedChart>
           </ResponsiveContainer>
 
-          {/* 시크바 썸과 정중앙 정렬된 세로 점선 */}
-          {mergedData.length > 1 && (
+          {/* 스크럽 힌트만 HTML — 세로선은 SVG(ThisYearMarker)로 그려 툴팁 아래에 둠 */}
+          {mergedData.length > 1 && scrubHint && (
             <div
-              className="absolute z-[6] pointer-events-none"
+              className="absolute z-[1] pointer-events-none"
               style={{
                 left: `calc(${SCRUBBER_INSET_L}px + (100% - ${SCRUBBER_INSET_L + SCRUBBER_INSET_R}px) * ${scrubPct})`,
                 top: MARGIN.top,
@@ -2203,49 +2194,26 @@ export function ChartTab({
                 width: 0,
               }}
             >
-              {scrubFocusLabel && (
-                <div
-                  className="absolute left-0 whitespace-nowrap text-[8px] font-medium tabular-nums select-none"
-                  style={{
-                    top: 0,
-                    transform: 'translateX(-50%)',
-                    color: rangeMode ? RANGE_ACCENT : '#6b7280',
-                  }}
-                >
-                  {scrubFocusLabel}
-                </div>
-              )}
               <div
-                className="absolute left-0 border-l border-dashed"
-                style={{
-                  top: SCRUB_LABEL_GAP,
-                  bottom: 0,
-                  borderColor: rangeMode ? RANGE_ACCENT : '#F04452',
-                  opacity: rangeMode ? 0.85 : 0.55,
-                }}
-              />
-              {scrubHint && (
-                <div
-                  className="absolute animate-scrub-hint pointer-events-none"
-                  style={{ left: 0, bottom: 10, width: 0, height: 0 }}
-                  onAnimationEnd={dismissScrubHint}
+                className="absolute animate-scrub-hint pointer-events-none"
+                style={{ left: 0, bottom: 10, width: 0, height: 0 }}
+                onAnimationEnd={dismissScrubHint}
+              >
+                <span
+                  className="absolute cp-scrub-hint-arrow select-none"
+                  style={{ right: 10, top: 0, transform: 'translateY(-100%)' }}
+                  aria-hidden
                 >
-                  <span
-                    className="absolute cp-scrub-hint-arrow select-none"
-                    style={{ right: 10, top: 0, transform: 'translateY(-100%)' }}
-                    aria-hidden
-                  >
-                    ←
-                  </span>
-                  <span
-                    className="absolute cp-scrub-hint-arrow select-none"
-                    style={{ left: 10, top: 0, transform: 'translateY(-100%)' }}
-                    aria-hidden
-                  >
-                    →
-                  </span>
-                </div>
-              )}
+                  ←
+                </span>
+                <span
+                  className="absolute cp-scrub-hint-arrow select-none"
+                  style={{ left: 10, top: 0, transform: 'translateY(-100%)' }}
+                  aria-hidden
+                >
+                  →
+                </span>
+              </div>
             </div>
           )}
 
