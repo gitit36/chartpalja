@@ -171,8 +171,34 @@ function fmtPillar(pillar: string | undefined): string {
   return `${pillarToHangul(pillar)}(${pillar})`
 }
 
-const MARGIN = { top: 16, right: 16, bottom: 20, left: 8 }
+/** 연도·나이 라벨. 월/주 뷰는 ageOverride(예: 올해 나이)를 넘긴다. */
+function formatTimeWithAge(
+  year: number,
+  opts: { monthly?: boolean; dayLabel?: string; age?: number | null; birthYear?: number | null },
+): string {
+  if (opts.dayLabel) return opts.dayLabel
+  const age =
+    typeof opts.age === 'number' && opts.age > 0
+      ? opts.age
+      : opts.birthYear != null && !opts.monthly && year >= 1000
+        ? year - opts.birthYear
+        : opts.birthYear != null && opts.monthly
+          ? THIS_YEAR - opts.birthYear
+          : null
+  const agePart = age != null && age >= 0 ? ` · ${age}세` : ''
+  return opts.monthly ? `${year}월${agePart}` : `${year}년${agePart}`
+}
+
+const MARGIN = { top: 16, right: 16, bottom: 0, left: 8 }
 const SUB_MARGIN = { top: 4, right: 16, bottom: 0, left: 8 }
+const RANGE_ACCENT = '#A78BFA'
+/** X축 눈금 영역 높이 — 시크바 트랙/썸은 이 영역의 맨 위(=축 라인)에 겹친다 */
+const X_AXIS_H = 40
+const SCRUBBER_INSET_L = MARGIN.left + 8
+const SCRUBBER_INSET_R = MARGIN.right + 8
+/** 시크바 박스 bottom — 썸 세로 중앙이 X_AXIS_H 에 오도록 */
+const SCRUBBER_H = 28
+const SCRUBBER_BOTTOM = X_AXIS_H - SCRUBBER_H / 2
 
 function CandleShape(props: Record<string, unknown>) {
   const { x: rawX, y: barY, width: rawW, height: barHeight, payload } = props as {
@@ -226,6 +252,7 @@ function ThisYearMarker(props: any) {
   const {
     formattedGraphicalItems, xAxisMap, yAxisMap, period, markerYear, selection, rangeMode, isMonthly, isWeekly, weekLen, weekLabelAt,
     peak, low, showExtremes, extremesOpaque,
+    birthYear,
   } = props
   if (!formattedGraphicalItems?.length || !xAxisMap || !yAxisMap) return null
   const xAxis = Object.values(xAxisMap)[0] as { scale?: ((v: number) => number) & { domain?: () => number[] } } | undefined
@@ -239,6 +266,12 @@ function ThisYearMarker(props: any) {
 
   type LabelSpec = { key: string; x: number; text: string; fill: string; bold?: boolean; preferTop: boolean }
   const labels: LabelSpec[] = []
+
+  const yearText = (yr: number) => {
+    if (isWeekly) return typeof weekLabelAt === 'function' ? weekLabelAt(yr) : String(yr)
+    if (isMonthly) return formatTimeWithAge(yr, { monthly: true, birthYear })
+    return formatTimeWithAge(yr, { birthYear })
+  }
 
   if (isWeekly) {
     const todayX = weekLen || WEEK_TODAY_X
@@ -272,15 +305,13 @@ function ThisYearMarker(props: any) {
     const sx = xAxis.scale(startYear)
     if (typeof sx === 'number' && !isNaN(sx)) {
       elements.push(
-        <line key="sel-s-line" x1={sx} y1={yTop} x2={sx} y2={yBottom} stroke="#F04452" strokeWidth={1.5} strokeOpacity={0.85}/>,
+        <line key="sel-s-line" x1={sx} y1={yTop} x2={sx} y2={yBottom} stroke={RANGE_ACCENT} strokeWidth={1.5} strokeOpacity={0.9}/>,
       )
       labels.push({
         key: 'sel-s',
         x: sx,
-        text: isWeekly
-          ? (typeof weekLabelAt === 'function' ? weekLabelAt(startYear) : String(startYear))
-          : isMonthly ? `${startYear}월` : String(startYear),
-        fill: '#F04452',
+        text: yearText(startYear),
+        fill: RANGE_ACCENT,
         bold: true,
         preferTop: true,
       })
@@ -289,41 +320,34 @@ function ThisYearMarker(props: any) {
       const ex = xAxis.scale(endYear)
       if (typeof ex === 'number' && !isNaN(ex)) {
         elements.push(
-          <line key="sel-e-line" x1={ex} y1={yTop} x2={ex} y2={yBottom} stroke="#F04452" strokeWidth={1.5} strokeOpacity={0.85}/>,
+          <line key="sel-e-line" x1={ex} y1={yTop} x2={ex} y2={yBottom} stroke={RANGE_ACCENT} strokeWidth={1.5} strokeOpacity={0.9}/>,
         )
         labels.push({
           key: 'sel-e',
           x: ex,
-          text: isWeekly
-            ? (typeof weekLabelAt === 'function' ? weekLabelAt(endYear) : String(endYear))
-            : isMonthly ? `${endYear}월` : String(endYear),
-          fill: '#F04452',
+          text: yearText(endYear),
+          fill: RANGE_ACCENT,
           bold: true,
-          // 시작 연도와 같은 높이로 맞춤
           preferTop: true,
         })
       }
     } else if (markerYear != null && markerYear !== startYear) {
-      // 시작만 고른 뒤 끝 지점 고르는 중 — hover 연도 실선+라벨
-      // (Recharts cursor 는 라벨이 없어서, 여기서 반드시 연도 텍스트를 그림)
       const hx = xAxis.scale(markerYear)
       if (typeof hx === 'number' && !isNaN(hx)) {
         elements.push(
-          <line key="sel-preview-line" x1={hx} y1={yTop} x2={hx} y2={yBottom} stroke="#F04452" strokeWidth={1.5} strokeOpacity={0.9}/>,
+          <line key="sel-preview-line" x1={hx} y1={yTop} x2={hx} y2={yBottom} stroke={RANGE_ACCENT} strokeWidth={1.5} strokeOpacity={0.95}/>,
         )
         labels.push({
           key: 'sel-preview',
           x: hx,
-          text: isWeekly
-            ? (typeof weekLabelAt === 'function' ? weekLabelAt(markerYear) : String(markerYear))
-            : isMonthly ? `${markerYear}월` : String(markerYear),
-          fill: '#F04452',
+          text: yearText(markerYear),
+          fill: RANGE_ACCENT,
           bold: true,
           preferTop: true,
         })
       }
     }
-  } else if (markerYear != null) {
+  } else if (markerYear != null && !props.hideFocusMarker) {
     const isCurrentMarker = isWeekly
       ? markerYear === (weekLen || WEEK_TODAY_X)
       : isMonthly
@@ -338,9 +362,7 @@ function ThisYearMarker(props: any) {
         labels.push({
           key: 'marker',
           x: hx,
-          text: isWeekly
-            ? (typeof weekLabelAt === 'function' ? weekLabelAt(markerYear) : String(markerYear))
-            : isMonthly ? `${markerYear}월` : String(markerYear),
+          text: yearText(markerYear),
           fill: '#6b7280',
           preferTop: true,
         })
@@ -507,11 +529,16 @@ function CompatYearBar(props: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels, hideDetail, baseLineVisible }: any) {
+function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overlayActive, overlayName, currentName, yearLevels, hideDetail, baseLineVisible, birthYear }: any) {
   if (!active || !payload?.length) return null
   const d = payload[0]?.payload as (MergedDatum & { dayLabel?: string }) | undefined
   if (!d) return null
-  const timeLabel = d.dayLabel ? d.dayLabel : monthly ? `${d.year}월` : `${d.year}년`
+  const timeLabel = formatTimeWithAge(d.year, {
+    monthly: !!monthly && !d.dayLabel,
+    dayLabel: d.dayLabel,
+    age: d.age,
+    birthYear,
+  })
   const scoreName = d.dayLabel ? '일운' : monthly ? '월운' : '세운'
   const ov = overlays as Record<MainOverlayKey, boolean> | undefined
   const dom = domainOverlays as Record<DomainOverlayKey, boolean> | undefined
@@ -672,6 +699,156 @@ function SubTooltip({
   )
 }
 
+/** 시크바 드래그 툴팁 — Recharts hover 와 동일하게 끝단에서 좌우 반전, 높이만 하단 고정 */
+function ScrubFollowTooltip({
+  containerRef,
+  scrubPct,
+  bottom,
+  children,
+}: {
+  containerRef: React.RefObject<HTMLDivElement | null>
+  scrubPct: number
+  bottom: number
+  children: React.ReactNode
+}) {
+  const tipRef = React.useRef<HTMLDivElement>(null)
+  const [translateX, setTranslateX] = React.useState(0)
+
+  React.useLayoutEffect(() => {
+    const container = containerRef.current
+    const tip = tipRef.current
+    if (!container || !tip) return
+    const cw = container.clientWidth
+    const tw = tip.offsetWidth || 160
+    const OFFSET = 10
+    const PAD = 4
+    // 세로선 X (시크바 썸과 동일)
+    const x = SCRUBBER_INSET_L + scrubPct * Math.max(0, cw - SCRUBBER_INSET_L - SCRUBBER_INSET_R)
+    // Recharts 기본: 커서 오른쪽에 배치, 넘치면 왼쪽으로 뒤집기
+    let next = x + OFFSET
+    if (next + tw > cw - PAD) {
+      next = Math.max(PAD, x - tw - OFFSET)
+    } else {
+      next = Math.max(PAD, next)
+    }
+    setTranslateX(next)
+  }, [containerRef, scrubPct, children])
+
+  return (
+    <div
+      ref={tipRef}
+      className="absolute z-30 pointer-events-none top-auto left-0"
+      style={{
+        bottom,
+        transform: `translateX(${translateX}px)`,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
+/** X축 = 시크바. 썸을 직접 배치해 세로선과 정중앙 정렬. */
+function YearScrubber({
+  min,
+  max,
+  value,
+  onChange,
+  onPointerDown,
+  onPointerUp,
+  rangeMode,
+  selection,
+}: {
+  min: number
+  max: number
+  value: number
+  onChange: (v: number) => void
+  onPointerDown: () => void
+  onPointerUp: (v: number) => void
+  rangeMode: boolean
+  selection: { startYear: number; endYear: number } | null
+}) {
+  const ref = React.useRef<HTMLDivElement>(null)
+  const dragging = React.useRef(false)
+  if (max <= min) return null
+  const clamped = Math.min(max, Math.max(min, value))
+  const pct = ((clamped - min) / (max - min)) * 100
+  const selStartPct = selection
+    ? ((Math.min(selection.startYear, selection.endYear) - min) / (max - min)) * 100
+    : null
+  const selEndPct = selection
+    ? ((Math.max(selection.startYear, selection.endYear) - min) / (max - min)) * 100
+    : null
+  const trackFill = rangeMode && selStartPct != null && selEndPct != null
+    ? `linear-gradient(to right, #4b4b54 0%, #4b4b54 ${selStartPct}%, ${RANGE_ACCENT} ${selStartPct}%, ${RANGE_ACCENT} ${selEndPct}%, #4b4b54 ${selEndPct}%, #4b4b54 100%)`
+    : `linear-gradient(to right, #f04452 0%, #f04452 ${pct}%, #4b4b54 ${pct}%, #4b4b54 100%)`
+
+  const valueFromClientX = (clientX: number) => {
+    const el = ref.current
+    if (!el) return clamped
+    const rect = el.getBoundingClientRect()
+    if (rect.width <= 0) return clamped
+    const t = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
+    return Math.round(min + t * (max - min))
+  }
+
+  const handleDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    dragging.current = true
+    e.currentTarget.setPointerCapture(e.pointerId)
+    onPointerDown()
+    onChange(valueFromClientX(e.clientX))
+  }
+  const handleMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging.current) return
+    onChange(valueFromClientX(e.clientX))
+  }
+  const handleUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging.current) return
+    dragging.current = false
+    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* ignore */ }
+    const v = valueFromClientX(e.clientX)
+    onChange(v)
+    onPointerUp(v)
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={`cp-yt-scrubber ${rangeMode ? 'is-range' : ''}`}
+      role="slider"
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={clamped}
+      aria-label={rangeMode ? '구간 선택' : '시기 이동'}
+      tabIndex={0}
+      onPointerDown={handleDown}
+      onPointerMove={handleMove}
+      onPointerUp={handleUp}
+      onPointerCancel={handleUp}
+      onKeyDown={(e) => {
+        let next = clamped
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = Math.max(min, clamped - 1)
+        else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = Math.min(max, clamped + 1)
+        else if (e.key === 'Home') next = min
+        else if (e.key === 'End') next = max
+        else return
+        e.preventDefault()
+        onPointerDown()
+        onChange(next)
+        onPointerUp(next)
+      }}
+    >
+      <div className="cp-yt-scrubber-track" style={{ background: trackFill }} aria-hidden />
+      <div
+        className="cp-yt-scrubber-thumb"
+        style={{ left: `${pct}%` }}
+        aria-hidden
+      />
+    </div>
+  )
+}
+
 export interface OverlayEntry {
   id: string
   name: string
@@ -787,6 +964,8 @@ export function ChartTab({
   const [yearSummaryLoading, setYearSummaryLoading] = useState(false)
   const [rangeMode, setRangeMode] = useState(false)
   const rangeFirst = React.useRef<number | null>(null)
+  const [rangeAwaitingEnd, setRangeAwaitingEnd] = useState(false)
+  const [scrubbing, setScrubbing] = useState(false)
   const [juShortage, setJuShortage] = useState<{ needed: number; current: number } | null>(null)
 
   // 비로그인·공유: 이번 주/올해는 잠금 — 전체 곡선만 공개
@@ -804,8 +983,10 @@ export function ChartTab({
 
   const [settingsBadge, setSettingsBadge] = useState(false)
   const [chartHint, setChartHint] = useState(false)
+  const [scrubHint, setScrubHint] = useState(false)
   const [summaryCache] = useState<Map<string, { text: string }>>(() => new Map())
   const chartRef = React.useRef<HTMLDivElement>(null)
+  const chartBoxRef = React.useRef<HTMLDivElement>(null)
   const auxSectionRef = React.useRef<HTMLDivElement>(null)
   const pendingAuxScroll = React.useRef(false)
   const lastHapticYear = React.useRef<number | null>(null)
@@ -852,6 +1033,16 @@ export function ChartTab({
     if (typeof window !== 'undefined' && localStorage.getItem('chartpalja_chart_touched')) return
     const t = setTimeout(() => setChartHint(true), 2000)
     return () => clearTimeout(t)
+  }, [])
+
+  useEffect(() => {
+    // 총운 차트 진입 시마다 시크바 힌트 4회 깜빡임
+    const t = setTimeout(() => setScrubHint(true), 600)
+    return () => clearTimeout(t)
+  }, [])
+
+  const dismissScrubHint = useCallback(() => {
+    setScrubHint(false)
   }, [])
 
   const dismissChartHint = useCallback(() => {
@@ -1387,32 +1578,129 @@ export function ChartTab({
     void run()
   }, [entryId, summaryCache, shareMode, onShareCta, overlayActive, overlayEntryId])
 
-  const dragStartYear = React.useRef<number | null>(null)
   const didDrag = React.useRef(false)
+  const haptic = useCallback((ms = 8) => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(ms)
+  }, [])
+
+  const applyFocusYear = useCallback((yr: number) => {
+    setClickedYear(yr)
+    setHoverYear(null)
+    if (!rangeMode && !shareMode) {
+      setQuickPick(yr)
+      setYearSummary(null)
+      setYearSummaryLoading(false)
+    }
+  }, [rangeMode, shareMode])
+
+  const resetRangeSelection = useCallback(() => {
+    setSelection(null)
+    rangeFirst.current = null
+    setRangeAwaitingEnd(false)
+    setYearSummary(null)
+    setYearSummaryLoading(false)
+  }, [])
+
+  /** 구간: 손 떼는 순간 확정. 1회=시작, 2회=끝. 드래그 중엔 프리뷰만. */
+  const onScrubberPointerDown = useCallback(() => {
+    setScrubbing(true)
+    if (!rangeMode) return
+    // 이미 완성된 구간이면 이번 제스처부터 새로 시작
+    if (selection && selection.startYear !== selection.endYear) {
+      rangeFirst.current = null
+      setRangeAwaitingEnd(false)
+      setSelection(null)
+      setYearSummary(null)
+      setYearSummaryLoading(false)
+    }
+  }, [rangeMode, selection])
+
+  const onScrubberChange = useCallback((yr: number) => {
+    setClickedYear(yr)
+    setHoverYear(null)
+    if (!rangeMode) {
+      if (!shareMode) {
+        setQuickPick(yr)
+        setYearSummary(null)
+        setYearSummaryLoading(false)
+      }
+      return
+    }
+    // 시작 확정 전: 현재 위치만 표시
+    if (rangeFirst.current == null) {
+      setSelection({ startYear: yr, endYear: yr })
+      return
+    }
+    // 끝 고르는 중: 시작~현재 프리뷰
+    const a = rangeFirst.current
+    setSelection({ startYear: Math.min(a, yr), endYear: Math.max(a, yr) })
+  }, [rangeMode, shareMode])
+
+  const onScrubberPointerUp = useCallback((yr: number) => {
+    setScrubbing(false)
+    setClickedYear(yr)
+    if (!rangeMode) {
+      applyFocusYear(yr)
+      return
+    }
+    // 1) 시작 미확정 → 손 떼면 시작 확정
+    if (rangeFirst.current == null) {
+      rangeFirst.current = yr
+      setRangeAwaitingEnd(true)
+      setSelection({ startYear: yr, endYear: yr })
+      setYearSummary(null)
+      setYearSummaryLoading(false)
+      haptic(8)
+      return
+    }
+    // 2) 시작 확정 후 → 손 떼면 끝 확정
+    const a = rangeFirst.current
+    setSelection({ startYear: Math.min(a, yr), endYear: Math.max(a, yr) })
+    rangeFirst.current = null
+    setRangeAwaitingEnd(false)
+    haptic(12)
+  }, [rangeMode, applyFocusYear, haptic])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMouseDown = useCallback((state: any) => {
     if (!rangeMode) return
     didDrag.current = false
+    if (selection && selection.startYear !== selection.endYear) {
+      rangeFirst.current = null
+      setSelection(null)
+    }
     if (state?.activeTooltipIndex != null) {
       const yr = mergedData[state.activeTooltipIndex]?.year
-      if (yr) dragStartYear.current = yr
+      if (yr != null) {
+        setClickedYear(yr)
+        if (rangeFirst.current == null) {
+          setSelection({ startYear: yr, endYear: yr })
+        } else {
+          const a = rangeFirst.current
+          setSelection({ startYear: Math.min(a, yr), endYear: Math.max(a, yr) })
+        }
+      }
     }
-  }, [mergedData, rangeMode])
+  }, [mergedData, rangeMode, selection])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleMouseUp = useCallback((state: any) => {
-    const startYr = dragStartYear.current; dragStartYear.current = null
-    if (!startYr || !rangeMode) return
+    if (!rangeMode) return
     const endIdx = state?.activeTooltipIndex
     const endYr = endIdx != null ? mergedData[endIdx]?.year : null
-    if (endYr && endYr !== startYr) {
+    if (endYr == null) return
+
+    // 드래그로 끝이 달라진 경우만 여기서 확정. 단순 탭은 onClick 이 처리.
+    if (rangeFirst.current != null && endYr !== rangeFirst.current) {
       didDrag.current = true
-      setSelection({ startYear: Math.min(startYr, endYr), endYear: Math.max(startYr, endYr) })
+      const a = rangeFirst.current
+      setSelection({ startYear: Math.min(a, endYr), endYear: Math.max(a, endYr) })
       rangeFirst.current = null
-      setClickedYear(null)
+      setRangeAwaitingEnd(false)
+      setClickedYear(endYr)
+      haptic(12)
     }
-  }, [mergedData, rangeMode])
+  }, [mergedData, rangeMode, haptic])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChartClick = useCallback((state: any) => {
@@ -1421,29 +1709,29 @@ export function ChartTab({
     const yr = mergedData[state.activeTooltipIndex]?.year
     if (!yr) return
 
-    setClickedYear(yr)
-
     if (!rangeMode) {
-      // 일반 모드: 포커스 + 단일 시점 해설 CTA (공유 뷰는 크레딧 소모라 CTA 생략)
-      if (!shareMode) {
-        setQuickPick(yr)
-        setYearSummary(null)
-        setYearSummaryLoading(false)
-      }
+      applyFocusYear(yr)
       return
     }
 
-    if (!rangeFirst.current) {
+    // 손 떼기(탭) = 확정. 1회 시작, 2회 끝
+    if (rangeFirst.current == null) {
       rangeFirst.current = yr
+      setRangeAwaitingEnd(true)
       setSelection({ startYear: yr, endYear: yr })
+      setClickedYear(yr)
+      setYearSummary(null)
+      setYearSummaryLoading(false)
+      haptic(8)
     } else {
-      const a = rangeFirst.current, b = yr
-      const sel = { startYear: Math.min(a, b), endYear: Math.max(a, b) }
-      setSelection(sel)
+      const a = rangeFirst.current
+      setSelection({ startYear: Math.min(a, yr), endYear: Math.max(a, yr) })
       rangeFirst.current = null
-      setClickedYear(null)
+      setRangeAwaitingEnd(false)
+      setClickedYear(yr)
+      haptic(12)
     }
-  }, [mergedData, rangeMode, shareMode])
+  }, [mergedData, rangeMode, applyFocusYear, haptic])
 
   const toggleMain = (k: MainOverlayKey) => {
     if (overlayActive) {
@@ -1575,9 +1863,47 @@ export function ChartTab({
     return start === end ? `${start}년` : `${start}~${end}년`
   }
 
-  const showRangeCta = rangeMode && selection && !yearSummary && !yearSummaryLoading
+  const showRangeCta = rangeMode && selection && selection.startYear !== selection.endYear && !yearSummary && !yearSummaryLoading
   const showQuickCta = !rangeMode && !shareMode && quickPick != null && !yearSummary && !yearSummaryLoading
   const showSummaryCard = !!(yearSummaryLoading || yearSummary) && (rangeMode || !shareMode)
+
+  const scrubMin = mergedData[0]?.year ?? (isMonthly ? 1 : isWeekly ? 0 : THIS_YEAR)
+  const scrubMax = mergedData[mergedData.length - 1]?.year ?? scrubMin
+  const scrubFallback = isWeekly ? WEEK_TODAY_X : isMonthly ? THIS_MONTH : THIS_YEAR
+  const scrubValue = Math.min(
+    scrubMax,
+    Math.max(scrubMin, hoverYear ?? clickedYear ?? scrubFallback),
+  )
+  const scrubPct = scrubMax > scrubMin ? (scrubValue - scrubMin) / (scrubMax - scrubMin) : 0
+  const scrubFocusLabel = (() => {
+    if (isWeekly) {
+      if (scrubValue === WEEK_TODAY_X) return null
+      return weekFullLabel(scrubValue, mergedData)
+    }
+    if (isMonthly) {
+      if (scrubValue === THIS_MONTH) return null
+      return formatTimeWithAge(scrubValue, { monthly: true, birthYear })
+    }
+    if (scrubValue === THIS_YEAR) return null
+    const age = mergedData.find(d => d.year === scrubValue)?.age
+    return formatTimeWithAge(scrubValue, { birthYear, age })
+  })()
+  const scrubAtCurrent = isWeekly
+    ? scrubValue === WEEK_TODAY_X
+    : isMonthly
+      ? scrubValue === THIS_MONTH
+      : scrubValue === THIS_YEAR
+  /** 연도·나이(또는 올해) 라벨과 세로 점선이 겹치지 않도록 */
+  const SCRUB_LABEL_GAP = scrubFocusLabel || scrubAtCurrent ? 14 : 0
+  const scrubDatum = mergedData.find(d => d.year === scrubValue) ?? null
+  const scrubTooltipPayload = scrubDatum ? [{ payload: scrubDatum }] : null
+  const rangePhase: 'idle' | 'start' | 'end' | 'done' = !rangeMode
+    ? 'idle'
+    : selection && selection.startYear !== selection.endYear && !rangeAwaitingEnd
+      ? 'done'
+      : rangeAwaitingEnd
+        ? 'end'
+        : 'start'
 
   return (
     <div>
@@ -1651,8 +1977,12 @@ export function ChartTab({
           ))}
         </div>
 
-        {/* Main chart */}
-        <div className="w-full h-[420px] relative z-0 bg-cp-raised rounded-xl" onPointerDown={dismissChartHint}>
+        {/* Main chart — 시크바가 X축 */}
+        <div
+          ref={chartBoxRef}
+          className="w-full h-[420px] relative z-0 bg-cp-raised rounded-xl overflow-hidden"
+          onPointerDown={dismissChartHint}
+        >
           {chartHint && (
             <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none animate-fade-in">
               <span className="bg-cp-surface/95 backdrop-blur-sm text-cp-muted text-xs px-3 py-2 rounded-xl shadow-sm border border-cp-border text-center max-w-[240px] leading-relaxed">
@@ -1661,26 +1991,26 @@ export function ChartTab({
               </span>
             </div>
           )}
-          {/* 구간 안내 — X축 라벨·눈금보다 확실히 위(플롯 하단) */}
-          {rangeMode && !selection && (
+          {/* 구간 안내 — 차트 내부 하단 (X축 위) */}
+          {rangeMode && rangePhase === 'start' && (
             <div className="absolute left-0 right-0 bottom-[76px] z-[5] flex justify-center pointer-events-none">
               <span className="text-[10px] text-cp-violet animate-pulse bg-cp-violetMuted px-2.5 py-0.5 rounded-full border border-cp-violetBorder/50">
                 {isWeekly
-                  ? '👆 여러 요일을 드래그하거나, 시작·끝을 눌러 주세요'
+                  ? '👆 시작 요일로 옮긴 뒤 손을 떼세요'
                   : isMonthly
-                    ? '👆 여러 달을 드래그하거나, 시작·끝을 눌러 주세요'
-                    : '👆 여러 해를 드래그하거나, 시작·끝을 눌러 주세요'}
+                    ? '👆 시작 달로 옮긴 뒤 손을 떼세요'
+                    : '👆 시작 연도로 옮긴 뒤 손을 떼세요'}
               </span>
             </div>
           )}
-          {rangeMode && selection && selection.startYear === selection.endYear && rangeFirst.current && (
+          {rangeMode && rangePhase === 'end' && (
             <div className="absolute left-0 right-0 bottom-[76px] z-[5] flex justify-center pointer-events-none">
               <span className="text-[10px] text-cp-violet animate-pulse bg-cp-violetMuted px-2.5 py-0.5 rounded-full border border-cp-violetBorder/50">
                 {isWeekly
-                  ? '👆 끝 요일을 눌러 주세요'
+                  ? '👆 끝 요일로 옮긴 뒤 손을 떼세요'
                   : isMonthly
-                    ? '👆 끝 달을 눌러 주세요'
-                    : '👆 끝 연도를 눌러 주세요'}
+                    ? '👆 끝 달로 옮긴 뒤 손을 떼세요'
+                    : '👆 끝 연도로 옮긴 뒤 손을 떼세요'}
               </span>
             </div>
           )}
@@ -1692,12 +2022,15 @@ export function ChartTab({
                   if (state?.activeTooltipIndex != null) {
                     const yr = mergedData[state.activeTooltipIndex]?.year ?? null
                     setHoverYear(yr)
+                    if (rangeMode && yr != null && rangeFirst.current != null) {
+                      const a = rangeFirst.current
+                      setSelection({ startYear: Math.min(a, yr), endYear: Math.max(a, yr) })
+                    }
                     if (yr && yr !== lastHapticYear.current) { lastHapticYear.current = yr; if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(3) }
                   }
                 }}
                 onMouseLeave={() => {
-                  setHoverYear(null); lastHapticYear.current = null; dragStartYear.current = null
-                  if (!isTouchRef.current) setClickedYear(null)
+                  setHoverYear(null); lastHapticYear.current = null
                 }}>
               <defs>
                 <linearGradient id="cpScoreFill" x1="0" y1="0" x2="0" y2="1">
@@ -1714,7 +2047,8 @@ export function ChartTab({
                   <rect x="0" y="0" width="1" height="1" fill="url(#cpScoreEdgeFade)" />
                 </mask>
               </defs>
-              <XAxis dataKey="year" type="number" domain={xDomain} tick={{ fontSize: 8, fill: '#8B8B93' }} angle={isMonthly || isWeekly ? 0 : -45} textAnchor={isMonthly || isWeekly ? 'middle' : 'end'} height={40}
+              <XAxis dataKey="year" type="number" domain={xDomain} tick={{ fontSize: 8, fill: '#8B8B93' }} angle={isMonthly || isWeekly ? 0 : -45} textAnchor={isMonthly || isWeekly ? 'middle' : 'end'} height={X_AXIS_H}
+                    axisLine={false} tickLine={false}
                     ticks={
                       isWeekly
                         ? [...WEEK_TICKS]
@@ -1734,18 +2068,10 @@ export function ChartTab({
                     }
                     padding={{left: 8, right: 8}}/>
               <YAxis domain={yDomain} hide={true} width={0}/>
-              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels} hideDetail={isLocked} baseLineVisible={baseLineVisible}/>} cursor={hoverYear != null ? { stroke: '#F04452', strokeWidth: 1, strokeDasharray: '4 2', strokeOpacity: 0.45 } : false}/>}
-              {/* 구간 모드: 시작만 고른 뒤에는 ThisYearMarker 가 실선+연도 라벨을 그리므로 cursor 는 끈다 */}
+              {!rangeMode && <Tooltip content={<MainTooltip overlays={mainOverlays} domainOverlays={domainOverlays} monthly={isMonthly || isWeekly} overlayActive={overlayActive} overlayName={overlayName} currentName={currentName} yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels} hideDetail={isLocked} baseLineVisible={baseLineVisible} birthYear={birthYear}/>} cursor={false}/>}
+              {/* 구간 모드: 시크바 HTML 세로선이 따라가므로 Recharts cursor 는 끔 */}
               {rangeMode && (
-                <Tooltip
-                  content={() => null}
-                  cursor={
-                    hoverYear != null
-                    && !(selection && selection.startYear === selection.endYear)
-                      ? { stroke: '#F04452', strokeWidth: 1.5, strokeOpacity: 0.55 }
-                      : false
-                  }
-                />
+                <Tooltip content={() => null} cursor={false} />
               )}
               {currentYearScore != null && <ReferenceLine y={currentYearScore} stroke="#2E2F36" strokeWidth={0.5} strokeDasharray="3 3" label={{ value: `${currentYearScore}`, position: 'insideLeft', fontSize: 10, fill: '#8B8B93', offset: 4 }}/>}
               {mainOverlays.season && hasEngineData && !isWeekly && !overlayActive && seasonBands.map((b: SeasonBand, i: number) => (
@@ -1815,14 +2141,128 @@ export function ChartTab({
                   low={extremes.low}
                   showExtremes={lineAnimDone}
                   extremesOpaque={extremesOpaque}
+                  birthYear={birthYear}
+                  hideFocusMarker
                 />
               )}/>
             </ComposedChart>
           </ResponsiveContainer>
+
+          {/* 시크바 썸과 정중앙 정렬된 세로 점선 */}
+          {mergedData.length > 1 && (
+            <div
+              className="absolute z-[6] pointer-events-none"
+              style={{
+                left: `calc(${SCRUBBER_INSET_L}px + (100% - ${SCRUBBER_INSET_L + SCRUBBER_INSET_R}px) * ${scrubPct})`,
+                top: MARGIN.top,
+                bottom: X_AXIS_H,
+                transform: 'translateX(-50%)',
+                width: 0,
+              }}
+            >
+              {scrubFocusLabel && (
+                <div
+                  className="absolute left-0 whitespace-nowrap text-[8px] font-medium tabular-nums select-none"
+                  style={{
+                    top: 0,
+                    transform: 'translateX(-50%)',
+                    color: rangeMode ? RANGE_ACCENT : '#6b7280',
+                  }}
+                >
+                  {scrubFocusLabel}
+                </div>
+              )}
+              <div
+                className="absolute left-0 border-l border-dashed"
+                style={{
+                  top: SCRUB_LABEL_GAP,
+                  bottom: 0,
+                  borderColor: rangeMode ? RANGE_ACCENT : '#F04452',
+                  opacity: rangeMode ? 0.85 : 0.55,
+                }}
+              />
+              {scrubHint && (
+                <div
+                  className="absolute animate-scrub-hint pointer-events-none"
+                  style={{ left: 0, bottom: 10, width: 0, height: 0 }}
+                  onAnimationEnd={dismissScrubHint}
+                >
+                  <span
+                    className="absolute cp-scrub-hint-arrow select-none"
+                    style={{ right: 10, top: 0, transform: 'translateY(-100%)' }}
+                    aria-hidden
+                  >
+                    ←
+                  </span>
+                  <span
+                    className="absolute cp-scrub-hint-arrow select-none"
+                    style={{ left: 10, top: 0, transform: 'translateY(-100%)' }}
+                    aria-hidden
+                  >
+                    →
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 시크바 드래그 중 툴팁 — hover 와 동일(끝단 반전 포함), 높이만 하단 고정 */}
+          {scrubbing && scrubTooltipPayload && (
+            <ScrubFollowTooltip
+              containerRef={chartBoxRef}
+              scrubPct={scrubPct}
+              bottom={X_AXIS_H + 18}
+            >
+              <MainTooltip
+                active
+                payload={scrubTooltipPayload}
+                overlays={mainOverlays}
+                domainOverlays={domainOverlays}
+                monthly={isMonthly || isWeekly}
+                overlayActive={overlayActive}
+                overlayName={overlayName}
+                currentName={currentName}
+                yearLevels={isWeekly ? weekLevels : isMonthly ? monthLevels : yearLevels}
+                hideDetail={isLocked}
+                baseLineVisible={baseLineVisible}
+                birthYear={birthYear}
+              />
+            </ScrubFollowTooltip>
+          )}
+
+          {/* 시크바 = X축 라인 (눈금 바로 위) */}
+          {mergedData.length > 1 && (
+            <div
+              className="absolute z-20"
+              style={{
+                left: SCRUBBER_INSET_L,
+                right: SCRUBBER_INSET_R,
+                bottom: SCRUBBER_BOTTOM,
+                height: SCRUBBER_H,
+              }}
+            >
+              <YearScrubber
+                min={scrubMin}
+                max={scrubMax}
+                value={scrubValue}
+                onChange={(v) => {
+                  if (scrubHint) dismissScrubHint()
+                  onScrubberChange(v)
+                }}
+                onPointerDown={() => {
+                  if (scrubHint) dismissScrubHint()
+                  onScrubberPointerDown()
+                }}
+                onPointerUp={onScrubberPointerUp}
+                rangeMode={rangeMode}
+                selection={selection}
+              />
+            </div>
+          )}
         </div>
 
         {/* Period selector — 차트에 가깝게 올리되, z-index로 클릭이 차트에 먹히지 않게 */}
-        <div className="relative z-10 flex justify-center items-center gap-1.5 -mt-5 mb-1" ref={chartRef}>
+        <div className="relative z-10 flex justify-center items-center gap-1.5 -mt-1 mb-1" ref={chartRef}>
           {([['week', '이번 주'], ['year', '올해'], ['all', '전체']] as [PeriodKey, string][]).map(([k, l]) => (
             <button key={k} onClick={() => {
               if (k !== 'all' && blockIfLocked(k === 'week' ? '이번 주' : '올해')) return
@@ -1877,8 +2317,8 @@ export function ChartTab({
                 const next = !rangeMode
                 setRangeMode(next)
                 setQuickPick(null)
-                if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null }
-                else { setSelection(null); rangeFirst.current = null }
+                if (next) { setSelection(null); setYearSummary(null); rangeFirst.current = null; setRangeAwaitingEnd(false) }
+                else { setSelection(null); rangeFirst.current = null; setRangeAwaitingEnd(false) }
               }}
               className={`flex items-center gap-1 px-2 py-1.5 rounded-full text-[10px] font-medium transition-all ${
                 rangeMode

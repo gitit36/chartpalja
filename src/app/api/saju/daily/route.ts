@@ -3,9 +3,12 @@ import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import {
   computeDailyFortunes,
-  extractYongshinOverride,
   type DailyComputeEntry,
 } from '@/lib/saju/daily-fortune'
+import {
+  findDailyListEntries,
+  yongshinOverrideFromSlice,
+} from '@/lib/saju/json-slices'
 import { kstRecentDates, deltaDirection, buildDailyComment, buildDailySignals, weekScoreRange } from '@/lib/saju/daily-util'
 
 export const runtime = 'nodejs'
@@ -79,16 +82,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ today: kstRecentDates(1)[0], entries: [], representative: null })
     }
 
-    const where = user ? { userId: user.id } : { guestId: guestId! }
-    const entries = await prisma.sajuEntry.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true, name: true, gender: true, birthDate: true, birthTime: true,
-        timeUnknown: true, isLunar: true, isLeapMonth: true, createdAt: true,
-        isRepresentative: true, sajuReportJson: true,
-      },
-    })
+    // Load metadata + 용신 jsonb slice only — never the full ~300KB sajuReportJson per entry.
+    const entries = await findDailyListEntries(
+      user ? { userId: user.id } : { guestId: guestId! },
+    )
 
     const dates = kstRecentDates(WINDOW_DAYS)
     const today = dates[dates.length - 1]
@@ -141,7 +138,7 @@ export async function GET(request: NextRequest) {
         gender: e.gender,
         isLunar: e.isLunar,
         isLeapMonth: e.isLeapMonth,
-        yongshinOverride: extractYongshinOverride(e.sajuReportJson),
+        yongshinOverride: yongshinOverrideFromSlice(e.yongshin),
       }))
 
       // 배치에 필요한 빈 날짜만 계산 (이미 있는 ±3일은 스킵)

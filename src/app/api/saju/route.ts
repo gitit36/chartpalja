@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
 import { buildSajuReportViaPython } from '@/lib/saju/saju-report'
 import { resolveYongshin, extractFourPillarKey } from '@/lib/ai/yongshin-llm'
+import { findDayElementsByIds } from '@/lib/saju/json-slices'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -41,15 +42,11 @@ export async function GET(request: NextRequest) {
 
     const needBackfill = entries.filter(e => !e.dayElement)
     if (needBackfill.length > 0) {
-      const rows = await prisma.sajuEntry.findMany({
-        where: { id: { in: needBackfill.map(e => e.id) } },
-        select: { id: true, sajuReportJson: true },
-      })
+      // jsonb path only — avoid loading full sajuReportJson for dayElement backfill
+      const rows = await findDayElementsByIds(needBackfill.map(e => e.id))
       for (const r of rows) {
         try {
-          const rpt = r.sajuReportJson as Record<string, unknown> | null
-          const detail = rpt?.['오행십성_상세'] as { 천간?: Array<{ element?: string }> } | undefined
-          const elem = detail?.천간?.[2]?.element ?? null
+          const elem = r.dayElement
           if (elem) {
             await prisma.sajuEntry.update({ where: { id: r.id }, data: { dayElement: elem } })
             const entry = entries.find(e => e.id === r.id)

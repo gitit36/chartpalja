@@ -145,21 +145,32 @@ export async function GET(
       )
     }
 
-    const entry = await prisma.sajuEntry.findUnique({ where: { id } })
-    if (!entry) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    if (entry.userId && entry.userId !== user.id) {
+    // Phase 1: auth + fortune cache only (skip sajuReportJson on cache hit)
+    const meta = await prisma.sajuEntry.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        guestId: true,
+        birthDate: true,
+        job: true,
+        fortuneJson: true,
+      },
+    })
+    if (!meta) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    if (meta.userId && meta.userId !== user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
-    if (!entry.userId && entry.guestId && entry.guestId !== guestId) {
+    if (!meta.userId && meta.guestId && meta.guestId !== guestId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    if (!regenerate && entry.fortuneJson && isValidFortuneFormat(entry.fortuneJson)) {
-      const cached = entry.fortuneJson as { items: unknown[] }
+    if (!regenerate && meta.fortuneJson && isValidFortuneFormat(meta.fortuneJson)) {
+      const cached = meta.fortuneJson as { items: unknown[] }
       return NextResponse.json({ items: scrubBreakdownKeyLeakageDeep(cached.items ?? cached) })
     }
 
-    const isFirstGeneration = !entry.fortuneJson || !isValidFortuneFormat(entry.fortuneJson)
+    const isFirstGeneration = !meta.fortuneJson || !isValidFortuneFormat(meta.fortuneJson)
     const isRegenWithConsume = regenerate && request.nextUrl.searchParams.get('consumeCredit') === 'true'
     const shouldConsumeCredit = isFirstGeneration || isRegenWithConsume
 
@@ -170,22 +181,27 @@ export async function GET(
       }
     }
 
-    const report = entry.sajuReportJson as SajuReportJson | null
+    // Phase 2: load report only when generating
+    const reportRow = await prisma.sajuEntry.findUnique({
+      where: { id },
+      select: { sajuReportJson: true },
+    })
+    const report = reportRow?.sajuReportJson as SajuReportJson | null
     if (!report) {
       return NextResponse.json({ error: 'No saju data' }, { status: 400 })
     }
 
-    const birthYear = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
+    const birthYear = meta.birthDate ? parseInt(meta.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
     const chartSummary = buildChartSummary(report, birthYear)
     const chartPayloadForPrompt = report.chartData as ChartPayload | undefined
     const lifeChart = buildLifeChartData(chartPayloadForPrompt, report, birthYear)
     const chartData = lifeChart?.data as ChartDatum[] | undefined
-    const prompt = buildFortunePrompt(report, { birthYear, chartData, job: entry.job }, chartSummary)
+    const prompt = buildFortunePrompt(report, { birthYear, chartData, job: meta.job }, chartSummary)
     const raw = await callGemini(prompt, { feature: 'fortune', meta: { entryId: id } })
     const items = scrubBreakdownKeyLeakageDeep(parseJsonResponse(raw)) as unknown[]
 
-    const existingFortune = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
-      ? entry.fortuneJson as Record<string, unknown>
+    const existingFortune = (meta.fortuneJson && typeof meta.fortuneJson === 'object')
+      ? meta.fortuneJson as Record<string, unknown>
       : {}
 
     await prisma.sajuEntry.update({

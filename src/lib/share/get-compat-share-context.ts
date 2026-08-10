@@ -31,7 +31,23 @@ export async function getCompatShareContext(
   const snapshot = getCompatShareSnapshot(entry.fortuneJson, partnerId, relationship)
   if (!snapshot) return null
 
-  const partnerRow = await prisma.sajuEntry.findUnique({ where: { id: partnerId } }).catch(() => null)
+  const partnerRow = await prisma.sajuEntry
+    .findUnique({
+      where: { id: partnerId },
+      select: {
+        id: true,
+        name: true,
+        gender: true,
+        birthDate: true,
+        birthTime: true,
+        timeUnknown: true,
+        isLunar: true,
+        isLeapMonth: true,
+        dayElement: true,
+        sajuReportJson: true,
+      },
+    })
+    .catch(() => null)
   if (!partnerRow?.sajuReportJson) return null
 
   const partnerBirthYear = parseInt(String(partnerRow.birthDate).slice(0, 4), 10)

@@ -14,6 +14,7 @@ import { hydrateWeekSeries } from '@/lib/saju/hydrate-week-series'
 import { weekdayLabelFromDate } from '@/lib/saju/week-chart-data'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
 import { buildRelationshipSeries } from '@/lib/compat/relationship-score'
+import { findMonthlyTargetYear } from '@/lib/saju/json-slices'
 
 const MAX_YEAR_RANGE = 30
 const THIS_YEAR = new Date().getFullYear()
@@ -150,20 +151,45 @@ export async function GET(
     }
 
     const guestId = getGuestId(request)
-    const entry = await prisma.sajuEntry.findUnique({ where: { id } })
-    if (!entry) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-    if (entry.userId && entry.userId !== user.id) {
+    // Phase 1: auth + fortune cache (no sajuReportJson until cache miss)
+    const entryMeta = await prisma.sajuEntry.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        guestId: true,
+        name: true,
+        gender: true,
+        birthDate: true,
+        birthTime: true,
+        timeUnknown: true,
+        isLunar: true,
+        isLeapMonth: true,
+        fortuneJson: true,
+      },
+    })
+    if (!entryMeta) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    if (entryMeta.userId && entryMeta.userId !== user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
-    if (!entry.userId && entry.guestId && entry.guestId !== guestId) {
+    if (!entryMeta.userId && entryMeta.guestId && entryMeta.guestId !== guestId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const reportA = entry.sajuReportJson as SajuReportJson | null
-    if (!reportA) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
-
-    const partner = await prisma.sajuEntry.findUnique({ where: { id: overlayId } })
-    if (!partner?.sajuReportJson) {
+    const partnerMeta = await prisma.sajuEntry.findUnique({
+      where: { id: overlayId },
+      select: {
+        id: true,
+        name: true,
+        gender: true,
+        birthDate: true,
+        birthTime: true,
+        timeUnknown: true,
+        isLunar: true,
+        isLeapMonth: true,
+      },
+    })
+    if (!partnerMeta) {
       return NextResponse.json({ error: '비교 대상을 찾을 수 없습니다.' }, { status: 404 })
     }
     const allowed = await canAccessPartnerEntry(user.id, id, overlayId)
@@ -171,20 +197,20 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized partner' }, { status: 403 })
     }
 
-    const reportB = partner.sajuReportJson as SajuReportJson
-    const birthYearA = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
-    const birthYearB = partner.birthDate ? parseInt(partner.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
-    const nameA = entry.name || '나'
-    const nameB = partner.name || '상대'
-    const chartA = buildLifeChartData(reportA.chartData as ChartPayload | undefined, reportA, birthYearA)
-    const chartB = buildLifeChartData(reportB.chartData as ChartPayload | undefined, reportB, birthYearB)
+    const nameA = entryMeta.name || '나'
+    const nameB = partnerMeta.name || '상대'
 
     let cacheKey: string
     let periodLabel: string
     let startYear: number
     let endYear: number
-    let periodFacts: string
     let responseMeta: Record<string, unknown> = {}
+    let selectedDates: string[] | null = null
+    let monthStart = 0
+    let monthEnd = 0
+    let targetYear = THIS_YEAR
+    let yearStart = 0
+    let yearEnd = 0
 
     if (weekStartStr) {
       const weekStart = parseInt(weekStartStr, 10)
@@ -193,7 +219,7 @@ export async function GET(
         return NextResponse.json({ error: 'invalid weekStart/weekEnd' }, { status: 400 })
       }
       const weekDates = kstCenteredWeekDates()
-      const selectedDates = weekDates.slice(weekStart - 1, weekEnd)
+      selectedDates = weekDates.slice(weekStart - 1, weekEnd)
       if (!selectedDates.length) {
         return NextResponse.json({ error: 'invalid week range' }, { status: 400 })
       }
@@ -207,11 +233,10 @@ export async function GET(
         : `compatPeriod_v2_${overlayId}_week_${selectedDates[0]}_${selectedDates[selectedDates.length - 1]}`
       startYear = THIS_YEAR
       endYear = THIS_YEAR
-      periodFacts = await weekFactLines(nameA, nameB, entry, partner, selectedDates)
       responseMeta = { weekStart, weekEnd: weekEnd > weekStart ? weekEnd : undefined, dates: selectedDates }
     } else if (monthStr) {
-      const monthStart = parseInt(monthStr, 10)
-      const monthEnd = monthEndStr ? parseInt(monthEndStr, 10) : monthStart
+      monthStart = parseInt(monthStr, 10)
+      monthEnd = monthEndStr ? parseInt(monthEndStr, 10) : monthStart
       if (
         isNaN(monthStart) || isNaN(monthEnd)
         || monthStart < 1 || monthStart > 12
@@ -219,9 +244,7 @@ export async function GET(
       ) {
         return NextResponse.json({ error: 'invalid month/monthEnd' }, { status: 400 })
       }
-      const targetYear =
-        (reportA.chartData as ChartPayload | undefined)?.['월운_타임라인']?.target_year
-        ?? THIS_YEAR
+      targetYear = await findMonthlyTargetYear(id)
       periodLabel = monthStart === monthEnd
         ? `${targetYear}년 ${monthStart}월`
         : `${targetYear}년 ${monthStart}~${monthEnd}월`
@@ -230,11 +253,10 @@ export async function GET(
         : `compatPeriod_v2_${overlayId}_month_${targetYear}_${monthStart}_${monthEnd}`
       startYear = targetYear
       endYear = targetYear
-      periodFacts = monthFactLines(nameA, nameB, reportA, reportB, monthStart, monthEnd, targetYear)
       responseMeta = { month: monthStart, monthEnd: monthEnd > monthStart ? monthEnd : undefined, year: targetYear }
     } else {
-      const yearStart = parseInt(yearStr!, 10)
-      const yearEnd = yearEndStr ? parseInt(yearEndStr, 10) : yearStart
+      yearStart = parseInt(yearStr!, 10)
+      yearEnd = yearEndStr ? parseInt(yearEndStr, 10) : yearStart
       if (isNaN(yearStart) || isNaN(yearEnd) || yearEnd < yearStart) {
         return NextResponse.json({ error: 'invalid year/yearEnd' }, { status: 400 })
       }
@@ -247,14 +269,11 @@ export async function GET(
         : `compatPeriod_v2_${overlayId}_year_${yearStart}_${yearEnd}`
       startYear = yearStart
       endYear = yearEnd
-      periodFacts = yearFactLines(
-        nameA, nameB, chartA, chartB, reportA, reportB, birthYearA, birthYearB, yearStart, yearEnd,
-      )
       responseMeta = { year: yearStart, yearEnd: yearEnd > yearStart ? yearEnd : undefined }
     }
 
-    const existingFortune = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
-      ? entry.fortuneJson as Record<string, unknown>
+    const existingFortune = (entryMeta.fortuneJson && typeof entryMeta.fortuneJson === 'object')
+      ? entryMeta.fortuneJson as Record<string, unknown>
       : {}
     if (existingFortune[cacheKey]) {
       return NextResponse.json({
@@ -269,6 +288,36 @@ export async function GET(
       return NextResponse.json(
         { error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: balance.ju },
         { status: 402 },
+      )
+    }
+
+    // Phase 2: load reports only when generating
+    const [selfReport, partnerReport] = await Promise.all([
+      prisma.sajuEntry.findUnique({ where: { id }, select: { sajuReportJson: true } }),
+      prisma.sajuEntry.findUnique({ where: { id: overlayId }, select: { sajuReportJson: true } }),
+    ])
+    const reportA = selfReport?.sajuReportJson as SajuReportJson | null
+    const reportB = partnerReport?.sajuReportJson as SajuReportJson | null
+    if (!reportA) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
+    if (!reportB) {
+      return NextResponse.json({ error: '비교 대상을 찾을 수 없습니다.' }, { status: 404 })
+    }
+
+    const entry: EntryRow = { ...entryMeta, sajuReportJson: reportA }
+    const partner: EntryRow = { ...partnerMeta, sajuReportJson: reportB }
+    const birthYearA = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
+    const birthYearB = partner.birthDate ? parseInt(partner.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
+    const chartA = buildLifeChartData(reportA.chartData as ChartPayload | undefined, reportA, birthYearA)
+    const chartB = buildLifeChartData(reportB.chartData as ChartPayload | undefined, reportB, birthYearB)
+
+    let periodFacts: string
+    if (selectedDates) {
+      periodFacts = await weekFactLines(nameA, nameB, entry, partner, selectedDates)
+    } else if (monthStr) {
+      periodFacts = monthFactLines(nameA, nameB, reportA, reportB, monthStart, monthEnd, targetYear)
+    } else {
+      periodFacts = yearFactLines(
+        nameA, nameB, chartA, chartB, reportA, reportB, birthYearA, birthYearB, yearStart, yearEnd,
       )
     }
 

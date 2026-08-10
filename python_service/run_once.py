@@ -12,7 +12,10 @@ import json
 import sys
 import warnings
 
+from mem_report import register_atexit
 from saju_lib import compute_report
+
+register_atexit()
 
 
 def main() -> None:

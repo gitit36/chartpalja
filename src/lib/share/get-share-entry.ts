@@ -59,7 +59,25 @@ export async function getShareSamples(excludeId?: string): Promise<ShareSample[]
 
 /** 공유 공개된 엔트리만 반환. 비공개거나 없으면 null. */
 export async function getPublicShareEntry(id: string): Promise<PublicShareEntry | null> {
-  const entry = await prisma.sajuEntry.findUnique({ where: { id } }).catch(() => null)
+  const entry = await prisma.sajuEntry
+    .findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        gender: true,
+        birthDate: true,
+        birthTime: true,
+        timeUnknown: true,
+        isLunar: true,
+        isLeapMonth: true,
+        dayElement: true,
+        isShared: true,
+        sajuReportJson: true,
+        fortuneJson: true,
+      },
+    })
+    .catch(() => null)
   if (!entry || !entry.isShared) return null
 
   const birthYear = parseInt(String(entry.birthDate).slice(0, 4), 10)

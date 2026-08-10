@@ -13,6 +13,8 @@ import { callGemini } from '@/lib/ai/gemini'
 import { kstCenteredWeekDates } from '@/lib/saju/daily-util'
 import { hydrateWeekSeries } from '@/lib/saju/hydrate-week-series'
 import { weekdayLabelFromDate } from '@/lib/saju/week-chart-data'
+import { findMonthlyTargetYear } from '@/lib/saju/json-slices'
+import { extractYongshinOverride } from '@/lib/saju/daily-fortune'
 
 const MAX_YEAR_RANGE = 30
 
@@ -128,7 +130,24 @@ export async function GET(
       )
     }
 
-    const entry = await prisma.sajuEntry.findUnique({ where: { id } })
+    // Phase 1: auth + fortune cache — do not load sajuReportJson until cache miss
+    const entry = await prisma.sajuEntry.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        guestId: true,
+        name: true,
+        gender: true,
+        birthDate: true,
+        birthTime: true,
+        timeUnknown: true,
+        isLunar: true,
+        isLeapMonth: true,
+        job: true,
+        fortuneJson: true,
+      },
+    })
     if (!entry) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     if (entry.userId && entry.userId !== user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
@@ -137,12 +156,18 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
 
-    const report = entry.sajuReportJson as SajuReportJson | null
-    if (!report) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
-
     const birthYear = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
-    const chartPayload = report.chartData as ChartPayload | undefined
-    const chartData = chartPayload ? buildLifeChartData(chartPayload, report, birthYear) : null
+    const fortuneCache = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
+      ? entry.fortuneJson as Record<string, unknown>
+      : null
+
+    const loadReport = async (): Promise<SajuReportJson | null> => {
+      const row = await prisma.sajuEntry.findUnique({
+        where: { id },
+        select: { sajuReportJson: true },
+      })
+      return (row?.sajuReportJson as SajuReportJson | null) ?? null
+    }
 
     if (isWeeklyRequest) {
       const weekStart = parseInt(weekStartStr!, 10)
@@ -161,13 +186,12 @@ export async function GET(
       const cacheKey = selectedDates.length === 1
         ? `weekSummary_${selectedDates[0]}`
         : `weekSummary_${selectedDates[0]}_${selectedDates[selectedDates.length - 1]}`
-      const cached = entry.fortuneJson as Record<string, unknown> | null
-      if (cached && typeof cached === 'object' && cached[cacheKey]) {
+      if (fortuneCache && fortuneCache[cacheKey]) {
         return NextResponse.json({
           weekStart,
           weekEnd: weekEnd > weekStart ? weekEnd : undefined,
           dates: selectedDates,
-          summary: scrubBreakdownKeyLeakage(String(cached[cacheKey])),
+          summary: scrubBreakdownKeyLeakage(String(fortuneCache[cacheKey])),
         })
       }
 
@@ -176,7 +200,9 @@ export async function GET(
         return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: balance.ju }, { status: 402 })
       }
 
-      // 차트와 동일하게 hydrate(엔진 backfill 포함) 후 FACT 구성
+      const report = await loadReport()
+      if (!report) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
+
       const weekSeries = await hydrateWeekSeries({
         id: entry.id,
         birthDate: entry.birthDate,
@@ -185,7 +211,7 @@ export async function GET(
         gender: entry.gender,
         isLunar: entry.isLunar,
         isLeapMonth: entry.isLeapMonth,
-        sajuReportJson: entry.sajuReportJson,
+        yongshinOverride: extractYongshinOverride(report),
       })
       const byDate = new Map(weekSeries.days.map((d) => [d.date, d]))
       const days = selectedDates.map((date) => {
@@ -221,7 +247,7 @@ export async function GET(
         meta: { entryId: id, weekStart, weekEnd, dates: selectedDates },
       })).trim())
 
-      const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>
+      const existingFortune = fortuneCache ?? {}
       await prisma.sajuEntry.update({
         where: { id },
         data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
@@ -247,18 +273,17 @@ export async function GET(
         return NextResponse.json({ error: 'invalid month/monthEnd' }, { status: 400 })
       }
 
-      const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
-      const targetYear = chartPayload?.['월운_타임라인']?.target_year ?? new Date().getFullYear()
+      // target_year jsonb path only — enough to build cache key without full report
+      const targetYear = await findMonthlyTargetYear(id)
       const cacheKey = monthStart === monthEnd
         ? `monthSummary_${targetYear}_${monthStart}`
         : `monthSummary_${targetYear}_${monthStart}_${monthEnd}`
-      const cached = entry.fortuneJson as Record<string, unknown> | null
-      if (cached && typeof cached === 'object' && cached[cacheKey]) {
+      if (fortuneCache && fortuneCache[cacheKey]) {
         return NextResponse.json({
           month: monthStart,
           monthEnd: monthEnd > monthStart ? monthEnd : undefined,
           year: targetYear,
-          summary: scrubBreakdownKeyLeakage(String(cached[cacheKey])),
+          summary: scrubBreakdownKeyLeakage(String(fortuneCache[cacheKey])),
         })
       }
 
@@ -266,6 +291,12 @@ export async function GET(
       if (balance.ju < READING_COST.period) {
         return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: balance.ju }, { status: 402 })
       }
+
+      const report = await loadReport()
+      if (!report) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
+      const chartPayload = report.chartData as ChartPayload | undefined
+      const chartData = chartPayload ? buildLifeChartData(chartPayload, report, birthYear) : null
+      const monthlyTimeline = chartPayload?.['월운_타임라인']?.data
 
       const monthlyData: Array<{
         month: number; score: number; breakdown?: Record<string, number>;
@@ -326,7 +357,7 @@ export async function GET(
         meta: { entryId: id, year: targetYear, monthStart, monthEnd },
       })).trim())
 
-      const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>
+      const existingFortune = fortuneCache ?? {}
       await prisma.sajuEntry.update({
         where: { id },
         data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
@@ -354,15 +385,19 @@ export async function GET(
     const isRange = yearEnd > yearStart
 
     const cacheKey = isRange ? `yearSummary_${yearStart}_${yearEnd}` : `yearSummary_${yearStart}`
-    const cached = (entry.fortuneJson as Record<string, unknown> | null)
-    if (cached && typeof cached === 'object' && cached[cacheKey]) {
-      return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary: scrubBreakdownKeyLeakage(String(cached[cacheKey])) })
+    if (fortuneCache && fortuneCache[cacheKey]) {
+      return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary: scrubBreakdownKeyLeakage(String(fortuneCache[cacheKey])) })
     }
 
     const yearBalance = await getBalance(user.id)
     if (yearBalance.ju < READING_COST.period) {
       return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period, ju: yearBalance.ju }, { status: 402 })
     }
+
+    const report = await loadReport()
+    if (!report) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
+    const chartPayload = report.chartData as ChartPayload | undefined
+    const chartData = chartPayload ? buildLifeChartData(chartPayload, report, birthYear) : null
 
     let summary: string
     const rawTimeline = chartPayload?.['연도별_타임라인']
@@ -386,7 +421,7 @@ export async function GET(
       })).trim())
     }
 
-    const existingFortune = (entry.fortuneJson ?? {}) as Record<string, unknown>
+    const existingFortune = fortuneCache ?? {}
     await prisma.sajuEntry.update({
       where: { id },
       data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },

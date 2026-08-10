@@ -14,13 +14,35 @@ function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
 }
 
+/** Omit fortuneJsonB (unused legacy blob) to avoid loading it on every detail request. */
+const ENTRY_SELECT = {
+  id: true,
+  userId: true,
+  guestId: true,
+  name: true,
+  gender: true,
+  birthDate: true,
+  birthTime: true,
+  timeUnknown: true,
+  isLunar: true,
+  isLeapMonth: true,
+  job: true,
+  dayElement: true,
+  isRepresentative: true,
+  isShared: true,
+  sajuReportJson: true,
+  fortuneJson: true,
+  createdAt: true,
+  updatedAt: true,
+} as const
+
 async function findEntry(id: string, req: NextRequest) {
   const user = await getUserFromSession().catch(() => null)
   const guestId = getGuestId(req)
   const contextEntryId = req.nextUrl.searchParams.get('contextEntryId')
   const allowed = await canReadSajuEntry(user?.id ?? null, guestId, id, contextEntryId)
   if (!allowed) return null
-  return prisma.sajuEntry.findUnique({ where: { id } })
+  return prisma.sajuEntry.findUnique({ where: { id }, select: ENTRY_SELECT })
 }
 
 export async function GET(

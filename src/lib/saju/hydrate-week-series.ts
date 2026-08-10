@@ -41,7 +41,9 @@ type EntryForDaily = {
   gender: string
   isLunar: boolean
   isLeapMonth: boolean
-  sajuReportJson: unknown
+  /** Prefer yongshinOverride; sajuReportJson kept for callers that already loaded it. */
+  sajuReportJson?: unknown
+  yongshinOverride?: DailyComputeEntry['yongshinOverride']
 }
 
 type CacheRow = {
@@ -163,7 +165,8 @@ export async function hydrateWeekSeries(entry: EntryForDaily): Promise<WeekSerie
       gender: entry.gender,
       isLunar: entry.isLunar,
       isLeapMonth: entry.isLeapMonth,
-      yongshinOverride: extractYongshinOverride(entry.sajuReportJson),
+      yongshinOverride:
+        entry.yongshinOverride ?? extractYongshinOverride(entry.sajuReportJson),
     }
     const computed = computeDailyFortunes([computeEntry], missing)
     const rows: {

@@ -37,21 +37,25 @@ export async function POST(
     }
 
     const guestId = getGuestId(request)
-    const entry = await prisma.sajuEntry.findUnique({ where: { id } })
+    // Phase 1: auth + fortune cache — skip both sajuReportJson blobs on cache hit
+    const entry = await prisma.sajuEntry.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        guestId: true,
+        name: true,
+        gender: true,
+        birthDate: true,
+        fortuneJson: true,
+      },
+    })
     if (!entry) return NextResponse.json({ error: 'Not found' }, { status: 404 })
     if (entry.userId && entry.userId !== user.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
     }
     if (!entry.userId && entry.guestId && entry.guestId !== guestId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
-    }
-
-    const reportA = entry.sajuReportJson as SajuReportJson | null
-    if (!reportA) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
-
-    const partner = await prisma.sajuEntry.findUnique({ where: { id: overlayId } })
-    if (!partner?.sajuReportJson) {
-      return NextResponse.json({ error: '비교 대상을 찾을 수 없습니다.' }, { status: 404 })
     }
 
     const allowed = await canAccessPartnerEntry(user.id, id, overlayId)
@@ -78,6 +82,20 @@ export async function POST(
         { error: '이용권이 부족합니다.', needed: READING_COST.compat, ju: balance.ju },
         { status: 402 },
       )
+    }
+
+    // Phase 2: load both reports only when generating
+    const [selfReport, partner] = await Promise.all([
+      prisma.sajuEntry.findUnique({ where: { id }, select: { sajuReportJson: true } }),
+      prisma.sajuEntry.findUnique({
+        where: { id: overlayId },
+        select: { sajuReportJson: true, name: true, gender: true, birthDate: true },
+      }),
+    ])
+    const reportA = selfReport?.sajuReportJson as SajuReportJson | null
+    if (!reportA) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
+    if (!partner?.sajuReportJson) {
+      return NextResponse.json({ error: '비교 대상을 찾을 수 없습니다.' }, { status: 404 })
     }
 
     const reportB = partner.sajuReportJson as SajuReportJson

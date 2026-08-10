@@ -35,7 +35,10 @@ import json
 import sys
 import warnings
 
+from mem_report import register_atexit
 from saju_lib import _load_engine, _parse_date, _parse_time
+
+register_atexit()
 
 
 def _best_worst(domains: dict) -> tuple:

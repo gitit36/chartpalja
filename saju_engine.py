@@ -4146,16 +4146,15 @@ def _gishin_disruption_penalty(
 
 
 # ── 종합운점수 산출 ────────────────────────────
-# 전반적 점수 상향(체감 "너무 짜다" 완화). gamma<1 인 단조 곡선으로
-# 중·저 구간을 끌어올리고 100은 그대로 둔다(순위·상한 보존).
+# 전반적 점수 상향(체감 "너무 짜다" 완화). 전 구간 동일 가산 후 클립.
 # 대운/세운/월운 모두 _composite_score 를 base 로 쓰므로 여기 한 곳이면 일관 적용됨.
-# 튜닝: SCORE_UPLIFT_GAMMA 환경변수로 조정(1.0=상향 없음, 낮을수록 강함).
-_SCORE_UPLIFT_GAMMA = float(os.environ.get("SCORE_UPLIFT_GAMMA", "0.78"))
+# 일진 도메인 등도 동일 함수를 재사용한다(이중 가산 없음: 이미 올라간 값에 재적용하지 않음).
+# 튜닝: SCORE_BIAS 환경변수(0=상향 없음). 기본 10.
+_SCORE_BIAS = float(os.environ.get("SCORE_BIAS", "10"))
 
 def _uplift_composite(sc: float) -> int:
     s = max(0.0, min(100.0, float(sc)))
-    lifted = 100.0 * ((s / 100.0) ** _SCORE_UPLIFT_GAMMA)
-    return int(max(0, min(100, round(lifted))))
+    return int(max(0, min(100, round(s + _SCORE_BIAS))))
 
 
 def _composite_score(
