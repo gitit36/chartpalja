@@ -748,10 +748,36 @@ function ScrubFollowTooltip({
   )
 }
 
+/**
+ * 시크바 위치 ↔ 차트 X스케일 동일 매핑.
+ * Recharts `type="number" domain={xDomain}` 와 같이 domain 비율로 두고,
+ * 값은 데이터 포인트(stops)에만 스냅 — hover/click 의 activeTooltipIndex 와 동일.
+ */
+function scrubPctInDomain(value: number, domain: [number, number]): number {
+  const [d0, d1] = domain
+  if (d1 <= d0) return 0
+  return Math.min(1, Math.max(0, (value - d0) / (d1 - d0)))
+}
+
+function nearestStop(raw: number, stops: number[]): number {
+  if (stops.length === 0) return raw
+  let best = stops[0]!
+  let bestDist = Math.abs(raw - best)
+  for (let i = 1; i < stops.length; i++) {
+    const s = stops[i]!
+    const d = Math.abs(raw - s)
+    if (d < bestDist) {
+      best = s
+      bestDist = d
+    }
+  }
+  return best
+}
+
 /** X축 = 시크바. 썸을 직접 배치해 세로선과 정중앙 정렬. */
 function YearScrubber({
-  min,
-  max,
+  domain,
+  stops,
   value,
   onChange,
   onPointerDown,
@@ -759,8 +785,10 @@ function YearScrubber({
   rangeMode,
   selection,
 }: {
-  min: number
-  max: number
+  /** 차트 XAxis domain 과 동일 (예: 월 [0.5,12.5], 주 [0.5,7.5]) */
+  domain: [number, number]
+  /** 스냅 대상 — mergedData 의 year 목록 (차트 hover 포인트와 동일) */
+  stops: number[]
   value: number
   onChange: (v: number) => void
   onPointerDown: () => void
@@ -770,14 +798,16 @@ function YearScrubber({
 }) {
   const ref = React.useRef<HTMLDivElement>(null)
   const dragging = React.useRef(false)
-  if (max <= min) return null
-  const clamped = Math.min(max, Math.max(min, value))
-  const pct = ((clamped - min) / (max - min)) * 100
+  if (stops.length < 2 || domain[1] <= domain[0]) return null
+  const stopMin = stops[0]!
+  const stopMax = stops[stops.length - 1]!
+  const clamped = nearestStop(Math.min(stopMax, Math.max(stopMin, value)), stops)
+  const pct = scrubPctInDomain(clamped, domain) * 100
   const selStartPct = selection
-    ? ((Math.min(selection.startYear, selection.endYear) - min) / (max - min)) * 100
+    ? scrubPctInDomain(Math.min(selection.startYear, selection.endYear), domain) * 100
     : null
   const selEndPct = selection
-    ? ((Math.max(selection.startYear, selection.endYear) - min) / (max - min)) * 100
+    ? scrubPctInDomain(Math.max(selection.startYear, selection.endYear), domain) * 100
     : null
   const trackFill = rangeMode && selStartPct != null && selEndPct != null
     ? `linear-gradient(to right, #4b4b54 0%, #4b4b54 ${selStartPct}%, ${RANGE_ACCENT} ${selStartPct}%, ${RANGE_ACCENT} ${selEndPct}%, #4b4b54 ${selEndPct}%, #4b4b54 100%)`
@@ -789,7 +819,15 @@ function YearScrubber({
     const rect = el.getBoundingClientRect()
     if (rect.width <= 0) return clamped
     const t = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width))
-    return Math.round(min + t * (max - min))
+    const raw = domain[0] + t * (domain[1] - domain[0])
+    return nearestStop(raw, stops)
+  }
+
+  const stepByIndex = (delta: number) => {
+    const idx = stops.indexOf(clamped)
+    const i = idx < 0 ? 0 : idx
+    const next = stops[Math.min(stops.length - 1, Math.max(0, i + delta))]
+    return next ?? clamped
   }
 
   const handleDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -817,8 +855,8 @@ function YearScrubber({
       ref={ref}
       className={`cp-yt-scrubber ${rangeMode ? 'is-range' : ''}`}
       role="slider"
-      aria-valuemin={min}
-      aria-valuemax={max}
+      aria-valuemin={stopMin}
+      aria-valuemax={stopMax}
       aria-valuenow={clamped}
       aria-label={rangeMode ? '구간 선택' : '시기 이동'}
       tabIndex={0}
@@ -828,10 +866,10 @@ function YearScrubber({
       onPointerCancel={handleUp}
       onKeyDown={(e) => {
         let next = clamped
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = Math.max(min, clamped - 1)
-        else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = Math.min(max, clamped + 1)
-        else if (e.key === 'Home') next = min
-        else if (e.key === 'End') next = max
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = stepByIndex(-1)
+        else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = stepByIndex(1)
+        else if (e.key === 'Home') next = stopMin
+        else if (e.key === 'End') next = stopMax
         else return
         e.preventDefault()
         onPointerDown()
@@ -1867,14 +1905,19 @@ export function ChartTab({
   const showQuickCta = !rangeMode && !shareMode && quickPick != null && !yearSummary && !yearSummaryLoading
   const showSummaryCard = !!(yearSummaryLoading || yearSummary) && (rangeMode || !shareMode)
 
-  const scrubMin = mergedData[0]?.year ?? (isMonthly ? 1 : isWeekly ? 0 : THIS_YEAR)
-  const scrubMax = mergedData[mergedData.length - 1]?.year ?? scrubMin
-  const scrubFallback = isWeekly ? WEEK_TODAY_X : isMonthly ? THIS_MONTH : THIS_YEAR
-  const scrubValue = Math.min(
-    scrubMax,
-    Math.max(scrubMin, hoverYear ?? clickedYear ?? scrubFallback),
+  const scrubStops = useMemo(
+    () => mergedData.map(d => d.year).filter((y): y is number => typeof y === 'number' && !Number.isNaN(y)),
+    [mergedData],
   )
-  const scrubPct = scrubMax > scrubMin ? (scrubValue - scrubMin) / (scrubMax - scrubMin) : 0
+  const scrubMin = scrubStops[0] ?? (isMonthly ? 1 : isWeekly ? 1 : THIS_YEAR)
+  const scrubMax = scrubStops[scrubStops.length - 1] ?? scrubMin
+  const scrubFallback = isWeekly ? WEEK_TODAY_X : isMonthly ? THIS_MONTH : THIS_YEAR
+  const scrubValueRaw = hoverYear ?? clickedYear ?? scrubFallback
+  const scrubValue = scrubStops.length
+    ? nearestStop(Math.min(scrubMax, Math.max(scrubMin, scrubValueRaw)), scrubStops)
+    : Math.min(scrubMax, Math.max(scrubMin, scrubValueRaw))
+  // 세로선·썸 위치 = 차트 XAxis domain 비율 (월/주 0.5 패딩 포함)
+  const scrubPct = scrubPctInDomain(scrubValue, xDomain)
   const scrubFocusLabel = (() => {
     if (isWeekly) {
       if (scrubValue === WEEK_TODAY_X) return null
@@ -2242,8 +2285,8 @@ export function ChartTab({
               }}
             >
               <YearScrubber
-                min={scrubMin}
-                max={scrubMax}
+                domain={xDomain}
+                stops={scrubStops}
                 value={scrubValue}
                 onChange={(v) => {
                   if (scrubHint) dismissScrubHint()
