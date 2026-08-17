@@ -1,0 +1,62 @@
+{
+  "version": "V5_25A_TG10_BALANCED_MULTITASK_DECISION_V1",
+  "created_at": "2026-08-17T14:05:42",
+  "status": "V5_TG10_BALANCED_GENERAL_CANDIDATE_FROZEN_READY_FOR_CONTROL_BENCHMARK",
+  "winner": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+  "primary_metric": "chronology_balanced_subject_macro_pairwise_accuracy",
+  "gates": [
+    {
+      "model": "TG10_SHARED_RIDGE_BALANCED",
+      "primary_balanced": 0.5661518987341772,
+      "primary_p10": 0.555620253164557,
+      "positive_later": 0.5713333333333334,
+      "positive_earlier": 0.560970464135021,
+      "broad_balanced": 0.5576024096385542,
+      "supported_wave_floor": 0.4717647058823529,
+      "primary_balanced_ge_055": true,
+      "p10_ge_050": true,
+      "positive_later_ge_050": true,
+      "positive_earlier_ge_050": true,
+      "broad_balanced_ge_053": true,
+      "wave_floor_ge_048": false,
+      "all_gates": false,
+      "delta_vs_shared_ge_001": NaN,
+      "bootstrap_p_ge_080": NaN
+    },
+    {
+      "model": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+      "primary_balanced": 0.6767721518987342,
+      "primary_p10": 0.6579282700421941,
+      "positive_later": 0.7233333333333334,
+      "positive_earlier": 0.6302109704641351,
+      "broad_balanced": 0.6366787148594377,
+      "supported_wave_floor": 0.6176470588235294,
+      "primary_balanced_ge_055": true,
+      "p10_ge_050": true,
+      "positive_later_ge_050": true,
+      "positive_earlier_ge_050": true,
+      "broad_balanced_ge_053": true,
+      "wave_floor_ge_048": true,
+      "all_gates": true,
+      "delta_vs_shared_ge_001": true,
+      "bootstrap_p_ge_080": true
+    }
+  ],
+  "bootstrap": [
+    {
+      "comparison": "MULTITASK_GENERAL_minus_SHARED_GENERAL",
+      "mean_delta": 0.11031598109159474,
+      "ci025": 0.037570680487384836,
+      "ci975": 0.1843770587076438,
+      "p_delta_gt_0": 0.9985
+    }
+  ],
+  "rules": {
+    "new_feature_family_added": false,
+    "manual_feature_selection": false,
+    "axis_required_at_inference": false,
+    "production_control_scored": false,
+    "confirm_loaded_or_researched": false
+  },
+  "next_rule": "If winner exists: benchmark frozen candidate against Production Control once with zero retuning. If no winner: keep CONFIRM sealed; do not run another broad feature search automatically."
+}

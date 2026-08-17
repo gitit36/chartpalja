@@ -1,0 +1,69 @@
+{
+  "version": "V5_24B_METRIC_AUDIT_DECISION_V1",
+  "created_date": "2026-08-17",
+  "status": "V5_24B_RAW_NUISANCE_GATE_SUPERSEDED_FOR_NEXT_DEV_BY_CHRONOLOGY_BALANCED_METRIC",
+  "preserve_24B_result": true,
+  "24B_result_remains_valid_under_its_frozen_raw_metric": true,
+  "why_next_dev_metric_changes": "The raw subject-macro nuisance score substantially rewards chronology orientation imbalance. PRIMARY has a 0.6548 subject-macro positive-earlier share; STATUS is 0.8382. The chronology-balanced metric gives positive-earlier and positive-later strata equal weight and is therefore more aligned with the intended nuisance-neutral discovery question.",
+  "primary_pairs_n": 193,
+  "primary_subjects_n": 100,
+  "positive_earlier_pair_share": 0.6217616580310881,
+  "positive_earlier_subject_macro_share": 0.6547976190476191,
+  "key_current_results": {
+    "NPLUS__TG10_RIDGE_DIAGNOSTIC": {
+      "raw_subject_macro": 0.6557642857142857,
+      "chronology_balanced_mean": 0.593590717299578,
+      "positive_later_macro": 0.48933333333333334,
+      "positive_earlier_macro": 0.6978481012658228
+    },
+    "NUISANCE_ONLY": {
+      "raw_subject_macro": 0.6777333333333333,
+      "chronology_balanced_mean": 0.5877257383966243,
+      "positive_later_macro": 0.28933333333333333,
+      "positive_earlier_macro": 0.8861181434599157
+    },
+    "NPLUS__ALL_ORTHODOX_ELASTICNET_AUTO": {
+      "raw_subject_macro": 0.624945238095238,
+      "chronology_balanced_mean": 0.5709620253164557,
+      "positive_later_macro": 0.458,
+      "positive_earlier_macro": 0.6839240506329114
+    },
+    "NPLUS__ALL_ORTHODOX_RIDGE_AUTO": {
+      "raw_subject_macro": 0.618804761904762,
+      "chronology_balanced_mean": 0.5619535864978903,
+      "positive_later_macro": 0.458,
+      "positive_earlier_macro": 0.6659071729957805
+    },
+    "ASTRO__TG10_RIDGE_DIAGNOSTIC": {
+      "raw_subject_macro": 0.5442738095238095,
+      "chronology_balanced_mean": 0.5371392405063291,
+      "positive_later_macro": 0.5786666666666667,
+      "positive_earlier_macro": 0.4956118143459915
+    },
+    "ASTRO__ALL_ORTHODOX_RIDGE_AUTO": {
+      "raw_subject_macro": 0.5369428571428572,
+      "chronology_balanced_mean": 0.5301772151898734,
+      "positive_later_macro": 0.5253333333333334,
+      "positive_earlier_macro": 0.5350210970464135
+    },
+    "ASTRO__ALL_ORTHODOX_ELASTICNET_AUTO": {
+      "raw_subject_macro": 0.46444285714285716,
+      "chronology_balanced_mean": 0.45938818565400846,
+      "positive_later_macro": 0.47333333333333333,
+      "positive_earlier_macro": 0.44544303797468354
+    }
+  },
+  "elasticnet_selection": {
+    "feature_count": 183,
+    "max_selection_frequency": 0.76,
+    "features_ge_0_80": 0,
+    "features_ge_0_50": 20
+  },
+  "interpretation": [
+    "ElasticNet is unstable: no feature reaches 0.80 fold-selection frequency.",
+    "TG10 Ridge is the most stable astrology-only representation across the three collection waves, but current evidence is weak rather than promotion-grade.",
+    "The next efficient hypothesis is not a broader feature search; it is a chronology-balanced TG10 test with a deployable global score and axis effects used only as auxiliary training structure."
+  ],
+  "control_scored": false,
+  "confirm_loaded_or_researched": false
+}

@@ -1,0 +1,2 @@
+candidate,candidate_balanced_macro,control_balanced_macro,delta_candidate_minus_control,candidate_positive_later,control_positive_later,candidate_positive_earlier,control_positive_earlier
+TG10_MULTITASK_EFFECT_RIDGE_BALANCED,0.6767721518987342,0.42530590717299577,0.2514662447257384,0.7233333333333333,0.385,0.630210970464135,0.4656118143459915

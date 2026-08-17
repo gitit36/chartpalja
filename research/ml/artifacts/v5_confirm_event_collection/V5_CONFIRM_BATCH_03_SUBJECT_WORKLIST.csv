@@ -1,0 +1,21 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+3,1,V5CONFIRM_040,Claire Keim,PROJECT,V5_WIKIDATA_EXPANSION,1975-07-08,"Senlis, France",female,Q281352,AA,ClaireKeim1975
+3,2,V5CONFIRM_026,Marilyn Manson,PROJECT,V5_WIKIDATA_EXPANSION,1969-01-05,"Canton, OH, United States",male,Q186327,AA,MarilynManson1969
+3,3,V5CONFIRM_012,Denny Moyer,COMPETITIVE,V5_WIKIDATA_EXPANSION,1939-08-08,"Portland, OR, United States",male,Q545389,AA,DennyMoyer1939
+3,4,V5CONFIRM_022,Arielle Dombasle,PROJECT,V5_WIKIDATA_EXPANSION,1953-04-27,"Hartford, CT, United States",female,Q284731,AA,ArielleDombasle1953
+3,5,V5CONFIRM_063,Jack Welch,STATUS,V5_WAVE_A,1935-11-19,"Peabody, MA, United States",male,,AA,JackWelch1935
+3,6,V5CONFIRM_014,Henry Cooper,COMPETITIVE,V5_WIKIDATA_EXPANSION,1934-05-03,"London, United Kingdom",male,Q381694,AA,HenryCooper1934
+3,7,V5CONFIRM_001,Tracy Austin,COMPETITIVE,V5_WAVE_A,1962-12-12,"Redondo Beach, CA, United States",female,,AA,TracyAustin1962
+3,8,V5CONFIRM_048,Christie Hefner,STATUS,V5_WIKIDATA_EXPANSION,1952-11-08,"Chicago, IL, United States",female,Q509163,AA,ChristieHefner1952
+3,9,V5CONFIRM_046,Christina Onassis,STATUS,V5_WIKIDATA_EXPANSION,1950-12-11,"New York, NY, United States",female,Q241812,AA,ChristinaOnassis1950
+3,10,V5CONFIRM_006,Marcel Cerdan,COMPETITIVE,V5_WIKIDATA_EXPANSION,1916-07-22,"Sidi Bel Abbes, Algeria",male,Q347201,AA,MarcelCerdan1916
+3,11,V5CONFIRM_041,Orson Welles,PROJECT,V5_WAVE_A,1915-05-06,"Kenosha, WI, United States",male,,AA,OrsonWelles1915
+3,12,V5CONFIRM_013,Ronnie Harris,COMPETITIVE,V5_WIKIDATA_EXPANSION,1948-09-03,"Canton, OH, United States",male,Q1344009,AA,RonnieHarris1948
+3,13,V5CONFIRM_043,Margherita Buy,PROJECT,V5_WIKIDATA_EXPANSION,1962-01-15,"Rome, Italy",female,Q201617,AA,MargheritaBuy1962
+3,14,V5CONFIRM_077,Michel Rocard,STATUS,V5_WAVE_A,1930-08-23,"Courbevoie, France",male,,AA,MichelRocard1930
+3,15,V5CONFIRM_069,Heinrich Hellwege,STATUS,V5_WIKIDATA_EXPANSION,1908-08-18,"Neuenkirchen-Vörden, Deutschland",male,Q72669,AA,HeinrichHellwege1908
+3,16,V5CONFIRM_062,Johannes Rau,STATUS,V5_WIKIDATA_EXPANSION,1931-01-16,"Wuppertal, Germany",male,Q2551,AA,JohannesRau1931
+3,17,V5CONFIRM_064,Bobby Rahal,STATUS,V5_WIKIDATA_EXPANSION,1953-01-10,"Medina, OH, United States",male,Q172255,AA,BobbyRahal1953
+3,18,V5CONFIRM_030,Marco Ferreri,PROJECT,V5_WIKIDATA_EXPANSION,1928-05-11,"Milan, Italy",male,Q53018,AA,MarcoFerreri1928
+3,19,V5CONFIRM_059,Hermann Fegelein,STATUS,V5_WIKIDATA_EXPANSION,1906-10-30,"Ansbach, Germany",male,Q57676,AA,HermannFegelein1906
+3,20,V5CONFIRM_065,Jürgen Wagner,STATUS,V5_WIKIDATA_EXPANSION,1901-09-09,"Strasburg (Uckermark), Germany",male,Q75518,AA,JürgenWagner1901

@@ -1,0 +1,15 @@
+{
+  "status": "V5_CONFIRM2_CANDIDATE_SUPPLY_INSUFFICIENT_DO_NOT_LOWER_TARGET",
+  "available": {
+    "PROJECT": 745,
+    "STATUS": 169,
+    "COMPETITIVE": 15
+  },
+  "target": {
+    "COMPETITIVE": 80,
+    "PROJECT": 100,
+    "STATUS": 140
+  },
+  "scores_viewed": false,
+  "next_rule": "Expand role-only exact-DOB supply; do not lower the frozen C2 quotas."
+}

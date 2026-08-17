@@ -1,0 +1,33 @@
+{
+  "version": "V5_CONFIRM2_COMPETITIVE_FEMALE_ONLY_SUPPLY_MANIFEST_V1",
+  "created_at": "2026-08-17T17:08:03",
+  "status": "CONFIRM2_COMPETITIVE_FEMALE_SUPPLY_PASS",
+  "before": {
+    "total": 423,
+    "female": 12
+  },
+  "after": {
+    "total": 431,
+    "female": 20
+  },
+  "requirements": {
+    "total_min": 80,
+    "female_min": 16
+  },
+  "queries": [
+    {
+      "role_family": "basketball_player",
+      "role_qid": "Q3665646",
+      "returned_rows": 24488,
+      "resolved_exact_DOB": 8,
+      "resolved_female": 8,
+      "cache_sha256": "896d4daa31b5ee3829d6a51a6e067e50111d88caca1c0b149fe7694fdc25db89"
+    }
+  ],
+  "female_supply_patch_sha256": "f4efdc7cbbee37000759fd9741f6dbef8131de90ad30d2b0080f6a559c842619",
+  "events_used": false,
+  "pairability_used": false,
+  "chronology_used": false,
+  "astrology_used": false,
+  "control_used": false
+}

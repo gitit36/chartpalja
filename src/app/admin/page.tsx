@@ -50,16 +50,6 @@ export default async function AdminDashboardPage({
             hint={`게스트 ${s.guestEntries} · 오늘 ${s.today.entries}`}
           />
           <MetricCard
-            label="DAU"
-            value={s.dau}
-            hint={`NAU ${s.nau} · EAU ${s.eau} · RAU ${s.rau}`}
-          />
-          <MetricCard
-            label="고착도"
-            value={`${s.stickinessWau}%`}
-            hint={`DAU/WAU · DAU/MAU ${s.stickinessMau}%`}
-          />
-          <MetricCard
             label="코호트 전환"
             value={`${s.payConvertRate}%`}
             hint={`가입→결제 · 엔트리 ${s.entryConvertRate}%`}

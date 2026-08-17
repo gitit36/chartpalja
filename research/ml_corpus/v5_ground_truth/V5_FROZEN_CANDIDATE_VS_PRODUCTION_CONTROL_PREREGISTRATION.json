@@ -1,0 +1,36 @@
+{
+  "version": "V5_FROZEN_CANDIDATE_VS_PRODUCTION_CONTROL_PREREGISTRATION_V1",
+  "created_date": "2026-08-17",
+  "status": "PREDECLARED_AFTER_25A_CANDIDATE_FREEZE_BEFORE_CONTROL_SCORING",
+  "candidate_required_status": "V5_TG10_BALANCED_GENERAL_CANDIDATE_FROZEN_READY_FOR_CONTROL_BENCHMARK",
+  "candidate_required_architecture": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+  "benchmark_question": "Does the frozen V5 candidate outperform the current Production Control annual score on the same PRIMARY DEV pairs when the V5 candidate is evaluated only from its already-generated subject-disjoint OOF predictions?",
+  "fairness_rules": {
+    "candidate_DEV_score_source": "V5_25A_PRIMARY_OOF_PAIR_SCORES.csv, GENERAL only",
+    "never_rescore_DEV_with_full_primary_fitted_candidate_for_headline": true,
+    "candidate_hyperparameters_or_coefficients_may_not_change": true,
+    "control_is_fixed_current_runtime": true,
+    "control_definition": "annual timeline meta_row['candle']['close']",
+    "same_pair_membership": true,
+    "same_chronology_balanced_metric": true,
+    "CONFIRM_must_remain_sealed": true
+  },
+  "primary_metric": "chronology_balanced_subject_macro_pairwise_accuracy",
+  "primary_comparison": "V5 candidate OOF GENERAL minus Production Control fixed",
+  "bootstrap": {
+    "unit": "subject",
+    "iterations": 10000,
+    "paired": true
+  },
+  "promotion_gates": {
+    "primary_balanced_delta_vs_control_min": 0.01,
+    "bootstrap_probability_delta_gt_0_min": 0.8,
+    "positive_later_candidate_not_worse_than_control_by_more_than": 0.02,
+    "positive_earlier_candidate_not_worse_than_control_by_more_than": 0.02,
+    "supported_wave_max_allowed_deficit_vs_control": 0.03,
+    "supported_wave_min_subjects": 15
+  },
+  "axis_results": "diagnostic only; PROJECT remains underpowered and does not gate CONFIRM opening",
+  "if_pass": "Freeze the DEV comparison result. The candidate architecture remains unchanged. Proceed to research/score the already sealed CONFIRM80 exactly once under a separately frozen confirmation protocol.",
+  "if_fail": "Keep CONFIRM sealed. Do not retune the candidate using Control results. Return to DEV-level representation/target diagnosis only."
+}

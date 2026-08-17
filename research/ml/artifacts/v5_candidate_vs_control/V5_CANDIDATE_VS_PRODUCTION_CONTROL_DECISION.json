@@ -1,0 +1,55 @@
+{
+  "version": "V5_CANDIDATE_VS_PRODUCTION_CONTROL_DECISION_V1",
+  "notebook_version": "SAJU_ML_V5_CANDIDATE_VS_CONTROL_26A_R2_MERGE_FIX_20260817",
+  "created_at": "2026-08-17T15:09:20",
+  "status": "V5_FROZEN_CANDIDATE_BEATS_CONTROL_READY_FOR_CONFIRM_PROTOCOL",
+  "candidate": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+  "candidate_evaluation": "25A subject-disjoint repeated OOF GENERAL",
+  "control_definition": "current runtime annual timeline candle.close",
+  "primary_metric": "chronology_balanced_subject_macro_pairwise_accuracy",
+  "headline": {
+    "candidate": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+    "candidate_balanced_macro": 0.6767721518987342,
+    "control_balanced_macro": 0.42530590717299577,
+    "delta_candidate_minus_control": 0.2514662447257384,
+    "candidate_positive_later": 0.7233333333333333,
+    "control_positive_later": 0.385,
+    "candidate_positive_earlier": 0.630210970464135,
+    "control_positive_earlier": 0.4656118143459915
+  },
+  "bootstrap": {
+    "comparison": "FROZEN_V5_OOF_minus_PRODUCTION_CONTROL",
+    "observed_delta": 0.2514662447257384,
+    "bootstrap_mean_delta": 0.2509825855644385,
+    "ci025": 0.14679573229360554,
+    "ci975": 0.35146985077627035,
+    "p_delta_gt_0": 1.0
+  },
+  "supported_wave_min_delta": 0.12647058823529417,
+  "gates": {
+    "primary_delta_ge_001": true,
+    "bootstrap_p_ge_080": true,
+    "positive_later_not_worse_gt_002": true,
+    "positive_earlier_not_worse_gt_002": true,
+    "supported_wave_not_worse_gt_003": true
+  },
+  "all_gates": true,
+  "lineage": {
+    "25A_decision_sha256": "938530f2d4988fdb205616f06fafafa199301f39ec0283a42e7aea2d7a24efde",
+    "25A_candidate_spec_sha256": "714e5d98a824107b6c81b3459b08da56a7e8ba78c543bc5b69f72c7002868acb",
+    "25A_coefficients_sha256": "fb600dd49208d9dfa4a2098c75c61469e9785f5139908953236d706a47051ead",
+    "25A_oof_sha256": "3ba42878594d8b22e890f2237693284e71fee7c424918ab0b0158c059e794f6f",
+    "primary_pairs_sha256": "d9654c8d45cb81ee88df7f0aedd885d0c93ed09863f8f14f6c9b62672a5c43b3",
+    "saju_engine_py_sha256": "d39e0c4d777ae3a19394c9175319a4f8a6a709c2b4d34400965b618ffbfdad1e",
+    "preregistration_sha256": "8ca3842d1330fc5869633364e0e62fb71caa41102f94dbe13d788e02ad6b8b18"
+  },
+  "rules": {
+    "candidate_retuned_after_freeze": false,
+    "full_primary_candidate_used_for_DEV_headline": false,
+    "pair_membership_changed": false,
+    "confirm_loaded_or_researched": false,
+    "control_scored": true
+  },
+  "confirm_protocol_may_begin": true,
+  "next_rule": "If READY: freeze a one-shot CONFIRM80 event-research/scoring protocol before opening CONFIRM. If FAIL: keep CONFIRM sealed and do not retune using Control results."
+}

@@ -1,0 +1,143 @@
+{
+  "version": "V5_CONFIRM_ONE_SHOT_EVALUATION_PROTOCOL_V1",
+  "created_date": "2026-08-17",
+  "status": "PREDECLARED_AFTER_DEV_CANDIDATE_AND_CONTROL_GATE_BEFORE_CONFIRM_ROSTER_OPEN",
+  "purpose": "One-shot sealed CONFIRM80 validation of the frozen V5 candidate against chance and current Production Control.",
+  "entry_requirements": {
+    "required_26A_status": "V5_FROZEN_CANDIDATE_BEATS_CONTROL_READY_FOR_CONFIRM_PROTOCOL",
+    "required_candidate": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+    "candidate_must_remain_frozen": true,
+    "no_CONFIRM_events_previously_collected_or_scored": true
+  },
+  "sealed_roster": {
+    "path": "research/ml/artifacts/v5_final_roster/V5_CONFIRM_SUBJECT_ROSTER_80_SEALED.csv",
+    "expected_counts": {
+      "COMPETITIVE": 20,
+      "PROJECT": 25,
+      "STATUS": 35,
+      "TOTAL": 80
+    },
+    "membership_changes_forbidden": true,
+    "subject_replacement_forbidden": true
+  },
+  "event_collection": {
+    "inherit_original_protocol": "V5_LOCAL_MATCHED_EVENT_PROTOCOL_V1",
+    "bounded_source_sweep": true,
+    "record_all_eligible_major_events": true,
+    "preassigned_axis_immutable": true,
+    "search_positive_and_negative_events_independently": true,
+    "pairability_or_year_gap_must_not_be_inspected_during_research": true,
+    "astrology_and_Control_must_not_be_used_during_research": true,
+    "routine_term_completion_not_automatically_negative_status": true,
+    "legal_health_reputation_disruption_not_silently_relabelled_as_status": true,
+    "event_columns": [
+      "batch_id",
+      "research_order_in_batch",
+      "subject_id",
+      "name",
+      "preassigned_axis",
+      "event_year",
+      "polarity",
+      "event_type",
+      "event_description",
+      "source_url",
+      "source_title",
+      "source_publisher",
+      "source_date",
+      "source_quality",
+      "eligibility_note",
+      "exclude",
+      "exclude_reason"
+    ],
+    "source_quality": {
+      "high": "Primary/official source, major institutional record, or highly authoritative reference directly supporting the event.",
+      "medium": "Reputable secondary source directly supporting the event.",
+      "low": "Weak, indirect, aggregator, unsourced, or insufficiently authoritative evidence."
+    }
+  },
+  "event_freeze_and_confidence_sets": {
+    "freeze_all_researched_rows_before_pairing": true,
+    "research_eligible": "exclude == false and valid year/polarity/axis/source",
+    "PRIMARY_TRUSTED": {
+      "source_quality": "high only",
+      "exclude_event_type_tokens": [
+        "breakthrough",
+        "critical_success",
+        "landmark",
+        "global_success",
+        "professional_boxing_win",
+        "quarterfinal_loss",
+        "international_radio",
+        "album_series",
+        "no_qualifying_core_axis_event"
+      ],
+      "note": "Filtering changes modeling confidence only; it must not alter factual event labels."
+    },
+    "BROAD_SENSITIVITY": {
+      "source_quality": [
+        "high",
+        "medium"
+      ]
+    }
+  },
+  "pairing": {
+    "collapse_same_subject_axis_year_polarity_before_pairing": true,
+    "same_subject": true,
+    "same_axis": true,
+    "opposite_polarity": true,
+    "same_year_forbidden": true,
+    "min_abs_year_gap": 1,
+    "max_abs_year_gap": 5,
+    "use_all_eligible_local_pairs": true,
+    "no_directional_pair_selection": true,
+    "subject_weight": "1 / number_of_pairs_for_subject"
+  },
+  "frozen_candidate_scoring": {
+    "architecture": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+    "coefficient_source": "V5_25A_FROZEN_CANDIDATE_COEFFICIENTS.csv",
+    "model_spec_source": "V5_25A_FROZEN_CANDIDATE_MODEL_SPEC.json",
+    "use_global_coefficients_only": true,
+    "axis_required_at_inference": false,
+    "retuning_forbidden": true,
+    "feature_addition_or_removal_forbidden": true
+  },
+  "control_scoring": {
+    "official_definition": "current runtime annual timeline candle.close",
+    "official_direction": "higher_is_better",
+    "reversed_direction_sensitivity": "report only; not a primary gate",
+    "control_retuning_forbidden": true
+  },
+  "evaluation": {
+    "primary_metric": "chronology_balanced_subject_macro_pairwise_accuracy",
+    "chronology_balance": "positive-later and positive-earlier strata weighted 50/50",
+    "bootstrap_unit": "subject",
+    "bootstrap_iterations": 20000,
+    "confidence_interval": "paired subject bootstrap percentile 95%",
+    "axis_results": "diagnostic only",
+    "BROAD_role": "predeclared sensitivity only"
+  },
+  "evidence_sufficiency": {
+    "PRIMARY_min_pairable_subjects": 30,
+    "if_below": "V5_CONFIRM_INSUFFICIENT_EVIDENCE_NO_PRODUCTION_DECISION"
+  },
+  "confirmation_gates": {
+    "candidate_PRIMARY_balanced_min": 0.55,
+    "candidate_positive_later_min": 0.5,
+    "candidate_positive_earlier_min": 0.5,
+    "candidate_minus_chance_bootstrap_lower95_gt": 0.0,
+    "candidate_minus_Control_observed_delta_gt": 0.0,
+    "candidate_minus_Control_bootstrap_lower95_gt": 0.0,
+    "candidate_minus_Control_bootstrap_probability_gt0_min": 0.95,
+    "BROAD_candidate_balanced_min": 0.52,
+    "BROAD_candidate_minus_Control_delta_min": 0.0
+  },
+  "decision_logic": {
+    "PASS": "Sufficient PRIMARY sample and every confirmation gate passes.",
+    "INCONCLUSIVE": "PRIMARY pairable subjects < 30, or evidence is directionally favorable but a frozen confidence gate is not cleared.",
+    "FAIL": "Sufficient PRIMARY sample and candidate is not directionally better than Control or does not remain above chance under the frozen metrics.",
+    "no_post_CONFIRM_retuning": true
+  },
+  "if_pass": "Candidate is externally confirmed on the sealed V5 CONFIRM set; next step is production translation/calibration without using CONFIRM for model fitting.",
+  "if_inconclusive": "Do not tune on CONFIRM. Decide separately whether a new independently frozen confirmation cohort is worth collecting.",
+  "if_fail": "Reject V5 candidate for production promotion. Do not tune using CONFIRM outcomes."
+}

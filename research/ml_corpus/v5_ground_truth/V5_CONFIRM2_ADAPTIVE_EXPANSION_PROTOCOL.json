@@ -1,0 +1,99 @@
+{
+  "version": "V5_CONFIRM2_ADAPTIVE_EXPANSION_PROTOCOL_V1",
+  "created_date": "2026-08-17",
+  "status": "PREDECLARED_AFTER_CONFIRM1_INSUFFICIENT_BEFORE_CONFIRM2_MEMBERSHIP_OR_EVENT_RESEARCH",
+  "trigger": {
+    "confirm1_status": "V5_CONFIRM_INSUFFICIENT_EVIDENCE_NO_PRODUCTION_DECISION",
+    "confirm1_scoring_performed": false,
+    "confirm1_primary_pairable_subjects": 8,
+    "frozen_min_pairable_subjects": 30
+  },
+  "goal": "Obtain enough fully independent high-confidence confirmation pairs without viewing V5 or Control scores, while minimizing unnecessary event research.",
+  "candidate_and_evaluation_freeze": {
+    "candidate": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+    "candidate_may_not_change": true,
+    "control_may_not_change": true,
+    "saju_engine_must_match_26A_sha": true,
+    "event_taxonomy_may_not_change": true,
+    "PRIMARY_definition_may_not_change": true,
+    "BROAD_definition_may_not_change": true,
+    "local_pair_window_years": [
+      1,
+      5
+    ],
+    "final_metric_and_gates": "Reuse V5_CONFIRM_ONE_SHOT_EVALUATION_PROTOCOL.json unchanged"
+  },
+  "confirm2_pool": {
+    "max_subjects": 320,
+    "axis_quotas": {
+      "COMPETITIVE": 80,
+      "PROJECT": 100,
+      "STATUS": 140
+    },
+    "rationale": "4x the original CONFIRM axis composition (20/25/35) to preserve target-population mixture.",
+    "identity_requirement": "PASS_EXACT_DOB only",
+    "exclude_all_prior_DEV_and_CONFIRM_identities": true,
+    "gender_guardrail_min_share_per_axis": 0.2,
+    "selection_seed": 2026081706
+  },
+  "status_supply": {
+    "base_source": "V5_IDENTITY_LINKAGE_AUDIT_CANDIDATE_POOL.csv PASS_EXACT_DOB",
+    "supplement_if_needed": true,
+    "supplement_roles_same_as_prior_predeclared_E1_status_supply": {
+      "diplomat": "Q193391",
+      "judge": "Q16533",
+      "civil_servant": "Q212238",
+      "military_officer": "Q189290",
+      "entrepreneur": "Q131524",
+      "banker": "Q806798"
+    },
+    "supplement_information_allowed": [
+      "occupation identity",
+      "English label",
+      "Wikidata date of birth for exact identity linkage only",
+      "frozen Rodden-AA birth snapshot"
+    ]
+  },
+  "batching": {
+    "n_batches": 16,
+    "batch_size": 20,
+    "pattern": {
+      "batches_1_5_9_13": {
+        "COMPETITIVE": 5,
+        "PROJECT": 7,
+        "STATUS": 8
+      },
+      "all_other_batches": {
+        "COMPETITIVE": 5,
+        "PROJECT": 6,
+        "STATUS": 9
+      }
+    },
+    "order_frozen_before_events": true
+  },
+  "adaptive_stopping": {
+    "evaluate_only_at_complete_batch_boundaries": true,
+    "quantity_allowed_for_stopping": "cumulative PRIMARY_TRUSTED pairable subject count only",
+    "combine_confirm1_and_confirm2": true,
+    "stop_event_research_when_cumulative_PRIMARY_pairable_subjects_ge": 30,
+    "forbidden_for_stopping": [
+      "V5 score",
+      "Control score",
+      "candidate correctness",
+      "chronology direction/share",
+      "axis-specific performance",
+      "event polarity direction beyond deterministic pairability calculation"
+    ],
+    "after_stop": "Freeze cumulative C2 event corpus and pairs, append frozen C1 pairs, then run one-shot final V5/Control scoring under the unchanged 27A gates."
+  },
+  "forbidden": {
+    "reuse_prior_subject": true,
+    "select_membership_using_event_outcome": true,
+    "select_membership_using_pairability": true,
+    "select_membership_using_chronology": true,
+    "select_membership_using_astrology": true,
+    "select_membership_using_control": true,
+    "change_PRIMARY_after_C2": true,
+    "retune_candidate_after_C2": true
+  }
+}

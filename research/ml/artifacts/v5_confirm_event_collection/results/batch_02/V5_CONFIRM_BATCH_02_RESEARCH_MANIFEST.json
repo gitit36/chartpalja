@@ -1,0 +1,46 @@
+{
+  "version": "V5_CONFIRM_BATCH_02_RESEARCH_V1",
+  "status": "CONFIRM_BATCH_02_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "roster_kind": "SEALED_V5_CONFIRM80",
+  "batch_id": 2,
+  "n_subjects": 20,
+  "axis_counts": {
+    "STATUS": 9,
+    "PROJECT": 6,
+    "COMPETITIVE": 5
+  },
+  "n_event_rows": 34,
+  "eligible_rows": 33,
+  "excluded_audit_rows": 1,
+  "subjects_with_positive": 17,
+  "subjects_with_negative": 7,
+  "subjects_with_both_polarities": 6,
+  "subjects_with_no_eligible_core_axis_event": 2,
+  "source_quality_rows": {
+    "high": 22,
+    "medium": 12
+  },
+  "lineage": {
+    "worklist_sha256": "029fab41c8fec9b508a5b4a2c516f884280b3fbbd682286b47aa6df5d3a154fd",
+    "events_sha256": "cb0e3bb8b34bb81afc4a4e76ce30f4cfba10b282996fa58e095fd1126cb4b643",
+    "audit_sha256": "2b89bde685900c16126ce8ddcb4b455699ab56ab3d7d879e2ec0ddf80e8a5a70"
+  },
+  "rules": {
+    "exact_frozen_worklist_used": true,
+    "blind_event_research": true,
+    "bounded_source_sweep_completed": true,
+    "all_located_eligible_major_events_retained": true,
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "no_pairability_used": true,
+    "no_pair_gap_inspected": true,
+    "no_chronology_balancing_used": true,
+    "preassigned_axis_immutable": true,
+    "ineligible_or_ambiguous_candidates_logged_not_relabelled": true,
+    "routine_term_completion_not_automatically_negative_status": true,
+    "death_health_legal_reputation_not_silently_status_negative": true,
+    "one_sided_subjects_not_backfilled": true,
+    "not_final_event_freeze": true
+  },
+  "next_rule": "Place this batch under research/ml/artifacts/v5_confirm_event_collection/results/batch_02/. After all four batches are present, run independent source/schema QA and freeze the complete CONFIRM event corpus before generating any local pairs, astrology features, or Production Control scores."
+}

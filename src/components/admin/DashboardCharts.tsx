@@ -392,12 +392,16 @@ export function GrowthCharts({ data }: { data: DashboardData }) {
   const dauRows = useMemo(
     () =>
       data.growth.dauSeries.map((row) => ({
-        ...row,
         date: row.date.slice(5),
+        nau: row.nau,
+        eau: row.eau,
+        rau: row.rau,
+        stickinessWau: row.stickinessWau,
+        stickinessMau: row.stickinessMau,
       })),
     [data.growth.dauSeries],
   )
-  const hasDau = dauRows.some((r) => r.dau > 0)
+  const hasDau = data.growth.dauSeries.some((r) => r.dau > 0)
   const retentionRows = data.growth.retention
   const hasRetention = retentionRows.some((r) => r.cohortN > 0)
   const latest = data.growth.latest
@@ -423,40 +427,57 @@ export function GrowthCharts({ data }: { data: DashboardData }) {
                   <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
                   <XAxis dataKey="date" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                  <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#e8e8ed' }} />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    labelStyle={{ color: '#e8e8ed' }}
+                    formatter={(v: number, name: string) => [v, name]}
+                    labelFormatter={(label, payload) => {
+                      const total = (payload ?? []).reduce((sum, p) => sum + Number(p.value ?? 0), 0)
+                      return `${label} · DAU ${total}`
+                    }}
+                  />
                   <Legend
                     verticalAlign="top"
                     height={28}
-                    iconType="circle"
+                    iconType="square"
                     iconSize={8}
                     wrapperStyle={{ fontSize: 11, color: '#8b8b93' }}
                   />
                   <Area
-                    type="monotone"
+                    type="linear"
                     stackId="dau"
                     dataKey="nau"
                     name="NAU"
                     stroke="#22c55e"
-                    fill="rgba(34,197,94,0.35)"
-                    strokeWidth={1.5}
+                    fill="#22c55e"
+                    fillOpacity={1}
+                    strokeWidth={0}
+                    legendType="square"
+                    isAnimationActive={false}
                   />
                   <Area
-                    type="monotone"
+                    type="linear"
                     stackId="dau"
                     dataKey="eau"
                     name="EAU"
                     stroke="#3182f6"
-                    fill="rgba(49,130,246,0.32)"
-                    strokeWidth={1.5}
+                    fill="#3182f6"
+                    fillOpacity={1}
+                    strokeWidth={0}
+                    legendType="square"
+                    isAnimationActive={false}
                   />
                   <Area
-                    type="monotone"
+                    type="linear"
                     stackId="dau"
                     dataKey="rau"
                     name="RAU"
                     stroke="#f5a524"
-                    fill="rgba(245,165,36,0.32)"
-                    strokeWidth={1.5}
+                    fill="#f5a524"
+                    fillOpacity={1}
+                    strokeWidth={0}
+                    legendType="square"
+                    isAnimationActive={false}
                   />
                 </AreaChart>
               </ResponsiveContainer>

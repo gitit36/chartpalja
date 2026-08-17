@@ -1,0 +1,70 @@
+{
+  "version": "V5_TG10_MULTITASK_BALANCED_PREREGISTRATION_V1",
+  "created_date": "2026-08-17",
+  "status": "PREDECLARED_AFTER_24B_DIAGNOSTICS_BEFORE_25A_REFIT",
+  "role": "SECOND_STAGE_EXPLORATORY_DEV_WITH_SEALED_CONFIRM",
+  "motivation": [
+    "24B raw nuisance accuracy is dominated by positive-earlier chronology imbalance.",
+    "TG10 Ridge is the most stable astrology-only representation across collection waves.",
+    "ALL_ORTHODOX adds noise and ElasticNet selection is unstable.",
+    "Axis diagnostics suggest outcome-mechanism heterogeneity, but a production general score must not require knowing the future event axis."
+  ],
+  "primary_metric": "chronology_balanced_subject_macro_pairwise_accuracy",
+  "metric_definition": "Within each repeat, compute equal-subject-weight accuracy separately for positive-later and positive-earlier pairs, then average the two strata 50/50.",
+  "feature_universe": "exact TG10 dynamic features only (40 pair-difference columns from 24B)",
+  "winner_eligible_models": [
+    {
+      "name": "TG10_SHARED_RIDGE_BALANCED",
+      "description": "One shared deployable TG10 coefficient vector.",
+      "hyperparameter": "C chosen by inner subject-CV on chronology-balanced metric"
+    },
+    {
+      "name": "TG10_MULTITASK_EFFECT_RIDGE_BALANCED",
+      "description": "Effect-coded axis deviations are allowed during training, but the deployable score uses only the common global TG10 coefficient vector. Axis is never required at inference.",
+      "axis_effect_coding": {
+        "COMPETITIVE": [
+          1,
+          0
+        ],
+        "PROJECT": [
+          0,
+          1
+        ],
+        "STATUS": [
+          -1,
+          -1
+        ]
+      },
+      "hyperparameter": "C chosen by inner subject-CV using deployable global-score chronology-balanced metric"
+    }
+  ],
+  "validation": {
+    "outer_repeats": 5,
+    "outer_folds": 5,
+    "inner_folds": 3,
+    "subject_disjoint": true,
+    "primary_dataset": "PRIMARY_TRUSTED",
+    "broad_sensitivity": "BROAD_SENSITIVITY",
+    "bootstrap_unit": "subject",
+    "bootstrap_iterations": 10000
+  },
+  "promotion_gates": {
+    "primary_balanced_macro_min": 0.55,
+    "primary_repeat_p10_min": 0.5,
+    "both_chronology_strata_min": 0.5,
+    "broad_balanced_macro_min": 0.53,
+    "supported_wave_balanced_floor": 0.48,
+    "for_multitask_delta_vs_shared_min": 0.01,
+    "for_multitask_bootstrap_p_delta_gt_0_min": 0.8
+  },
+  "hard_rules": {
+    "no_new_event_or_pair_selection": true,
+    "no_feature_family_expansion": true,
+    "no_manual_feature_selection": true,
+    "no_Control": true,
+    "no_CONFIRM": true,
+    "axis_not_required_at_inference": true
+  },
+  "next_if_survivor": "Freeze the deployable global TG10 architecture and coefficients, then benchmark against Production Control once with zero retuning.",
+  "next_if_none": "Do not add another broad feature search. Revisit target/representation design on DEV or conclude current annual astrology primitives lack promotion-grade signal."
+}

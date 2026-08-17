@@ -1,0 +1,27 @@
+{
+  "version": "V5_CONFIRM_PAIRABILITY_DECISION_V1",
+  "created_at": "2026-08-17T15:56:30",
+  "status": "V5_CONFIRM_INSUFFICIENT_EVIDENCE_NO_PRODUCTION_DECISION",
+  "primary_pair_rows": 15,
+  "primary_pairable_subjects": 8,
+  "broad_pair_rows": 35,
+  "broad_pairable_subjects": 22,
+  "primary_chronology_classes": [
+    0,
+    1
+  ],
+  "frozen_min_pairable_subjects": 30,
+  "ready_to_score": false,
+  "insufficiency_reason": "PRIMARY pairable subjects 8 < frozen minimum 30",
+  "primary_pairs_sha256": "7d47969a8d3d8b576eacf3140f30c2d3bf3f0a998323f24fe0ed8ce1d601fc3f",
+  "broad_pairs_sha256": "c1cbb2ddec25819c4f048b052087611755f8852cfa4561c77663c5d2000cfdb0",
+  "event_freeze_sha256": "7e905f9588efd966afe7adeeee1762dc14034dc2bf7820059d694921ce8b4405",
+  "rules": {
+    "event_corpus_was_frozen_before_pairing": true,
+    "all_1_to_5y_pairs_used": true,
+    "directional_pair_selection": false,
+    "subject_replacement": false,
+    "astrology_scored_yet": false,
+    "control_scored_yet": false
+  }
+}

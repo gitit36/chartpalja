@@ -1,0 +1,38 @@
+{
+  "version": "V5_CONFIRM_EVENT_WORKLIST_FREEZE_V1",
+  "notebook_version": "SAJU_ML_V5_CONFIRM_PROTOCOL_WORKLIST_20260817",
+  "created_at": "2026-08-17T15:19:42",
+  "status": "V5_CONFIRM_EVENT_WORKLIST_FROZEN_READY_FOR_BLIND_EVENT_COLLECTION",
+  "confirm_n": 80,
+  "axis_counts": {
+    "STATUS": 35,
+    "PROJECT": 25,
+    "COMPETITIVE": 20
+  },
+  "batch_count": 4,
+  "batch_sizes": {
+    "1": 21,
+    "2": 20,
+    "3": 20,
+    "4": 19
+  },
+  "confirm_roster_sha256": "3144f52a8e9304c5cf1773a1dc346b58a1e41fa6af784b3a4ea64a6d318dbfac",
+  "historic_final_freeze_sha256": "2ba9e0368865b0f6ad043a30615d0e7d8db2e89fe1960a93f394f42e95c5cde9",
+  "26A_control_decision_sha256": "7f16c7b847d73809e4a8c606d8eaaa4fd1f0ee14b07026e8a1b1d4366afbbd9e",
+  "candidate_spec_sha256": "714e5d98a824107b6c81b3459b08da56a7e8ba78c543bc5b69f72c7002868acb",
+  "candidate_coefficients_sha256": "fb600dd49208d9dfa4a2098c75c61469e9785f5139908953236d706a47051ead",
+  "original_event_protocol_sha256": "95b9b166ee42edfc6eaa4335b3dce24625f4e3d4bb6280d44c60be80f337f962",
+  "confirm_evaluation_protocol_sha256": "55a3340c5cf9e52eeffec5708ded805997f5922ad515a1d5cbf86ca1141a0ee9",
+  "master_worklist_sha256": "06af15f426739a98ccaa46579691ec5b91072794dae5b10adc1a872f413b9c95",
+  "rules": {
+    "membership_changed": false,
+    "subject_replacement_allowed": false,
+    "astrology_visible_to_event_research": false,
+    "Control_visible_to_event_research": false,
+    "pairability_or_year_gap_visible_to_event_research": false,
+    "chronology_balancing_used_for_research": false,
+    "preassigned_axis_immutable": true,
+    "record_all_eligible_major_events": true
+  },
+  "next_rule": "Research all four frozen batches under the blind guide. Freeze the complete CONFIRM event corpus before any pairing, astrology, candidate scoring, or Control scoring."
+}

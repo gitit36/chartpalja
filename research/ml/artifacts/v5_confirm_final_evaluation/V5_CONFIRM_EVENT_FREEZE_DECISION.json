@@ -1,0 +1,67 @@
+{
+  "version": "V5_CONFIRM_EVENT_CORPUS_FREEZE_DECISION_V1",
+  "created_at": "2026-08-17T15:56:30",
+  "status": "V5_CONFIRM_EVENT_CORPUS_FROZEN_READY_FOR_DETERMINISTIC_PAIRING",
+  "confirm_subjects": 80,
+  "full_event_rows": 158,
+  "research_eligible_rows": 149,
+  "excluded_audit_rows": 9,
+  "full_event_sha256": "3089d6be06d79784824acf02c08f43730795d0571790141d48117f35e46b691c",
+  "eligible_event_sha256": "64eb2df6055c0f21ab13ffc41174c88f69bb94e5f11d98de243fc58ab8ea7500",
+  "sealed_roster_sha256": "3144f52a8e9304c5cf1773a1dc346b58a1e41fa6af784b3a4ea64a6d318dbfac",
+  "worklist_freeze_sha256": "21664f5c76449221ceaa8b78b47c0d28390cd6daa3bded652f3129dfa04fb109",
+  "confirm_protocol_sha256": "55a3340c5cf9e52eeffec5708ded805997f5922ad515a1d5cbf86ca1141a0ee9",
+  "batch_lineage": [
+    {
+      "batch": "01",
+      "worklist_sha256": "4d4fcea1796680039bf902344951942471094b9e1f3303f92eeef6e70a016503",
+      "events_sha256": "946dee1d01d686628ce6d1f7ac3a4c292af19a70f60747dee6d79f004129d9ff",
+      "audit_sha256": "52d1fa5e33ac1cee4d2306f7d5babdcab1440093b5d73c96bee844c4b5d780b6",
+      "manifest_sha256": "44671b3ad6147a8956ba3a35d23ad743e12d8ec299f3d17e7d7d4642a6d6007a",
+      "subjects": 21,
+      "event_rows": 41,
+      "eligible_rows": 40
+    },
+    {
+      "batch": "02",
+      "worklist_sha256": "029fab41c8fec9b508a5b4a2c516f884280b3fbbd682286b47aa6df5d3a154fd",
+      "events_sha256": "cb0e3bb8b34bb81afc4a4e76ce30f4cfba10b282996fa58e095fd1126cb4b643",
+      "audit_sha256": "2b89bde685900c16126ce8ddcb4b455699ab56ab3d7d879e2ec0ddf80e8a5a70",
+      "manifest_sha256": "7e3b97cc51daed026dc14374f8a5b60b4cd090e7838c969a4f830cbf0603c1b5",
+      "subjects": 20,
+      "event_rows": 34,
+      "eligible_rows": 33
+    },
+    {
+      "batch": "03",
+      "worklist_sha256": "193d7e353a898f803851a7597373a01afc92e987b27be35927c6caffa4e4fda9",
+      "events_sha256": "f747163e1614ff422cc52ada62ce73264b1ccbba11586a39d1235724b0de787b",
+      "audit_sha256": "bccd9b2d8b71a8933e6792e57c447acfdb7913bdd98333f305a55ee1f70cad69",
+      "manifest_sha256": "48431c34248bd9a9197c0c945a06bd0dfdfce0b4545c34088c85be90282a5012",
+      "subjects": 20,
+      "event_rows": 40,
+      "eligible_rows": 38
+    },
+    {
+      "batch": "04",
+      "worklist_sha256": "a30059621100f02d5164059d8e8c0dc4cb0bc5eaeead1ce72cf899bd72395f06",
+      "events_sha256": "250fff24589c35252181051f78b979ab27baa4b6edd6fcdf7fe88eae9ababaed",
+      "audit_sha256": "7e2efce498962833c3c31fc6c050ffd8b5dd7579b7f6d00672308e8e52e0c842",
+      "manifest_sha256": "857192d72633af03c6d7556ffb8d23285b6ce32280a98731da95810498ce0f29",
+      "subjects": 19,
+      "event_rows": 43,
+      "eligible_rows": 38
+    }
+  ],
+  "rules": {
+    "membership_changed": false,
+    "axis_changed": false,
+    "event_year_or_polarity_changed": false,
+    "event_rows_deleted_for_pairability": false,
+    "pairability_used_before_event_freeze": false,
+    "astrology_used_before_event_freeze": false,
+    "control_used_before_event_freeze": false,
+    "network_refetch_in_this_notebook": false,
+    "source_basis": "blind research manifests + frozen source fields + schema/lineage QA"
+  }
+}

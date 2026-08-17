@@ -1,0 +1,22 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+1,1,V5CONFIRM_052,Rachida Dati,STATUS,V5_WIKIDATA_EXPANSION,1965-11-27,"Saint-Rémy-sur-Avre, France",female,Q27182,AA,RachidaDati1965
+1,2,V5CONFIRM_060,Walter Dirks,STATUS,V5_WIKIDATA_EXPANSION,1901-08-01,"Dortmund, Germany",male,Q95445,AA,WalterDirks1901
+1,3,V5CONFIRM_007,Jamie Murray,COMPETITIVE,V5_WIKIDATA_EXPANSION,1986-02-13,"Glasgow, United Kingdom",male,Q317820,AA,JamieMurray1986
+1,4,V5CONFIRM_080,Gustav Knuth,STATUS,V5_WIKIDATA_EXPANSION,1901-07-07,"Brunswick, Germany",male,Q69382,AA,GustavKnuth1901
+1,5,V5CONFIRM_019,Dieter Thoma,COMPETITIVE,V5_WIKIDATA_EXPANSION,1969-10-19,"Hinterzarten, Germany",male,Q61703,AA,DieterThoma1969
+1,6,V5CONFIRM_004,Doris Hart,COMPETITIVE,V5_WIKIDATA_EXPANSION,1925-06-20,"Saint Louis, MO, United States",female,Q53564,AA,DorisHart1925
+1,7,V5CONFIRM_002,Barbara Jordan,COMPETITIVE,V5_WIKIDATA_EXPANSION,1936-02-21,"Houston, TX, United States",female,Q53570,AA,BarbaraJordan1936
+1,8,V5CONFIRM_044,Nathalie Delon,PROJECT,V5_WIKIDATA_EXPANSION,1941-08-01,"Oujda, L'Oriental, Morocco",female,Q461186,AA,NathalieDelon1941
+1,9,V5CONFIRM_028,Michael Richards,PROJECT,V5_WIKIDATA_EXPANSION,1949-07-24,"Culver City, CA, United States",male,Q314945,AA,MichaelRichards1949
+1,10,V5CONFIRM_034,Mamie Van Doren,PROJECT,V5_WIKIDATA_EXPANSION,1931-02-06,"Rowena, SD, United States",female,Q264596,AA,MamieVanDoren1931
+1,11,V5CONFIRM_061,Marco Pannella,STATUS,V5_WIKIDATA_EXPANSION,1930-05-02,"Teramo, Italy",male,Q47651,AA,MarcoPannella1930
+1,12,V5CONFIRM_015,Brian J. White,COMPETITIVE,V5_WIKIDATA_EXPANSION,1973-04-21,"Boston, MA, United States",male,Q1762270,AA,BrianJ.White1973
+1,13,V5CONFIRM_068,Gianfranco Fini,STATUS,V5_WIKIDATA_EXPANSION,1952-01-03,"Bologna, Italy",male,Q47583,AA,GianfrancoFini1952
+1,14,V5CONFIRM_039,Eriprando Visconti,PROJECT,V5_WIKIDATA_EXPANSION,1932-09-24,"Milan, Italy",male,Q327346,AA,EriprandoVisconti1932
+1,15,V5CONFIRM_042,Annie Sprinkle,PROJECT,V5_WIKIDATA_EXPANSION,1954-07-23,"Philadelphia, PA, United States",female,Q433576,AA,AnnieSprinkle1954
+1,16,V5CONFIRM_072,Camilo Cienfuegos,STATUS,V5_WIKIDATA_EXPANSION,1932-02-06,"Havana, Havana, Cuba",male,Q26853,AA,CamiloCienfuegos1932
+1,17,V5CONFIRM_032,Wayne Marshall,PROJECT,V5_WIKIDATA_EXPANSION,1976-05-27,"Waltham, MA, United States",male,Q348230,AA,WayneMarshall1976
+1,18,V5CONFIRM_050,Andrea Ypsilanti,STATUS,V5_WIKIDATA_EXPANSION,1957-04-08,"Rüsselsheim am Main, Germany",female,Q61577,AA,AndreaYpsilanti1957
+1,19,V5CONFIRM_035,Harry Belafonte,PROJECT,V5_WIKIDATA_EXPANSION,1927-03-01,"New York, NY, United States",male,Q214959,AA,HarryBelafonte1927
+1,20,V5CONFIRM_058,Marc Veyrat,STATUS,V5_WIKIDATA_EXPANSION,1950-05-08,"Annecy, France",male,Q1225410,AA,MarcVeyrat1950
+1,21,V5CONFIRM_079,Daniel Hechter,STATUS,V5_WIKIDATA_EXPANSION,1938-07-30,"Paris, France",male,Q711826,AA,DanielHechter1938

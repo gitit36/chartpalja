@@ -1,0 +1,21 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+2,1,V5CONFIRM_025,Katharine McPhee,PROJECT,V5_WIKIDATA_EXPANSION,1984-03-25,"Los Angeles, CA, United States",female,Q229282,AA,KatharineMcPhee1984
+2,2,V5CONFIRM_036,Jim Morrison,PROJECT,V5_WIKIDATA_EXPANSION,1943-12-08,"Melbourne Beach, FL, United States",male,Q44301,AA,JimMorrison1943
+2,3,V5CONFIRM_070,Guy,STATUS,V5_WIKIDATA_EXPANSION,1974-02-08,"Neuilly-sur-Seine, France",male,Q28531,AA,Guy1974
+2,4,V5CONFIRM_049,Marina Berlusconi,STATUS,V5_WIKIDATA_EXPANSION,1966-08-10,"Milan, Italy",female,Q468797,AA,MarinaBerlusconi1966
+2,5,V5CONFIRM_005,Fabrice Tiozzo,COMPETITIVE,V5_WIKIDATA_EXPANSION,1969-05-08,"Saint-Denis, France",male,Q717369,AA,FabriceTiozzo1969
+2,6,V5CONFIRM_010,Rubin Carter,COMPETITIVE,V5_WIKIDATA_EXPANSION,1937-05-06,"William Paterson University of New Jersey, NJ, United States",male,Q452772,AA,RubinCarter1937
+2,7,V5CONFIRM_066,Fritz Fischer,STATUS,V5_WIKIDATA_EXPANSION,1908-03-05,"Ludwigsstadt, Germany",male,Q61533,AA,FritzFischer1908
+2,8,V5CONFIRM_045,Robert Bresson,PROJECT,V5_WIKIDATA_EXPANSION,1901-09-25,"Bromont-Lamothe, France",male,Q55391,AA,RobertBresson1901
+2,9,V5CONFIRM_075,Gerd Bucerius,STATUS,V5_WIKIDATA_EXPANSION,1906-05-19,"Hamm, Germany",male,Q78109,AA,GerdBucerius1906
+2,10,V5CONFIRM_029,Matt Dillon,PROJECT,V5_WIKIDATA_EXPANSION,1964-02-18,"New Rochelle, NY, United States",male,Q193070,AA,MattDillon1964
+2,11,V5CONFIRM_020,Maurizio Stecca,COMPETITIVE,V5_WIKIDATA_EXPANSION,1963-03-09,"Santarcangelo di Romagna, Italia",male,Q580903,AA,MaurizioStecca1963
+2,12,V5CONFIRM_073,Jimmy Osmond,STATUS,V5_WIKIDATA_EXPANSION,1963-04-16,"Los Angeles, CA, United States",male,Q1689414,AA,JimmyOsmond1963
+2,13,V5CONFIRM_057,Daniel Wildenstein,STATUS,V5_WIKIDATA_EXPANSION,1917-09-11,"Verrières-le-Buisson, France",male,Q723358,AA,DanielWildenstein1917
+2,14,V5CONFIRM_078,Frank Lorenzo,STATUS,V5_WIKIDATA_EXPANSION,1940-05-19,"New York, NY, United States",male,Q1443680,AA,FrankLorenzo1940
+2,15,V5CONFIRM_021,Mattiwilda Dobbs,PROJECT,V5_WIKIDATA_EXPANSION,1925-07-11,"Atlanta, GA, United States",female,Q180896,AA,MattiwildaDobbs1925
+2,16,V5CONFIRM_008,Zora Folley,COMPETITIVE,V5_WIKIDATA_EXPANSION,1931-05-27,"Dallas, TX, United States",male,Q220464,AA,ZoraFolley1931
+2,17,V5CONFIRM_016,Boomer Esiason,COMPETITIVE,V5_WAVE_A,1961-04-17,"West Islip, NY, United States",male,,AA,BoomerEsiason1961
+2,18,V5CONFIRM_056,Hans Fritzsche,STATUS,V5_WIKIDATA_EXPANSION,1900-04-21,"Bochum, Germany",male,Q58620,AA,HansFritzsche1900
+2,19,V5CONFIRM_067,Seymour Cray,STATUS,V5_WIKIDATA_EXPANSION,1925-09-28,"Chippewa Falls, WI, United States",male,Q92765,AA,SeymourCray1925
+2,20,V5CONFIRM_031,Gregory Peck,PROJECT,V5_WAVE_A,1916-04-05,"La Jolla, CA, United States",male,,AA,GregoryPeck1916

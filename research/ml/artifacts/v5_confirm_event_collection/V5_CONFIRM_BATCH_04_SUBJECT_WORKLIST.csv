@@ -1,0 +1,20 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+4,1,V5CONFIRM_018,Sergi Bruguera,COMPETITIVE,V5_WIKIDATA_EXPANSION,1971-01-16,"Barcelona, Spain",male,Q311177,AA,SergiBruguera1971
+4,2,V5CONFIRM_047,Liliane Bettencourt,STATUS,V5_WIKIDATA_EXPANSION,1922-10-21,"Paris, France",female,Q297804,AA,LilianeBettencourt1922
+4,3,V5CONFIRM_033,Hélène Grimaud,PROJECT,V5_WIKIDATA_EXPANSION,1969-11-07,"Aix-en-Provence, France",female,Q253845,AA,HélèneGrimaud1969
+4,4,V5CONFIRM_024,Nadine Trintignant,PROJECT,V5_WIKIDATA_EXPANSION,1934-11-11,"Nice, France",female,Q266222,AA,NadineTrintignant1934
+4,5,V5CONFIRM_074,Horst Wessel,STATUS,V5_WIKIDATA_EXPANSION,1907-10-09,"Bielefeld, Germany",male,Q57163,AA,HorstWessel1907
+4,6,V5CONFIRM_003,Pauline Betz,COMPETITIVE,V5_WIKIDATA_EXPANSION,1919-08-06,"Dayton, OH, United States",female,Q53331,AA,PaulineBetz1919
+4,7,V5CONFIRM_055,Umberto Agnelli,STATUS,V5_WIKIDATA_EXPANSION,1934-10-30,"Lausanne, Switzerland",male,Q967846,AA,UmbertoAgnelli1934
+4,8,V5CONFIRM_038,Chris Farley,PROJECT,V5_WIKIDATA_EXPANSION,1964-02-15,"Madison, WI, United States",male,Q311752,AA,ChrisFarley1964
+4,9,V5CONFIRM_071,Jack Valenti,STATUS,V5_WIKIDATA_EXPANSION,1921-09-05,"Houston, TX, United States",male,Q1380767,AA,JackValenti1921
+4,10,V5CONFIRM_076,François Fillon,STATUS,V5_WIKIDATA_EXPANSION,1954-03-04,"Le Mans, France",male,Q101410,AA,FrançoisFillon1954
+4,11,V5CONFIRM_017,Patrick Vieira,COMPETITIVE,V5_WAVE_A,1976-06-23,"Dakar, Dakar, Senegal",male,,AA,PatrickVieira1976
+4,12,V5CONFIRM_037,Oliver Stone,PROJECT,V5_WIKIDATA_EXPANSION,1946-09-15,"New York, NY, United States",male,Q179497,AA,OliverStone1946
+4,13,V5CONFIRM_009,Hans Günter Winkler,COMPETITIVE,V5_WIKIDATA_EXPANSION,1926-07-24,"Wuppertal, Germany",male,Q62177,AA,HansGünterWinkler1926
+4,14,V5CONFIRM_023,Belinda Carlisle,PROJECT,V5_WIKIDATA_EXPANSION,1958-08-17,"Los Angeles, CA, United States",female,Q233959,AA,BelindaCarlisle1958
+4,15,V5CONFIRM_011,Pierre Pellizza,COMPETITIVE,V5_WIKIDATA_EXPANSION,1917-07-10,"Lardy, France",male,Q3386551,AA,PierrePellizza1917
+4,16,V5CONFIRM_027,David Morse,PROJECT,V5_WIKIDATA_EXPANSION,1953-10-11,"Beverly, MA, United States",male,Q296370,AA,DavidMorse1953
+4,17,V5CONFIRM_053,Malcolm X,STATUS,V5_WIKIDATA_EXPANSION,1925-05-19,"Omaha, NE, United States",male,Q43303,AA,MalcolmX1925
+4,18,V5CONFIRM_054,Charles Wilson,STATUS,V5_WIKIDATA_EXPANSION,1909-05-16,"Glasgow, United Kingdom",male,Q1066474,AA,CharlesWilson1909
+4,19,V5CONFIRM_051,Sonia Rykiel,STATUS,V5_WIKIDATA_EXPANSION,1930-05-25,"Paris, France",female,Q237944,AA,SoniaRykiel1930

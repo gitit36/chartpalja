@@ -1,0 +1,36 @@
+{
+  "version": "V5_CONFIRM2_COMPETITIVE_FEMALE_ONLY_SUPPLY_PATCH_V1",
+  "created_at": "2026-08-17T17:07:41",
+  "status": "PREDECLARED_AFTER_COMPETITIVE_FEMALE_SUPPLY_SHORTAGE_BEFORE_FEMALE_ONLY_ROLE_QUERY",
+  "observed_supply_fact": {
+    "competitive_total": 423,
+    "competitive_female": 12,
+    "frozen_total_target": 80,
+    "frozen_female_min": 16
+  },
+  "remedy": "Use P21=female only within already-approved original Competitive occupations. Stop at the first complete role query boundary where total and female supply both meet the frozen guardrails.",
+  "roles_in_fixed_order": [
+    {
+      "role_family": "basketball_player",
+      "role_qid": "Q3665646"
+    },
+    {
+      "role_family": "association_football_player",
+      "role_qid": "Q937857"
+    }
+  ],
+  "female_qid": "Q6581072",
+  "identity_rule": "Wikidata English normalized name + exact day-level P569 DOB must equal one unique frozen Rodden-AA birth row.",
+  "forbidden": {
+    "events": true,
+    "event_years": true,
+    "pairability": true,
+    "pair_gap": true,
+    "chronology": true,
+    "astrology": true,
+    "control": true,
+    "candidate_performance": true
+  },
+  "quota_reduction_allowed": false,
+  "female_guardrail_reduction_allowed": false
+}

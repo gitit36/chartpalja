@@ -1,0 +1,76 @@
+{
+  "version": "V5_CONFIRM2_COMPETITIVE_SUPPLEMENT_QUERY_MANIFEST_R2",
+  "status": "CONFIRM2_COMPETITIVE_ORIGINAL_ROLE_INCREMENTAL_SUPPLEMENT_COMPLETE",
+  "query_records": [
+    {
+      "role_family": "athlete",
+      "role_qid": "Q2066131",
+      "query_mode": "FULL_1900_1995",
+      "cache_file": "COMPETITIVE__athlete.json",
+      "cache_sha256": "5cde6eb5b66bf3476a90cc9d8f3494360fe2c5cf987468c7218a90660ce99741",
+      "resolved_exact_DOB_rows": 17,
+      "fresh_competitive_supply_after": 27
+    },
+    {
+      "role_family": "tennis_player",
+      "role_qid": "Q10833314",
+      "query_mode": "FULL_1900_1995",
+      "cache_file": "COMPETITIVE__tennis_player.json",
+      "cache_sha256": "88e6cc2678b5fa828b73ec03cb9d5ea613715ecb7fa5070f75236ac132d20db3",
+      "resolved_exact_DOB_rows": 25,
+      "fresh_competitive_supply_after": 46
+    },
+    {
+      "role_family": "boxer",
+      "role_qid": "Q11338576",
+      "query_mode": "FULL_1900_1995",
+      "cache_file": "COMPETITIVE__boxer.json",
+      "cache_sha256": "70296a804b69500b9b34fb4ac5187af00f6d760920dbf8ccd4e60bcb9b414f3f",
+      "resolved_exact_DOB_rows": 29,
+      "fresh_competitive_supply_after": 70
+    },
+    {
+      "role_family": "basketball_player",
+      "role_qid": "Q3665646",
+      "query_mode": "FULL_1900_1995",
+      "cache_file": "COMPETITIVE__basketball_player.json",
+      "cache_sha256": "6a9079b964727f40e9118bc77510ba5557a0681aeedf37d98d4d17ce665e655c",
+      "resolved_exact_DOB_rows": 5,
+      "fresh_competitive_supply_after": 75
+    },
+    {
+      "role_family": "association_football_player",
+      "role_qid": "Q937857",
+      "query_mode": "DOB_5Y_SHARD",
+      "year_lo": 1900,
+      "year_hi": 1904,
+      "cache_file": "COMPETITIVE__association_football_player__1900_1904.json",
+      "cache_sha256": "63ac8b6b87dbc71dadacb5d5a66ecae735b3d3b8be2206a0ab2b28766834bd04",
+      "resolved_exact_DOB_rows": 3,
+      "fresh_competitive_supply_after": 78
+    },
+    {
+      "role_family": "association_football_player",
+      "role_qid": "Q937857",
+      "query_mode": "DOB_5Y_SHARD",
+      "year_lo": 1905,
+      "year_hi": 1909,
+      "cache_file": "COMPETITIVE__association_football_player__1905_1909.json",
+      "cache_sha256": "c9fecd52ecc4a79b8cb86e5329c3d116d6e1ec8e01937e73658f6e0e3eb58505",
+      "resolved_exact_DOB_rows": 24,
+      "fresh_competitive_supply_after": 102
+    }
+  ],
+  "resolved_fresh_unique_exact_DOB_n": 102,
+  "fresh_competitive_supply_after": 102,
+  "target": 80,
+  "target_reached": true,
+  "birth_snapshot_sha256": "ca28a3fea1250b2ea01eb06a54b4921ec0bf790fdc14c5c561006f1c592c634b",
+  "supply_patch_sha256": "8f2277af4f8991e1c1d69c062b06d783e70012f791fb417eb2fafa6da369a6c2",
+  "supplement_pool_sha256": "476dce456d5dd7320c9b76a0ca524fe728f65e1aa3da84044517e9e6345e5600",
+  "events_used": false,
+  "pairability_used": false,
+  "chronology_used": false,
+  "astrology_used": false,
+  "control_used": false
+}
