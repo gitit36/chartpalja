@@ -411,7 +411,7 @@ export function GrowthCharts({ data }: { data: DashboardData }) {
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard
           title="DAU 구성"
-          hint="NAU 신규 가입 · EAU 전날 연속 · RAU 복귀 · 활성=가입/사주/주사용/결제"
+          hint="각 색은 실제 인원(겹침) · 합이 DAU · 활성=가입/사주/주사용/결제"
           stat={
             latest
               ? `최근일 DAU ${latest.dau} · NAU ${latest.nau} · EAU ${latest.eau} · RAU ${latest.rau}`
@@ -439,44 +439,35 @@ export function GrowthCharts({ data }: { data: DashboardData }) {
                   <Legend
                     verticalAlign="top"
                     height={28}
-                    iconType="square"
+                    iconType="circle"
                     iconSize={8}
                     wrapperStyle={{ fontSize: 11, color: '#8b8b93' }}
                   />
                   <Area
-                    type="linear"
-                    stackId="dau"
+                    type="monotone"
                     dataKey="nau"
                     name="NAU"
                     stroke="#22c55e"
-                    fill="#22c55e"
-                    fillOpacity={1}
-                    strokeWidth={0}
-                    legendType="square"
+                    fill="rgba(34,197,94,0.22)"
+                    strokeWidth={2}
                     isAnimationActive={false}
                   />
                   <Area
-                    type="linear"
-                    stackId="dau"
+                    type="monotone"
                     dataKey="eau"
                     name="EAU"
                     stroke="#3182f6"
-                    fill="#3182f6"
-                    fillOpacity={1}
-                    strokeWidth={0}
-                    legendType="square"
+                    fill="rgba(49,130,246,0.18)"
+                    strokeWidth={2}
                     isAnimationActive={false}
                   />
                   <Area
-                    type="linear"
-                    stackId="dau"
+                    type="monotone"
                     dataKey="rau"
                     name="RAU"
                     stroke="#f5a524"
-                    fill="#f5a524"
-                    fillOpacity={1}
-                    strokeWidth={0}
-                    legendType="square"
+                    fill="rgba(245,165,36,0.18)"
+                    strokeWidth={2}
                     isAnimationActive={false}
                   />
                 </AreaChart>

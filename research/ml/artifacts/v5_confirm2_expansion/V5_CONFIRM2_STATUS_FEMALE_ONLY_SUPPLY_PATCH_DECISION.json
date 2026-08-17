@@ -1,0 +1,60 @@
+{
+  "version": "V5_CONFIRM2_STATUS_FEMALE_ONLY_SUPPLY_PATCH_V1",
+  "created_at": "2026-08-17T17:17:12",
+  "status": "PREDECLARED_AFTER_STATUS_FEMALE_SUPPLY_SHORTAGE_BEFORE_FEMALE_ONLY_ROLE_QUERY",
+  "observed_supply_fact": {
+    "status_total": 169,
+    "status_female": 16,
+    "frozen_total_target": 140,
+    "frozen_female_min": 28
+  },
+  "fixed_role_order": [
+    {
+      "role_family": "politician",
+      "role_qid": "Q82955"
+    },
+    {
+      "role_family": "businessperson",
+      "role_qid": "Q43845"
+    },
+    {
+      "role_family": "diplomat",
+      "role_qid": "Q193391"
+    },
+    {
+      "role_family": "judge",
+      "role_qid": "Q16533"
+    },
+    {
+      "role_family": "civil_servant",
+      "role_qid": "Q212238"
+    },
+    {
+      "role_family": "military_officer",
+      "role_qid": "Q189290"
+    },
+    {
+      "role_family": "entrepreneur",
+      "role_qid": "Q131524"
+    },
+    {
+      "role_family": "banker",
+      "role_qid": "Q806798"
+    }
+  ],
+  "female_qid": "Q6581072",
+  "remedy": "Use P21=female only within already-used V5 STATUS occupation taxonomy. Stop at the first complete role-query boundary where the frozen STATUS total and female supply requirements are both met.",
+  "identity_rule": "Wikidata English normalized name + exact day-level P569 DOB must match one unique frozen Rodden-AA birth row.",
+  "forbidden": {
+    "events": true,
+    "event_years": true,
+    "pairability": true,
+    "pair_gap": true,
+    "chronology": true,
+    "astrology": true,
+    "control": true,
+    "candidate_performance": true
+  },
+  "quota_reduction_allowed": false,
+  "female_guardrail_reduction_allowed": false
+}

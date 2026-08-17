@@ -1,0 +1,41 @@
+{
+  "version": "V5_CONFIRM2_STATUS_FEMALE_ONLY_SUPPLY_MANIFEST_V1",
+  "created_at": "2026-08-17T17:17:57",
+  "status": "CONFIRM2_STATUS_FEMALE_SUPPLY_PASS",
+  "before": {
+    "total": 169,
+    "female": 16
+  },
+  "after": {
+    "total": 184,
+    "female": 31
+  },
+  "requirements": {
+    "total_min": 140,
+    "female_min": 28
+  },
+  "queries": [
+    {
+      "role_family": "politician",
+      "role_qid": "Q82955",
+      "query_mode": "FULL_1900_1995",
+      "returned_rows": 25000,
+      "resolved_exact_DOB_female": 4,
+      "cache_sha256": "5844ba6da791572093aa99883877032302d2ee2c10bc34fcf6a0cdaa9cd7081e"
+    },
+    {
+      "role_family": "businessperson",
+      "role_qid": "Q43845",
+      "query_mode": "FULL_1900_1995",
+      "returned_rows": 5731,
+      "resolved_exact_DOB_female": 11,
+      "cache_sha256": "c84648eb115cee59ef5e74acce663b21a4b19fadfa7eb5ca392a803da38bcd63"
+    }
+  ],
+  "patch_sha256": "e8a97e0ef24fd45ee19967a128ac09fb6007d6d269bf878bf0d2eaacff73895f",
+  "events_used": false,
+  "pairability_used": false,
+  "chronology_used": false,
+  "astrology_used": false,
+  "control_used": false
+}
