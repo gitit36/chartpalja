@@ -1,0 +1,25 @@
+{
+  "version": "V5_PREPAIR_FEASIBILITY_GATE_PROTOCOL_V1",
+  "status": "PREDECLARED_BEFORE_ANY_1_TO_5_YEAR_PAIR_GAP_INSPECTION",
+  "purpose": "Check a necessary upper bound for the frozen local-pair gate using only frozen subject polarity coverage. This does not generate or inspect any year-gap pair.",
+  "frozen_thresholds": {
+    "min_pairable_subjects_total": 80,
+    "min_pairable_subjects_by_axis": {
+      "COMPETITIVE": 20,
+      "PROJECT": 20,
+      "STATUS": 25
+    },
+    "pair_definition_for_later_step": "same subject, same preassigned axis, opposite polarity, distinct years, abs gap 1-5"
+  },
+  "necessary_condition": "A subject can only be pairable later if it already has at least one eligible positive and at least one eligible negative event. Therefore both-polarity subject count is a strict upper bound on eventual 1-5y pairable-subject count.",
+  "forbidden": [
+    "inspect year gaps",
+    "generate pairs",
+    "delete/relabel events",
+    "rebalance chronology",
+    "generate astrology",
+    "score Control",
+    "research CONFIRM"
+  ],
+  "fail_rule": "If the both-polarity upper bound is below any frozen minimum, stop before pair generation and add a whole new DEV roster wave under a separately frozen deterministic protocol."
+}

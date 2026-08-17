@@ -1,0 +1,35 @@
+{
+  "version": "V5_SOURCE_VERIFICATION_BACKFILL_PROTOCOL_V1",
+  "status": "PREDECLARED_BEFORE_CORPUS_SOURCE_QA",
+  "purpose": "Assemble repaired DEV Batch 1-8 event rows and verify source traceability before event freeze. This gate may flag rows for review but may not delete, relabel, replace, pair, rebalance, or score them.",
+  "scope": {
+    "DEV_batches_1_to_8": true,
+    "CONFIRM": false,
+    "eligible_and_excluded_rows_checked": true
+  },
+  "automatic_checks": [
+    "source_url nonempty and http/https",
+    "HTTP request returns retrievable content when network permits",
+    "page text/title has subject-name token evidence OR source metadata page is structurally identifiable",
+    "page text has event year evidence when year is reasonably expected",
+    "page text has at least one event-type keyword family when applicable"
+  ],
+  "classification": {
+    "AUTO_PASS": "URL fetched and minimum traceability signals satisfy frozen thresholds.",
+    "MANUAL_REVIEW": "URL inaccessible, dynamically rendered, or minimum traceability signals do not satisfy threshold.",
+    "INVALID_SOURCE_FIELD": "Missing or malformed source URL."
+  },
+  "guardrails": {
+    "membership_change_allowed": false,
+    "event_row_deletion_allowed": false,
+    "event_polarity_change_allowed": false,
+    "event_year_change_allowed": false,
+    "axis_change_allowed": false,
+    "pairability_used": false,
+    "chronology_balancing_used": false,
+    "astrology_used": false,
+    "control_used": false,
+    "manual_review_required_before_freeze_for_any_non_auto_pass_eligible_row": true
+  },
+  "next_rule": "If any eligible row is MANUAL_REVIEW or INVALID_SOURCE_FIELD, do not freeze. Return the manual-review worklist for independent web verification. Only after all eligible rows have verified source support may the event corpus freeze."
+}

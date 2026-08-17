@@ -1,0 +1,601 @@
+{
+  "measured_at": "2026-08-13T03:05:20",
+  "phase": "V2_FULL_HIERARCHY_QA",
+  "validation_b_scored": false,
+  "production_scoring_modified": false,
+  "frozen_layers": {
+    "DY": "V2_DY_B",
+    "Month": "M1_CONSERVATIVE",
+    "Day": "D1_CONSERVATIVE"
+  },
+  "composition": {
+    "Y": "clamp(D_B + AnnualDev_B)",
+    "M": "clamp(Y + MonthlyDev)",
+    "Day": "clamp(M + DailyDev)"
+  },
+  "calendar_chain": {
+    "ok": true,
+    "n": 96,
+    "failures": [],
+    "sample": [
+      {
+        "subject": "Björk",
+        "label": "before_ipchun",
+        "t": "2020-02-04T16:07:44.062500+09:00",
+        "daewoon": "壬辰",
+        "sewoon_year": 2019,
+        "sewoon": "己亥",
+        "wolwoon": "丑",
+        "wolwoon_gz": "丁丑",
+        "civil_day": "丁丑",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      },
+      {
+        "subject": "Björk",
+        "label": "after_ipchun",
+        "t": "2020-02-04T20:07:44.062500+09:00",
+        "daewoon": "癸巳",
+        "sewoon_year": 2020,
+        "sewoon": "庚子",
+        "wolwoon": "寅",
+        "wolwoon_gz": "戊寅",
+        "civil_day": "丁丑",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      },
+      {
+        "subject": "Björk",
+        "label": "ny",
+        "t": "2020-01-01T12:00:00+09:00",
+        "daewoon": "壬辰",
+        "sewoon_year": 2019,
+        "sewoon": "己亥",
+        "wolwoon": "子",
+        "wolwoon_gz": "丙子",
+        "civil_day": "癸卯",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      },
+      {
+        "subject": "Björk",
+        "label": "before_xiaohan",
+        "t": "2021-01-05T10:20:23.437500+09:00",
+        "daewoon": "癸巳",
+        "sewoon_year": 2020,
+        "sewoon": "庚子",
+        "wolwoon": "子",
+        "wolwoon_gz": "戊子",
+        "civil_day": "癸丑",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      },
+      {
+        "subject": "Björk",
+        "label": "after_xiaohan",
+        "t": "2021-01-05T14:20:23.437500+09:00",
+        "daewoon": "癸巳",
+        "sewoon_year": 2020,
+        "sewoon": "庚子",
+        "wolwoon": "丑",
+        "wolwoon_gz": "己丑",
+        "civil_day": "癸丑",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      },
+      {
+        "subject": "Björk",
+        "label": "before_daxue",
+        "t": "2020-12-06T23:03:59.062500+09:00",
+        "daewoon": "癸巳",
+        "sewoon_year": 2020,
+        "sewoon": "庚子",
+        "wolwoon": "亥",
+        "wolwoon_gz": "丁亥",
+        "civil_day": "癸未",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      },
+      {
+        "subject": "Björk",
+        "label": "after_daxue",
+        "t": "2020-12-07T03:03:59.062500+09:00",
+        "daewoon": "癸巳",
+        "sewoon_year": 2020,
+        "sewoon": "庚子",
+        "wolwoon": "子",
+        "wolwoon_gz": "戊子",
+        "civil_day": "甲申",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      },
+      {
+        "subject": "Björk",
+        "label": "year_end",
+        "t": "2020-12-31T12:00:00+09:00",
+        "daewoon": "癸巳",
+        "sewoon_year": 2020,
+        "sewoon": "庚子",
+        "wolwoon": "子",
+        "wolwoon_gz": "戊子",
+        "civil_day": "戊申",
+        "month_in_sewoon": true,
+        "in_month": true,
+        "civil_midnight_stable": true,
+        "ok": true
+      }
+    ]
+  },
+  "boundary_dates": {
+    "n_total": 163,
+    "n_unambiguous": 159,
+    "n_boundary_ambiguous": 4,
+    "ambiguous_events": [
+      {
+        "name": "Hillary Clinton",
+        "year": 2000,
+        "month": 11,
+        "day": 7,
+        "label": "뉴욕주 상원의원 당선",
+        "polarity": "positive",
+        "class": "BOUNDARY_DATE_AMBIGUOUS",
+        "detail": {
+          "edge": "2000-11-07T11:43:49.687500+09:00",
+          "branch_before": "戌",
+          "branch_after": "亥",
+          "branch_at_noon": "亥",
+          "noon_matches_evening": true
+        }
+      },
+      {
+        "name": "Monica Lewinsky",
+        "year": 2021,
+        "month": 9,
+        "day": 7,
+        "label": "Impeachment ACS 방영 시작",
+        "polarity": "positive",
+        "class": "BOUNDARY_DATE_AMBIGUOUS",
+        "detail": {
+          "edge": "2021-09-07T18:49:55.312500+09:00",
+          "branch_before": "申",
+          "branch_after": "酉",
+          "branch_at_noon": "申",
+          "noon_matches_evening": false
+        }
+      },
+      {
+        "name": "윤석열",
+        "year": 2025,
+        "month": 4,
+        "day": 4,
+        "label": "헌법재판소 탄핵 인용·파면",
+        "polarity": "negative",
+        "class": "BOUNDARY_DATE_AMBIGUOUS",
+        "detail": {
+          "edge": "2025-04-04T21:41:29.062500+09:00",
+          "branch_before": "卯",
+          "branch_after": "辰",
+          "branch_at_noon": "卯",
+          "noon_matches_evening": false
+        }
+      },
+      {
+        "name": "Lionel Messi",
+        "year": 2015,
+        "month": 6,
+        "day": 6,
+        "label": "UCL 우승(트레블)",
+        "polarity": "positive",
+        "class": "BOUNDARY_DATE_AMBIGUOUS",
+        "detail": {
+          "edge": "2015-06-06T08:50:51.562500+09:00",
+          "branch_before": "巳",
+          "branch_after": "午",
+          "branch_at_noon": "午",
+          "noon_matches_evening": true
+        }
+      }
+    ]
+  },
+  "day_mapping": {
+    "before": {
+      "mapped": 161,
+      "missing": [
+        {
+          "name": "Monica Lewinsky",
+          "date": "2021-09-07",
+          "label": "Impeachment ACS 방영 시작",
+          "reason": "DAY_ITERATION",
+          "detail": "Wolwoon 申 ended 2021-09-07 18:49; civil-day loop excluded end calendar day though noon∈window"
+        },
+        {
+          "name": "윤석열",
+          "date": "2025-04-04",
+          "label": "헌법재판소 탄핵 인용·파면",
+          "reason": "DAY_ITERATION",
+          "detail": "Wolwoon 卯 ended 2025-04-04 21:41; same noon-in-window miss"
+        }
+      ],
+      "root_cause": "DAY_ITERATION",
+      "fix": "iter_civil_days now includes civil dates whose noon lies in [start,end)"
+    },
+    "after_mapped": 163,
+    "after_unmapped": [],
+    "after_n_events": 163,
+    "fixed": true
+  },
+  "amplitude": {
+    "D_values": {
+      "n": 1400,
+      "p50": 61.9073,
+      "p75": 63.5356,
+      "p90": 63.75,
+      "p95": 64.125,
+      "max": 65.25
+    },
+    "abs_AnnualDev": {
+      "n": 1400,
+      "p50": 1.5488,
+      "p75": 2.7972,
+      "p90": 4.1612,
+      "p95": 5.0856,
+      "max": 10.2505
+    },
+    "abs_MonthlyDev": {
+      "n": 8904,
+      "p50": 0.3793,
+      "p75": 0.6804,
+      "p90": 1.0024,
+      "p95": 1.192,
+      "max": 2.0144
+    },
+    "abs_DailyDev": {
+      "n": 270998,
+      "p50": 0.1369,
+      "p75": 0.2366,
+      "p90": 0.3491,
+      "p95": 0.4216,
+      "max": 0.7384
+    },
+    "ratios": {
+      "day_over_month_p90": 0.3483,
+      "month_over_annual_p90": 0.2409,
+      "day_over_annual_p90": 0.0839
+    },
+    "reference_check": {
+      "month_p90_ref_approx": 1.0,
+      "day_p90_ref_approx": 0.36,
+      "annual_p90_ref_approx": 4.0,
+      "month_ok": true,
+      "day_ok": true,
+      "annual_ok": true,
+      "order_ok": true
+    },
+    "centering": {
+      "month_median_violations": [],
+      "n_month_violations": 0,
+      "day_median_violations": [],
+      "n_day_violations": 0
+    },
+    "saturation": {
+      "note": "checked via child scores near 0/100 in layer snapshots"
+    }
+  },
+  "crossings": {
+    "thresholds": {
+      "HARD": 59.0,
+      "FAV": 61.0,
+      "BASE": 60.0
+    },
+    "D_range": {
+      "min": 59.0894,
+      "max": 65.25,
+      "p10": 60.4629,
+      "p50": 61.9073,
+      "p90": 63.75
+    },
+    "counts": {
+      "A_fav_year_hard_D": 0,
+      "B_hard_year_fav_D": 89,
+      "C_fav_month_hard_Y": 105,
+      "D_hard_month_fav_Y": 455,
+      "E_fav_month_hard_D": 0,
+      "F_hard_month_fav_D": 69,
+      "G_fav_day_hard_M": 1242,
+      "H_hard_day_fav_M": 5091,
+      "I_fav_day_hard_Y": 1245,
+      "J_hard_day_fav_Y": 5161
+    },
+    "n_year_obs": 1400,
+    "n_month_blocks": 742,
+    "reachability": {
+      "A": {
+        "label": "fav_Y_in_hard_D",
+        "class": "STRUCTURALLY_IMPOSSIBLE",
+        "why": "D_B never < 59.0 in development sample (min D=59.089); hard-D threshold unreachable — not a Month/Day bug",
+        "count": 0
+      },
+      "B": {
+        "label": "hard_Y_in_fav_D",
+        "class": "OBSERVED",
+        "why": "seen in sample",
+        "count": 89
+      },
+      "E": {
+        "label": "fav_M_in_hard_D",
+        "class": "STRUCTURALLY_IMPOSSIBLE",
+        "why": "D_B never < 59.0 in development sample (min D=59.089); hard-D threshold unreachable — not a Month/Day bug",
+        "count": 0
+      },
+      "F": {
+        "label": "hard_M_in_fav_D",
+        "class": "OBSERVED",
+        "why": "seen in sample",
+        "count": 69
+      },
+      "C": {
+        "label": "C",
+        "class": "OBSERVED",
+        "count": 105
+      },
+      "D": {
+        "label": "D",
+        "class": "OBSERVED",
+        "count": 455
+      },
+      "G": {
+        "label": "G",
+        "class": "OBSERVED",
+        "count": 1242
+      },
+      "H": {
+        "label": "H",
+        "class": "OBSERVED",
+        "count": 5091
+      },
+      "I": {
+        "label": "I",
+        "class": "OBSERVED",
+        "count": 1245
+      },
+      "J": {
+        "label": "J",
+        "class": "OBSERVED",
+        "count": 5161
+      }
+    },
+    "fav_month_in_hard_D_diagnosis": {
+      "flag": true,
+      "primary_cause": "STRUCTURALLY_IMPOSSIBLE",
+      "explanation": "D_B never < 59.0 in development sample (min D=59.089); hard-D threshold unreachable — not a Month/Day bug",
+      "not": "Month implementation bug — D_B amplitude understates hard regimes"
+    }
+  },
+  "jumps": {
+    "daewoon": {
+      "n": 125,
+      "p50": 0.9106,
+      "p90": 2.625,
+      "p95": 3.5356,
+      "max": 4.4461,
+      "largest_20": [
+        4.4461,
+        4.3394,
+        4.125,
+        3.5356,
+        3.5356,
+        3.5356,
+        3.5356,
+        3.5356,
+        3.1777,
+        2.9016,
+        2.8179,
+        2.625,
+        2.625,
+        2.625,
+        2.625,
+        2.625,
+        2.625,
+        2.625,
+        2.625,
+        2.625
+      ]
+    },
+    "sewoon_lichun": {
+      "n": 1386,
+      "p50": 2.1865,
+      "p90": 5.5608,
+      "p95": 7.3867,
+      "max": 11.5233,
+      "largest_20": [
+        11.5233,
+        11.3782,
+        11.3622,
+        11.2179,
+        11.1525,
+        10.9396,
+        10.8363,
+        10.792,
+        10.5233,
+        10.4485,
+        10.2512,
+        10.2318,
+        10.0815,
+        10.0762,
+        10.0754,
+        10.0044,
+        9.9007,
+        9.6974,
+        9.6941,
+        9.5126
+      ]
+    },
+    "wolwoon": {
+      "n": 8162,
+      "p50": 0.5254,
+      "p90": 1.308,
+      "p95": 1.5629,
+      "max": 2.5673,
+      "largest_20": [
+        2.5673,
+        2.4859,
+        2.4859,
+        2.4684,
+        2.445,
+        2.445,
+        2.4248,
+        2.4248,
+        2.403,
+        2.403,
+        2.3462,
+        2.3462,
+        2.3462,
+        2.3462,
+        2.3351,
+        2.3342,
+        2.3308,
+        2.3308,
+        2.325,
+        2.3001
+      ]
+    },
+    "civil_day": {
+      "n": 270396,
+      "p50": 0.1963,
+      "p90": 0.5027,
+      "p95": 0.6068,
+      "max": 9.0803,
+      "largest_20": [
+        9.0803,
+        8.9135,
+        8.6711,
+        8.6506,
+        8.4151,
+        6.6511,
+        6.4247,
+        6.3564,
+        6.1149,
+        5.9723,
+        5.7871,
+        5.7338,
+        5.6002,
+        5.1234,
+        5.1039,
+        5.0731,
+        5.0639,
+        4.992,
+        4.8993,
+        4.7079
+      ]
+    }
+  },
+  "ux": {
+    "flags": [
+      {
+        "id": "flat_daewoon",
+        "severity": "high",
+        "note": "D_B IQR-like span p90-p10=3.29; known understated amplitude"
+      },
+      {
+        "id": "overconfident_day_claims",
+        "severity": "high",
+        "note": "Day exact-hit ~0.47 with negative sep — product must not claim daily accuracy"
+      },
+      {
+        "id": "child_as_independent_fortune",
+        "severity": "high",
+        "note": "Users may read M/Day as standalone life scores; UI must show parent context"
+      }
+    ]
+  },
+  "timing": {
+    "ANNUAL_DIRECTION_EVIDENCE": {
+      "FA_pw": 0.6429,
+      "OLD_pw": 0.5749,
+      "status": "development evidence exists; Val B sealed"
+    },
+    "MONTH_TIMING_DIAGNOSTIC": {
+      "n_events": 163,
+      "exact_direction_hit": 0.5828,
+      "pos_neg_sep": 0.1792,
+      "subject_hit_rate": 0.5714,
+      "window_pm1_hit": 0.8834,
+      "status": "V2_MONTH_TIMING_ONLY",
+      "Fresh_A_exact": 0,
+      "boundary_ambiguous_n": 4,
+      "note": "QA-only: do not retune; ambiguous noon/節 dates reported separately"
+    },
+    "DAY_TIMING_DIAGNOSTIC": {
+      "n_events": 163,
+      "exact_direction_hit": 0.4785,
+      "pos_neg_sep": -0.0279,
+      "subject_hit_rate": 0.6429,
+      "window_pm1_hit": 0.865,
+      "window_pm3_hit": 1.0,
+      "status": "V2_DAY_TIMING_ONLY",
+      "mapping_before": 161,
+      "mapping_after": 163,
+      "Fresh_A_exact": 0,
+      "signal": "weak/negative sep — not predictive"
+    }
+  },
+  "product_policy": {
+    "month": "MONTH_LOW_CONFIDENCE_TIMING",
+    "month_rationale": "Month hierarchy is coherent with modest OLD exact-date diagnostic (hit≈0.5828) but Fresh A=0 and TIMING_ONLY — show numeric with low-confidence framing, not as validated prediction.",
+    "day": "DAY_EXPLANATION_ONLY",
+    "day_rationale": "Day hierarchy coherent but exact-day diagnostic is weak/negative (hit≈0.4785, sep=-0.0279). Prefer explanation/context over numeric Day prominence to avoid misleading daily claims.",
+    "user_risks": [
+      {
+        "risk": "Overconfident Day claims",
+        "mitigation": "Default Day to explanation-only or clearly labeled low-confidence; no '오늘 대박/망함' from score alone"
+      },
+      {
+        "risk": "Month/Day read as independent fortune",
+        "mitigation": "UI always anchors to Y/M parents; copy: '연간 흐름 안의 단기 리듬'"
+      },
+      {
+        "risk": "Score vs orthodox contradiction",
+        "mitigation": "Mixed-language templates; never attribute ortho-only factors to numeric moves"
+      },
+      {
+        "risk": "節 boundary date ambiguity",
+        "mitigation": "Avoid overprecise month claims on 節 calendar dates; optional range wording"
+      },
+      {
+        "risk": "Overly flat Daewoon",
+        "mitigation": "Set expectation that D is regime baseline; annual/month carry visible movement"
+      },
+      {
+        "risk": "Mechanical daily oscillation",
+        "mitigation": "If Day numeric shown, damp visual prominence; emphasize month baseline"
+      }
+    ]
+  },
+  "block_reasons": [],
+  "status": "V2_FULL_HIERARCHY_READY_WITH_TIMING_LIMITATIONS",
+  "hashes": {
+    "experiment_v2_dy.py": "d2c0199c5194dd63",
+    "experiment_v2_month.py": "1dbf9fa75a5711f0",
+    "experiment_v2_day.py": "40f999119437f222",
+    "exp_v2_dy.json": "a45cca5a56a13bdb",
+    "exp_v2_month.json": "7fb900582d341797",
+    "exp_v2_day.json": "44c7646524ebd991",
+    "V2_DAY_EVALUABLE_FREEZE.json": "838de9396c6116b6",
+    "V2_MONTH_EVALUABLE_FREEZE.json": "5b09221015d62ce8"
+  },
+  "next": "ONE-SHOT Validation B protocol decision (do not unseal in this run)"
+}

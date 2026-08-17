@@ -1,0 +1,112 @@
+PUBLIC_LIFE_V1 — BOUNDED V3 DEVELOPMENT
+
+Use the attached Stage 1 package only.
+
+HARD CONSTRAINTS
+- FINAL is sealed and unavailable. Do not search for, infer, or request it.
+- Validation B is consumed and forbidden for development/comparison.
+- CONTROL = actual production annual `candle.close`, not LEGACY_B9.
+- V2 = frozen V2_DY_B. Verify `experiment_v2_dy.py` hash16 == `d2c0199c5194dd63`.
+- Do not modify production wiring.
+- No web research and no relabeling benchmark events.
+- No hyperparameter grid, coefficient sweep, or multi-candidate tournament.
+
+TOKEN DISCIPLINE
+- Load JSON programmatically.
+- Do not restate biographies or dump per-subject narratives.
+- Reuse existing annual metric/scoring utilities.
+- Report aggregate metrics, failure clusters, and only a few representative examples.
+
+GOAL
+Build at most ONE structurally simpler/more robust challenger V3.
+PUBLIC_LIFE DEV is the primary new development set.
+OLD_DEV + Fresh A are secondary regression guards only. Never optimize specifically to them.
+
+1) VERIFY
+Run `validate_public_life_v1_stage1.py`. Confirm DEV n=24, CHECK n=8.
+
+2) DEV DIAGNOSIS
+On PUBLIC_LIFE DEV only, score production CONTROL and frozen V2_DY_B.
+Metrics:
+- subject-macro pairwise
+- subject hit
+- standardized separation
+- median subject separation
+- positive / negative subject count
+
+Minimum structural diagnostics:
+- same-D vs cross-D
+- parent-help / parent-harm
+- D range + adjacent D jumps
+- |annual_dev| distribution + saturation
+- broad structural failure clusters
+
+Do not tune during diagnosis.
+
+3) SYNTHETIC PROPERTY QA
+Generate/reuse about 5,000 diverse supported births.
+Check CONTROL/V2 for:
+- saturation
+- abnormal Daewoon boundary cliffs
+- excessively flat Daewoon regimes
+- annual movement dominating parent implausibly often
+- extreme adjacent-year jumps
+- systematic score bias by day-master / strength bucket
+- calendar/boundary failures
+
+Synthetic QA is structural sanity only, never accuracy.
+
+4) BUILD ONE V3
+Using PUBLIC_LIFE DEV + synthetic diagnosis, choose at most 3 structural changes.
+Prefer simplification/context-aware structure over stacked heuristics.
+
+Forbidden:
+- named-person/event-year patches
+- feature additions justified only by DEV lift
+- coefficient search
+- copying labels into logic
+
+Implement as experiment code only.
+
+5) DEV GATE
+Compare CONTROL / V2 / V3 on PUBLIC_LIFE DEV + synthetic QA.
+Also run OLD_DEV + Fresh A once as regression guards.
+
+Continue only if:
+- PUBLIC_LIFE DEV V3 macro pairwise >= CONTROL
+- PUBLIC_LIFE DEV V3 standardized separation > CONTROL
+- V3 is not materially worse than CONTROL on either OLD_DEV or Fresh A
+- no material structural QA regression
+- complexity is not materially worse without structural justification
+
+V3 does NOT need to beat V2 on any development pool.
+
+If fail: `V3_REJECTED_KEEP_CONTROL` and STOP.
+
+6) CHECK ONCE
+If DEV gate passes, open PUBLIC_LIFE CHECK once and compare CONTROL / V2 / V3 identically.
+
+If V3 is materially broken on CHECK, allow AT MOST ONE structural correction V3.1:
+- only a clear structural failure, never a person/event
+- no parameter sweep
+- CHECK then becomes consumed development data
+- after correction, freeze; no further candidate iteration
+
+Otherwise freeze V3 unchanged.
+
+7) FREEZE + STOP
+Create:
+- `test/experiments/v3_public_life/V3_DEV_CHECK_REPORT.md`
+- `test/experiments/v3_public_life/V3_DIAGNOSTICS.json`
+- `test/experiments/v3_public_life/V3_FROZEN_SPEC.json`
+- frozen experiment code + hash
+
+Final status exactly one:
+`V3_FROZEN_READY_FOR_FINAL`
+or
+`V3_REJECTED_KEEP_CONTROL`
+
+Do not open FINAL.
+Do not wire production.
+Do not start V4.
+STOP.

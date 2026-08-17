@@ -1,0 +1,52 @@
+{
+  "version": "V4_UNIFIED_DEV_WAVE2_FREEZE_DECISION_V1",
+  "notebook_version": "SAJU_ML_V4_UNIFIED_DEV_WAVE2_FREEZE_COMBINED_QA_20260816",
+  "created_at": "2026-08-16T21:23:26",
+  "status": "V4_UNIFIED_DEV_WAVE2_FROZEN_COMBINED_TARGETS_MET_READY_FOR_FEATURE_GENERATION_GATE",
+  "wave2": {
+    "n_frozen_subjects": 44,
+    "n_pairs": 28,
+    "n_unpairable": 16,
+    "axis_counts": {
+      "COMPETITIVE": 3,
+      "PROJECT": 6,
+      "STATUS": 19
+    },
+    "positive_earlier_share": 0.75,
+    "same_year_pairs": 0,
+    "astrology_scored": false
+  },
+  "combined": {
+    "n_pairs": 101,
+    "target_pairs": {
+      "COMPETITIVE": 30,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "axis_counts": {
+      "COMPETITIVE": 31,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "pair_deficits": {
+      "COMPETITIVE": 0,
+      "PROJECT": 0,
+      "STATUS": 0
+    },
+    "all_axis_targets_met": true,
+    "astrology_scored": false
+  },
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "rules": {
+    "wave2_subject_replacement": false,
+    "directional_chronology_backfill": false,
+    "astrology_feature_generation_performed": false,
+    "astrology_feature_generation_allowed_in_this_notebook": false,
+    "next_step_if_targets_met": "Create and freeze a separate combined-corpus feature-generation/preregistration gate before generating any astrology features."
+  }
+}

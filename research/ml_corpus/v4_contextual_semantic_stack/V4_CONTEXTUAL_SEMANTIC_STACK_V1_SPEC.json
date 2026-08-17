@@ -1,0 +1,67 @@
+{
+  "version": "V4_CONTEXTUAL_SEMANTIC_STACK_V1_SPEC",
+  "status": "PREREGISTERED_BEFORE_FINAL_101_DEV_RUN",
+  "architecture": {
+    "name": "CONTEXTUAL_SEMANTIC_STACK_V1",
+    "goal": "Independent annual ranking engine intended to beat Production Control without using Control score or Control breakdown as candidate predictors.",
+    "model": {
+      "type": "pairwise_logistic_regression",
+      "penalty": "L2",
+      "solver": "liblinear",
+      "C": 0.3,
+      "standardize": true,
+      "symmetric_pair_augmentation": true
+    },
+    "forbidden_candidate_inputs": [
+      "candle.close",
+      "scores.종합",
+      "종합운점수",
+      "_composite_score output",
+      "SCORE_BIAS",
+      "Production Control score",
+      "D_REF",
+      "engine score breakdown",
+      "age",
+      "axis",
+      "chronology",
+      "nuisance model",
+      "event/source metadata"
+    ],
+    "clean_feature_policy": [
+      "Do not call experiment_v2_dy._block_feats.",
+      "Read only current Daewoon stem/branch/relations from build_daewoon_detail rows.",
+      "Recompute fav_minus_unfav from NatalContext + _elem_sign.",
+      "Force struct_activ/struct_disrupt/struct_excess to zero before _regime_evidence.",
+      "Call _contextual_year with the clean regime direction_score."
+    ],
+    "outer_cv": {
+      "folds": 5,
+      "repeats": 10,
+      "stratification_for_evaluation_only": "axis x positive_earlier",
+      "seed": 20260817
+    },
+    "bootstrap_subjects": 20000
+  },
+  "development_sanity_gate": {
+    "overall_pairwise_min": 0.56,
+    "delta_vs_control_min": 0.01,
+    "bootstrap_P_delta_gt_0_vs_control_min": 0.7,
+    "repeated_outer_cv_p10_min": 0.5,
+    "axis_floor_min": 0.48
+  },
+  "stopping_rule": {
+    "if_pass": "Freeze exact feature schema and coefficients; next step is completely fresh confirmation DEV.",
+    "if_fail": "End architecture/model search on the consumed 101-pair corpus. Move to larger, more balanced fresh DEV and ground-truth redesign."
+  },
+  "fresh_confirmation_gate_if_frozen": {
+    "delta_vs_control_min": 0.01,
+    "bootstrap_P_delta_gt_0_vs_control_min": 0.8,
+    "no_retuning": true
+  },
+  "sealed_holdouts": [
+    "NEW_CONFIRM",
+    "Validation_B",
+    "Public_CHECK",
+    "Public_FINAL"
+  ]
+}

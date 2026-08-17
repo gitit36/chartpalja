@@ -1,0 +1,52 @@
+{
+  "version": "V5_FINAL_ROSTER_FREEZE_V1",
+  "notebook_version": "SAJU_ML_V5_ROLE_ONLY_EXPANSION_FINAL_FREEZE_20260817",
+  "created_at": "2026-08-17T02:30:41",
+  "status": "V5_FINAL_DEV_AND_CONFIRM_ROSTERS_FROZEN_READY_FOR_DEV_EVENT_COLLECTION",
+  "dev_n": 160,
+  "confirm_n": 80,
+  "dev_axis_counts": {
+    "STATUS": 70,
+    "PROJECT": 50,
+    "COMPETITIVE": 40
+  },
+  "confirm_axis_counts": {
+    "STATUS": 35,
+    "PROJECT": 25,
+    "COMPETITIVE": 20
+  },
+  "dev_roster_sha256": "a7c5a8cbb9855f952d7fbbde7ed6c358d0053dfbec8b2b09f66430413f8a1316",
+  "confirm_roster_sha256": "3144f52a8e9304c5cf1773a1dc346b58a1e41fa6af784b3a4ea64a6d318dbfac",
+  "event_template_sha256": "9cc25d854bc92678e78494abc9d5b228140b3de232e8a64e5f347b81ed1dac9a",
+  "wave_a_sha256": "35ac1a96c66b89299ac5140f45ec11c0ca2cb8088ee5efcca3fd0c0264a08b69",
+  "expansion_request_sha256": "318d3e3e5e681d1d3091fd03c0fdde4d1333a79e20ae1a7aca73f581ef0963c0",
+  "birth_snapshot_sha256": "ca28a3fea1250b2ea01eb06a54b4921ec0bf790fdc14c5c561006f1c592c634b",
+  "original_seed_sha256": "ee3eaf2c907462a4152140350219787630dec7c82c00dd0a0a32f378c4666f29",
+  "role_query_snapshot_sha256": "f0737c468f969a8fbd8bdaa027c3db4fedb5948a407ee5d468cbc671fef78192",
+  "strict_aa_expansion_pool_sha256": "e314b2064ca58dc321b73779d24c89585d31f56b387df698a83b514917c1527d",
+  "spec_sha256": "c4124e0bfebf4204ee7b3926987257bebe9e7604f7788e280324f06e675288d7",
+  "wikidata_query_cache_sha256": {
+    "COMPETITIVE__athlete.json": "73bb94e86a279d0fccb75b72aa5367af2ae2a0f7a325c2f6f766a758bd899efe",
+    "COMPETITIVE__athlete__LIGHT_V1.json": "e555ce9c0a0246e7c4dbc7df5fbea80b27b11fc0807503f0bb52485fb043424b",
+    "COMPETITIVE__boxer__LIGHT_V1.json": "2c9a436b0b240c483d3ab083f2b6a8004110f57d3d027732b1987c68076fe777",
+    "COMPETITIVE__tennis_player__LIGHT_V1.json": "d6203fa4bcfb862f40f0e4381c9555e5ef410993847a75f92c8160c96d701fc1",
+    "PROJECT__actor__LIGHT_V1.json": "cb2530d05feacad5981be3de679e455c6caf6e05448f648d64524ac6a37412cc",
+    "PROJECT__film_director__LIGHT_V1.json": "4c5d3903df944adc384549b82aebc4c9be9dcd3e2e1e57cd7b19020aabba1dc1",
+    "PROJECT__musician__LIGHT_V1.json": "43de3f647d26e251a77b94b3530f336abbae16e6153908c756ccfed3f5a84790",
+    "PROJECT__singer__LIGHT_V1.json": "0e8c8ec093968b5a2683fddad5f979261e3e9b2f124963812fc165be160133cf",
+    "STATUS__businessperson__LIGHT_V1.json": "3d95978e9650a4c3fc1b12ed121cfd49fd9e4c978777218dbfd9ac9f6fe8d979",
+    "STATUS__politician__LIGHT_V1.json": "f007c68ad659b2847cfa3f12460433a912bf7d9007074cf90d00a6064738f56c"
+  },
+  "selection_seed": 2026081701,
+  "membership_used_event_outcomes": false,
+  "membership_used_chronology": false,
+  "membership_used_pairability": false,
+  "membership_used_astrology": false,
+  "membership_used_control": false,
+  "event_collection": {
+    "DEV_allowed": true,
+    "CONFIRM_allowed": false
+  },
+  "astrology_generation_allowed": false,
+  "next_rule": "Collect source-verifiable events for V5 DEV only. Freeze all DEV events before pairing. Do not inspect or collect CONFIRM events. Do not generate astrology until the pre-astrology local-pair/nuisance quality gate passes."
+}

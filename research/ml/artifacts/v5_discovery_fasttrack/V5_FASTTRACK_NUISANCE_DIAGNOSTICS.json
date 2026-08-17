@@ -1,0 +1,102 @@
+[
+  {
+    "dataset": "PRIMARY_TRUSTED",
+    "include_wave": false,
+    "status": "OK",
+    "n_pairs": 193,
+    "n_subjects": 100,
+    "positive_earlier_share": 0.6217616580310881,
+    "group_cv_folds": 5,
+    "mean_accuracy": 0.5954116059379218,
+    "mean_balanced_accuracy": 0.5992264382622821,
+    "fold_accuracy": [
+      0.5897435897435898,
+      0.5897435897435898,
+      0.6923076923076923,
+      0.6052631578947368,
+      0.5
+    ],
+    "fold_balanced_accuracy": [
+      0.5666666666666667,
+      0.6586206896551725,
+      0.6907894736842105,
+      0.5544871794871795,
+      0.5255681818181819
+    ]
+  },
+  {
+    "dataset": "PRIMARY_TRUSTED",
+    "include_wave": true,
+    "status": "OK",
+    "n_pairs": 193,
+    "n_subjects": 100,
+    "positive_earlier_share": 0.6217616580310881,
+    "group_cv_folds": 5,
+    "mean_accuracy": 0.5955465587044534,
+    "mean_balanced_accuracy": 0.5916892469297188,
+    "fold_accuracy": [
+      0.6410256410256411,
+      0.5384615384615384,
+      0.6666666666666666,
+      0.6052631578947368,
+      0.5263157894736842
+    ],
+    "fold_balanced_accuracy": [
+      0.6083333333333334,
+      0.5913793103448276,
+      0.6644736842105263,
+      0.5544871794871795,
+      0.5397727272727273
+    ]
+  },
+  {
+    "dataset": "BROAD_SENSITIVITY",
+    "include_wave": false,
+    "status": "OK",
+    "n_pairs": 197,
+    "n_subjects": 104,
+    "positive_earlier_share": 0.6294416243654822,
+    "group_cv_folds": 5,
+    "mean_accuracy": 0.5788461538461538,
+    "mean_balanced_accuracy": 0.57552307515351,
+    "fold_accuracy": [
+      0.6,
+      0.525,
+      0.5128205128205128,
+      0.6153846153846154,
+      0.6410256410256411
+    ],
+    "fold_balanced_accuracy": [
+      0.5866666666666667,
+      0.48860398860398857,
+      0.5257142857142857,
+      0.6,
+      0.6766304347826086
+    ]
+  },
+  {
+    "dataset": "BROAD_SENSITIVITY",
+    "include_wave": true,
+    "status": "OK",
+    "n_pairs": 197,
+    "n_subjects": 104,
+    "positive_earlier_share": 0.6294416243654822,
+    "group_cv_folds": 5,
+    "mean_accuracy": 0.578974358974359,
+    "mean_balanced_accuracy": 0.5792624931429279,
+    "fold_accuracy": [
+      0.55,
+      0.55,
+      0.5384615384615384,
+      0.6410256410256411,
+      0.6153846153846154
+    ],
+    "fold_balanced_accuracy": [
+      0.5333333333333333,
+      0.5071225071225072,
+      0.5771428571428572,
+      0.6333333333333333,
+      0.6453804347826086
+    ]
+  }
+]

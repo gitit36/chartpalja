@@ -1,0 +1,20 @@
+﻿batch_id,research_order_in_batch,subject_id,name,preassigned_axis,sweep_status,eligible_positive_events,eligible_negative_events,excluded_logged_candidates,source_rows_logged,notes
+7,1,V5DEVE2_123,Gilbert Lavoine,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event retained in first-pass bounded sweep.
+7,2,V5DEVE2_124,Chiara Mastroianni,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event retained in first-pass bounded sweep.
+7,3,V5DEVE2_125,Jim Jeffords,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,1,2,No eligible negative event retained in first-pass bounded sweep.
+7,4,V5DEVE2_126,Hacine Cherifi,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+7,5,V5DEVE2_127,Kurt Cobain,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,0,2,No eligible negative event retained in first-pass bounded sweep.
+7,6,V5DEVE2_128,C. William O'Neill,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,1,0,3,Both polarities observed in first-pass bounded sweep.
+7,7,V5DEVE2_129,Charly Gaul,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event retained in first-pass bounded sweep.
+7,8,V5DEVE2_130,Ettore Scola,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,0,2,No eligible negative event retained in first-pass bounded sweep.
+7,9,V5DEVE2_131,Simone Veil,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event retained in first-pass bounded sweep.
+7,10,V5DEVE2_132,Henri Cochet,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+7,11,V5DEVE2_133,Jean Delannoy,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event retained in first-pass bounded sweep.
+7,12,V5DEVE2_134,Bart Starr,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+7,13,V5DEVE2_135,Marion Bartoli,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+7,14,V5DEVE2_136,Gianni Morandi,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event retained in first-pass bounded sweep.
+7,15,V5DEVE2_137,Roger Karoutchi,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,0,2,No eligible negative event retained in first-pass bounded sweep.
+7,16,V5DEVE2_138,Joe Dante,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,0,2,No eligible negative event retained in first-pass bounded sweep.
+7,17,V5DEVE2_139,Victor Mature,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,0,0,1,1,No eligible core-axis event retained; audit-only row(s) preserve the sparse subject.
+7,18,V5DEVE2_140,Guido Carli,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,0,2,No eligible negative event retained in first-pass bounded sweep.
+7,19,V5DEVE2_141,Jacques Attali,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,0,2,No eligible negative event retained in first-pass bounded sweep.

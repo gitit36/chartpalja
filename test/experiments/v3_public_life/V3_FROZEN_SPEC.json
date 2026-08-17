@@ -1,0 +1,28 @@
+{
+  "status": "V3_REJECTED_KEEP_CONTROL",
+  "model_id": "V3_ENGINE_D_CLIPPED_G",
+  "parent": "V2_DY_B",
+  "formula": {
+    "D": "production engine 종합운점수 (candle.open / daewoon block)",
+    "annual_dev": "clip(A_G, ±4.0)",
+    "Y": "clamp(D + annual_dev)",
+    "dropped": [
+      "V2 D_B z-formula",
+      "B_trigger",
+      "0.65/0.35 mix"
+    ]
+  },
+  "z_source": "unused for V3 D; A_G still G_CLEAN_AXIS within Daewoon block",
+  "v2_sha256": "d2c0199c5194dd637ddea6c29fc48c003ac1075b383422809175473e006925bf",
+  "experiment_code": "test/experiments/v3_public_life/experiment_v3_public_life.py",
+  "validation_b_used": false,
+  "final_opened": false,
+  "check_opened": false,
+  "production_wired": false,
+  "gate_ok": false,
+  "gate_reasons": [
+    "DEV_std_sep_not_gt_CONTROL",
+    "FRESH_A_material_regression"
+  ],
+  "experiment_sha256": "7669e4fca4c28647af55538e85b9bdbd7ccfdde2f6832399965251f803f4b30e"
+}

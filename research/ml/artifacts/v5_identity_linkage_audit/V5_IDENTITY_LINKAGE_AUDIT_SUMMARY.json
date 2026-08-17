@@ -1,0 +1,117 @@
+{
+  "version": "V5_IDENTITY_LINKAGE_AUDIT_SUMMARY_V1",
+  "created_at": "2026-08-17T03:27:32",
+  "status": "V5_IDENTITY_LINKAGE_AUDIT_REPAIR_REQUIRED",
+  "trigger_subject": "V5DEV_022 Walter Schmidt",
+  "DEV_counts": {
+    "PASS_EXACT_DOB": 133,
+    "PASS_LEGACY_WAVE_A": 15,
+    "LIKELY_IDENTITY_MISMATCH": 6,
+    "REVIEW_DOB_DISCREPANCY_SAME_PLACE": 3,
+    "REVIEW_MISSING_OR_LOW_PRECISION_DOB": 2,
+    "REVIEW_DOB_DISCREPANCY_UNKNOWN_PLACE": 1
+  },
+  "CONFIRM_counts_aggregate_only": {
+    "PASS_EXACT_DOB": 64,
+    "PASS_LEGACY_WAVE_A": 7,
+    "REVIEW_DOB_DISCREPANCY_SAME_PLACE": 4,
+    "LIKELY_IDENTITY_MISMATCH": 3,
+    "REVIEW_MISSING_OR_LOW_PRECISION_DOB": 2
+  },
+  "candidate_pool_counts_by_axis_and_status": [
+    {
+      "axis": "COMPETITIVE",
+      "linkage_status": "LIKELY_IDENTITY_MISMATCH",
+      "n": 15
+    },
+    {
+      "axis": "COMPETITIVE",
+      "linkage_status": "PASS_EXACT_DOB",
+      "n": 155
+    },
+    {
+      "axis": "COMPETITIVE",
+      "linkage_status": "PASS_LEGACY_WAVE_A",
+      "n": 45
+    },
+    {
+      "axis": "COMPETITIVE",
+      "linkage_status": "REVIEW_DOB_DISCREPANCY_SAME_PLACE",
+      "n": 11
+    },
+    {
+      "axis": "COMPETITIVE",
+      "linkage_status": "REVIEW_DOB_DISCREPANCY_UNKNOWN_PLACE",
+      "n": 2
+    },
+    {
+      "axis": "COMPETITIVE",
+      "linkage_status": "REVIEW_MISSING_OR_LOW_PRECISION_DOB",
+      "n": 3
+    },
+    {
+      "axis": "PROJECT",
+      "linkage_status": "LIKELY_IDENTITY_MISMATCH",
+      "n": 15
+    },
+    {
+      "axis": "PROJECT",
+      "linkage_status": "PASS_EXACT_DOB",
+      "n": 920
+    },
+    {
+      "axis": "PROJECT",
+      "linkage_status": "PASS_LEGACY_WAVE_A",
+      "n": 50
+    },
+    {
+      "axis": "PROJECT",
+      "linkage_status": "REVIEW_DOB_DISCREPANCY_SAME_PLACE",
+      "n": 14
+    },
+    {
+      "axis": "PROJECT",
+      "linkage_status": "REVIEW_DOB_DISCREPANCY_UNKNOWN_PLACE",
+      "n": 1
+    },
+    {
+      "axis": "STATUS",
+      "linkage_status": "LIKELY_IDENTITY_MISMATCH",
+      "n": 6
+    },
+    {
+      "axis": "STATUS",
+      "linkage_status": "PASS_EXACT_DOB",
+      "n": 141
+    },
+    {
+      "axis": "STATUS",
+      "linkage_status": "PASS_LEGACY_WAVE_A",
+      "n": 14
+    },
+    {
+      "axis": "STATUS",
+      "linkage_status": "REVIEW_DOB_DISCREPANCY_SAME_PLACE",
+      "n": 4
+    },
+    {
+      "axis": "STATUS",
+      "linkage_status": "REVIEW_MISSING_OR_LOW_PRECISION_DOB",
+      "n": 3
+    }
+  ],
+  "DEV_likely_mismatch_n": 6,
+  "DEV_review_n": 6,
+  "CONFIRM_likely_mismatch_n": 3,
+  "CONFIRM_review_n": 6,
+  "rules": {
+    "events_loaded": false,
+    "pairability_loaded": false,
+    "chronology_loaded": false,
+    "astrology_loaded": false,
+    "control_loaded": false,
+    "membership_changed": false,
+    "confirm_details_must_remain_sealed": true
+  },
+  "next_rule": "If REPAIR_REQUIRED: stop event research and freeze a separate deterministic identity-repair protocol. If MANUAL_REVIEW_REQUIRED: resolve DEV review rows and aggregate CONFIRM review locally before any repair. Do not resume Batch 4 yet."
+}

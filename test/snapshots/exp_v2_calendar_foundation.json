@@ -1,0 +1,380 @@
+{
+  "measured_at": "2026-08-13T02:35:12",
+  "phase": "V2_CALENDAR_FOUNDATION",
+  "validation_b_scored": false,
+  "production_dy_architecture_changed": false,
+  "wolwoon": {
+    "years_n": 7,
+    "years_ok": 7,
+    "rows": [
+      {
+        "ey": 1984,
+        "n_months": 12,
+        "issues": [],
+        "zi_start": "1984-12-07T07:22:15.937500+09:00",
+        "zi_end": "1985-01-05T18:33:02.812500+09:00",
+        "chou_start": "1985-01-05T18:33:02.812500+09:00",
+        "chou_end": "1985-02-04T06:14:45.937500+09:00",
+        "zi_days": 29.47,
+        "chou_days": 29.49,
+        "switch_ok": true,
+        "ok": true
+      },
+      {
+        "ey": 1997,
+        "n_months": 12,
+        "issues": [],
+        "zi_start": "1997-12-07T11:01:38.437500+09:00",
+        "zi_end": "1998-01-05T22:15:14.062500+09:00",
+        "chou_start": "1998-01-05T22:15:14.062500+09:00",
+        "chou_end": "1998-02-04T09:54:08.437500+09:00",
+        "zi_days": 29.47,
+        "chou_days": 29.49,
+        "switch_ok": true,
+        "ok": true
+      },
+      {
+        "ey": 2017,
+        "n_months": 12,
+        "issues": [],
+        "zi_start": "2017-12-07T07:33:30.937500+09:00",
+        "zi_end": "2018-01-05T18:48:30.937500+09:00",
+        "chou_start": "2018-01-05T18:48:30.937500+09:00",
+        "chou_end": "2018-02-04T06:27:25.312500+09:00",
+        "zi_days": 29.47,
+        "chou_days": 29.49,
+        "switch_ok": true,
+        "ok": true
+      },
+      {
+        "ey": 2023,
+        "n_months": 12,
+        "issues": [],
+        "zi_start": "2023-12-07T18:27:25.312500+09:00",
+        "zi_end": "2024-01-06T05:43:49.687500+09:00",
+        "chou_start": "2024-01-06T05:43:49.687500+09:00",
+        "chou_end": "2024-02-04T17:21:19.687500+09:00",
+        "zi_days": 29.47,
+        "chou_days": 29.48,
+        "switch_ok": true,
+        "ok": true
+      },
+      {
+        "ey": 2024,
+        "n_months": 12,
+        "issues": [],
+        "zi_start": "2024-12-07T00:14:45.937500+09:00",
+        "zi_end": "2025-01-05T11:31:10.312500+09:00",
+        "chou_start": "2025-01-05T11:31:10.312500+09:00",
+        "chou_end": "2025-02-03T23:08:40.312500+09:00",
+        "zi_days": 29.47,
+        "chou_days": 29.48,
+        "switch_ok": true,
+        "ok": true
+      },
+      {
+        "ey": 2025,
+        "n_months": 12,
+        "issues": [],
+        "zi_start": "2025-12-07T06:02:06.562500+09:00",
+        "zi_end": "2026-01-05T17:18:30.937500+09:00",
+        "chou_start": "2026-01-05T17:18:30.937500+09:00",
+        "chou_end": "2026-02-04T04:56:00.937500+09:00",
+        "zi_days": 29.47,
+        "chou_days": 29.48,
+        "switch_ok": true,
+        "ok": true
+      },
+      {
+        "ey": 2026,
+        "n_months": 12,
+        "issues": [],
+        "zi_start": "2026-12-07T11:49:27.187500+09:00",
+        "zi_end": "2027-01-05T23:07:15.937500+09:00",
+        "chou_start": "2027-01-05T23:07:15.937500+09:00",
+        "chou_end": "2027-02-04T10:43:21.562500+09:00",
+        "zi_days": 29.47,
+        "chou_days": 29.48,
+        "switch_ok": true,
+        "ok": true
+      }
+    ],
+    "ok": true
+  },
+  "live_sewoon": {
+    "ok": true,
+    "rows": [
+      {
+        "label": "before",
+        "civil_y": 1984,
+        "t": "1984-02-04T18:26:00.937500+09:00",
+        "live_ey": 1983,
+        "live_gz": "癸亥",
+        "expect_ey": 1983,
+        "hist_civil_gz": "甲子",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true,
+        "civil_vs_live_diverges": true
+      },
+      {
+        "label": "exact_after",
+        "civil_y": 1984,
+        "t": "1984-02-05T00:26:01.937500+09:00",
+        "live_ey": 1984,
+        "live_gz": "甲子",
+        "expect_ey": 1984,
+        "hist_civil_gz": "甲子",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "after",
+        "civil_y": 1984,
+        "t": "1984-02-05T06:26:00.937500+09:00",
+        "live_ey": 1984,
+        "live_gz": "甲子",
+        "expect_ey": 1984,
+        "hist_civil_gz": "甲子",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "before",
+        "civil_y": 1997,
+        "t": "1997-02-03T22:02:34.687500+09:00",
+        "live_ey": 1996,
+        "live_gz": "丙子",
+        "expect_ey": 1996,
+        "hist_civil_gz": "丁丑",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true,
+        "civil_vs_live_diverges": true
+      },
+      {
+        "label": "exact_after",
+        "civil_y": 1997,
+        "t": "1997-02-04T04:02:35.687500+09:00",
+        "live_ey": 1997,
+        "live_gz": "丁丑",
+        "expect_ey": 1997,
+        "hist_civil_gz": "丁丑",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "after",
+        "civil_y": 1997,
+        "t": "1997-02-04T10:02:34.687500+09:00",
+        "live_ey": 1997,
+        "live_gz": "丁丑",
+        "expect_ey": 1997,
+        "hist_civil_gz": "丁丑",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "before",
+        "civil_y": 2017,
+        "t": "2017-02-03T18:35:51.562500+09:00",
+        "live_ey": 2016,
+        "live_gz": "丙申",
+        "expect_ey": 2016,
+        "hist_civil_gz": "丁酉",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true,
+        "civil_vs_live_diverges": true
+      },
+      {
+        "label": "exact_after",
+        "civil_y": 2017,
+        "t": "2017-02-04T00:35:52.562500+09:00",
+        "live_ey": 2017,
+        "live_gz": "丁酉",
+        "expect_ey": 2017,
+        "hist_civil_gz": "丁酉",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "after",
+        "civil_y": 2017,
+        "t": "2017-02-04T06:35:51.562500+09:00",
+        "live_ey": 2017,
+        "live_gz": "丁酉",
+        "expect_ey": 2017,
+        "hist_civil_gz": "丁酉",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "before",
+        "civil_y": 2023,
+        "t": "2023-02-04T05:33:59.062500+09:00",
+        "live_ey": 2022,
+        "live_gz": "壬寅",
+        "expect_ey": 2022,
+        "hist_civil_gz": "癸卯",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true,
+        "civil_vs_live_diverges": true
+      },
+      {
+        "label": "exact_after",
+        "civil_y": 2023,
+        "t": "2023-02-04T11:34:00.062500+09:00",
+        "live_ey": 2023,
+        "live_gz": "癸卯",
+        "expect_ey": 2023,
+        "hist_civil_gz": "癸卯",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "after",
+        "civil_y": 2023,
+        "t": "2023-02-04T17:33:59.062500+09:00",
+        "live_ey": 2023,
+        "live_gz": "癸卯",
+        "expect_ey": 2023,
+        "hist_civil_gz": "癸卯",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "before",
+        "civil_y": 2024,
+        "t": "2024-02-04T11:21:19.687500+09:00",
+        "live_ey": 2023,
+        "live_gz": "癸卯",
+        "expect_ey": 2023,
+        "hist_civil_gz": "甲辰",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true,
+        "civil_vs_live_diverges": true
+      },
+      {
+        "label": "exact_after",
+        "civil_y": 2024,
+        "t": "2024-02-04T17:21:20.687500+09:00",
+        "live_ey": 2024,
+        "live_gz": "甲辰",
+        "expect_ey": 2024,
+        "hist_civil_gz": "甲辰",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "after",
+        "civil_y": 2024,
+        "t": "2024-02-04T23:21:19.687500+09:00",
+        "live_ey": 2024,
+        "live_gz": "甲辰",
+        "expect_ey": 2024,
+        "hist_civil_gz": "甲辰",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "before",
+        "civil_y": 2025,
+        "t": "2025-02-03T17:08:40.312500+09:00",
+        "live_ey": 2024,
+        "live_gz": "甲辰",
+        "expect_ey": 2024,
+        "hist_civil_gz": "乙巳",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true,
+        "civil_vs_live_diverges": true
+      },
+      {
+        "label": "exact_after",
+        "civil_y": 2025,
+        "t": "2025-02-03T23:08:41.312500+09:00",
+        "live_ey": 2025,
+        "live_gz": "乙巳",
+        "expect_ey": 2025,
+        "hist_civil_gz": "乙巳",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "after",
+        "civil_y": 2025,
+        "t": "2025-02-04T05:08:40.312500+09:00",
+        "live_ey": 2025,
+        "live_gz": "乙巳",
+        "expect_ey": 2025,
+        "hist_civil_gz": "乙巳",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "before",
+        "civil_y": 2026,
+        "t": "2026-02-03T22:56:00.937500+09:00",
+        "live_ey": 2025,
+        "live_gz": "乙巳",
+        "expect_ey": 2025,
+        "hist_civil_gz": "丙午",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true,
+        "civil_vs_live_diverges": true
+      },
+      {
+        "label": "exact_after",
+        "civil_y": 2026,
+        "t": "2026-02-04T04:56:01.937500+09:00",
+        "live_ey": 2026,
+        "live_gz": "丙午",
+        "expect_ey": 2026,
+        "hist_civil_gz": "丙午",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      },
+      {
+        "label": "after",
+        "civil_y": 2026,
+        "t": "2026-02-04T10:56:00.937500+09:00",
+        "live_ey": 2026,
+        "live_gz": "丙午",
+        "expect_ey": 2026,
+        "hist_civil_gz": "丙午",
+        "policy": "LIVE_ACTIVE_SEWOON_LICHUN",
+        "match": true
+      }
+    ]
+  },
+  "live_hierarchy": {
+    "ok": true,
+    "n_cases": 24,
+    "failures": []
+  },
+  "dy_regression": {
+    "OLD_DEV": {
+      "pairwise_mean": 0.5749,
+      "hit": "40/56",
+      "same_D_pairwise": 0.5222,
+      "cross_D_pairwise": 0.556
+    },
+    "FRESH_A_DEV": {
+      "pairwise_mean": 0.6429,
+      "hit": "9/14",
+      "same_D_pairwise": 0.5714,
+      "cross_D_pairwise": 0.6531
+    },
+    "headline_ok": true
+  },
+  "policies": {
+    "LIVE_ACTIVE_SEWOON": "立春→立春",
+    "HISTORICAL_EXPERIMENT_YEAR": "civil Gregorian year",
+    "month": "solar 節",
+    "day": "DEFERRED_PHASE_4",
+    "eot_zi_bansi": "unchanged"
+  },
+  "block_reasons": [],
+  "status": "V2_CALENDAR_READY_FOR_MONTH",
+  "hierarchy_qa_flag": {
+    "good_year_in_hard_D_crossing_was_0": true,
+    "action": "re-check after Month/Day + blind user QA; do not modify D/Y now"
+  }
+}

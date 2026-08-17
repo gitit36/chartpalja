@@ -1,0 +1,20 @@
+{
+  "version": "V5_DEV_EVENT_BATCH_02_SANITIZED_V1",
+  "status": "SANITIZED_AWAITING_RESEARCH_FOR_REPAIRED_SLOTS",
+  "batch_id": 2,
+  "original_manifest_status": "BATCH_02_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "original_subjects": 21,
+  "invalidated_subject_ids": [
+    "V5DEV_035",
+    "V5DEV_110"
+  ],
+  "invalidated_subject_n": 2,
+  "removed_event_rows": 7,
+  "removed_audit_rows": 2,
+  "retained_event_rows": 57,
+  "retained_subject_audit_rows": 19,
+  "events_sanitized_sha256": "c95817f66a8a5facb5b126b6ee87ae9dce217446c7206887ab958b4b53958a91",
+  "audit_sanitized_sha256": "6309a2b7f8add49f4b102db32351734edc327fa75aaa86f583873b37dd89dc1c",
+  "sanitization_rule": "subject_id invalidation only; event content/polarity not consulted",
+  "ready_for_final_batch_freeze": false
+}

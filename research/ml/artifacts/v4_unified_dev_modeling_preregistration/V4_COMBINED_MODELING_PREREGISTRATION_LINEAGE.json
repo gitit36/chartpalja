@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-08-16T21:37:20",
+  "notebook_version": "SAJU_ML_V4_COMBINED_FEATURE_PREREG_GATE_20260816",
+  "pair_file": "research/ml/artifacts/v4_unified_dev_wave2/V4_UNIFIED_DEV_COMBINED_FROZEN_PAIRS.csv",
+  "pair_sha256": "5c4cecc76e2059fc6276564b4be13638ffc4b5b11b5773dd5954ed98e7dad31b",
+  "axis_audit_sha256": "64d9fa3f7b892ca4efdbd0ad9c20860010efdfbed4e7e336409a3ee70a0792e0",
+  "wave2_freeze_decision_sha256": "c13196e525cd1bbfdb4e877eed2a281e632ec417cc355ee42bb8201e8d2a1feb",
+  "preregistration_spec_sha256": "de20924dcb3a289d51f999e1518164d0337583d1102e74081ff8a4623d3ce869",
+  "saju_engine_sha256_at_preregistration": "d39e0c4d777ae3a19394c9175319a4f8a6a709c2b4d34400965b618ffbfdad1e",
+  "winner_eligible_architectures": [
+    "TG10_STEM_BRANCH_L2",
+    "ALL_L2",
+    "ALL_ELASTICNET_AUTO"
+  ],
+  "baselines": [
+    "CHANCE_050",
+    "AGE_YOUNGER_FIXED",
+    "AGE_LATER_FIXED",
+    "NUISANCE_AGE_AXIS",
+    "CONTROL_FIXED"
+  ]
+}

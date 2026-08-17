@@ -1,0 +1,110 @@
+{
+  "version": "V5_DISCOVERY_ASTROLOGY_TOURNAMENT_PREREGISTRATION_V1",
+  "created_date": "2026-08-17",
+  "status": "PREDECLARED_AFTER_FASTTRACK_READINESS_BEFORE_V5_ASTROLOGY_FEATURE_GENERATION",
+  "required_input_status": "V5_DISCOVERY_FASTTRACK_READY_FOR_ASTROLOGY_AND_MODEL_DEVELOPMENT",
+  "role": "EXPLORATORY_DEV_WITH_SEALED_CONFIRM",
+  "goal": "Identify an interpretable shared-coefficient astrology architecture that has stable out-of-sample signal and incremental predictive value beyond chronology/age/axis/wave nuisance.",
+  "hard_integrity_rules": {
+    "CONFIRM_must_not_be_loaded_or_researched": true,
+    "Production_Control_must_not_be_scored_or_used_as_feature": true,
+    "pair_membership_must_not_change": true,
+    "event_labels_must_not_change": true,
+    "collection_wave_never_astrology_feature": true,
+    "axis_specific_astrology_interactions_forbidden": true,
+    "exact_birth_time_required_for_all_paired_subjects": true,
+    "birth_metadata_may_only_be_hydrated_from_frozen_PersonList15k_by_source_row_key": true
+  },
+  "datasets": {
+    "primary": "V5_FASTTRACK_COMBINED_LOCAL_PAIRS_PRIMARY_TRUSTED.csv",
+    "sensitivity": "V5_FASTTRACK_COMBINED_LOCAL_PAIRS_BROAD_SENSITIVITY.csv",
+    "candidate_selection_uses": "PRIMARY_TRUSTED",
+    "BROAD_use": "fixed-algorithm sensitivity only; no architecture invented from BROAD results"
+  },
+  "feature_principles": {
+    "pair_difference": "positive-year astrology primitives minus negative-year primitives",
+    "same_coefficients_across_axes": true,
+    "production_control_score_excluded": true,
+    "shinsal_high_dimensional_flattening_excluded_initially": true,
+    "reason_shinsal_excluded": "Avoid reopening the high-dimensional feature-search problem before lower-dimensional orthodox primitives earn signal."
+  },
+  "candidate_architectures": [
+    {
+      "name": "SW_TG10_L2",
+      "features": "Sewoon exact 10-Ten-God stem + branch hidden-stem distribution",
+      "model": "L2 logistic, C=0.3"
+    },
+    {
+      "name": "DW_SW_TG10_L2",
+      "features": "Daewoon + Sewoon exact 10-Ten-God stem + branch hidden-stem distributions",
+      "model": "L2 logistic, C=0.3"
+    },
+    {
+      "name": "DW_SW_TG10_REL_L2",
+      "features": "DW_SW_TG10 + stem/branch relations to natal and Daewoon↔Sewoon",
+      "model": "L2 logistic, C=0.3"
+    },
+    {
+      "name": "ORTHODOX_CORE_L2",
+      "features": "DW/SW exact Ten-God + dynamic element/yinyang + relations + Yongshin fit + 12-Unseong",
+      "model": "L2 logistic, C=0.3"
+    },
+    {
+      "name": "ORTHODOX_CORE_STRENGTH_L2",
+      "features": "ORTHODOX_CORE + exact dynamic Ten-God × natal strength bucket interactions",
+      "model": "L2 logistic, C=0.3"
+    },
+    {
+      "name": "ORTHODOX_CORE_ELASTICNET_AUTO",
+      "features": "Same shared orthodox-core feature universe including strength interactions",
+      "model": "ElasticNet logistic with inner subject-CV hyperparameter selection",
+      "hyperparameters": {
+        "C": [
+          0.03,
+          0.1,
+          0.3,
+          1.0
+        ],
+        "l1_ratio": [
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ]
+      }
+    }
+  ],
+  "diagnostic_models": {
+    "NUISANCE_ONLY": "Signed chronology/age information interacted with axis and collection wave; no astrology.",
+    "NUISANCE_PLUS_ASTRO": "NUISANCE_ONLY plus candidate astrology features; diagnostic only, never production architecture."
+  },
+  "validation": {
+    "outer_repeats": 5,
+    "outer_folds": 5,
+    "inner_folds_for_elasticnet": 3,
+    "subject_disjoint": true,
+    "fold_balance_dimensions": [
+      "pair_count",
+      "axis",
+      "collection_wave",
+      "positive_earlier"
+    ],
+    "primary_metric": "subject_macro_pairwise_accuracy",
+    "subject_weighting": "equal total weight per subject",
+    "bootstrap_unit": "subject",
+    "bootstrap_iterations": 10000
+  },
+  "promotion_gates": {
+    "astro_only_subject_macro_min": 0.55,
+    "astro_only_repeat_p10_min": 0.48,
+    "conditional_delta_NplusAstro_minus_Nuisance_min": 0.01,
+    "bootstrap_probability_conditional_delta_gt_0_min": 0.8,
+    "broad_astro_only_subject_macro_min": 0.52,
+    "broad_conditional_delta_min": 0.0,
+    "supported_wave_floor": 0.45,
+    "supported_wave_min_subjects": 10
+  },
+  "winner_rule": "Among architectures passing all gates on PRIMARY with required BROAD/wave sensitivity, choose highest PRIMARY astrology-only subject-macro accuracy; break ties by larger conditional N+Astro vs nuisance delta, then simpler architecture order.",
+  "if_winner": "Freeze architecture and full-PRIMARY astrology-only model coefficients. Next phase may benchmark Production Control without retuning the astrology architecture.",
+  "if_no_winner": "Do not open CONFIRM. Diagnose feature representation/mechanism using DEV only; do not return to automatic whole-wave expansion."
+}

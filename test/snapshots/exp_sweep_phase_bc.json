@@ -1,0 +1,890 @@
+{
+  "measured_at": "2026-08-12T01:51:54",
+  "phase": "6B2_6C2_month_day_sep",
+  "seed": 11,
+  "sewoon_arm": "B7_dae_first",
+  "label_file": "month_day_labels.json",
+  "coverage": {
+    "month": {
+      "need_day": false,
+      "n_subjects": 14,
+      "evalable": 14,
+      "rows": [
+        {
+          "name": "Donald Trump",
+          "good": 9,
+          "bad": 9,
+          "evalable": true
+        },
+        {
+          "name": "Barack Obama",
+          "good": 9,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Michael Jackson",
+          "good": 9,
+          "bad": 7,
+          "evalable": true
+        },
+        {
+          "name": "Justin Bieber",
+          "good": 6,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Chris Brown",
+          "good": 4,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Hillary Clinton",
+          "good": 7,
+          "bad": 5,
+          "evalable": true
+        },
+        {
+          "name": "Kamala Harris",
+          "good": 7,
+          "bad": 2,
+          "evalable": true
+        },
+        {
+          "name": "Al Gore",
+          "good": 8,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Monica Lewinsky",
+          "good": 2,
+          "bad": 2,
+          "evalable": true
+        },
+        {
+          "name": "Madonna",
+          "good": 9,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Dennis Rodman",
+          "good": 7,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Björk",
+          "good": 7,
+          "bad": 3,
+          "evalable": true
+        },
+        {
+          "name": "윤석열",
+          "good": 5,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Lionel Messi",
+          "good": 12,
+          "bad": 6,
+          "evalable": true
+        }
+      ]
+    },
+    "day": {
+      "need_day": true,
+      "n_subjects": 14,
+      "evalable": 14,
+      "rows": [
+        {
+          "name": "Donald Trump",
+          "good": 9,
+          "bad": 9,
+          "evalable": true
+        },
+        {
+          "name": "Barack Obama",
+          "good": 9,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Michael Jackson",
+          "good": 9,
+          "bad": 7,
+          "evalable": true
+        },
+        {
+          "name": "Justin Bieber",
+          "good": 6,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Chris Brown",
+          "good": 4,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Hillary Clinton",
+          "good": 7,
+          "bad": 5,
+          "evalable": true
+        },
+        {
+          "name": "Kamala Harris",
+          "good": 7,
+          "bad": 2,
+          "evalable": true
+        },
+        {
+          "name": "Al Gore",
+          "good": 8,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Monica Lewinsky",
+          "good": 2,
+          "bad": 2,
+          "evalable": true
+        },
+        {
+          "name": "Madonna",
+          "good": 9,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Dennis Rodman",
+          "good": 7,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Björk",
+          "good": 7,
+          "bad": 3,
+          "evalable": true
+        },
+        {
+          "name": "윤석열",
+          "good": 5,
+          "bad": 4,
+          "evalable": true
+        },
+        {
+          "name": "Lionel Messi",
+          "good": 12,
+          "bad": 6,
+          "evalable": true
+        }
+      ]
+    }
+  },
+  "month": {
+    "n_trials": 120,
+    "n_gated": 22,
+    "baseline": {
+      "gated": false,
+      "spearman": 0.953,
+      "sigma": 12.665,
+      "train": {
+        "n": 9,
+        "evalable": 9,
+        "pass": 6,
+        "fail": 3,
+        "rate": 66.66666666666667,
+        "avg_sep": 2.3670349904926473,
+        "hard_fail": 2,
+        "near_miss": 1
+      },
+      "holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.4560001753623535,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "all": {
+        "n": 14,
+        "evalable": 14,
+        "pass": 11,
+        "fail": 3,
+        "rate": 78.57142857142857,
+        "avg_sep": 4.184522556517543,
+        "hard_fail": 2,
+        "near_miss": 1
+      },
+      "config": {
+        "parent_w": 0.72,
+        "child_w": 0.28,
+        "neutral_child_w": 0.48,
+        "child_amp": 2.34,
+        "min_parent_w": 0.55
+      },
+      "n_persons": 14,
+      "trial": 0,
+      "tag": "baseline_locked"
+    },
+    "recommend": {
+      "gated": true,
+      "spearman": 0.9925,
+      "sigma": 11.28,
+      "train": {
+        "n": 9,
+        "evalable": 9,
+        "pass": 7,
+        "fail": 2,
+        "rate": 77.77777777777777,
+        "avg_sep": 2.7201118047772064,
+        "hard_fail": 2,
+        "near_miss": 0
+      },
+      "holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.588947025320797,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "all": {
+        "n": 14,
+        "evalable": 14,
+        "pass": 12,
+        "fail": 2,
+        "rate": 85.71428571428571,
+        "avg_sep": 4.458981526399918,
+        "hard_fail": 2,
+        "near_miss": 0
+      },
+      "config": {
+        "parent_w": 0.7148610216327141,
+        "child_w": 0.28513897836728586,
+        "neutral_child_w": 0.49404351499864935,
+        "child_amp": 1.7094852443607127,
+        "min_parent_w": 0.55
+      },
+      "n_persons": 14,
+      "trial": 113,
+      "tag": "random"
+    },
+    "top5": [
+      {
+        "gated": true,
+        "spearman": 0.9925,
+        "sigma": 11.28,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 2.7201118047772064,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 5,
+          "fail": 0,
+          "rate": 100.0,
+          "avg_sep": 7.588947025320797,
+          "hard_fail": 0,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 12,
+          "fail": 2,
+          "rate": 85.71428571428571,
+          "avg_sep": 4.458981526399918,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "config": {
+          "parent_w": 0.7148610216327141,
+          "child_w": 0.28513897836728586,
+          "neutral_child_w": 0.49404351499864935,
+          "child_amp": 1.7094852443607127,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 113,
+        "tag": "random"
+      },
+      {
+        "gated": true,
+        "spearman": 1.0,
+        "sigma": 9.767,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 2.8690064383082827,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 5,
+          "fail": 0,
+          "rate": 100.0,
+          "avg_sep": 7.269428089999009,
+          "hard_fail": 0,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 12,
+          "fail": 2,
+          "rate": 85.71428571428571,
+          "avg_sep": 4.4405855996264,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "config": {
+          "parent_w": 0.7336009268373739,
+          "child_w": 0.2663990731626261,
+          "neutral_child_w": 0.48844552204177544,
+          "child_amp": 1.2560958255713401,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 116,
+        "tag": "random"
+      },
+      {
+        "gated": true,
+        "spearman": 1.0,
+        "sigma": 9.756,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 2.8196982891210363,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 5,
+          "fail": 0,
+          "rate": 100.0,
+          "avg_sep": 7.324480794010235,
+          "hard_fail": 0,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 12,
+          "fail": 2,
+          "rate": 85.71428571428571,
+          "avg_sep": 4.428549183724321,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "config": {
+          "parent_w": 0.723074254083569,
+          "child_w": 0.27692574591643104,
+          "neutral_child_w": 0.4898503635961956,
+          "child_amp": 1.2994703475754659,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 33,
+        "tag": "random"
+      },
+      {
+        "gated": true,
+        "spearman": 1.0,
+        "sigma": 9.559,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 2.8503286415414095,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 5,
+          "fail": 0,
+          "rate": 100.0,
+          "avg_sep": 7.230828930213408,
+          "hard_fail": 0,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 12,
+          "fail": 2,
+          "rate": 85.71428571428571,
+          "avg_sep": 4.414793030352838,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "config": {
+          "parent_w": 0.7285726977824057,
+          "child_w": 0.27142730221759426,
+          "neutral_child_w": 0.4814266972579381,
+          "child_amp": 1.257519342455702,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 10,
+        "tag": "random"
+      },
+      {
+        "gated": true,
+        "spearman": 1.0,
+        "sigma": 9.371,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 2.8438776926728866,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 5,
+          "fail": 0,
+          "rate": 100.0,
+          "avg_sep": 7.1281098225790505,
+          "hard_fail": 0,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 12,
+          "fail": 2,
+          "rate": 85.71428571428571,
+          "avg_sep": 4.373960596210802,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "config": {
+          "parent_w": 0.7296643703130312,
+          "child_w": 0.2703356296869688,
+          "neutral_child_w": 0.4556724632335021,
+          "child_amp": 1.2878604785018568,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 47,
+        "tag": "random"
+      }
+    ],
+    "gates": {
+      "spearman_min": 0.9,
+      "parent_min": 0.55,
+      "parent_max": 0.75,
+      "train_min": 70.0,
+      "holdout_min": 60.0
+    }
+  },
+  "day": {
+    "n_trials": 100,
+    "n_gated": 4,
+    "baseline": {
+      "gated": true,
+      "spearman": 0.8102,
+      "sigma": 14.103,
+      "train": {
+        "n": 9,
+        "evalable": 9,
+        "pass": 7,
+        "fail": 2,
+        "rate": 77.77777777777777,
+        "avg_sep": 1.6687024673045612,
+        "hard_fail": 2,
+        "near_miss": 0
+      },
+      "holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 3,
+        "fail": 2,
+        "rate": 60.0,
+        "avg_sep": 7.360922882499604,
+        "hard_fail": 1,
+        "near_miss": 1
+      },
+      "all": {
+        "n": 14,
+        "evalable": 14,
+        "pass": 10,
+        "fail": 4,
+        "rate": 71.42857142857143,
+        "avg_sep": 3.701638329874219,
+        "hard_fail": 3,
+        "near_miss": 1
+      },
+      "config": {
+        "parent_w": 0.56,
+        "child_w": 0.44,
+        "neutral_child_w": 0.46,
+        "child_amp": 2.42,
+        "min_parent_w": 0.55
+      },
+      "n_persons": 14,
+      "trial": 0,
+      "tag": "baseline_locked"
+    },
+    "recommend": {
+      "gated": true,
+      "spearman": 0.8012,
+      "sigma": 13.123,
+      "train": {
+        "n": 9,
+        "evalable": 9,
+        "pass": 7,
+        "fail": 2,
+        "rate": 77.77777777777777,
+        "avg_sep": 1.6880975083321053,
+        "hard_fail": 2,
+        "near_miss": 0
+      },
+      "holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 4,
+        "fail": 1,
+        "rate": 80.0,
+        "avg_sep": 7.794017799278724,
+        "hard_fail": 1,
+        "near_miss": 0
+      },
+      "all": {
+        "n": 14,
+        "evalable": 14,
+        "pass": 11,
+        "fail": 3,
+        "rate": 78.57142857142857,
+        "avg_sep": 3.868783326527326,
+        "hard_fail": 3,
+        "near_miss": 0
+      },
+      "config": {
+        "parent_w": 0.5794379074965363,
+        "child_w": 0.42056209250346366,
+        "neutral_child_w": 0.45512376404571736,
+        "child_amp": 1.9090709096026228,
+        "min_parent_w": 0.55
+      },
+      "n_persons": 14,
+      "trial": 38,
+      "tag": "random"
+    },
+    "top5": [
+      {
+        "gated": true,
+        "spearman": 0.8012,
+        "sigma": 13.123,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 1.6880975083321053,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 4,
+          "fail": 1,
+          "rate": 80.0,
+          "avg_sep": 7.794017799278724,
+          "hard_fail": 1,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 11,
+          "fail": 3,
+          "rate": 78.57142857142857,
+          "avg_sep": 3.868783326527326,
+          "hard_fail": 3,
+          "near_miss": 0
+        },
+        "config": {
+          "parent_w": 0.5794379074965363,
+          "child_w": 0.42056209250346366,
+          "neutral_child_w": 0.45512376404571736,
+          "child_amp": 1.9090709096026228,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 38,
+        "tag": "random"
+      },
+      {
+        "gated": true,
+        "spearman": 0.8137,
+        "sigma": 13.786,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 1.7706146768640976,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 4,
+          "fail": 1,
+          "rate": 80.0,
+          "avg_sep": 7.451905979093757,
+          "hard_fail": 1,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 11,
+          "fail": 3,
+          "rate": 78.57142857142857,
+          "avg_sep": 3.7996472848032616,
+          "hard_fail": 3,
+          "near_miss": 0
+        },
+        "config": {
+          "parent_w": 0.5690809277623196,
+          "child_w": 0.43091907223768044,
+          "neutral_child_w": 0.48420099742987366,
+          "child_amp": 2.189553522116044,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 28,
+        "tag": "random"
+      },
+      {
+        "gated": true,
+        "spearman": 0.8077,
+        "sigma": 12.569,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 1.503391162938862,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 4,
+          "fail": 1,
+          "rate": 80.0,
+          "avg_sep": 7.890730689174042,
+          "hard_fail": 0,
+          "near_miss": 1
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 11,
+          "fail": 3,
+          "rate": 78.57142857142857,
+          "avg_sep": 3.7845838508799976,
+          "hard_fail": 2,
+          "near_miss": 1
+        },
+        "config": {
+          "parent_w": 0.5610915173655456,
+          "child_w": 0.43890848263445437,
+          "neutral_child_w": 0.49118900822511946,
+          "child_amp": 1.6961632931387156,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 65,
+        "tag": "random"
+      },
+      {
+        "gated": true,
+        "spearman": 0.8102,
+        "sigma": 14.103,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 1.6687024673045612,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 7.360922882499604,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 10,
+          "fail": 4,
+          "rate": 71.42857142857143,
+          "avg_sep": 3.701638329874219,
+          "hard_fail": 3,
+          "near_miss": 1
+        },
+        "config": {
+          "parent_w": 0.56,
+          "child_w": 0.44,
+          "neutral_child_w": 0.46,
+          "child_amp": 2.42,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 0,
+        "tag": "baseline_locked"
+      },
+      {
+        "gated": false,
+        "spearman": 0.6518,
+        "sigma": 12.324,
+        "train": {
+          "n": 9,
+          "evalable": 9,
+          "pass": 7,
+          "fail": 2,
+          "rate": 77.77777777777777,
+          "avg_sep": 2.114477859837047,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 5,
+          "fail": 0,
+          "rate": 100.0,
+          "avg_sep": 7.582261583445792,
+          "hard_fail": 0,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 14,
+          "pass": 12,
+          "fail": 2,
+          "rate": 85.71428571428571,
+          "avg_sep": 4.067257761125885,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "config": {
+          "parent_w": 0.7081943197242087,
+          "child_w": 0.29180568027579135,
+          "neutral_child_w": 0.39379851273908745,
+          "child_amp": 1.1586393575227087,
+          "min_parent_w": 0.55
+        },
+        "n_persons": 14,
+        "trial": 81,
+        "tag": "random"
+      }
+    ],
+    "month_cfg_used": {
+      "parent_w": 0.7148610216327141,
+      "child_w": 0.28513897836728586,
+      "neutral_child_w": 0.49404351499864935,
+      "child_amp": 1.7094852443607127,
+      "min_parent_w": 0.55
+    },
+    "gates": {
+      "spearman_min": 0.8,
+      "parent_min": 0.55,
+      "parent_max": 0.72,
+      "train_min": 60.0,
+      "holdout_min": 50.0
+    }
+  },
+  "corpus": {
+    "month_persons": 14,
+    "day_persons": 14,
+    "month_names": [
+      "Donald Trump",
+      "Barack Obama",
+      "Michael Jackson",
+      "Justin Bieber",
+      "Chris Brown",
+      "Hillary Clinton",
+      "Kamala Harris",
+      "Al Gore",
+      "Monica Lewinsky",
+      "Madonna",
+      "Dennis Rodman",
+      "Björk",
+      "윤석열",
+      "Lionel Messi"
+    ],
+    "day_names": [
+      "Donald Trump",
+      "Barack Obama",
+      "Michael Jackson",
+      "Justin Bieber",
+      "Chris Brown",
+      "Hillary Clinton",
+      "Kamala Harris",
+      "Al Gore",
+      "Monica Lewinsky",
+      "Madonna",
+      "Dennis Rodman",
+      "Björk",
+      "윤석열",
+      "Lionel Messi"
+    ]
+  }
+}

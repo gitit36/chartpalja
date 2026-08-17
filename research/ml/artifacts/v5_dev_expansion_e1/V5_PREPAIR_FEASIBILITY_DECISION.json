@@ -1,0 +1,24 @@
+{
+  "version": "V5_PREPAIR_FEASIBILITY_DECISION_V1",
+  "created_at": "2026-08-17T05:03:52",
+  "status": "V5_PREPAIR_FEASIBILITY_FAIL_EXPANSION_REQUIRED",
+  "both_polarity_upper_bound_total": 71,
+  "both_polarity_upper_bound_by_axis": {
+    "COMPETITIVE": 31,
+    "PROJECT": 12,
+    "STATUS": 28
+  },
+  "frozen_min_pairable_total": 80,
+  "frozen_min_pairable_by_axis": {
+    "COMPETITIVE": 20,
+    "PROJECT": 20,
+    "STATUS": 25
+  },
+  "pair_gap_inspected": false,
+  "pairs_generated": false,
+  "astrology_generated": false,
+  "control_scored": false,
+  "confirm_researched": false,
+  "feasibility_summary_sha256": "8044deea238a1dfcc1c49a005d96b3af63a7ee6227554322360e44f16d6dde49",
+  "next_rule": "Freeze and collect a whole new DEV expansion wave under V5_DEV_EXPANSION_WAVE_E1_PROTOCOL."
+}

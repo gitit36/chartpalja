@@ -1,0 +1,9 @@
+{
+  "url": "https://www.atptour.com/en/scores/results-archive?tournamentType=1000&year=2000",
+  "ok": false,
+  "status_code": 403,
+  "final_url": "https://www.atptour.com/en/scores/results-archive?tournamentType=1000&year=2000",
+  "content_type": "text/html; charset=UTF-8",
+  "title": "",
+  "error": "HTTP_403"
+}

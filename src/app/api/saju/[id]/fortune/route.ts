@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
-import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
+import { getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
 import { buildFortunePrompt, scrubBreakdownKeyLeakageDeep } from '@/lib/ai/fortune-prompt'
 import type { ChartSummary } from '@/lib/ai/fortune-prompt'
@@ -10,6 +10,8 @@ import type { ChartPayload } from '@/types/chart'
 import { buildLifeChartData, extractTransitionYears, extract3YearContext, extractLifetimeSummary } from '@/lib/saju/life-chart-data'
 import type { ChartDatum } from '@/lib/saju/life-chart-data'
 import { callGemini } from '@/lib/ai/gemini'
+import { generationLockKey, withGenerationLock } from '@/lib/ai/generation-lock'
+import { persistFortuneJsonAndConsume } from '@/lib/ai/persist-reading'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -181,44 +183,67 @@ export async function GET(
       }
     }
 
-    // Phase 2: load report only when generating
-    const reportRow = await prisma.sajuEntry.findUnique({
-      where: { id },
-      select: { sajuReportJson: true },
+    const lockKey = generationLockKey([
+      'fortune',
+      id,
+      regenerate ? 'regen' : 'gen',
+      shouldConsumeCredit ? 'pay' : 'free',
+    ])
+
+    const items = await withGenerationLock(lockKey, async () => {
+      if (!regenerate) {
+        const fresh = await prisma.sajuEntry.findUnique({
+          where: { id },
+          select: { fortuneJson: true },
+        })
+        if (fresh?.fortuneJson && isValidFortuneFormat(fresh.fortuneJson)) {
+          const cached = fresh.fortuneJson as { items: unknown[] }
+          return scrubBreakdownKeyLeakageDeep(cached.items ?? cached) as unknown[]
+        }
+      }
+
+      const reportRow = await prisma.sajuEntry.findUnique({
+        where: { id },
+        select: { sajuReportJson: true, fortuneJson: true },
+      })
+      const report = reportRow?.sajuReportJson as SajuReportJson | null
+      if (!report) throw new Error('No saju data')
+
+      const birthYear = meta.birthDate ? parseInt(meta.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
+      const chartSummary = buildChartSummary(report, birthYear)
+      const chartPayloadForPrompt = report.chartData as ChartPayload | undefined
+      const lifeChart = buildLifeChartData(chartPayloadForPrompt, report, birthYear)
+      const chartData = lifeChart?.data as ChartDatum[] | undefined
+      const prompt = buildFortunePrompt(report, { birthYear, chartData, job: meta.job }, chartSummary)
+      const raw = await callGemini(prompt, { feature: 'fortune', meta: { entryId: id } })
+      const nextItems = scrubBreakdownKeyLeakageDeep(parseJsonResponse(raw)) as unknown[]
+
+      const existingFortune = (reportRow?.fortuneJson && typeof reportRow.fortuneJson === 'object')
+        ? reportRow.fortuneJson as Record<string, unknown>
+        : {}
+
+      await persistFortuneJsonAndConsume({
+        entryId: id,
+        fortuneJson: { ...existingFortune, items: nextItems } as object,
+        userId: user.id,
+        cost: shouldConsumeCredit ? READING_COST.fortune : 0,
+        reason: 'use:fortune',
+      })
+      return nextItems
     })
-    const report = reportRow?.sajuReportJson as SajuReportJson | null
-    if (!report) {
-      return NextResponse.json({ error: 'No saju data' }, { status: 400 })
-    }
-
-    const birthYear = meta.birthDate ? parseInt(meta.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
-    const chartSummary = buildChartSummary(report, birthYear)
-    const chartPayloadForPrompt = report.chartData as ChartPayload | undefined
-    const lifeChart = buildLifeChartData(chartPayloadForPrompt, report, birthYear)
-    const chartData = lifeChart?.data as ChartDatum[] | undefined
-    const prompt = buildFortunePrompt(report, { birthYear, chartData, job: meta.job }, chartSummary)
-    const raw = await callGemini(prompt, { feature: 'fortune', meta: { entryId: id } })
-    const items = scrubBreakdownKeyLeakageDeep(parseJsonResponse(raw)) as unknown[]
-
-    const existingFortune = (meta.fortuneJson && typeof meta.fortuneJson === 'object')
-      ? meta.fortuneJson as Record<string, unknown>
-      : {}
-
-    await prisma.sajuEntry.update({
-      where: { id },
-      data: { fortuneJson: { ...existingFortune, items } as object },
-    })
-
-    if (shouldConsumeCredit) {
-      await consumeUnits(user.id, READING_COST.fortune, 'use:fortune')
-    }
 
     return NextResponse.json({ items })
   } catch (error) {
     console.error('Fortune API error:', error)
     const raw = error instanceof Error ? error.message : 'Failed'
+    if (raw.includes('insufficient_ju')) {
+      return NextResponse.json({ error: '이용권이 부족합니다.', needed: READING_COST.fortune }, { status: 402 })
+    }
+    if (raw === 'No saju data') {
+      return NextResponse.json({ error: 'No saju data' }, { status: 400 })
+    }
     const isApiKeyError = raw.includes('GEMINI_API_KEY')
-    const msg = isApiKeyError ? raw : '해설을 불러오는 중 문제가 발생했습니다.'
+    const msg = isApiKeyError ? raw : '해설을 불러오는 중 문제가 발생했습니다. 잠시 후 다시 열어보면 이미 생성됐을 수 있어요.'
     return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

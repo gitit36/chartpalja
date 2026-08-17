@@ -1,0 +1,475 @@
+{
+  "measured_at": "2026-08-11T23:46:11",
+  "n": 58,
+  "domain_calib": {
+    "직업": [
+      8.09,
+      1.59
+    ],
+    "재물": [
+      4.34,
+      2.07
+    ],
+    "건강": [
+      -2.47,
+      3.68
+    ],
+    "연애": [
+      6.74,
+      1.33
+    ],
+    "결혼": [
+      4.64,
+      1.64
+    ]
+  },
+  "separation": {
+    "all": {
+      "pass": 25,
+      "fail": 25,
+      "na": 8,
+      "rate": 50.0,
+      "n": 58
+    },
+    "strict": {
+      "pass": 9,
+      "fail": 11,
+      "na": 2,
+      "rate": 45.0,
+      "n": 22
+    },
+    "core": {
+      "pass": 7,
+      "fail": 9,
+      "na": 0,
+      "rate": 43.75,
+      "n": 16
+    }
+  },
+  "domain_dist": {
+    "직업": {
+      "mu": 5.502,
+      "sd": 1.555
+    },
+    "재물": {
+      "mu": 4.891,
+      "sd": 1.671
+    },
+    "건강": {
+      "mu": 4.84,
+      "sd": 1.543
+    },
+    "연애": {
+      "mu": 5.138,
+      "sd": 1.598
+    },
+    "결혼": {
+      "mu": 5.09,
+      "sd": 1.619
+    }
+  },
+  "focus": [
+    {
+      "name": "Donald Trump",
+      "sep": -0.8971518987341724,
+      "status": "fail",
+      "severity": "near_miss",
+      "good_avg": 62.875,
+      "bad_avg": 63.77215189873417,
+      "domains": {
+        "직업": 2.8,
+        "재물": 4.6,
+        "건강": 5.3,
+        "연애": 3.1,
+        "결혼": 3.5
+      },
+      "용신": "水",
+      "신강신약": "극왕",
+      "격국": "건록격",
+      "tier": "core",
+      "strict": true
+    },
+    {
+      "name": "Justin Bieber",
+      "sep": 1.9620493358633766,
+      "status": "pass",
+      "severity": null,
+      "good_avg": 64.90322580645162,
+      "bad_avg": 62.94117647058824,
+      "domains": {
+        "직업": 4.2,
+        "재물": 3.8,
+        "건강": 2.6,
+        "연애": 4.4,
+        "결혼": 6.3
+      },
+      "용신": "水",
+      "신강신약": "신강",
+      "격국": "편인격",
+      "tier": "core",
+      "strict": true
+    },
+    {
+      "name": "윤석열",
+      "sep": -2.118136872235212,
+      "status": "fail",
+      "severity": "hard_fail",
+      "good_avg": 66.60317460317462,
+      "bad_avg": 68.72131147540983,
+      "domains": {
+        "직업": 3.5,
+        "재물": 7.4,
+        "건강": 7.1,
+        "연애": 6.8,
+        "결혼": 5.9
+      },
+      "용신": "土",
+      "신강신약": "신약",
+      "격국": "상관격",
+      "tier": "core",
+      "strict": true
+    },
+    {
+      "name": "박정희",
+      "sep": -1.0347490347490336,
+      "status": "fail",
+      "severity": "near_miss",
+      "good_avg": 50.857142857142854,
+      "bad_avg": 51.89189189189189,
+      "domains": {
+        "직업": 7.4,
+        "재물": 2.2,
+        "건강": 5.5,
+        "연애": 4.6,
+        "결혼": 3.6
+      },
+      "용신": "土",
+      "신강신약": "신강",
+      "격국": "식신격",
+      "tier": "candidate",
+      "strict": false
+    },
+    {
+      "name": "문재인",
+      "sep": 2.7119675456389416,
+      "status": "pass",
+      "severity": null,
+      "good_avg": 71.47058823529412,
+      "bad_avg": 68.75862068965517,
+      "domains": {
+        "직업": 3.4,
+        "재물": 4.2,
+        "건강": 6.6,
+        "연애": 4.2,
+        "결혼": 3.2
+      },
+      "용신": "火",
+      "신강신약": "중화신강",
+      "격국": "편인격",
+      "tier": "candidate",
+      "strict": false
+    },
+    {
+      "name": "이건희",
+      "sep": 7.414932680538541,
+      "status": "pass",
+      "severity": null,
+      "good_avg": 66.04651162790697,
+      "bad_avg": 58.631578947368425,
+      "domains": {
+        "직업": 5.5,
+        "재물": 8.3,
+        "건강": 3.7,
+        "연애": 5.0,
+        "결혼": 6.9
+      },
+      "용신": "火",
+      "신강신약": "태약",
+      "격국": "종재격",
+      "tier": "candidate",
+      "strict": false
+    },
+    {
+      "name": "김연아",
+      "sep": 2.493650793650801,
+      "status": "pass",
+      "severity": null,
+      "good_avg": 66.27142857142857,
+      "bad_avg": 63.77777777777777,
+      "domains": {
+        "직업": 7.5,
+        "재물": 7.0,
+        "건강": 5.8,
+        "연애": 7.4,
+        "결혼": 6.3
+      },
+      "용신": "火",
+      "신강신약": "중화신약",
+      "격국": "정인격",
+      "tier": "candidate",
+      "strict": false
+    },
+    {
+      "name": "손흥민",
+      "sep": 3.9294117647058755,
+      "status": "pass",
+      "severity": null,
+      "good_avg": 49.10588235294117,
+      "bad_avg": 45.1764705882353,
+      "domains": {
+        "직업": 9.1,
+        "재물": 5.4,
+        "건강": 4.9,
+        "연애": 8.8,
+        "결혼": 7.1
+      },
+      "용신": "水",
+      "신강신약": "태약",
+      "격국": "식신격",
+      "tier": "candidate",
+      "strict": false
+    },
+    {
+      "name": "노무현",
+      "sep": 2.269323671497588,
+      "status": "pass",
+      "severity": null,
+      "good_avg": 73.1304347826087,
+      "bad_avg": 70.86111111111111,
+      "domains": {
+        "직업": 5.9,
+        "재물": 4.3,
+        "건강": 3.4,
+        "연애": 4.0,
+        "결혼": 4.6
+      },
+      "용신": "水",
+      "신강신약": "태강",
+      "격국": "식신격",
+      "tier": "candidate",
+      "strict": false
+    },
+    {
+      "name": "Lionel Messi",
+      "sep": -0.7066436583261293,
+      "status": "fail",
+      "severity": "near_miss",
+      "good_avg": 72.47368421052632,
+      "bad_avg": 73.18032786885244,
+      "domains": {
+        "직업": 5.5,
+        "재물": 3.6,
+        "건강": 2.4,
+        "연애": 7.2,
+        "결혼": 6.3
+      },
+      "용신": "水",
+      "신강신약": "중화신약",
+      "격국": "상관격",
+      "tier": "core",
+      "strict": true
+    }
+  ],
+  "fails": [
+    {
+      "name": "Sean Penn",
+      "sep": -10.587662337662344,
+      "severity": "hard_fail",
+      "tier": "core",
+      "good_avg": 47.840909090909086,
+      "bad_avg": 58.42857142857143
+    },
+    {
+      "name": "오세훈",
+      "sep": -8.681047765793522,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 65.86440677966101,
+      "bad_avg": 74.54545454545453
+    },
+    {
+      "name": "서태지",
+      "sep": -8.166666666666686,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 68.33333333333333,
+      "bad_avg": 76.50000000000001
+    },
+    {
+      "name": "노태우",
+      "sep": -7.862068965517238,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 65.00000000000001,
+      "bad_avg": 72.86206896551725
+    },
+    {
+      "name": "전두환",
+      "sep": -6.666023166023166,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 57.42857142857143,
+      "bad_avg": 64.0945945945946
+    },
+    {
+      "name": "Diana Ross",
+      "sep": -5.664043583535104,
+      "severity": "hard_fail",
+      "tier": "strict_candidate",
+      "good_avg": 61.728813559322035,
+      "bad_avg": 67.39285714285714
+    },
+    {
+      "name": "Michael Jackson",
+      "sep": -5.399159663865547,
+      "severity": "hard_fail",
+      "tier": "core",
+      "good_avg": 58.529411764705884,
+      "bad_avg": 63.92857142857143
+    },
+    {
+      "name": "John Ritter",
+      "sep": -4.678571428571431,
+      "severity": "hard_fail",
+      "tier": "core",
+      "good_avg": 59.75,
+      "bad_avg": 64.42857142857143
+    },
+    {
+      "name": "강호동",
+      "sep": -4.651045421773588,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 68.50684931506851,
+      "bad_avg": 73.1578947368421
+    },
+    {
+      "name": "권지용",
+      "sep": -4.246318607764394,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 51.97590361445783,
+      "bad_avg": 56.22222222222222
+    },
+    {
+      "name": "이재용",
+      "sep": -4.019677996422182,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 51.53846153846154,
+      "bad_avg": 55.55813953488372
+    },
+    {
+      "name": "김우중",
+      "sep": -3.4676440849342782,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 70.16279069767442,
+      "bad_avg": 73.6304347826087
+    },
+    {
+      "name": "Al Gore",
+      "sep": -3.413525498891353,
+      "severity": "hard_fail",
+      "tier": "core",
+      "good_avg": 60.768292682926834,
+      "bad_avg": 64.18181818181819
+    },
+    {
+      "name": "Elizabeth Taylor",
+      "sep": -3.2743295019157017,
+      "severity": "hard_fail",
+      "tier": "strict_candidate",
+      "good_avg": 66.10344827586208,
+      "bad_avg": 69.37777777777778
+    },
+    {
+      "name": "Hillary Clinton",
+      "sep": -3.2123490544543216,
+      "severity": "hard_fail",
+      "tier": "core",
+      "good_avg": 67.8051948051948,
+      "bad_avg": 71.01754385964912
+    },
+    {
+      "name": "홍준표",
+      "sep": -3.1113636363636203,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 67.76363636363637,
+      "bad_avg": 70.87499999999999
+    },
+    {
+      "name": "남진",
+      "sep": -2.434782608695656,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 48.56521739130435,
+      "bad_avg": 51.00000000000001
+    },
+    {
+      "name": "Chris Brown",
+      "sep": -2.2923976608187147,
+      "severity": "hard_fail",
+      "tier": "core",
+      "good_avg": 56.44444444444444,
+      "bad_avg": 58.73684210526316
+    },
+    {
+      "name": "박근혜",
+      "sep": -2.1842105263157876,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 57.0,
+      "bad_avg": 59.18421052631579
+    },
+    {
+      "name": "윤석열",
+      "sep": -2.118136872235212,
+      "severity": "hard_fail",
+      "tier": "core",
+      "good_avg": 66.60317460317462,
+      "bad_avg": 68.72131147540983
+    },
+    {
+      "name": "정몽헌",
+      "sep": -2.0,
+      "severity": "hard_fail",
+      "tier": "candidate",
+      "good_avg": 45.00000000000001,
+      "bad_avg": 47.00000000000001
+    },
+    {
+      "name": "김부겸",
+      "sep": -1.980861244019131,
+      "severity": "near_miss",
+      "tier": "candidate",
+      "good_avg": 62.47368421052632,
+      "bad_avg": 64.45454545454545
+    },
+    {
+      "name": "박정희",
+      "sep": -1.0347490347490336,
+      "severity": "near_miss",
+      "tier": "candidate",
+      "good_avg": 50.857142857142854,
+      "bad_avg": 51.89189189189189
+    },
+    {
+      "name": "Donald Trump",
+      "sep": -0.8971518987341724,
+      "severity": "near_miss",
+      "tier": "core",
+      "good_avg": 62.875,
+      "bad_avg": 63.77215189873417
+    },
+    {
+      "name": "Lionel Messi",
+      "sep": -0.7066436583261293,
+      "severity": "near_miss",
+      "tier": "core",
+      "good_avg": 72.47368421052632,
+      "bad_avg": 73.18032786885244
+    }
+  ]
+}

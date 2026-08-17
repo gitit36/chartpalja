@@ -1,0 +1,52 @@
+{
+  "version": "V5_COMBINED_PREPAIR_FEASIBILITY_GATE_PROTOCOL_V1",
+  "created_for": "Original DEV 160 + E1 DEV expansion 160, before any 1-5y pair generation",
+  "frozen_min_pairable_total": 80,
+  "frozen_min_pairable_by_axis": {
+    "COMPETITIVE": 20,
+    "PROJECT": 20,
+    "STATUS": 25
+  },
+  "count_definition": "Necessary-condition upper bound: subject has at least one eligible positive and at least one eligible negative event on its frozen preassigned axis. No year-gap inspection is permitted at this gate.",
+  "hard_rules": {
+    "pair_gap_may_be_inspected": false,
+    "pairs_may_be_generated": false,
+    "chronology_may_be_balanced": false,
+    "astrology_may_be_generated": false,
+    "control_may_be_scored": false,
+    "confirm_may_be_researched": false,
+    "threshold_reduction_allowed": false,
+    "subject_replacement_allowed": false
+  },
+  "failure_action": {
+    "status": "V5_COMBINED_PREPAIR_FEASIBILITY_FAIL_EXPANSION_E2_REQUIRED",
+    "action": "Freeze one whole new outcome-blind DEV expansion wave E2 before pairing.",
+    "E2_axis_quotas": {
+      "COMPETITIVE": 40,
+      "PROJECT": 50,
+      "STATUS": 70
+    },
+    "E2_total": 160,
+    "why_whole_wave": "Preserve the predeclared expansion design. Do not oversample PROJECT after observing that PROJECT is the remaining deficient axis.",
+    "E2_selection_may_use": [
+      "role/category",
+      "identity",
+      "exact DOB availability",
+      "frozen birth-quality rule",
+      "birth year",
+      "gender guardrail"
+    ],
+    "E2_selection_may_not_use": [
+      "event outcome",
+      "event chronology",
+      "pairability",
+      "1-5y gap",
+      "astrology",
+      "Control score"
+    ]
+  },
+  "pass_action": {
+    "status": "V5_COMBINED_PREPAIR_FEASIBILITY_PASS_READY_FOR_LOCAL_PAIRING_NUISANCE_GATE",
+    "action": "Only then generate 1-5y local opposite-polarity pairs and run nuisance gates."
+  }
+}

@@ -1,0 +1,2180 @@
+{
+  "measured_at": "2026-08-12T01:45:07",
+  "phase": "6D_daewoon_then_6E_sewoon",
+  "seed": 11,
+  "control_dae_primary": {
+    "rate": 75.0,
+    "avg_sep": 1.4435685685685655,
+    "pass": 3,
+    "evalable": 4
+  },
+  "baseline": {
+    "gated": true,
+    "dae_ok": true,
+    "block_ok": true,
+    "sew_ok": true,
+    "dae_train": {
+      "n": 9,
+      "evalable": 3,
+      "pass": 3,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 9.895465337132,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_holdout": {
+      "n": 5,
+      "evalable": 1,
+      "pass": 1,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 3.1594594594594483,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_primary": {
+      "n": 14,
+      "evalable": 4,
+      "pass": 4,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 8.211463867713864,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_train": {
+      "n": 9,
+      "evalable": 8,
+      "pass": 8,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 6.84841115213557,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_holdout": {
+      "n": 5,
+      "evalable": 5,
+      "pass": 5,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 2.8759401432491543,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_primary": {
+      "n": 14,
+      "evalable": 13,
+      "pass": 13,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 5.320537687179257,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "within_block_sigma": 7.473,
+    "between_block_sigma": 1.907,
+    "config_dae": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 1.66,
+      "dae_open_weight": 0.7,
+      "dae_gen_amp": 1.0
+    },
+    "config_mat": {
+      "yfit_pos_scale": 0.86,
+      "rel_weight": 0.73,
+      "yfit_career_normal": 0.19,
+      "yfit_career_conflict": 0.08,
+      "discord_pen": -12.9,
+      "hollow_pen": -6.5,
+      "health_guan_pen": -8.0,
+      "base": 53.0
+    },
+    "config_sew": {
+      "daewoon_blend": 0.45,
+      "yindep_amp": 2.86
+    },
+    "dae_climate_mode": "year_resid",
+    "trial": 0,
+    "tag": "baseline",
+    "config": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 1.66,
+      "dae_open_weight": 0.7,
+      "dae_gen_amp": 1.0,
+      "yfit_pos_scale": 0.86,
+      "rel_weight": 0.73,
+      "yfit_career_normal": 0.19,
+      "yfit_career_conflict": 0.08,
+      "discord_pen": -12.9,
+      "hollow_pen": -6.5,
+      "health_guan_pen": -8.0,
+      "base": 53.0,
+      "daewoon_blend": 0.45,
+      "yindep_amp": 2.86,
+      "daewoon_parent": "climate"
+    }
+  },
+  "d1_best": {
+    "gated": true,
+    "dae_ok": true,
+    "block_ok": true,
+    "sew_ok": true,
+    "dae_train": {
+      "n": 9,
+      "evalable": 3,
+      "pass": 3,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 12.924121557454887,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_holdout": {
+      "n": 5,
+      "evalable": 1,
+      "pass": 1,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 0.44864864864864984,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_primary": {
+      "n": 14,
+      "evalable": 4,
+      "pass": 4,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 9.80525333025333,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_train": {
+      "n": 9,
+      "evalable": 8,
+      "pass": 8,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 7.397276827970807,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_holdout": {
+      "n": 5,
+      "evalable": 5,
+      "pass": 5,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 2.7772702721093694,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_primary": {
+      "n": 14,
+      "evalable": 13,
+      "pass": 13,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 5.620351229562562,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "within_block_sigma": 9.171,
+    "between_block_sigma": 4.115,
+    "config_dae": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192
+    },
+    "config_mat": {
+      "yfit_pos_scale": 0.86,
+      "rel_weight": 0.73,
+      "yfit_career_normal": 0.19,
+      "yfit_career_conflict": 0.08,
+      "discord_pen": -12.9,
+      "hollow_pen": -6.5,
+      "health_guan_pen": -8.0,
+      "base": 53.0
+    },
+    "config_sew": {
+      "daewoon_blend": 0.45,
+      "yindep_amp": 2.86
+    },
+    "dae_climate_mode": "year_resid",
+    "trial": 6,
+    "tag": "d1",
+    "config": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192,
+      "yfit_pos_scale": 0.86,
+      "rel_weight": 0.73,
+      "yfit_career_normal": 0.19,
+      "yfit_career_conflict": 0.08,
+      "discord_pen": -12.9,
+      "hollow_pen": -6.5,
+      "health_guan_pen": -8.0,
+      "base": 53.0,
+      "daewoon_blend": 0.45,
+      "yindep_amp": 2.86,
+      "daewoon_parent": "climate"
+    }
+  },
+  "d2_best": {
+    "gated": true,
+    "dae_ok": true,
+    "block_ok": true,
+    "sew_ok": true,
+    "dae_train": {
+      "n": 9,
+      "evalable": 3,
+      "pass": 3,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 15.346035137701804,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_holdout": {
+      "n": 5,
+      "evalable": 1,
+      "pass": 1,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 0.1675675675675663,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_primary": {
+      "n": 14,
+      "evalable": 4,
+      "pass": 4,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 11.551418245168243,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_train": {
+      "n": 9,
+      "evalable": 8,
+      "pass": 8,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 7.382466946324094,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_holdout": {
+      "n": 5,
+      "evalable": 5,
+      "pass": 5,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 3.2102010405440025,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_primary": {
+      "n": 14,
+      "evalable": 13,
+      "pass": 13,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 5.777749290254827,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "within_block_sigma": 9.117,
+    "between_block_sigma": 4.236,
+    "config_dae": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192
+    },
+    "config_mat": {
+      "yfit_pos_scale": 0.7747342212844648,
+      "rel_weight": 0.41706453756396,
+      "yfit_career_normal": 0.3036046146078234,
+      "yfit_career_conflict": 0.1965579333805984,
+      "discord_pen": -12.458891792683648,
+      "hollow_pen": -9.919717757893322,
+      "health_guan_pen": -13.459477625893832,
+      "base": 51.67836562508081
+    },
+    "config_sew": {
+      "daewoon_blend": 0.45,
+      "yindep_amp": 2.86
+    },
+    "dae_climate_mode": "year_resid",
+    "trial": 1,
+    "tag": "d2",
+    "config": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192,
+      "yfit_pos_scale": 0.7747342212844648,
+      "rel_weight": 0.41706453756396,
+      "yfit_career_normal": 0.3036046146078234,
+      "yfit_career_conflict": 0.1965579333805984,
+      "discord_pen": -12.458891792683648,
+      "hollow_pen": -9.919717757893322,
+      "health_guan_pen": -13.459477625893832,
+      "base": 51.67836562508081,
+      "daewoon_blend": 0.45,
+      "yindep_amp": 2.86,
+      "daewoon_parent": "climate"
+    }
+  },
+  "e_best": {
+    "gated": true,
+    "dae_ok": true,
+    "block_ok": true,
+    "sew_ok": true,
+    "dae_train": {
+      "n": 9,
+      "evalable": 3,
+      "pass": 3,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 15.346035137701804,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_holdout": {
+      "n": 5,
+      "evalable": 1,
+      "pass": 1,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 0.1675675675675663,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_primary": {
+      "n": 14,
+      "evalable": 4,
+      "pass": 4,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 11.551418245168243,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_train": {
+      "n": 9,
+      "evalable": 8,
+      "pass": 8,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 7.532435037371905,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_holdout": {
+      "n": 5,
+      "evalable": 5,
+      "pass": 5,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 4.050808139204963,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_primary": {
+      "n": 14,
+      "evalable": 13,
+      "pass": 13,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 6.193347768846158,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "within_block_sigma": 9.117,
+    "between_block_sigma": 4.236,
+    "config_dae": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192
+    },
+    "config_mat": {
+      "yfit_pos_scale": 0.7747342212844648,
+      "rel_weight": 0.41706453756396,
+      "yfit_career_normal": 0.3036046146078234,
+      "yfit_career_conflict": 0.1965579333805984,
+      "discord_pen": -12.458891792683648,
+      "hollow_pen": -9.919717757893322,
+      "health_guan_pen": -13.459477625893832,
+      "base": 51.67836562508081
+    },
+    "config_sew": {
+      "daewoon_blend": 0.31135797276856875,
+      "yindep_amp": 2.8327269741897907
+    },
+    "dae_climate_mode": "year_resid",
+    "trial": 14,
+    "tag": "e",
+    "config": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192,
+      "yfit_pos_scale": 0.7747342212844648,
+      "rel_weight": 0.41706453756396,
+      "yfit_career_normal": 0.3036046146078234,
+      "yfit_career_conflict": 0.1965579333805984,
+      "discord_pen": -12.458891792683648,
+      "hollow_pen": -9.919717757893322,
+      "health_guan_pen": -13.459477625893832,
+      "base": 51.67836562508081,
+      "daewoon_blend": 0.31135797276856875,
+      "yindep_amp": 2.8327269741897907,
+      "daewoon_parent": "climate"
+    }
+  },
+  "recommend": {
+    "gated": true,
+    "dae_ok": true,
+    "block_ok": true,
+    "sew_ok": true,
+    "dae_train": {
+      "n": 9,
+      "evalable": 3,
+      "pass": 3,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 15.346035137701804,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_holdout": {
+      "n": 5,
+      "evalable": 1,
+      "pass": 1,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 0.1675675675675663,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "dae_primary": {
+      "n": 14,
+      "evalable": 4,
+      "pass": 4,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 11.551418245168243,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_train": {
+      "n": 9,
+      "evalable": 8,
+      "pass": 8,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 7.532435037371905,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_holdout": {
+      "n": 5,
+      "evalable": 5,
+      "pass": 5,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 4.050808139204963,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "sew_primary": {
+      "n": 14,
+      "evalable": 13,
+      "pass": 13,
+      "fail": 0,
+      "rate": 100.0,
+      "avg_sep": 6.193347768846158,
+      "hard_fail": 0,
+      "near_miss": 0
+    },
+    "within_block_sigma": 9.117,
+    "between_block_sigma": 4.236,
+    "config_dae": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192
+    },
+    "config_mat": {
+      "yfit_pos_scale": 0.7747342212844648,
+      "rel_weight": 0.41706453756396,
+      "yfit_career_normal": 0.3036046146078234,
+      "yfit_career_conflict": 0.1965579333805984,
+      "discord_pen": -12.458891792683648,
+      "hollow_pen": -9.919717757893322,
+      "health_guan_pen": -13.459477625893832,
+      "base": 51.67836562508081
+    },
+    "config_sew": {
+      "daewoon_blend": 0.31135797276856875,
+      "yindep_amp": 2.8327269741897907
+    },
+    "dae_climate_mode": "year_resid",
+    "trial": 14,
+    "tag": "e",
+    "config": {
+      "dae_climate_mode": "year_resid",
+      "dae_resid_scale": 2.0968201591332476,
+      "dae_open_weight": 0.6745376344350131,
+      "dae_gen_amp": 2.4675531868054192,
+      "yfit_pos_scale": 0.7747342212844648,
+      "rel_weight": 0.41706453756396,
+      "yfit_career_normal": 0.3036046146078234,
+      "yfit_career_conflict": 0.1965579333805984,
+      "discord_pen": -12.458891792683648,
+      "hollow_pen": -9.919717757893322,
+      "health_guan_pen": -13.459477625893832,
+      "base": 51.67836562508081,
+      "daewoon_blend": 0.31135797276856875,
+      "yindep_amp": 2.8327269741897907,
+      "daewoon_parent": "climate"
+    }
+  },
+  "n_d1_gated": 21,
+  "n_d2_gated": 38,
+  "n_e_gated": 63,
+  "d1_top5": [
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 12.924121557454887,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.44864864864864984,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 9.80525333025333,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.397276827970807,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 2.7772702721093694,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.620351229562562,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.171,
+      "between_block_sigma": 4.115,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 6,
+      "tag": "d1",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 12.564102564102564,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.8837837837837768,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 9.644022869022866,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.350554555510705,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 2.8094809859160605,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.603987797974303,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 8.952,
+      "between_block_sigma": 3.701,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0298265349722104,
+        "dae_open_weight": 0.8473488968430727,
+        "dae_gen_amp": 2.0906878620117
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 30,
+      "tag": "d1",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0298265349722104,
+        "dae_open_weight": 0.8473488968430727,
+        "dae_gen_amp": 2.0906878620117,
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.899477682811016,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 1.4729729729729755,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 9.292851505351504,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.220495886881131,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 2.8040946640947766,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.521880031963303,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 8.592,
+      "between_block_sigma": 3.116,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 1.9319756122456384,
+        "dae_open_weight": 0.6728969912614784,
+        "dae_gen_amp": 1.924508374332951
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 27,
+      "tag": "d1",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 1.9319756122456384,
+        "dae_open_weight": 0.6728969912614784,
+        "dae_gen_amp": 1.924508374332951,
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.548694207027546,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 1.7270270270270132,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 9.093277412027412,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.176038063210091,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 2.8240504125060526,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.502196659093153,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 8.396,
+      "between_block_sigma": 2.828,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 1.8809952778142225,
+        "dae_open_weight": 0.8023140499590264,
+        "dae_gen_amp": 2.092706589054301
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 42,
+      "tag": "d1",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 1.8809952778142225,
+        "dae_open_weight": 0.8023140499590264,
+        "dae_gen_amp": 2.092706589054301,
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 10.781196581196582,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 2.370270270270268,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 8.678465003465003,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.055339854144123,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 2.8370031844289985,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.43290267348446,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 7.991,
+      "between_block_sigma": 2.32,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 1.781397186007004,
+        "dae_open_weight": 0.5011080138940192,
+        "dae_gen_amp": 2.332432833769901
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 11,
+      "tag": "d1",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 1.781397186007004,
+        "dae_open_weight": 0.5011080138940192,
+        "dae_gen_amp": 2.332432833769901,
+        "yfit_pos_scale": 0.86,
+        "rel_weight": 0.73,
+        "yfit_career_normal": 0.19,
+        "yfit_career_conflict": 0.08,
+        "discord_pen": -12.9,
+        "hollow_pen": -6.5,
+        "health_guan_pen": -8.0,
+        "base": 53.0,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    }
+  ],
+  "d2_top5": [
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 15.346035137701804,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.1675675675675663,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.551418245168243,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.382466946324094,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.2102010405440025,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.777749290254827,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.117,
+      "between_block_sigma": 4.236,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 1,
+      "tag": "d2",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 14.915954415954417,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.5891891891891845,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.334263109263109,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.50797068618411,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 2.838306919504453,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.711946160538087,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.452,
+      "between_block_sigma": 4.277,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7287917769668026,
+        "rel_weight": 0.5497718961887474,
+        "yfit_career_normal": 0.16247390230900013,
+        "yfit_career_conflict": 0.18579982006248136,
+        "discord_pen": -11.785817232513295,
+        "hollow_pen": -9.794626692743943,
+        "health_guan_pen": -10.268165177144134,
+        "base": 53.74284960193219
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 12,
+      "tag": "d2",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7287917769668026,
+        "rel_weight": 0.5497718961887474,
+        "yfit_career_normal": 0.16247390230900013,
+        "yfit_career_conflict": 0.18579982006248136,
+        "discord_pen": -11.785817232513295,
+        "hollow_pen": -9.794626692743943,
+        "health_guan_pen": -10.268165177144134,
+        "base": 53.74284960193219,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 13.982953466286796,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.4540540540540512,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 10.600728613228611,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 6.295525234225009,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.114388153091734,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.072010972250672,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 8.792,
+      "between_block_sigma": 4.178,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.9868305830301058,
+        "rel_weight": 0.3897963158133719,
+        "yfit_career_normal": 0.197725084929534,
+        "yfit_career_conflict": 0.11159553897003294,
+        "discord_pen": -9.430566856323443,
+        "hollow_pen": -9.50013877141862,
+        "health_guan_pen": -13.572083101142436,
+        "base": 49.755698012647855
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 4,
+      "tag": "d2",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.9868305830301058,
+        "rel_weight": 0.3897963158133719,
+        "yfit_career_normal": 0.197725084929534,
+        "yfit_career_conflict": 0.11159553897003294,
+        "discord_pen": -9.430566856323443,
+        "hollow_pen": -9.50013877141862,
+        "health_guan_pen": -13.572083101142436,
+        "base": 49.755698012647855,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 13.933214624881288,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.4432432432432485,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 10.560721779471779,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 6.823611636845195,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.2206105640048905,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.437841993445078,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.074,
+      "between_block_sigma": 4.2,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7698787353974472,
+        "rel_weight": 0.5159830078199132,
+        "yfit_career_normal": 0.20049608796013685,
+        "yfit_career_conflict": 0.15099711888245088,
+        "discord_pen": -10.409369670313597,
+        "hollow_pen": -9.109739051851601,
+        "health_guan_pen": -13.741009982586819,
+        "base": 51.13042079932619
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 10,
+      "tag": "d2",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7698787353974472,
+        "rel_weight": 0.5159830078199132,
+        "yfit_career_normal": 0.20049608796013685,
+        "yfit_career_conflict": 0.15099711888245088,
+        "discord_pen": -10.409369670313597,
+        "hollow_pen": -9.109739051851601,
+        "health_guan_pen": -13.741009982586819,
+        "base": 51.13042079932619,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 13.628917378917379,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.4594594594594561,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 10.336552899052897,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 6.583079523156823,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.25886755396395,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.304536458082641,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 8.767,
+      "between_block_sigma": 4.123,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.9882865185037997,
+        "rel_weight": 0.45649184319755015,
+        "yfit_career_normal": 0.24182142449929714,
+        "yfit_career_conflict": 0.14948268866340864,
+        "discord_pen": -11.226127036542573,
+        "hollow_pen": -7.34494280289003,
+        "health_guan_pen": -13.166318448947553,
+        "base": 51.112567899228736
+      },
+      "config_sew": {
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 21,
+      "tag": "d2",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.9882865185037997,
+        "rel_weight": 0.45649184319755015,
+        "yfit_career_normal": 0.24182142449929714,
+        "yfit_career_conflict": 0.14948268866340864,
+        "discord_pen": -11.226127036542573,
+        "hollow_pen": -7.34494280289003,
+        "health_guan_pen": -13.166318448947553,
+        "base": 51.112567899228736,
+        "daewoon_blend": 0.45,
+        "yindep_amp": 2.86,
+        "daewoon_parent": "climate"
+      }
+    }
+  ],
+  "e_top5": [
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 15.346035137701804,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.1675675675675663,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.551418245168243,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.532435037371905,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 4.050808139204963,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 6.193347768846158,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.117,
+      "between_block_sigma": 4.236,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081
+      },
+      "config_sew": {
+        "daewoon_blend": 0.31135797276856875,
+        "yindep_amp": 2.8327269741897907
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 14,
+      "tag": "e",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081,
+        "daewoon_blend": 0.31135797276856875,
+        "yindep_amp": 2.8327269741897907,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 15.346035137701804,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.1675675675675663,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.551418245168243,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.57951323772499,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.780712077951807,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 6.118435868581458,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.117,
+      "between_block_sigma": 4.236,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081
+      },
+      "config_sew": {
+        "daewoon_blend": 0.37650244978194175,
+        "yindep_amp": 2.932944489867276
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 75,
+      "tag": "e",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081,
+        "daewoon_blend": 0.37650244978194175,
+        "yindep_amp": 2.932944489867276,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 15.346035137701804,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.1675675675675663,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.551418245168243,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.551081495868399,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.768150633038539,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 6.096108087087684,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.117,
+      "between_block_sigma": 4.236,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081
+      },
+      "config_sew": {
+        "daewoon_blend": 0.36942217882448375,
+        "yindep_amp": 2.889862602813993
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 12,
+      "tag": "e",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081,
+        "daewoon_blend": 0.36942217882448375,
+        "yindep_amp": 2.889862602813993,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 15.346035137701804,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.1675675675675663,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.551418245168243,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.556293942936932,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.4108473769310734,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.9618914175500635,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.117,
+      "between_block_sigma": 4.236,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081
+      },
+      "config_sew": {
+        "daewoon_blend": 0.44132790329378474,
+        "yindep_amp": 2.9701533116230037
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 53,
+      "tag": "e",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081,
+        "daewoon_blend": 0.44132790329378474,
+        "yindep_amp": 2.9701533116230037,
+        "daewoon_parent": "climate"
+      }
+    },
+    {
+      "gated": true,
+      "dae_ok": true,
+      "block_ok": true,
+      "sew_ok": true,
+      "dae_train": {
+        "n": 9,
+        "evalable": 3,
+        "pass": 3,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 15.346035137701804,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_holdout": {
+        "n": 5,
+        "evalable": 1,
+        "pass": 1,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 0.1675675675675663,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "dae_primary": {
+        "n": 14,
+        "evalable": 4,
+        "pass": 4,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 11.551418245168243,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.49258161712614,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.3845821897623622,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "sew_primary": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 5.9125818373708405,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "within_block_sigma": 9.117,
+      "between_block_sigma": 4.236,
+      "config_dae": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192
+      },
+      "config_mat": {
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081
+      },
+      "config_sew": {
+        "daewoon_blend": 0.4378950766880171,
+        "yindep_amp": 2.9320351839270016
+      },
+      "dae_climate_mode": "year_resid",
+      "trial": 4,
+      "tag": "e",
+      "config": {
+        "dae_climate_mode": "year_resid",
+        "dae_resid_scale": 2.0968201591332476,
+        "dae_open_weight": 0.6745376344350131,
+        "dae_gen_amp": 2.4675531868054192,
+        "yfit_pos_scale": 0.7747342212844648,
+        "rel_weight": 0.41706453756396,
+        "yfit_career_normal": 0.3036046146078234,
+        "yfit_career_conflict": 0.1965579333805984,
+        "discord_pen": -12.458891792683648,
+        "hollow_pen": -9.919717757893322,
+        "health_guan_pen": -13.459477625893832,
+        "base": 51.67836562508081,
+        "daewoon_blend": 0.4378950766880171,
+        "yindep_amp": 2.9320351839270016,
+        "daewoon_parent": "climate"
+      }
+    }
+  ]
+}

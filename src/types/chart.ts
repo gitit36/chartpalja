@@ -86,6 +86,12 @@ export interface ChartMeta {
   strength: string
   geokguk: string
   geokgukType?: string
+  /** 엔진 점수 스키마 버전 — 옛 캐시 무효화/재생성용 */
+  scoreSchemaVersion?: string
+  /** 종합·도메인 표시 가산 (기본 10) */
+  scoreBias?: number
+  /** 엔진 도메인 저장 스케일 힌트 */
+  domainScale?: string
   yongshin: { label: string; element: string }
   heeshin: Array<{ label: string; element: string }>
   gishin: Array<{ label: string; element: string }>

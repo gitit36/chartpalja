@@ -1,0 +1,265 @@
+pool,subject_id,name,birth_time_known,birth_date,birth_time,birth_source_quality,rodden_rating,CRITICAL,HIGH,MEDIUM,LOW,pairable,n_pairs,gold_candidate,strict_time_gold_candidate
+V1,MLV1_OLD_001,Donald Trump,True,1946-06-14,10:54,A_birth_record,,0,7,7,0,True,10,False,False
+V1,MLV1_OLD_002,Barack Obama,True,1961-08-04,19:24,A_birth_record,,0,8,8,0,True,15,False,False
+V1,MLV1_OLD_003,Michael Jackson,True,1958-08-29,19:33,A_rodden_AA,,0,5,6,0,False,0,False,False
+V1,MLV1_OLD_004,Justin Bieber,True,1994-03-01,00:56,A_rodden_AA,,0,5,4,0,True,3,False,False
+V1,MLV1_OLD_005,Chris Brown,True,1989-05-05,12:30,A_rodden_AA,,0,4,4,0,True,3,False,False
+V1,MLV1_OLD_006,Hillary Clinton,True,1947-10-26,18:45,A_rodden_AA,,0,7,7,0,True,10,False,False
+V1,MLV1_OLD_007,Kamala Harris,True,1964-10-20,21:28,A_rodden_AA,,0,5,5,0,False,0,False,False
+V1,MLV1_OLD_008,Al Gore,True,1948-03-31,12:53,A_rodden_AA,,0,7,7,0,False,0,False,False
+V1,MLV1_OLD_009,Amy Klobuchar,True,1960-05-25,00:56,A_rodden_AA,,0,4,4,0,False,0,False,False
+V1,MLV1_OLD_010,Monica Lewinsky,True,1973-07-23,12:21,A_rodden_AA,,0,0,0,0,False,0,True,False
+V1,MLV1_OLD_011,Madonna,True,1958-08-16,07:05,A_rodden_AA,,0,1,1,0,False,0,False,False
+V1,MLV1_OLD_012,Elizabeth Taylor,True,1932-02-27,02:30,A_rodden_AA,,0,2,4,0,False,0,False,False
+V1,MLV1_OLD_013,Drake,True,1986-10-24,02:31,A_rodden_AA,,0,3,3,0,False,0,False,False
+V1,MLV1_OLD_014,Diana Ross,True,1944-03-26,23:46,A_rodden_AA,,0,3,3,0,False,0,False,False
+V1,MLV1_OLD_015,Dennis Rodman,True,1961-05-13,00:10,A_rodden_AA,,0,8,8,0,True,7,False,False
+V1,MLV1_OLD_016,John Ritter,True,1948-09-17,07:59,A_rodden_AA,,0,3,4,0,True,2,False,False
+V1,MLV1_OLD_017,Sean Penn,True,1960-08-17,15:17,A_rodden_AA,,0,2,2,0,False,0,False,False
+V1,MLV1_OLD_018,Björk,True,1965-11-21,08:10,A_rodden_AA,,0,3,3,0,False,0,False,False
+V1,MLV1_OLD_019,Kylie Jenner,True,1997-08-10,17:25,A_rodden_AA,,0,0,0,0,False,0,True,False
+V1,MLV1_OLD_020,윤석열,True,1960-12-18,22:00,A_official,,0,8,8,0,True,12,False,False
+V1,MLV1_OLD_021,김부겸,False,1956-12-21,,B_interview_or_broadcast,,0,7,8,0,True,12,False,False
+V1,MLV1_OLD_022,김어준,False,1968-12-04,,C_saju_compilation,,0,2,3,0,True,1,False,False
+V1,MLV1_OLD_023,박나래,True,1985-10-25,00:30,unknown,,0,3,3,0,True,2,False,False
+V1,MLV1_OLD_024,박정희,False,1917-11-14,,D_disputed,,0,2,4,0,True,1,False,False
+V1,MLV1_OLD_025,오세훈,False,1961-01-04,,C_saju_compilation,,0,8,9,0,True,12,False,False
+V1,MLV1_OLD_026,홍준표,True,1953-11-20,02:40,C_saju_compilation,,0,6,6,0,True,9,False,False
+V1,MLV1_OLD_027,문재인,False,1953-01-24,,C_saju_compilation,,0,2,4,0,True,1,False,False
+V1,MLV1_OLD_028,박근혜,False,1952-02-02,,C_saju_compilation,,0,6,9,0,True,9,False,False
+V1,MLV1_OLD_029,이건희,False,1942-01-09,,C_saju_compilation,,0,4,6,0,True,3,False,False
+V1,MLV1_OLD_030,이재용,False,1968-06-23,,unknown,,0,4,6,0,False,0,False,False
+V1,MLV1_OLD_031,봉준호,False,1969-09-14,,unknown,,0,2,3,0,False,0,False,False
+V1,MLV1_OLD_032,김연아,False,1990-09-05,,unknown,,1,6,7,0,False,0,False,False
+V1,MLV1_OLD_033,손흥민,False,1992-07-08,,unknown,,0,6,7,0,False,0,False,False
+V1,MLV1_OLD_034,장미희,True,1958-01-27,12:00,C_saju_compilation,,0,3,3,0,False,0,False,False
+V1,MLV1_OLD_035,김희민,True,1984-10-22,10:00,C_saju_compilation,,0,1,1,0,False,0,False,False
+V1,MLV1_OLD_036,박찬호,True,1973-06-29,15:50,C_saju_compilation,,0,0,0,0,False,0,True,False
+V1,MLV1_OLD_037,박세리,True,1977-08-16,20:00,C_saju_compilation,,0,5,5,0,False,0,False,False
+V1,MLV1_OLD_038,이명박,False,1941-12-19,,C_saju_compilation,,1,7,8,0,True,4,False,False
+V1,MLV1_OLD_039,조용필,False,1950-03-21,,C_saju_compilation,,0,2,4,0,False,0,False,False
+V1,MLV1_OLD_040,신성일,False,1937-05-08,,C_saju_compilation,,0,2,4,0,False,0,False,False
+V1,MLV1_OLD_041,남진,False,1946-10-21,,C_saju_compilation,,0,2,3,0,False,0,False,False
+V1,MLV1_OLD_042,정몽헌,False,1948-09-14,,C_saju_compilation,,0,0,3,0,False,0,True,False
+V1,MLV1_OLD_043,정몽구,False,1938-03-19,,C_saju_compilation,,0,3,4,0,False,0,False,False
+V1,MLV1_OLD_044,김우중,False,1936-12-19,,C_saju_compilation,,0,2,4,0,False,0,False,False
+V1,MLV1_OLD_045,김영삼,False,1929-01-14,,C_saju_compilation,,0,4,6,0,True,3,False,False
+V1,MLV1_OLD_046,노태우,False,1932-08-17,,C_saju_compilation,,0,3,5,0,False,0,False,False
+V1,MLV1_OLD_047,전두환,False,1931-03-06,,C_saju_compilation,,0,1,3,0,False,0,False,False
+V1,MLV1_OLD_048,정주영,False,1915-11-25,,C_saju_compilation,,0,7,9,0,True,6,False,False
+V1,MLV1_OLD_049,이병철,False,1910-02-12,,C_saju_compilation,,0,5,7,0,False,0,False,False
+V1,MLV1_OLD_050,신해철,False,1968-05-06,,C_saju_compilation,,0,0,2,0,False,0,True,False
+V1,MLV1_OLD_051,서태지,False,1972-03-02,,C_saju_compilation,,0,2,3,0,False,0,False,False
+V1,MLV1_OLD_052,노무현,False,1946-08-06,,C_saju_compilation,,1,5,7,0,True,2,False,False
+V1,MLV1_OLD_053,전소연,True,1998-08-26,17:20,unknown,,1,6,6,0,False,0,False,False
+V1,MLV1_OLD_054,강호동,True,1970-07-14,06:30,D_disputed,,0,4,4,0,True,3,False,False
+V1,MLV1_OLD_055,Lionel Messi,True,1987-06-24,20:30,A_birth_record,,1,18,0,0,True,36,False,False
+V1,MLV1_OLD_056,권지용,False,1988-08-18,,unknown,,0,3,4,0,False,0,False,False
+V1,MLV1_FA_001,Arnold Schwarzenegger,True,1947-07-30,04:10,Rodden_A,,0,0,1,0,False,0,True,False
+V1,MLV1_FA_002,Bill Gates,True,1955-10-28,22:00,Rodden_A,,0,0,0,0,True,2,True,True
+V1,MLV1_FA_003,Britney Spears,True,1981-12-02,01:30,Rodden_A,,0,0,0,0,False,0,True,False
+V1,MLV1_FA_004,"Diana, Princess of Wales",True,1961-07-01,19:45,Rodden_A,,0,0,1,0,False,0,True,False
+V1,MLV1_FA_005,George Clooney,True,1961-05-06,02:58,Rodden_AA,,0,0,0,0,False,0,True,False
+V1,MLV1_FA_006,Johnny Depp,True,1963-06-09,08:44,Rodden_AA,,0,0,0,0,True,2,True,True
+V1,MLV1_FA_007,Marilyn Monroe,True,1926-06-01,09:30,Rodden_AA,,0,0,1,0,False,0,True,False
+V1,MLV1_FA_008,Martha Stewart,True,1941-08-03,13:33,Rodden_AA,,0,0,0,0,True,2,True,True
+V1,MLV1_FA_009,Meryl Streep,True,1949-06-22,08:05,Rodden_AA,,0,0,2,0,False,0,True,False
+V1,MLV1_FA_010,Michael Jordan,True,1963-02-17,13:40,Rodden_AA,,0,0,1,0,True,4,True,True
+V1,MLV1_FA_011,Robert Downey Jr.,True,1965-04-04,13:10,Rodden_A,,0,0,0,0,True,2,True,True
+V1,MLV1_FA_012,Roger Federer,True,1981-08-08,08:40,Rodden_A,,0,0,2,0,True,4,True,True
+V1,MLV1_FA_013,Tiger Woods,True,1975-12-30,22:50,Rodden_AA,,0,0,0,0,False,0,True,False
+V1,MLV1_FA_014,Whitney Houston,True,1963-08-09,20:55,Rodden_AA,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_001,Aaron Spelling,True,1923-04-22,12:30,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_002,Amanda Knox,True,1987-07-09,02:47,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_003,Ann Wilson,True,1950-06-19,17:20,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_004,Ashley Judd,True,1968-04-19,13:12,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_005,Billy Connolly,True,1942-11-24,04:30,Rodden_AA_via_VedAstro,,0,0,0,0,True,2,True,True
+V1,MLV1_PUB_006,Burt Reynolds,True,1936-02-11,12:10,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_007,Buzz Aldrin,True,1930-01-20,14:17,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_008,Diahann Carroll,True,1935-07-17,21:35,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_009,Farrah Fawcett,True,1947-02-02,15:10,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_010,Harrison Dillard,True,1923-07-08,07:32,Rodden_AA_via_VedAstro,,0,0,1,0,True,2,True,True
+V1,MLV1_PUB_011,Harrison Ford,True,1942-07-13,11:41,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_012,Jeff Bridges,True,1949-12-04,23:58,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_013,Jennifer Lawrence,True,1990-08-15,15:20,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_014,Laura Flessel,True,1971-11-06,16:15,Rodden_AA_via_VedAstro,,0,0,0,0,True,4,True,True
+V1,MLV1_PUB_015,Mark Ruffalo,True,1967-11-22,07:33,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_016,Matthew Perry,True,1969-08-19,04:47,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_017,Mick Fanning,True,1981-06-13,04:21,Rodden_AA_via_VedAstro,,0,0,0,0,False,0,True,False
+V1,MLV1_PUB_018,Miley Cyrus,True,1992-11-23,16:19,Rodden_AA_via_VedAstro,,0,1,0,0,False,0,False,False
+V1,MLV1_PUB_019,Rock Hudson,True,1925-11-17,02:15,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_020,Rocky Bleier,True,1946-03-05,08:15,Rodden_AA_via_VedAstro,,0,0,0,0,True,2,True,True
+V1,MLV1_PUB_021,Sally Ride,True,1951-05-26,08:11,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_022,Salvador Allende,True,1908-06-26,01:30,Rodden_AA_via_VedAstro,,0,0,1,0,True,4,True,True
+V1,MLV1_PUB_023,Steve McQueen,True,1930-03-24,12:15,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V1,MLV1_PUB_024,Whoopi Goldberg,True,1955-11-13,12:48,Rodden_AA_via_VedAstro,,0,0,1,0,False,0,True,False
+V2_NEW_DEV,MLV2_DEV_001,Aaron Eckhart,True,1968-03-12,18:50,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_002,Abigail Johnson,True,1961-12-19,14:45,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_003,Jennifer Aniston,True,1969-02-11,22:22,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_004,Jennifer Coolidge,True,1961-06-01,13:09,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_005,Julia Roberts,True,1967-10-28,00:16,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_006,Julianne Moore,True,1960-12-03,17:53,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_007,Julie Delpy,True,1969-12-21,22:40,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_008,Jenna Elfman,True,1971-09-30,17:50,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_009,Katy Perry,True,1984-10-25,07:58,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_010,Amber Tamblyn,True,1983-05-14,04:45,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_011,Antonio Banderas,True,1960-08-10,21:00,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_012,Billy Crystal,True,1948-03-14,07:48,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_013,Billy Dee Williams,True,1937-04-06,21:51,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_014,Steve Prefontaine,True,1951-01-25,08:05,Rodden_AA_via_VedAstro,AA,0,0,6,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_015,Cameron Diaz,True,1972-08-30,02:53,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_016,Carson Daly,True,1973-06-22,09:06,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_017,Cher,True,1946-05-20,07:25,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_018,Cheech Marin,True,1946-07-13,13:00,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_019,Cindy Crawford,True,1966-02-20,14:08,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_020,Cindy Sherman,True,1954-01-19,04:27,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_021,Clint Eastwood,True,1930-05-31,17:35,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_022,Glenn Close,True,1947-03-19,14:12,Rodden_AA_via_VedAstro,AA,0,0,6,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_023,Goldie Hawn,True,1945-11-21,09:20,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_024,Gonzalo Higuain,True,1987-12-10,06:30,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_025,Gwyneth Paltrow,True,1972-09-27,17:25,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_026,Helen Hunt,True,1963-06-15,12:55,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_027,Jamie Lee Curtis,True,1958-11-22,08:37,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_028,Jane Curtin,True,1947-09-06,14:00,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_029,Jeff Bagwell,True,1968-05-27,14:03,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_030,Jodie Foster,True,1962-11-19,08:14,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_031,Jon Bon Jovi,True,1962-03-02,20:45,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_032,Jon Huntsman,True,1960-03-26,11:58,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_033,Kevin Costner,True,1955-01-18,21:40,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_034,Kevin Kline,True,1947-10-24,09:11,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_035,Kirsten Dunst,True,1982-04-30,13:00,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_036,Laura Dern,True,1967-02-10,07:48,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_037,Laura Pausini,True,1974-05-16,17:00,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_038,Leonardo DiCaprio,True,1974-11-11,02:47,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_039,Leonardo Del Vecchio,True,1935-05-22,03:30,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_040,Lisa Kudrow,True,1963-07-30,04:37,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_041,Lisa Ling,True,1973-08-30,06:53,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_042,Mark Knopfler,True,1949-08-12,21:50,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_043,Mark Spitz,True,1950-02-10,17:45,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_044,Matthew McConaughey,True,1969-11-04,19:34,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_045,Michelle Pfeiffer,True,1958-04-29,08:11,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_046,Milton Nascimento,True,1942-10-26,18:00,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_047,Paul Molitor,True,1956-08-22,03:23,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_048,Robin Quivers,True,1952-08-08,05:30,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_049,Sally Field,True,1946-11-06,04:23,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_050,Sigourney Weaver,True,1949-10-08,18:15,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_051,Steve Martin,True,1945-08-14,05:54,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_052,Steve Miller,True,1943-10-05,10:31,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_053,Steve Perry,True,1949-01-22,18:05,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_054,Uma Thurman,True,1970-04-29,13:51,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_055,Umberto Eco,True,1932-01-05,18:30,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_056,Denzel Washington,True,1954-12-28,00:09,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_057,Diane Keaton,True,1946-01-05,02:49,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_058,George Takei,True,1937-04-20,02:10,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_059,Angus Young,True,1955-03-31,20:10,Rodden_AA_via_VedAstro,AA,0,0,6,0,True,4,True,True
+V2_NEW_DEV,MLV2_DEV_060,Serge Gainsbourg,True,1928-04-02,04:55,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,4,True,True
+V2_NEW_DEV,MLV2_DEV_061,Al Jarreau,True,1940-03-12,01:20,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,4,True,True
+V2_NEW_DEV,MLV2_DEV_062,Al Unser,True,1939-05-29,08:10,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_063,John Krasinski,True,1979-10-20,20:44,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_064,Steve Fossett,True,1944-04-22,01:58,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,4,True,True
+V2_NEW_DEV,MLV2_DEV_065,Ann Jillian,True,1950-01-29,14:19,Rodden_AA_via_VedAstro,AA,0,0,6,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_066,Mark Hamill,True,1951-09-25,14:43,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_067,John Nash,True,1928-06-13,07:00,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_068,Chris Evert,True,1954-12-21,04:30,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,2,True,True
+V2_NEW_DEV,MLV2_DEV_069,Roberta Flack,True,1937-02-10,06:30,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,4,True,True
+V2_NEW_DEV,MLV2_DEV_070,Steve Forbes,True,1947-07-18,01:35,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,4,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_001,Bob Dylan,True,1941-05-24,21:05,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_002,Bob Fosse,True,1927-06-23,22:29,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_003,Bob Gibson,True,1935-11-09,13:45,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_004,Bob Hayes,True,1942-12-20,15:29,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_005,Bob Knight,True,1940-10-25,08:42,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_006,Bob Lilly,True,1939-07-26,10:00,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_007,Bob Mathias,True,1930-11-17,07:47,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_008,Bob McAdoo,True,1951-09-25,19:38,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_009,Bob Newhart,True,1929-09-05,09:10,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_010,Bob Pettit,True,1932-12-12,05:04,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_011,Bob Richards,True,1926-02-20,20:00,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_012,Bob Schul,True,1937-09-28,05:30,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_013,Bob Seagren,True,1946-10-17,16:04,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_014,Bob Uecker,True,1934-01-26,02:10,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_015,Bob Brenly,True,1954-02-25,18:57,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_016,Bobby Bell,True,1940-06-17,22:50,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_017,Bobby Bonds,True,1946-03-15,17:38,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_018,Bo Burnham,True,1990-08-21,14:10,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_019,Bo Derek,True,1956-11-20,14:13,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_020,Bob Woolmer,True,1948-05-14,02:15,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_021,Bill Bradley,True,1943-07-28,11:37,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_022,Bill Blass,True,1922-06-22,06:20,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_023,Bill Engvall,True,1957-07-27,20:35,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_024,Bill Forsyth,True,1946-07-29,11:00,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_025,Bill Guerin,True,1970-11-09,16:47,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_026,Bill Walton,True,1952-11-05,21:20,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_027,Billie Jean King,True,1943-11-22,11:45,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_028,Billy Backus,True,1943-03-05,22:43,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_029,Billy Casper,True,1931-06-24,10:24,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_030,Billy Kidd,True,1943-04-13,11:55,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_031,Billy Martin,True,1928-05-16,15:43,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_032,Billy Joe Shaver,True,1939-08-16,21:10,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_033,Billy Mackenzie,True,1957-03-27,19:20,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_034,Bill Shoemaker,True,1931-08-19,01:30,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_035,Bill Steinkraus,True,1925-10-12,14:30,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_036,Tom Brady,True,1977-08-03,11:48,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_037,Tom Coughlin,True,1946-08-31,03:07,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_038,Tom Courtney,True,1933-08-17,01:35,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_039,Tom Daschle,True,1947-12-09,13:55,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_040,Tom DeLay,True,1947-04-08,21:47,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_041,Tom Foley,True,1929-03-06,13:40,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_042,Tom Glavine,True,1966-03-25,07:28,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_043,Tom Okker,True,1944-02-22,18:20,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_044,Tom Poti,True,1977-03-22,12:54,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_045,Tom Seaver,True,1944-11-17,06:27,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_046,Tom Selleck,True,1945-01-29,08:22,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_047,Tom Brokaw,True,1940-02-06,03:40,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_048,Tom Bergeron,True,1955-05-06,10:30,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_049,Tom Harmon,True,1919-09-28,07:30,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_050,A. J. Foyt,True,1935-01-16,01:25,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_051,Tom Scholz,True,1947-03-10,12:47,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_052,Tony Blair,True,1953-05-06,06:10,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_053,Toni Kroos,True,1990-01-04,12:56,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_054,Toni Morrison,True,1931-02-18,11:00,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_055,Tony Curtis,True,1925-06-03,09:00,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_056,Tony Estanguet,True,1978-05-06,12:50,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_057,Tony Gwynn,True,1960-05-09,02:41,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_058,Tony Hawk,True,1968-05-12,03:12,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_059,Tony Kubek,True,1935-10-12,06:23,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_060,Tony Parker,True,1982-05-17,16:40,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_061,Tony Levin,True,1946-06-06,17:45,Rodden_AA_via_VedAstro,AA,0,0,5,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_062,Tony Mendez,True,1940-11-15,14:00,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_063,Tony Conigliaro,True,1945-01-07,20:52,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_064,Tony Bettenhausen,True,1951-10-30,23:15,Rodden_AA_via_VedAstro,AA,2,0,3,0,True,1,False,False
+NEW_DEV_2_CONSUMED,NEWDEV2_065,George Foreman,True,1949-01-10,21:15,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_066,George Galloway,True,1954-08-16,06:00,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_067,Gerald Ford,True,1913-07-14,00:43,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_068,Gerard Butler,True,1969-11-13,05:21,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_069,Geraldine Chaplin,True,1944-07-31,23:14,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_070,Carol Burnett,True,1933-04-26,04:00,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_071,Carol Channing,True,1921-01-31,21:00,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_072,Carol Kane,True,1952-06-18,09:29,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_073,Carmen Miranda,True,1909-02-09,15:37,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_074,Carmen Electra,True,1972-04-20,00:27,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_075,Carmen Basilio,True,1927-04-02,23:00,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_076,Dennis Weaver,True,1924-06-04,08:00,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_077,Dennis Wilson,True,1944-12-04,22:56,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_078,Dennis Ralston,True,1942-07-27,08:37,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_079,Jimmy Johnson,True,1943-07-16,14:12,Rodden_AA_via_VedAstro,AA,0,0,1,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_080,Eliza Dushku,True,1980-12-30,13:31,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_081,Elizabeth Banks,True,1974-02-10,20:11,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_082,Elizabeth Dole,True,1936-07-29,01:55,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_083,Elizabeth Montgomery,True,1933-04-15,16:38,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_084,Elizabeth Olsen,True,1989-02-16,18:49,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_085,Judd Hirsch,True,1935-03-15,07:20,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_086,Jack Bruce,True,1943-05-14,02:10,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_087,Robert Carlyle,True,1961-04-14,05:15,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_088,Robert Carradine,True,1954-03-24,19:27,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_089,Robert Byrd,True,1917-11-20,14:00,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_090,Tony Trabert,True,1930-08-16,03:50,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_091,Michael Landon,True,1936-10-31,12:12,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_092,Michael Llodra,True,1980-05-18,10:10,Rodden_AA_via_VedAstro,AA,0,0,4,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_093,Aaron Pryor,True,1955-10-20,09:41,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_094,John Slattery,True,1962-08-13,19:21,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_095,John Updike,True,1932-03-18,15:45,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_096,John Thomas,True,1941-03-03,21:55,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_097,Patrick Sercu,True,1944-06-27,18:00,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_098,Grégory Coupet,True,1972-12-31,18:30,Rodden_AA_via_VedAstro,AA,0,0,3,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_099,Grégory Baugé,True,1985-01-31,08:55,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True
+NEW_DEV_2_CONSUMED,NEWDEV2_100,Tony Shalhoub,True,1953-10-09,23:50,Rodden_AA_via_VedAstro,AA,0,0,2,0,True,1,True,True

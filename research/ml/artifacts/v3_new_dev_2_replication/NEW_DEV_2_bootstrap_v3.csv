@@ -1,0 +1,2 @@
+macro_pairwise,pairwise_ci_low,pairwise_ci_high,bootstrap_p_pairwise_gt_0_5,control_pairwise,n_control_evaluable,delta_vs_control,delta_ci_low,delta_ci_high,bootstrap_p_delta_gt_0
+0.56,0.465,0.655,0.88495,0.55,100,0.01,-0.125,0.14,0.54545

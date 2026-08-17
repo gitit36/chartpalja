@@ -1,0 +1,651 @@
+{
+  "dataset_version": "PUBLIC_LIFE_V1",
+  "dataset_sha256_owner_full": "fa975419d8299cb38a8d9cac2c04e418dd6f5819cad4fbbb7550b524614ccd2f",
+  "split": "CHECK",
+  "n": 8,
+  "scoring_unit": "calendar_year",
+  "subjects": [
+    {
+      "subject_id": "PLV1_012",
+      "name": "Carrie Fisher",
+      "gender": "female",
+      "birth": {
+        "date": "1956-10-21",
+        "time": "12:49",
+        "utc_offset": "-08:00",
+        "city": "Burbank, CA",
+        "country": "USA",
+        "latitude": 34.182,
+        "longitude": -118.307,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1977,
+          "valence": "positive",
+          "category": "career",
+          "description": "Star Wars made her internationally famous as Princess Leia",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_012_E01",
+          "source_refs": [
+            "PLV1_012_S1"
+          ]
+        },
+        {
+          "year": 1987,
+          "valence": "positive",
+          "category": "career",
+          "description": "Published the successful semi-autobiographical novel Postcards from the Edge",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_012_E02",
+          "source_refs": [
+            "PLV1_012_S1"
+          ]
+        },
+        {
+          "year": 1985,
+          "valence": "negative",
+          "category": "health",
+          "description": "Experienced a drug overdose and entered treatment",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_012_E03",
+          "source_refs": [
+            "PLV1_012_S1"
+          ]
+        },
+        {
+          "year": 2016,
+          "valence": "negative",
+          "category": "health",
+          "description": "Suffered cardiac arrest and died days later",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_012_E04",
+          "source_refs": [
+            "PLV1_012_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_012_S1",
+          "url": "https://en.wikipedia.org/wiki/Carrie_Fisher",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "CHECK"
+    },
+    {
+      "subject_id": "PLV1_014",
+      "name": "Drew Barrymore",
+      "gender": "female",
+      "birth": {
+        "date": "1975-02-22",
+        "time": "11:51",
+        "utc_offset": "-08:00",
+        "city": "Culver City, CA",
+        "country": "USA",
+        "latitude": 34.022,
+        "longitude": -118.394,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1982,
+          "valence": "positive",
+          "category": "career",
+          "description": "E.T. the Extra-Terrestrial made her an internationally known child actor",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_014_E01",
+          "source_refs": [
+            "PLV1_014_S1",
+            "PLV1_014_S2"
+          ]
+        },
+        {
+          "year": 2010,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won a Golden Globe for Grey Gardens",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_014_E02",
+          "source_refs": [
+            "PLV1_014_S1",
+            "PLV1_014_S2"
+          ]
+        },
+        {
+          "year": 1988,
+          "valence": "negative",
+          "category": "health",
+          "description": "Entered rehabilitation during severe adolescent substance-use problems",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_014_E03",
+          "source_refs": [
+            "PLV1_014_S1",
+            "PLV1_014_S2"
+          ]
+        },
+        {
+          "year": 1989,
+          "valence": "negative",
+          "category": "health",
+          "description": "Relapsed and experienced a suicide attempt followed by further treatment",
+          "confidence": "medium",
+          "evidence_grade": "B",
+          "event_id": "PLV1_014_E04",
+          "source_refs": [
+            "PLV1_014_S1",
+            "PLV1_014_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_014_S1",
+          "url": "https://en.wikipedia.org/wiki/Drew_Barrymore",
+          "tier": "C_public_reference"
+        },
+        {
+          "source_id": "PLV1_014_S2",
+          "url": "https://www.goldenglobes.com/person/drew-barrymore",
+          "tier": "B_major_media_or_reference"
+        }
+      ],
+      "split": "CHECK"
+    },
+    {
+      "subject_id": "PLV1_017",
+      "name": "Gordon Brown",
+      "gender": "male",
+      "birth": {
+        "date": "1951-02-20",
+        "time": "08:40",
+        "utc_offset": "+00:00",
+        "city": "Giffnock, Glasgow",
+        "country": "UK",
+        "latitude": 55.805,
+        "longitude": -4.295,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1997,
+          "valence": "positive",
+          "category": "career",
+          "description": "Appointed Chancellor of the Exchequer",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_017_E01",
+          "source_refs": [
+            "PLV1_017_S1",
+            "PLV1_017_S2"
+          ]
+        },
+        {
+          "year": 2007,
+          "valence": "positive",
+          "category": "career",
+          "description": "Became Prime Minister of the United Kingdom",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_017_E02",
+          "source_refs": [
+            "PLV1_017_S1",
+            "PLV1_017_S2"
+          ]
+        },
+        {
+          "year": 2002,
+          "valence": "negative",
+          "category": "family",
+          "description": "His infant daughter Jennifer died",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_017_E03",
+          "source_refs": [
+            "PLV1_017_S1",
+            "PLV1_017_S2"
+          ]
+        },
+        {
+          "year": 2010,
+          "valence": "negative",
+          "category": "career",
+          "description": "Labour lost power and Brown resigned as Prime Minister",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_017_E04",
+          "source_refs": [
+            "PLV1_017_S1",
+            "PLV1_017_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_017_S1",
+          "url": "https://www.gov.uk/government/history/past-prime-ministers/gordon-brown",
+          "tier": "A_official_or_institutional"
+        },
+        {
+          "source_id": "PLV1_017_S2",
+          "url": "https://en.wikipedia.org/wiki/Gordon_Brown",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "CHECK"
+    },
+    {
+      "subject_id": "PLV1_024",
+      "name": "Justin Timberlake",
+      "gender": "male",
+      "birth": {
+        "date": "1981-01-31",
+        "time": "18:30",
+        "utc_offset": "-06:00",
+        "city": "Memphis, TN",
+        "country": "USA",
+        "latitude": 35.143,
+        "longitude": -90.052,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2002,
+          "valence": "positive",
+          "category": "career",
+          "description": "Justified launched his successful solo career",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_024_E01",
+          "source_refs": [
+            "PLV1_024_S1"
+          ]
+        },
+        {
+          "year": 2006,
+          "valence": "positive",
+          "category": "career",
+          "description": "FutureSex/LoveSounds became a major global commercial success",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_024_E02",
+          "source_refs": [
+            "PLV1_024_S1"
+          ]
+        },
+        {
+          "year": 2004,
+          "valence": "negative",
+          "category": "public_reputation",
+          "description": "Super Bowl halftime controversy caused major public backlash",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_024_E03",
+          "source_refs": [
+            "PLV1_024_S1"
+          ]
+        },
+        {
+          "year": 2024,
+          "valence": "negative",
+          "category": "legal",
+          "description": "Arrested for driving while intoxicated",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_024_E04",
+          "source_refs": [
+            "PLV1_024_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_024_S1",
+          "url": "https://en.wikipedia.org/wiki/Justin_Timberlake",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "CHECK"
+    },
+    {
+      "subject_id": "PLV1_025",
+      "name": "Justine Henin",
+      "gender": "female",
+      "birth": {
+        "date": "1982-06-01",
+        "time": "16:20",
+        "utc_offset": "+02:00",
+        "city": "Liege",
+        "country": "Belgium",
+        "latitude": 50.644,
+        "longitude": 5.572,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2003,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won her first Grand Slam singles titles at Roland Garros and the US Open",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_025_E01",
+          "source_refs": [
+            "PLV1_025_S1"
+          ]
+        },
+        {
+          "year": 2007,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won Roland Garros and the US Open and finished the season ranked world No. 1",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_025_E02",
+          "source_refs": [
+            "PLV1_025_S1"
+          ]
+        },
+        {
+          "year": 2004,
+          "valence": "negative",
+          "category": "health",
+          "description": "A viral illness significantly disrupted her season",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_025_E03",
+          "source_refs": [
+            "PLV1_025_S1"
+          ]
+        },
+        {
+          "year": 2011,
+          "valence": "negative",
+          "category": "health",
+          "description": "Retired because of a chronic elbow injury",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_025_E04",
+          "source_refs": [
+            "PLV1_025_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_025_S1",
+          "url": "https://en.wikipedia.org/wiki/Justine_Henin",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "CHECK"
+    },
+    {
+      "subject_id": "PLV1_031",
+      "name": "Miles Davis",
+      "gender": "male",
+      "birth": {
+        "date": "1926-05-26",
+        "time": "05:00",
+        "utc_offset": "-05:00",
+        "city": "Alton, IL",
+        "country": "USA",
+        "latitude": 38.903,
+        "longitude": -90.149,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1959,
+          "valence": "positive",
+          "category": "career",
+          "description": "Released Kind of Blue, a landmark jazz album",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_031_E01",
+          "source_refs": [
+            "PLV1_031_S1"
+          ]
+        },
+        {
+          "year": 1970,
+          "valence": "positive",
+          "category": "career",
+          "description": "Released Bitches Brew, a major artistic and commercial landmark",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_031_E02",
+          "source_refs": [
+            "PLV1_031_S1"
+          ]
+        },
+        {
+          "year": 1975,
+          "valence": "negative",
+          "category": "health",
+          "description": "Withdrew from public performance amid severe health and substance-use problems",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_031_E03",
+          "source_refs": [
+            "PLV1_031_S1"
+          ]
+        },
+        {
+          "year": 1982,
+          "valence": "negative",
+          "category": "health",
+          "description": "Suffered a stroke that impaired his right side",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_031_E04",
+          "source_refs": [
+            "PLV1_031_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_031_S1",
+          "url": "https://en.wikipedia.org/wiki/Miles_Davis",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "CHECK"
+    },
+    {
+      "subject_id": "PLV1_033",
+      "name": "Paul Newman",
+      "gender": "male",
+      "birth": {
+        "date": "1925-01-26",
+        "time": "06:30",
+        "utc_offset": "-05:00",
+        "city": "Cleveland, OH",
+        "country": "USA",
+        "latitude": 41.505,
+        "longitude": -81.691,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1958,
+          "valence": "positive",
+          "category": "career",
+          "description": "Cat on a Hot Tin Roof brought major acclaim and an Academy Award nomination",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_033_E01",
+          "source_refs": [
+            "PLV1_033_S1"
+          ]
+        },
+        {
+          "year": 1987,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won the Academy Award for Best Actor for The Color of Money",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_033_E02",
+          "source_refs": [
+            "PLV1_033_S1"
+          ]
+        },
+        {
+          "year": 1978,
+          "valence": "negative",
+          "category": "family",
+          "description": "His son Scott died from an accidental overdose",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_033_E03",
+          "source_refs": [
+            "PLV1_033_S1"
+          ]
+        },
+        {
+          "year": 2008,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died after battling lung cancer",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_033_E04",
+          "source_refs": [
+            "PLV1_033_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_033_S1",
+          "url": "https://en.wikipedia.org/wiki/Paul_Newman",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "CHECK"
+    },
+    {
+      "subject_id": "PLV1_034",
+      "name": "Robin Williams",
+      "gender": "male",
+      "birth": {
+        "date": "1951-07-21",
+        "time": "13:34",
+        "utc_offset": "-05:00",
+        "city": "Chicago, IL",
+        "country": "USA",
+        "latitude": 41.883,
+        "longitude": -87.632,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1988,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won a Golden Globe for Good Morning, Vietnam",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_034_E01",
+          "source_refs": [
+            "PLV1_034_S1"
+          ]
+        },
+        {
+          "year": 1998,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won the Academy Award for Good Will Hunting",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_034_E02",
+          "source_refs": [
+            "PLV1_034_S1"
+          ]
+        },
+        {
+          "year": 2006,
+          "valence": "negative",
+          "category": "health",
+          "description": "Returned to treatment for alcohol dependency",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_034_E03",
+          "source_refs": [
+            "PLV1_034_S1"
+          ]
+        },
+        {
+          "year": 2014,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died by suicide amid severe neurological and mental-health decline",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_034_E04",
+          "source_refs": [
+            "PLV1_034_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_034_S1",
+          "url": "https://en.wikipedia.org/wiki/Robin_Williams",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "CHECK"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "version": "V5_DEV_EVENT_BATCH_02_RESEARCH_V1",
+  "status": "BATCH_02_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "n_subjects": 21,
+  "n_event_rows": 64,
+  "eligible_rows": 53,
+  "excluded_rows": 11,
+  "subjects_with_positive": 19,
+  "subjects_with_negative": 10,
+  "subjects_with_both_polarities": 10,
+  "subjects_with_no_eligible_core_axis_event": 2,
+  "batch_subjects_sha256": "94dae37aa0dc7a10efacbe4a74142a7922604da96abbbaeb78c147b4eaecf6f0",
+  "events_sha256": "937edf5b892682fff00c546f4130f36c13d635c42c9d99cadb3d6f3f8b87a8a1",
+  "audit_sha256": "b316c98241605cbb1ea976dc2d813fc8025287ad5490f4be09b904df376a757c",
+  "rules": {
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "no_pairability_used_for_selection": true,
+    "no_chronology_balancing_used_for_selection": true,
+    "preassigned_axis_immutable": true,
+    "ineligible_or_ambiguous_candidates_logged_not_relabelled": true,
+    "not_final_event_freeze": true
+  },
+  "next_rule": "Place Batch 02 outputs under results/batch_02. Do not merge, pair, inspect astrology, or research CONFIRM. Proceed next with the frozen Batch 03 subject list."
+}

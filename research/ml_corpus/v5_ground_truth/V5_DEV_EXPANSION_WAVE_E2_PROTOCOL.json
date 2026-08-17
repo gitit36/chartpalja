@@ -1,0 +1,45 @@
+{
+  "version": "V5_DEV_EXPANSION_WAVE_E2_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_COMBINED_PREPAIR_FAILURE_BEFORE_E2_MEMBERSHIP_SELECTION",
+  "trigger": "V5_COMBINED_PREPAIR_FEASIBILITY_FAIL_EXPANSION_E2_REQUIRED",
+  "purpose": "Add one whole new outcome-blind DEV expansion wave after Original DEV + E1 still fail the frozen necessary-condition gate. Preserve the original axis composition rather than oversampling PROJECT after observing the remaining deficit.",
+  "wave": {
+    "name": "V5_DEV_EXPANSION_E2",
+    "n": 160,
+    "axis_quotas": {
+      "COMPETITIVE": 40,
+      "PROJECT": 50,
+      "STATUS": 70
+    },
+    "selection_seed": 2026081704,
+    "selection_method": "SHA256 deterministic ordering within axis",
+    "batch_count": 8
+  },
+  "candidate_sources_allowed": [
+    "V5_IDENTITY_LINKAGE_AUDIT_CANDIDATE_POOL.csv with PASS_EXACT_DOB only",
+    "Previously frozen E1 STATUS role-supplement exact-DOB candidate pool"
+  ],
+  "identity_exclusions_required": [
+    "current repaired DEV 160",
+    "sealed CONFIRM 80",
+    "frozen E1 expansion 160"
+  ],
+  "identity_quality": {
+    "required_linkage_status": "PASS_EXACT_DOB",
+    "wikidata_id_required": true,
+    "name_dedup_required": true,
+    "same_axis_only": true
+  },
+  "forbidden_for_membership": {
+    "event_outcomes": true,
+    "event_years": true,
+    "pairability": true,
+    "pair_gap": true,
+    "chronology": true,
+    "astrology": true,
+    "control": true,
+    "confirm_event_research": true
+  },
+  "supply_failure_rule": "If fresh exact-DOB supply is insufficient for any frozen axis quota after excluding DEV/CONFIRM/E1, stop. Do not lower quotas or reuse identities. Freeze a supply diagnostic before any new candidate-source supplement.",
+  "after_success_rule": "Freeze E2 roster and collect events under the same bounded major-event source sweep and frozen axis taxonomy. Do not inspect 1-5y gaps until E2 events are frozen."
+}

@@ -1,0 +1,9 @@
+{
+  "url": "https://www.bundeskanzler.de/bk-de/content/gerhard-schroeder-1998-2005--1844998",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='www.bundeskanzler.de', port=443): Max retries exceeded with url: /bk-de/content/gerhard-schroeder-1998-2005--1844998 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1076)')))\"))"
+}

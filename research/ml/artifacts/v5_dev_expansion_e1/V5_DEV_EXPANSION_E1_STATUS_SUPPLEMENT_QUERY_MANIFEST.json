@@ -1,0 +1,51 @@
+{
+  "version": "V5_E1_STATUS_SUPPLEMENT_QUERY_MANIFEST_V1",
+  "status": "STATUS_SUPPLEMENT_QUERIED_EXACT_DOB_LINKED",
+  "role_queries": {
+    "diplomat": {
+      "qid": "Q193391",
+      "returned_rows": 5000,
+      "cache_file": "STATUS__diplomat.json",
+      "cache_sha256": "7d25f65c0c774d79b7ccedbb2347955b5eb78bffba8e777a32467481c7fb66f2"
+    },
+    "judge": {
+      "qid": "Q16533",
+      "returned_rows": 5000,
+      "cache_file": "STATUS__judge.json",
+      "cache_sha256": "26f95cab69e36297e93d21bc43ae73552d27413918768c3ace9e72d0e78988fe"
+    },
+    "civil_servant": {
+      "qid": "Q212238",
+      "returned_rows": 5000,
+      "cache_file": "STATUS__civil_servant.json",
+      "cache_sha256": "7b17f17a2c99368d5f185bba0600fc7e08ccb49ad3b19d7819e1e013381710f4"
+    },
+    "military_officer": {
+      "qid": "Q189290",
+      "returned_rows": 5000,
+      "cache_file": "STATUS__military_officer.json",
+      "cache_sha256": "c3c8392993f22a0e90039888ef52a85da762e9e619c86fe6edfdece0e3cb052e"
+    },
+    "entrepreneur": {
+      "qid": "Q131524",
+      "returned_rows": 5000,
+      "cache_file": "STATUS__entrepreneur.json",
+      "cache_sha256": "f53705fc2ca3391c86df54861d0b9127e63900cbe917b3f2dcca915cfe8a974c"
+    },
+    "banker": {
+      "qid": "Q806798",
+      "returned_rows": 4771,
+      "cache_file": "STATUS__banker.json",
+      "cache_sha256": "a00970fdb2900ea1cecfec76992d629c9d11753a175279f92257447d79749e50"
+    }
+  },
+  "strict_AA_unique_birth_rows": 12795,
+  "resolved_exact_DOB_status_candidates_n": 327,
+  "birth_snapshot_sha256": "ca28a3fea1250b2ea01eb06a54b4921ec0bf790fdc14c5c561006f1c592c634b",
+  "supplement_pool_sha256": "b190f42f4bf32860c5a4446c4e27089ba3b52aa89c433f89eb4f11ad16cd8056",
+  "events_used": false,
+  "pairability_used": false,
+  "chronology_used": false,
+  "astrology_used": false,
+  "control_used": false
+}

@@ -1,0 +1,59 @@
+{
+  "version": "V2_DEV_WINNER_FREEZE",
+  "created_at": "2026-08-15T18:32:35",
+  "status": "V2_DEV_NO_CANDIDATE_SURVIVES",
+  "winner": null,
+  "reason": "Neither frozen V1.4 candidate passed the external NEW_DEV gate.",
+  "model": {
+    "family": "PairwiseLogisticRegression",
+    "penalty": "l2",
+    "C": 0.3,
+    "standard_scaler": true,
+    "max_iter": 3000
+  },
+  "winner_features": null,
+  "dev_metrics": null,
+  "all_dev_results": [
+    {
+      "candidate": "TENGOD",
+      "n_features": 10,
+      "macro_pairwise": 0.5857142857142857,
+      "subject_hit_rate": 0.6,
+      "median_sep": 0.18936084307974954,
+      "control_pairwise": 0.5196428571428572,
+      "delta_vs_control": 0.06607142857142856,
+      "bootstrap_mean_delta": 0.06607142857142857,
+      "bootstrap_ci_low": -0.05892857142857143,
+      "bootstrap_ci_high": 0.18928571428571428,
+      "bootstrap_p_delta_gt_0": 0.8467,
+      "fresh_v2_pairwise": 0.6136363636363636,
+      "prior_unused_candidate_pairwise": 0.5805084745762712,
+      "high_conf_pairwise": 0.5882352941176471,
+      "passes_gate": false
+    },
+    {
+      "candidate": "SHINSAL_ALL",
+      "n_features": 43,
+      "macro_pairwise": 0.5642857142857143,
+      "subject_hit_rate": 0.5285714285714286,
+      "median_sep": 0.44362077349379625,
+      "control_pairwise": 0.5196428571428572,
+      "delta_vs_control": 0.044642857142857095,
+      "bootstrap_mean_delta": 0.044642857142857144,
+      "bootstrap_ci_low": -0.08392857142857142,
+      "bootstrap_ci_high": 0.16964285714285715,
+      "bootstrap_p_delta_gt_0": 0.7465,
+      "fresh_v2_pairwise": 0.6136363636363636,
+      "prior_unused_candidate_pairwise": 0.5550847457627118,
+      "high_conf_pairwise": 0.5588235294117647,
+      "passes_gate": false
+    }
+  ],
+  "integrity": {
+    "V1_corpus_sha256": "4d3de2a50de488580b4f19e411a05d3e331ab0223f57da1a2941dbfefb03df19",
+    "V2_NEW_DEV_sha256": "acc665b0a9525214a8ecc1c7302d399309a1969aabb7e77952f82e889f93b748",
+    "candidate_freeze_sha256": "e435f464b4c9fb22ec872b6a520168f1c0aee3d911781fcb0ffbf238b0cd953e",
+    "confirm_file_loaded": false
+  },
+  "confirmation_refit_policy": "If a winner exists, refit the SAME model + SAME features on V1 + V2 NEW_DEV before one-shot NEW_CONFIRM scoring."
+}

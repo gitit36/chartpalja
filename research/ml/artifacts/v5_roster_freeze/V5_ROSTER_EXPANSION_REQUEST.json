@@ -1,0 +1,52 @@
+{
+  "version": "V5_ROSTER_EXPANSION_REQUEST_V1",
+  "created_at": "2026-08-17T02:06:54",
+  "status": "V5_CURRENT_SEED_UNIVERSE_INSUFFICIENT_EXPANSION_REQUIRED_BEFORE_FINAL_ROSTER_FREEZE",
+  "available_fresh_AA": {
+    "COMPETITIVE": 45,
+    "PROJECT": 50,
+    "STATUS": 14
+  },
+  "final_DEV_target": {
+    "COMPETITIVE": 40,
+    "PROJECT": 50,
+    "STATUS": 70
+  },
+  "final_CONFIRM_target": {
+    "COMPETITIVE": 20,
+    "PROJECT": 25,
+    "STATUS": 35
+  },
+  "DEV_deficit": {
+    "COMPETITIVE": 0,
+    "PROJECT": 0,
+    "STATUS": 56
+  },
+  "DEV_plus_CONFIRM_expansion_deficit": {
+    "COMPETITIVE": 15,
+    "PROJECT": 25,
+    "STATUS": 91
+  },
+  "wave_a_pool_sha256": "35ac1a96c66b89299ac5140f45ec11c0ca2cb8088ee5efcca3fd0c0264a08b69",
+  "rules": {
+    "event_collection_allowed": false,
+    "astrology_generation_allowed": false,
+    "prior_subject_reuse_allowed": false,
+    "target_reduction_allowed": false,
+    "next_seed_expansion_may_use": [
+      "role/category",
+      "identity",
+      "birth availability",
+      "Rodden AA",
+      "birth year",
+      "gender guardrail"
+    ],
+    "next_seed_expansion_may_not_use": [
+      "event outcome",
+      "event chronology",
+      "pairability",
+      "astrology",
+      "Control score"
+    ]
+  }
+}

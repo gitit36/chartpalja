@@ -1,0 +1,127 @@
+{
+  "version": "SAJU_ML_V4_FAILURE_DIAGNOSTIC_DECISION_V1",
+  "notebook_version": "SAJU_ML_V4_FAILURE_DIAGNOSTICS_DEV_EXPANSION_20260816",
+  "created_at": "2026-08-16T19:46:45",
+  "status": "V4_FAIL_DIAGNOSED_COLLECT_UNIFIED_DEV",
+  "winner": null,
+  "source_tournament_status": "V4_NO_ARCHITECTURE_SURVIVES_DISCOVERY_GATE",
+  "current_100_pair_role": "CONSUMED_DIAGNOSTIC_DEVELOPMENT",
+  "key_evidence": {
+    "best_winner_eligible_model": "ALL_ELASTICNET_AUTO",
+    "best_overall": 0.5050724637681159,
+    "best_p10": 0.2893719806763285,
+    "best_origin_min": 0.4873873873873875,
+    "origin_chronology_gap": 0.8367346938775511,
+    "forbidden_origin_diagnostic": 0.8913043478260869,
+    "core_axis_counts": {
+      "COMPETITIVE": {
+        "pairs": 43,
+        "subjects": 26
+      },
+      "PROJECT": {
+        "pairs": 40,
+        "subjects": 33
+      },
+      "RECOGNITION": {
+        "pairs": 4,
+        "subjects": 3
+      },
+      "STATUS": {
+        "pairs": 13,
+        "subjects": 9
+      }
+    }
+  },
+  "failure_taxonomy": [
+    {
+      "code": "COLLECTION_ORIGIN_CONFOUNDING_HIGH",
+      "severity": "HIGH",
+      "evidence": "forbidden origin diagnostic=0.891; origin chronology gap=0.837",
+      "implication": "Current 100-pair target is consumed diagnostic development, not a clean external-like corpus."
+    },
+    {
+      "code": "ASTRO_SIGNAL_WEAK_OVERALL",
+      "severity": "HIGH",
+      "evidence": "ALL_ELASTICNET_AUTO overall=0.505",
+      "implication": "No current astrology architecture is strong enough to freeze."
+    },
+    {
+      "code": "BEST_MODEL_LOWER_TAIL_UNSTABLE",
+      "severity": "HIGH",
+      "evidence": "ALL_ELASTICNET_AUTO p10=0.289",
+      "implication": "Repeated subject-CV performance is highly unstable."
+    },
+    {
+      "code": "BEST_MODEL_ORIGIN_REPLICATION_FAIL",
+      "severity": "HIGH",
+      "evidence": "ALL_ELASTICNET_AUTO origin_min=0.487",
+      "implication": "Best model does not independently clear chance in both collection origins."
+    },
+    {
+      "code": "INCREMENTAL_VALUE_NOT_SECURE",
+      "severity": "HIGH",
+      "evidence": "P(delta>0) nuisance=0.719; Control=0.682",
+      "implication": "Observed positive deltas are not statistically secure enough for promotion."
+    },
+    {
+      "code": "EXACT_TENGOD_REPRESENTATION_RECOVERY_ONLY",
+      "severity": "MEDIUM",
+      "evidence": "TG10 stem+branch improves over TG5 by 0.056 but remains <0.50",
+      "implication": "Richer Ten-God encoding is worth retaining as a next-dev candidate, not a winner."
+    },
+    {
+      "code": "AXIS_SPARSE_RECOGNITION",
+      "severity": "MEDIUM",
+      "evidence": "RECOGNITION has 3 subjects / 4 pairs",
+      "implication": "Do not make axis-specific claims from this cell."
+    },
+    {
+      "code": "AXIS_SPARSE_STATUS",
+      "severity": "MEDIUM",
+      "evidence": "STATUS has 9 subjects / 13 pairs",
+      "implication": "Do not make axis-specific claims from this cell."
+    },
+    {
+      "code": "ELASTICNET_FEATURE_SELECTION_UNSTABLE",
+      "severity": "MEDIUM",
+      "evidence": "No feature meets >=60% selection and >=70% selected-sign consistency.",
+      "implication": "Do not freeze individual features or coefficients from this discovery run."
+    }
+  ],
+  "next_development": {
+    "protocol": "SINGLE_UNIFIED_COLLECTION_PROTOCOL",
+    "recommended_fresh_pairs": 100,
+    "axis_allocation": {
+      "COMPETITIVE": 30,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "minimum_core_axis_subjects_for_diagnostic_interpretation": 50,
+    "recognition_core_deferred_until_subjects": 30,
+    "chronology_rule": "Do not directional-backfill. Freeze a complete wave first; if chronology remains imbalanced, collect another complete wave under the same protocol.",
+    "pair_selection_rule": "Within the preassigned axis, enumerate verified opposite-polarity events and choose the minimum-absolute-year-gap pair using a deterministic tie-break."
+  },
+  "next_dev_architecture_shortlist_diagnostic_only": [
+    "TG10_STEM_BRANCH_L2",
+    "ALL_L2",
+    "ALL_ELASTICNET_AUTO"
+  ],
+  "shortlist_note": "This is not a winner freeze. It only limits the next development comparison to previously tested families; no new feature search is authorized here.",
+  "optional_artifacts_present": {
+    "axis": true,
+    "oof_pair": true,
+    "oof_subject": true,
+    "elastic_by_fold": true,
+    "elastic_frequency": true,
+    "pair_features": true,
+    "reviewed_414": true,
+    "expansion_events": true
+  },
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "next_rule": "Collect the fresh unified development wave BEFORE generating astrology scores. Then run a preregistered small-family development comparison. Do not construct or open a new external holdout until a candidate passes discovery gates."
+}

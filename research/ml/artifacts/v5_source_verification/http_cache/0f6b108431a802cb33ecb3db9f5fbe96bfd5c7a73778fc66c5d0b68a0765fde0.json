@@ -1,0 +1,9 @@
+{
+  "url": "https://siusa-archivi.cultura.gov.it/cgi-bin/pagina.pl?Chiave=51365&RicDimF=2&RicLin=en&RicProgetto=imprese&TipoPag=prodpersona",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "ConnectTimeout(MaxRetryError(\"HTTPSConnectionPool(host='siusa-archivi.cultura.gov.it', port=443): Max retries exceeded with url: /cgi-bin/pagina.pl?Chiave=51365&RicDimF=2&RicLin=en&RicProgetto=imprese&TipoPag=prodpersona (Caused by ConnectTimeoutError(<urllib3.connection.VerifiedHTTPSConnection object at 0x7ff578f9a250>, 'Connection to siusa-archivi.cultura.gov.it timed out. (connect timeout=25)'))\"))"
+}

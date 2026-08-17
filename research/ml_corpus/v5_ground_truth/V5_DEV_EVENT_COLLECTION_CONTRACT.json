@@ -1,0 +1,165 @@
+{
+  "version": "V5_DEV_EVENT_COLLECTION_CONTRACT_V1",
+  "status": "PREDECLARED_BEFORE_V5_DEV_EVENT_RESEARCH",
+  "created_at": "2026-08-16T17:32:58",
+  "purpose": "Collect source-verifiable positive and negative real-life events for the frozen V5 DEV roster before any astrology feature generation.",
+  "scope": {
+    "roster": "V5_DEV_SUBJECT_ROSTER_160.csv",
+    "n_subjects": 160,
+    "axes": {
+      "COMPETITIVE": 40,
+      "PROJECT": 50,
+      "STATUS": 70
+    },
+    "research_axis_is_preassigned_and_immutable": true,
+    "confirm_roster_must_remain_untouched": true
+  },
+  "core_rules": [
+    "Research each subject only within preassigned_axis.",
+    "Record all eligible major events found during the bounded source sweep, not only pair-friendly events.",
+    "Do not inspect astrology, Control scores, chronology balance, pairability, or model outputs during event collection.",
+    "Positive and negative events require explicit source-verifiable outcomes.",
+    "Do not replace subjects because events are sparse or difficult to find.",
+    "Same-year positive and negative collisions are retained for QA but cannot form a final pair.",
+    "Routine term completion, retirement, ordinary government turnover, or normal resignation is not automatically a negative STATUS event.",
+    "Legal, health, or reputation disruption is not a core STATUS negative unless the source-verifiable mechanism is a direct loss of status/office/authority under the STATUS definition.",
+    "Event eligibility must be decided before looking at any astrology feature.",
+    "No CONFIRM event research until one candidate architecture is frozen after DEV."
+  ],
+  "bounded_source_sweep": {
+    "per_subject_sequence": [
+      "1. One broad biographical/reference source to build the career timeline.",
+      "2. One authoritative or primary source where available for major candidate events.",
+      "3. Up to two reputable independent sources for verification/clarification of candidate events."
+    ],
+    "stop_rule": "Stop after the bounded sweep has covered the major career timeline and no new eligible axis-specific major event appears in the final two consulted sources.",
+    "not_exhaustive_lifetime_enumeration": true,
+    "single_source_allowed_for_intake": true,
+    "preferred_second_source_for_high_impact_or_ambiguous_events": true
+  },
+  "axis_definitions": {
+    "COMPETITIVE": {
+      "unit": "observable competitive outcome",
+      "positive_examples": [
+        "major title/championship win",
+        "major medal or tournament win",
+        "clear ranking breakthrough or record-setting competitive achievement",
+        "decisive selection/qualification success when competitively meaningful"
+      ],
+      "negative_examples": [
+        "major final/tournament defeat or elimination",
+        "loss of title/status through competitive result",
+        "clear competitive collapse or failure documented as an outcome",
+        "disqualification/competitive sanction when directly part of the competition outcome"
+      ],
+      "exclude_unless_direct_competitive_outcome": [
+        "general injury/illness",
+        "personal scandal",
+        "retirement",
+        "contract dispute"
+      ]
+    },
+    "PROJECT": {
+      "unit": "discrete creative/professional project outcome",
+      "positive_examples": [
+        "major release/project success",
+        "major award or critical/commercial breakthrough tied to a specific work",
+        "major commission/launch completed successfully",
+        "documented comeback project or project milestone"
+      ],
+      "negative_examples": [
+        "major flop/failure tied to a specific project",
+        "project cancellation after meaningful commitment",
+        "major production failure or shelved work",
+        "major critically/commercially unsuccessful project when clearly documented"
+      ],
+      "exclude_unless_project_mechanism_is_direct": [
+        "general reputation decline",
+        "health event",
+        "relationship event",
+        "routine gap between projects"
+      ]
+    },
+    "STATUS": {
+      "unit": "formal or clearly observable status/authority outcome",
+      "positive_examples": [
+        "election or appointment to materially higher office",
+        "promotion to major leadership position",
+        "successful leadership accession",
+        "major institutional status gain"
+      ],
+      "negative_examples": [
+        "electoral defeat when contesting to retain/gain meaningful office",
+        "removal/dismissal from major office",
+        "forced resignation directly tied to loss of authority",
+        "major demotion or loss of leadership control"
+      ],
+      "not_automatically_negative": [
+        "routine term completion",
+        "retirement",
+        "ordinary government turnover",
+        "voluntary normal resignation",
+        "death",
+        "health episode",
+        "legal/reputation event without direct status loss"
+      ]
+    }
+  },
+  "event_fields": {
+    "event_year": "integer calendar year of the outcome",
+    "polarity": [
+      "positive",
+      "negative"
+    ],
+    "event_type": "short normalized axis-specific event category",
+    "event_description": "concise factual description, not interpretation",
+    "source_url": "verifying public source",
+    "source_title": "source title",
+    "source_publisher": "publisher/organization",
+    "source_date": "publication date if known",
+    "source_quality": [
+      "high",
+      "medium"
+    ],
+    "eligibility_note": "why this is an eligible event under the preassigned axis",
+    "exclude": "true only for logged candidate events found during sweep that fail eligibility",
+    "exclude_reason": "predefined factual reason, never astrology/pairability"
+  },
+  "collection_batching": {
+    "n_batches": 8,
+    "assignment": "deterministic axis-stratified round-robin after SHA256 ordering",
+    "batch_order_is_fixed": true,
+    "complete_each_subject_sweep_before_moving_to_next_subject": true,
+    "do_not_prioritize_by_expected_pairability": true
+  },
+  "post_collection": {
+    "freeze_all_raw_event_rows_before_pairing": true,
+    "pair_rule_after_freeze": {
+      "same_subject": true,
+      "same_axis": true,
+      "opposite_polarity": true,
+      "same_year_forbidden": true,
+      "abs_year_gap_min": 1,
+      "abs_year_gap_max": 5,
+      "use_all_eligible_local_pairs": true,
+      "subject_total_training_weight": 1.0
+    },
+    "pre_astrology_gate": {
+      "minimum_pairable_subjects_total": 80,
+      "minimum_pairable_by_axis": {
+        "COMPETITIVE": 20,
+        "PROJECT": 20,
+        "STATUS": 25
+      },
+      "overall_positive_earlier_share_range": [
+        0.4,
+        0.6
+      ],
+      "axis_positive_earlier_soft_range": [
+        0.3,
+        0.7
+      ],
+      "cross_validated_age_axis_nuisance_accuracy_max": 0.6
+    }
+  }
+}

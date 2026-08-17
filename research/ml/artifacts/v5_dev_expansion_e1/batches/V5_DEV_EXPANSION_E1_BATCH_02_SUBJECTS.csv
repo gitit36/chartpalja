@@ -1,0 +1,22 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+2,1,V5DEVX_022,Dick Fosbury,COMPETITIVE,V5_WIKIDATA_EXPANSION,1947-03-06,"Portland, OR, United States",male,Q310989,,DickFosbury1947
+2,2,V5DEVX_023,Michele Lee,PROJECT,V5_WIKIDATA_EXPANSION,1942-06-24,"Los Angeles, CA, United States",female,Q269106,,MicheleLee1942
+2,3,V5DEVX_024,Olivier Sarkozy,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1969-05-26,"Boulogne-Billancourt, France",male,Q3351364,AA,OlivierSarkozy1969
+2,4,V5DEVX_025,Alex Ferguson,COMPETITIVE,V5_WIKIDATA_EXPANSION,1941-12-31,"Glasgow, United Kingdom",male,Q44980,,AlexFerguson1941
+2,5,V5DEVX_026,Roger Coggio,PROJECT,V5_WIKIDATA_EXPANSION,1934-03-11,"Lyon, France",male,Q508777,,RogerCoggio1934
+2,6,V5DEVX_027,Michael Jordan,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1963-02-17,"New York, NY, United States",male,Q41421,AA,MichaelJordan1963
+2,7,V5DEVX_028,Marcel Bernard,COMPETITIVE,V5_WIKIDATA_EXPANSION,1914-05-18,"La Madeleine, France",male,Q1892978,,MarcelBernard1914
+2,8,V5DEVX_029,Ross Hagen,PROJECT,V5_WIKIDATA_EXPANSION,1938-05-21,"Williams, AZ, United States",male,Q518984,,RossHagen1938
+2,9,V5DEVX_030,Paul Bocuse,STATUS,V5_WIKIDATA_EXPANSION,1926-02-11,"Collonges-au-Mont-d'Or, France",male,Q8159,,PaulBocuse1926
+2,10,V5DEVX_031,Jack Kramer,COMPETITIVE,V5_WIKIDATA_EXPANSION,1921-08-01,"Las Vegas, NV, United States",male,Q54529,,JackKramer1921
+2,11,V5DEVX_032,Chevy Chase,PROJECT,V5_WIKIDATA_EXPANSION,1943-10-08,"New York, NY, United States",male,Q310926,,ChevyChase1943
+2,12,V5DEVX_033,Bradford Dillman,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1930-04-14,"San Francisco, CA, United States",male,Q896953,AA,BradfordDillman1930
+2,13,V5DEVX_034,Bruno Arcari,COMPETITIVE,V5_WIKIDATA_EXPANSION,1942-01-01,"Atina, Italy",male,Q729084,,BrunoArcari1942
+2,14,V5DEVX_035,Steve Reich,PROJECT,V5_WIKIDATA_EXPANSION,1936-10-03,"Manhattan, KS, United States",male,Q262791,,SteveReich1936
+2,15,V5DEVX_036,Paul Lücke,STATUS,V5_WIKIDATA_EXPANSION,1914-11-13,"Marienheide, Germany",male,Q69098,,PaulLucke1914
+2,16,V5DEVX_037,Agnès Soral,PROJECT,V5_WIKIDATA_EXPANSION,1960-06-08,"Aix-les-Bains, France",female,Q395124,,AgnèsSoral1960
+2,17,V5DEVX_038,Roland Dumas,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1922-08-23,"Limoges, France",male,Q547525,AA,RolandDumas1922
+2,18,V5DEVX_039,Élodie Navarre,PROJECT,V5_WIKIDATA_EXPANSION,1979-01-21,"Paris, France",female,Q274759,,ÉlodieNavarre1979
+2,19,V5DEVX_040,Hari Rhodes,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1932-04-10,"Cincinnati, OH, United States",male,Q3127440,AA,HariRhodes1932
+2,20,V5DEVX_041,Raymond Leo Burke,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1948-06-30,"Richland Center, WI, United States",male,Q515887,AA,RaymondLeoBurke1948
+2,21,V5DEVX_042,Charlie Wilson,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1933-06-01,"Trinity, TX, United States",male,Q333430,AA,CharlieWilson1933

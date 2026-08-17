@@ -1,0 +1,21 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,sweep_status,eligible_positive_events,eligible_negative_events,excluded_logged_candidates,source_rows_logged,notes
+3,1,V5DEVX_043,Wilfried Dietrich,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,3,0,0,3,No eligible negative event found in first-pass bounded sweep.
+3,2,V5DEVX_044,Valérie Lemercier,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,3,0,0,3,No eligible negative event found in first-pass bounded sweep.
+3,3,V5DEVX_045,Olivier Poivre d'Arvor,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,0,0,1,No eligible negative event found in first-pass bounded sweep.
+3,4,V5DEVX_046,Ronda Rousey,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,2,2,0,4,Both polarities observed in first-pass bounded sweep.
+3,5,V5DEVX_047,Alice Pearce,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,0,0,1,No eligible negative event found in first-pass bounded sweep.
+3,6,V5DEVX_048,Jean Van Houtte,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+3,7,V5DEVX_049,Arnaud Clément,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,3,2,0,5,Both polarities observed in first-pass bounded sweep.
+3,8,V5DEVX_050,Rob Cohen,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+3,9,V5DEVX_051,Roberto Calvi,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,0,1,2,No eligible negative event found in first-pass bounded sweep.
+3,10,V5DEVX_052,Shirley Fry,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,3,1,0,4,Both polarities observed in first-pass bounded sweep.
+3,11,V5DEVX_053,Andy Griffith,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,0,0,1,No eligible negative event found in first-pass bounded sweep.
+3,12,V5DEVX_054,Robert Eugene Bush,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,0,0,1,1,No eligible core-axis event found in first-pass bounded sweep; only excluded audit candidate(s) logged.
+3,13,V5DEVX_055,Don Budge,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,2,1,0,3,Both polarities observed in first-pass bounded sweep.
+3,14,V5DEVX_056,Frank Gorshin,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,0,1,2,No eligible negative event found in first-pass bounded sweep.
+3,15,V5DEVX_057,Wolfgang Abendroth,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,0,0,1,1,No eligible core-axis event found in first-pass bounded sweep; only excluded audit candidate(s) logged.
+3,16,V5DEVX_058,Max Ophüls,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,0,0,1,1,No eligible core-axis event found in first-pass bounded sweep; only excluded audit candidate(s) logged.
+3,17,V5DEVX_059,Lee Van Cleef,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,0,0,1,1,No eligible core-axis event found in first-pass bounded sweep; only excluded audit candidate(s) logged.
+3,18,V5DEVX_060,Wyc Grousbeck,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,0,1,2,No eligible negative event found in first-pass bounded sweep.
+3,19,V5DEVX_061,Emilio Colombo,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,2,0,0,2,No eligible negative event found in first-pass bounded sweep.
+3,20,V5DEVX_062,Pietro Mennea,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP_REQUIRES_E1_SOURCE_GATE,1,0,1,2,No eligible negative event found in first-pass bounded sweep.

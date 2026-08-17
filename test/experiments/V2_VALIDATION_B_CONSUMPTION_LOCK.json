@@ -1,0 +1,9 @@
+{
+  "protocol_version": "V2_VAL_B_PROTOCOL_1.1",
+  "execution_started_at": "2026-08-15T12:10:11",
+  "scorer_sha256": "a461f1356945a87e540028375b2aaa6090bc36cb0884d6af42371fd40f5022db",
+  "protocol_freeze_sha256": "d86cab17882cf4641689e3d3112eee14028f165dfcf0f318fbdaf24362454688",
+  "model": "V2_DY_B",
+  "state": "CONSUMED_COMPLETE",
+  "execution_completed_at": "2026-08-15T12:10:44"
+}

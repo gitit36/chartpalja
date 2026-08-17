@@ -1,0 +1,688 @@
+{
+  "measured_at": "2026-08-12T02:39:04",
+  "phase": "B9B_kappa_sweep",
+  "frozen_A": {
+    "alpha": 1.0,
+    "version": "B9A_alpha_1"
+  },
+  "kappas": [
+    -0.25,
+    -0.15,
+    -0.1,
+    -0.05,
+    0.0,
+    0.05,
+    0.1,
+    0.15,
+    0.25
+  ],
+  "material_eps": {
+    "std_sep": 0.05,
+    "rank": 0.02,
+    "hit_pp": 1.0
+  },
+  "decision_rule": [
+    "structural gates must pass",
+    "R must add clear holdout incremental value (std_sep/rank/hit), not just raw sep",
+    "prefer gains reproduced on neighboring kappa",
+    "train-only improvement insufficient",
+    "if small/unstable vs A → reject R keep B9-A"
+  ],
+  "results": [
+    {
+      "kappa": -0.25,
+      "structure": {
+        "gated": false,
+        "pop_mean_raw_drift": -0.4593,
+        "max_abs_block_mean_drift": 3.5706,
+        "median_block_median_drift": -0.15,
+        "annual_shock_sd": {
+          "p25": 3.057,
+          "p50": 3.603,
+          "p75": 4.547,
+          "p90": 5.517,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": false,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.3006,
+        "raw_sep_median": 3.0337,
+        "pooled_sd": 13.2509,
+        "std_sep": 0.1736,
+        "pairwise_good_gt_bad": 0.6015,
+        "auc_macro": 0.6015,
+        "auc_micro": 0.5519,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3424,
+        "raw_sep_median": 1.2349,
+        "pooled_sd": 13.5571,
+        "std_sep": 0.1728,
+        "pairwise_good_gt_bad": 0.5868,
+        "auc_macro": 0.5868,
+        "auc_micro": 0.5053,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.8794,
+          "std_sep": -0.0651,
+          "pairwise_good_gt_bad": -0.0396,
+          "auc_micro": -0.0254,
+          "auc_macro": -0.0396
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.014,
+          "std_sep": -0.0004,
+          "pairwise_good_gt_bad": -0.0106,
+          "auc_micro": 0.0021,
+          "auc_macro": -0.0106
+        },
+        "structure": {
+          "pop_mean_raw_drift": 0.1883,
+          "max_abs_block_mean_drift": -0.5823,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": -0.15,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.5346,
+        "max_abs_block_mean_drift": 3.8035,
+        "median_block_median_drift": -0.105,
+        "annual_shock_sd": {
+          "p25": 3.033,
+          "p50": 3.509,
+          "p75": 4.68,
+          "p90": 6.08,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.6523,
+        "raw_sep_median": 3.154,
+        "pooled_sd": 13.2638,
+        "std_sep": 0.2,
+        "pairwise_good_gt_bad": 0.6311,
+        "auc_macro": 0.6311,
+        "auc_micro": 0.5631,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.348,
+        "raw_sep_median": 1.1596,
+        "pooled_sd": 13.5605,
+        "std_sep": 0.1732,
+        "pairwise_good_gt_bad": 0.5919,
+        "auc_macro": 0.5919,
+        "auc_micro": 0.5,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.5277,
+          "std_sep": -0.0387,
+          "pairwise_good_gt_bad": -0.01,
+          "auc_micro": -0.0142,
+          "auc_macro": -0.01
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.0084,
+          "std_sep": 0.0,
+          "pairwise_good_gt_bad": -0.0055,
+          "auc_micro": -0.0032,
+          "auc_macro": -0.0055
+        },
+        "structure": {
+          "pop_mean_raw_drift": 0.113,
+          "max_abs_block_mean_drift": -0.3494,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": -0.1,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.5723,
+        "max_abs_block_mean_drift": 3.92,
+        "median_block_median_drift": -0.075,
+        "annual_shock_sd": {
+          "p25": 3.035,
+          "p50": 3.442,
+          "p75": 4.716,
+          "p90": 6.18,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.8282,
+        "raw_sep_median": 3.2955,
+        "pooled_sd": 13.2778,
+        "std_sep": 0.213,
+        "pairwise_good_gt_bad": 0.6331,
+        "auc_macro": 0.6331,
+        "auc_micro": 0.5688,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3508,
+        "raw_sep_median": 1.1219,
+        "pooled_sd": 13.5699,
+        "std_sep": 0.1732,
+        "pairwise_good_gt_bad": 0.5919,
+        "auc_macro": 0.5919,
+        "auc_micro": 0.5021,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.3518,
+          "std_sep": -0.0257,
+          "pairwise_good_gt_bad": -0.008,
+          "auc_micro": -0.0085,
+          "auc_macro": -0.008
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.0056,
+          "std_sep": 0.0,
+          "pairwise_good_gt_bad": -0.0055,
+          "auc_micro": -0.0011,
+          "auc_macro": -0.0055
+        },
+        "structure": {
+          "pop_mean_raw_drift": 0.0753,
+          "max_abs_block_mean_drift": -0.2329,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": -0.05,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.6099,
+        "max_abs_block_mean_drift": 4.0365,
+        "median_block_median_drift": -0.035,
+        "annual_shock_sd": {
+          "p25": 3.041,
+          "p50": 3.508,
+          "p75": 4.896,
+          "p90": 6.298,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.0041,
+        "raw_sep_median": 3.4371,
+        "pooled_sd": 13.2969,
+        "std_sep": 0.2259,
+        "pairwise_good_gt_bad": 0.6361,
+        "auc_macro": 0.6361,
+        "auc_micro": 0.5748,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3536,
+        "raw_sep_median": 1.0843,
+        "pooled_sd": 13.5842,
+        "std_sep": 0.1733,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5042,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.1759,
+          "std_sep": -0.0128,
+          "pairwise_good_gt_bad": -0.005,
+          "auc_micro": -0.0025,
+          "auc_macro": -0.005
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": -0.0028,
+          "std_sep": 0.0001,
+          "pairwise_good_gt_bad": 0.0,
+          "auc_micro": 0.001,
+          "auc_macro": 0.0
+        },
+        "structure": {
+          "pop_mean_raw_drift": 0.0377,
+          "max_abs_block_mean_drift": -0.1164,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": 0.0,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.6476,
+        "max_abs_block_mean_drift": 4.1529,
+        "median_block_median_drift": 0.0,
+        "annual_shock_sd": {
+          "p25": 3.013,
+          "p50": 3.504,
+          "p75": 5.049,
+          "p90": 6.5,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.18,
+        "raw_sep_median": 3.5786,
+        "pooled_sd": 13.3209,
+        "std_sep": 0.2387,
+        "pairwise_good_gt_bad": 0.6411,
+        "auc_macro": 0.6411,
+        "auc_micro": 0.5773,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3564,
+        "raw_sep_median": 1.0467,
+        "pooled_sd": 13.6037,
+        "std_sep": 0.1732,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5032,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": 0.0,
+          "std_sep": 0.0,
+          "pairwise_good_gt_bad": 0.0,
+          "auc_micro": 0.0,
+          "auc_macro": 0.0
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": 0.0,
+          "std_sep": 0.0,
+          "pairwise_good_gt_bad": 0.0,
+          "auc_micro": 0.0,
+          "auc_macro": 0.0
+        },
+        "structure": {
+          "pop_mean_raw_drift": 0.0,
+          "max_abs_block_mean_drift": 0.0,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": 0.05,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.6853,
+        "max_abs_block_mean_drift": 4.2694,
+        "median_block_median_drift": 0.0325,
+        "annual_shock_sd": {
+          "p25": 2.989,
+          "p50": 3.584,
+          "p75": 5.18,
+          "p90": 6.738,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.3558,
+        "raw_sep_median": 3.7202,
+        "pooled_sd": 13.35,
+        "std_sep": 0.2514,
+        "pairwise_good_gt_bad": 0.6539,
+        "auc_macro": 0.6539,
+        "auc_micro": 0.583,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3592,
+        "raw_sep_median": 1.009,
+        "pooled_sd": 13.6282,
+        "std_sep": 0.1731,
+        "pairwise_good_gt_bad": 0.5903,
+        "auc_macro": 0.5903,
+        "auc_micro": 0.5011,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": 0.1758,
+          "std_sep": 0.0127,
+          "pairwise_good_gt_bad": 0.0128,
+          "auc_micro": 0.0057,
+          "auc_macro": 0.0128
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": 0.0028,
+          "std_sep": -0.0001,
+          "pairwise_good_gt_bad": -0.0071,
+          "auc_micro": -0.0021,
+          "auc_macro": -0.0071
+        },
+        "structure": {
+          "pop_mean_raw_drift": -0.0377,
+          "max_abs_block_mean_drift": 0.1165,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": 0.1,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.7229,
+        "max_abs_block_mean_drift": 4.3859,
+        "median_block_median_drift": 0.075,
+        "annual_shock_sd": {
+          "p25": 2.965,
+          "p50": 3.597,
+          "p75": 5.313,
+          "p90": 7.0,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 87.5,
+        "hit": "7/8",
+        "raw_sep_mean": 3.5317,
+        "raw_sep_median": 3.8617,
+        "pooled_sd": 13.384,
+        "std_sep": 0.2639,
+        "pairwise_good_gt_bad": 0.6514,
+        "auc_macro": 0.6514,
+        "auc_micro": 0.5846,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3621,
+        "raw_sep_median": 0.9714,
+        "pooled_sd": 13.6577,
+        "std_sep": 0.1729,
+        "pairwise_good_gt_bad": 0.5819,
+        "auc_macro": 0.5819,
+        "auc_micro": 0.4947,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 12.5,
+          "raw_sep_mean": 0.3517,
+          "std_sep": 0.0252,
+          "pairwise_good_gt_bad": 0.0103,
+          "auc_micro": 0.0073,
+          "auc_macro": 0.0103
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": 0.0057,
+          "std_sep": -0.0003,
+          "pairwise_good_gt_bad": -0.0155,
+          "auc_micro": -0.0085,
+          "auc_macro": -0.0155
+        },
+        "structure": {
+          "pop_mean_raw_drift": -0.0753,
+          "max_abs_block_mean_drift": 0.233,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": 0.15,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.7606,
+        "max_abs_block_mean_drift": 4.5024,
+        "median_block_median_drift": 0.1125,
+        "annual_shock_sd": {
+          "p25": 2.956,
+          "p50": 3.585,
+          "p75": 5.489,
+          "p90": 7.234,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 87.5,
+        "hit": "7/8",
+        "raw_sep_mean": 3.7076,
+        "raw_sep_median": 4.0033,
+        "pooled_sd": 13.423,
+        "std_sep": 0.2762,
+        "pairwise_good_gt_bad": 0.6593,
+        "auc_macro": 0.6593,
+        "auc_micro": 0.587,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3649,
+        "raw_sep_median": 0.9337,
+        "pooled_sd": 13.6921,
+        "std_sep": 0.1727,
+        "pairwise_good_gt_bad": 0.5819,
+        "auc_macro": 0.5819,
+        "auc_micro": 0.4937,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 12.5,
+          "raw_sep_mean": 0.5276,
+          "std_sep": 0.0375,
+          "pairwise_good_gt_bad": 0.0182,
+          "auc_micro": 0.0097,
+          "auc_macro": 0.0182
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": 0.0085,
+          "std_sep": -0.0005,
+          "pairwise_good_gt_bad": -0.0155,
+          "auc_micro": -0.0095,
+          "auc_macro": -0.0155
+        },
+        "structure": {
+          "pop_mean_raw_drift": -0.113,
+          "max_abs_block_mean_drift": 0.3495,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    },
+    {
+      "kappa": 0.25,
+      "structure": {
+        "gated": false,
+        "pop_mean_raw_drift": -0.8359,
+        "max_abs_block_mean_drift": 4.8625,
+        "median_block_median_drift": 0.2125,
+        "annual_shock_sd": {
+          "p25": 2.878,
+          "p50": 3.602,
+          "p75": 5.915,
+          "p90": 7.699,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": false,
+        "pop_mean_ok": true,
+        "saturation_ok": true
+      },
+      "train": {
+        "hit_rate": 87.5,
+        "hit": "7/8",
+        "raw_sep_mean": 4.0594,
+        "raw_sep_median": 4.2863,
+        "pooled_sd": 13.5154,
+        "std_sep": 0.3004,
+        "pairwise_good_gt_bad": 0.6593,
+        "auc_macro": 0.6593,
+        "auc_micro": 0.5939,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3705,
+        "raw_sep_median": 0.8585,
+        "pooled_sd": 13.7758,
+        "std_sep": 0.1721,
+        "pairwise_good_gt_bad": 0.5804,
+        "auc_macro": 0.5804,
+        "auc_micro": 0.4968,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "delta_vs_kappa0": {
+        "train": {
+          "hit_rate": 12.5,
+          "raw_sep_mean": 0.8794,
+          "std_sep": 0.0617,
+          "pairwise_good_gt_bad": 0.0182,
+          "auc_micro": 0.0166,
+          "auc_macro": 0.0182
+        },
+        "holdout": {
+          "hit_rate": 0.0,
+          "raw_sep_mean": 0.0141,
+          "std_sep": -0.0011,
+          "pairwise_good_gt_bad": -0.017,
+          "auc_micro": -0.0064,
+          "auc_macro": -0.017
+        },
+        "structure": {
+          "pop_mean_raw_drift": -0.1883,
+          "max_abs_block_mean_drift": 0.7096,
+          "raw_oor_rate": 0.0,
+          "display_saturation_rate": 0.0
+        }
+      }
+    }
+  ],
+  "decision": {
+    "accept_R": false,
+    "kappa": 0.0,
+    "arm": "B9-A",
+    "reason": "no κ provides clear holdout incremental value vs κ=0 (eps std_sep=0.05, rank=0.02, hit=1.0pp); reject R"
+  },
+  "C_D": "not_run"
+}

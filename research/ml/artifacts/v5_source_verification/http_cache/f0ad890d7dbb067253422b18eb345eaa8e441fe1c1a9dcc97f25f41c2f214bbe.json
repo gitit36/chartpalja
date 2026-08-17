@@ -1,0 +1,9 @@
+{
+  "url": "https://www.gerryrafferty.com/city-to-city",
+  "ok": false,
+  "status_code": 401,
+  "final_url": "https://www.gerryrafferty.com/city-to-city",
+  "content_type": "text/html; charset=UTF-8",
+  "title": "",
+  "error": "HTTP_401"
+}

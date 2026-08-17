@@ -1,0 +1,37 @@
+{
+  "version": "V4_STRUCTURED_FACTOR_STACK_V1_DECISION",
+  "status": "V4_STRUCTURED_FACTOR_STACK_V1_REJECTED_NO_FRESH_CONFIRM",
+  "architecture": "STRUCTURED_FACTOR_STACK_V1",
+  "corpus_role": "CONSUMED_ARCHITECTURE_DEVELOPMENT",
+  "n_pairs": 101,
+  "metrics": {
+    "candidate_outer_cv_mean": 0.501980198019802,
+    "control_fixed_mean": 0.5247524752475247,
+    "delta_vs_control": -0.02277227722772268,
+    "candidate_outer_cv_p10": 0.4534653465346535,
+    "candidate_axis_floor": 0.48,
+    "bootstrap_P_delta_gt_0_vs_control": 0.34455
+  },
+  "gate": {
+    "overall_ge_055": false,
+    "delta_vs_control_ge_000": false,
+    "p10_ge_048": false,
+    "axis_floor_ge_045": true
+  },
+  "dev_sanity_pass": false,
+  "candidate_predictor_exclusions": [
+    "Control",
+    "axis",
+    "age",
+    "chronology",
+    "nuisance",
+    "event metadata"
+  ],
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "next_rule": "If frozen, do not change architecture or coefficients; build completely fresh confirmation DEV and compare frozen candidate vs Production Control once. If rejected, do not collect fresh confirmation for this architecture."
+}

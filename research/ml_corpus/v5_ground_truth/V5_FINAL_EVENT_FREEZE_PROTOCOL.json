@@ -1,0 +1,46 @@
+{
+  "version": "V5_FINAL_EVENT_FREEZE_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_SOURCE_BACKFILL_BEFORE_EVENT_FREEZE",
+  "inputs": {
+    "assembled_pre_source_qa": "V5_DEV_EVENTS_REPAIRED_ASSEMBLED_PRE_SOURCE_QA.csv",
+    "auto_source_results": "V5_SOURCE_VERIFICATION_RESULTS_AUTO.csv",
+    "eligible_manual_review": "V5_SOURCE_VERIFICATION_ELIGIBLE_MANUAL_REVIEW.csv",
+    "manual_override": "V5_SOURCE_VERIFICATION_MANUAL_OVERRIDE.csv",
+    "repaired_dev_roster": "V5_DEV_SUBJECT_ROSTER_160_REPAIRED.csv"
+  },
+  "freeze_requirements": {
+    "DEV_subjects_exactly": 160,
+    "all_eligible_rows_source_verified": true,
+    "manual_override_row_ids_exactly_match_manual_review": true,
+    "no_event_corrections_pending": true,
+    "one_preassigned_axis_per_subject": true,
+    "roster_axis_match_required": true,
+    "eligible_polarity_values": [
+      "positive",
+      "negative"
+    ],
+    "exact_semantic_duplicate_rows_must_be_zero": true
+  },
+  "allowed_actions": [
+    "assemble",
+    "validate",
+    "stable_sort",
+    "hash",
+    "freeze",
+    "report_same_year_collisions"
+  ],
+  "forbidden_actions": [
+    "delete_event_for_balance",
+    "relabel_event",
+    "change_event_year",
+    "change_axis",
+    "inspect_pair_gap",
+    "pair_events",
+    "chronology_balancing",
+    "astrology_generation",
+    "control_scoring",
+    "confirm_research"
+  ],
+  "success_status": "V5_DEV_EVENT_CORPUS_FROZEN_READY_FOR_LOCAL_PAIRING_NUISANCE_GATE",
+  "next_rule": "After freeze, create local opposite-polarity same-subject same-axis distinct-year pairs with absolute year gap 1-5 and then run the pre-astrology chronology/nuisance gate."
+}

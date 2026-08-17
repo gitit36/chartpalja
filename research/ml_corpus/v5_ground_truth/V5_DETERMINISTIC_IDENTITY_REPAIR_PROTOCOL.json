@@ -1,0 +1,49 @@
+{
+  "version": "V5_DETERMINISTIC_IDENTITY_REPAIR_PROTOCOL_V1",
+  "status": "PREDECLARED_BEFORE_MEMBERSHIP_REPAIR",
+  "trigger_status": "V5_IDENTITY_LINKAGE_AUDIT_REPAIR_REQUIRED",
+  "purpose": "Repair V5 DEV and sealed CONFIRM membership using identity linkage evidence only, without loading event outcomes, chronology, pairability, astrology, Control, or model results.",
+  "retention_rule": {
+    "keep_selected_only_if": "linkage_status == PASS_EXACT_DOB",
+    "replace_statuses": [
+      "PASS_LEGACY_WAVE_A",
+      "LIKELY_IDENTITY_MISMATCH",
+      "REVIEW_DOB_DISCREPANCY_SAME_PLACE",
+      "REVIEW_DOB_DISCREPANCY_UNKNOWN_PLACE",
+      "REVIEW_MISSING_OR_LOW_PRECISION_DOB"
+    ],
+    "rationale": "Conservative identity-cleaning rule: no selected subject is retained unless the fixed Wikidata identity has day-precision DOB exactly matching the frozen AA birth record. This avoids adjudicating source discrepancies after partial event collection."
+  },
+  "replacement_candidate_rule": {
+    "source": "V5_IDENTITY_LINKAGE_AUDIT_CANDIDATE_POOL.csv",
+    "must_have_linkage_status": "PASS_EXACT_DOB",
+    "same_axis_only": true,
+    "exclude_any_name_or_qid_already_selected_in_old_DEV_or_CONFIRM": true,
+    "exclude_any_candidate_used_as_another_replacement": true,
+    "selection_seed": 2026081702,
+    "selection_method": "SHA256 deterministic ordering by axis and candidate QID/name",
+    "event_information_used": false,
+    "chronology_information_used": false,
+    "pairability_information_used": false,
+    "astrology_information_used": false,
+    "control_information_used": false
+  },
+  "slot_policy": {
+    "preserve_subject_id": true,
+    "preserve_split": true,
+    "preserve_preassigned_axis": true,
+    "preserve_batch_id_and_research_order": true,
+    "replace_identity_and_birth_fields_only": true
+  },
+  "event_results_policy": {
+    "do_not_load_batch_01_03_event_results_in_repair_notebook": true,
+    "all_existing_event_rows_for_replaced_subject_ids_are_invalidated": true,
+    "unreplaced_subject_event_rows_remain_quarantined_but_reusable_after_repair_validation": true,
+    "batch_04_must_not_resume_until_repair_validation": true
+  },
+  "confirm_policy": {
+    "repair_locally": true,
+    "details_remain_sealed": true,
+    "do_not_send_repaired_confirm_roster_or_map": true
+  }
+}

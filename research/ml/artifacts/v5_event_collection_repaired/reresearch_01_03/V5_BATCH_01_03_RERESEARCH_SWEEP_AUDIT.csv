@@ -1,0 +1,7 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,sweep_status,eligible_positive_events,eligible_negative_events,excluded_logged_candidates,source_rows_logged,notes
+1,4,V5DEV_037,Sergio Caprari,COMPETITIVE,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,3,3,0,6,Both polarities observed in repaired-slot bounded sweep.
+2,10,V5DEV_035,Benoît Paire,COMPETITIVE,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,3,2,0,5,Both polarities observed in repaired-slot bounded sweep.
+2,20,V5DEV_110,Thomas P. O'Neill III,STATUS,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,2,1,0,3,Both polarities observed in repaired-slot bounded sweep.
+3,9,V5DEV_112,Erich Honecker,STATUS,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,2,1,0,3,Both polarities observed in repaired-slot bounded sweep.
+3,13,V5DEV_038,Guy Forget,COMPETITIVE,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,3,3,0,6,Both polarities observed in repaired-slot bounded sweep.
+3,17,V5DEV_123,Philippe Starck,STATUS,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,1,0,2,3,No eligible negative event found in repaired-slot bounded sweep.

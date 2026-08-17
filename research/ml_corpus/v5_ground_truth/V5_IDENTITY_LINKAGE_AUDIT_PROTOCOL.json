@@ -1,0 +1,39 @@
+{
+  "version": "V5_IDENTITY_LINKAGE_AUDIT_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_OBJECTIVE_IDENTITY_COLLISION_DISCOVERY_BEFORE_REPAIR",
+  "trigger": {
+    "subject_id": "V5DEV_022",
+    "roster_name": "Walter Schmidt",
+    "roster_birth_date": "1917-01-28",
+    "roster_birth_place": "Bremen, Germany",
+    "linked_wikidata_id": "Q2546155",
+    "issue": "The linked Wikidata entity is a different same-name person; roster construction joined role identity to the AA birth record by normalized name only."
+  },
+  "purpose": "Audit entity linkage between frozen AA birth records and Wikidata role identities without using any event outcome, chronology, pairability, astrology, Control, or model result.",
+  "scope": {
+    "audit_DEV_selected": true,
+    "audit_CONFIRM_selected_locally_but_keep_details_sealed": true,
+    "audit_full_combined_candidate_pool_for_future_deterministic_repair": true,
+    "do_not_load_event_results": true
+  },
+  "signals": {
+    "wikidata_entity_id": "fixed QID already used at roster construction",
+    "date_of_birth": "Wikidata P569 vs frozen AA birth_date",
+    "place_of_birth": "Wikidata P19 English label vs frozen AA birth_place city token",
+    "gender": "Wikidata P21 vs frozen AA gender",
+    "description": "diagnostic only, never used automatically to pass/fail"
+  },
+  "classification": {
+    "PASS_EXACT_DOB": "At least one day-precision Wikidata P569 exactly equals the frozen AA birth date and gender is not contradictory.",
+    "REVIEW_DOB_DISCREPANCY_SAME_PLACE": "Exact DOB differs, but normalized birth place matches and gender is consistent. This may reflect a genuine public-vs-AA birth-date discrepancy, so do not auto-delete.",
+    "LIKELY_IDENTITY_MISMATCH": "Gender contradicts, or day-precision DOB differs and birth place also fails to match.",
+    "REVIEW_MISSING_OR_LOW_PRECISION_DOB": "Wikidata lacks day-precision DOB; manual identity review is required.",
+    "PASS_LEGACY_WAVE_A": "Legacy Wave A rows have no Wikidata QID in this expansion and are not reclassified by the automated Wikidata linkage audit."
+  },
+  "decision": {
+    "if_any_selected_likely_mismatch": "V5_IDENTITY_LINKAGE_AUDIT_REPAIR_REQUIRED",
+    "elif_any_selected_review": "V5_IDENTITY_LINKAGE_AUDIT_MANUAL_REVIEW_REQUIRED",
+    "else": "V5_IDENTITY_LINKAGE_AUDIT_PASS"
+  },
+  "repair_guardrail": "This audit never performs replacement. If repair is required, replacement rules must be frozen in a separate notebook and may not use event outcomes, chronology, pairability, astrology, Control, or already collected Batch 1-3 event results."
+}

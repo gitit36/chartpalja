@@ -1,0 +1,10 @@
+{
+  "created_at": "2026-08-17T00:44:05",
+  "notebook_version": "SAJU_ML_V4_STRUCTURED_FACTOR_STACK_V1_20260817",
+  "spec_sha256": "4f0a79e85aad2f955e8ceb6cbe172d89298f00cf6645815bc2ddd8d9fac9aadc",
+  "pair_diff_sha256": "c63e6c267f052ed8d261b9f3812c3ec75d58e0350e4a3417aae0948f9608e4b9",
+  "year_features_sha256": "4ccb204896607f6655990c1d529475eb009d44a89d7933cfc871444cdf0ba2c8",
+  "saju_engine_sha256": "d39e0c4d777ae3a19394c9175319a4f8a6a709c2b4d34400965b618ffbfdad1e",
+  "frozen_model_sha256": null,
+  "frozen_weights_sha256": null
+}

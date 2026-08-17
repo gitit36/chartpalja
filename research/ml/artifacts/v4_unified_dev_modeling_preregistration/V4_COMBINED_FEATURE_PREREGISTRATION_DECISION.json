@@ -1,0 +1,55 @@
+{
+  "version": "V4_UNIFIED_DEV_COMBINED_FEATURE_PREREG_GATE_DECISION_V1",
+  "notebook_version": "SAJU_ML_V4_COMBINED_FEATURE_PREREG_GATE_20260816",
+  "created_at": "2026-08-16T21:37:20",
+  "status": "V4_COMBINED_FEATURE_PREREGISTERED_READY_FOR_FEATURE_GENERATION",
+  "corpus": {
+    "n_pairs": 101,
+    "n_subjects": 101,
+    "axis_counts": {
+      "COMPETITIVE": 31,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "positive_earlier_share": 0.5643564356435643,
+    "astrology_scored": false
+  },
+  "winner_eligible_architectures": [
+    "TG10_STEM_BRANCH_L2",
+    "ALL_L2",
+    "ALL_ELASTICNET_AUTO"
+  ],
+  "production_reference": "CONTROL_FIXED",
+  "nuisance_reference": "NUISANCE_AGE_AXIS",
+  "promotion_gates": {
+    "all_required": true,
+    "rules": {
+      "overall_subject_macro_pairwise": ">= 0.55",
+      "delta_vs_CONTROL_FIXED": ">= 0.01",
+      "bootstrap_P_delta_gt_0_vs_CONTROL_FIXED": ">= 0.80",
+      "delta_vs_NUISANCE_AGE_AXIS": ">= 0.01",
+      "bootstrap_P_delta_gt_0_vs_NUISANCE_AGE_AXIS": ">= 0.80",
+      "repeated_outer_cv_p10": ">= 0.48",
+      "axis_floor_diagnostic": "No axis should be catastrophically inverted; report each axis separately."
+    },
+    "tie_break": [
+      "Higher overall subject-macro pairwise accuracy",
+      "Higher bootstrap delta versus CONTROL_FIXED",
+      "Higher repeated-CV p10",
+      "Prefer the simpler/more interpretable architecture when empirical differences are negligible"
+    ]
+  },
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "forbidden_after_this_gate": [
+    "Changing the 101 event pairs or their axis labels",
+    "Adding a fourth winner-eligible architecture after seeing results",
+    "Hand-tuning feature weights on this corpus",
+    "Opening any sealed holdout before a development architecture survives all gates"
+  ],
+  "next_rule": "Generate the preregistered astrology feature matrix with the recorded engine lineage, then run a separate nested subject-CV tournament containing only the 3 frozen winner-eligible architectures plus preregistered baselines. If none survives, do not open a holdout."
+}

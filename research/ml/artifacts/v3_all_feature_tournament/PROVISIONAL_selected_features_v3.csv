@@ -1,0 +1,11 @@
+feature,family,coefficient,selection_frequency
+tengod__dw_group_officer,tengod,0.11369787708083885,1.0
+tengod__dw_group_output,tengod,-0.41785137072767486,1.0
+tengod__dw_group_peer,tengod,0.3404802937489237,1.0
+tengod__dw_group_resource,tengod,-0.09931490518612,1.0
+tengod__dw_group_wealth,tengod,0.0959020380639966,1.0
+tengod__sw_group_officer,tengod,-0.12464578918184523,1.0
+tengod__sw_group_output,tengod,-0.4169850850434045,1.0
+tengod__sw_group_peer,tengod,0.13421960847564376,1.0
+tengod__sw_group_resource,tengod,0.3980434610174588,1.0
+tengod__sw_group_wealth,tengod,0.05479735119319227,1.0

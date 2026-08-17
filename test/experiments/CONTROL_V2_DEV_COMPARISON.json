@@ -1,0 +1,172 @@
+{
+  "measured_at": "2026-08-15T13:03:04",
+  "control_definition": "production engine yearly candle.close (arm_control.year_score_from_meta)",
+  "v2_definition": "frozen V2_DY_B; z from OLD_DEV+Fresh A only",
+  "not_legacy_b9": true,
+  "validation_b_control_scored": false,
+  "tuning_performed": false,
+  "v2_hash16": "d2c0199c5194dd63",
+  "DEVELOPMENT_COMPARISON": {
+    "OLD_DEV": {
+      "CONTROL": {
+        "n": 56,
+        "macro_pairwise": 0.4998,
+        "subject_hit": "25/56",
+        "std_sep": -0.0242,
+        "median_sep": -0.9309,
+        "positive": 25,
+        "negative": 31,
+        "neutral": 0
+      },
+      "V2_DY_B": {
+        "n": 56,
+        "macro_pairwise": 0.5749,
+        "subject_hit": "39/56",
+        "std_sep": 0.2213,
+        "median_sep": 0.8292,
+        "positive": 39,
+        "negative": 17,
+        "neutral": 0
+      },
+      "delta_V2_minus_CONTROL": {
+        "macro_pairwise": 0.0751,
+        "subject_hit_n": 14,
+        "std_sep": 0.2455,
+        "median_sep": 1.7601,
+        "positive": 14,
+        "negative": -14
+      }
+    },
+    "FRESH_A": {
+      "CONTROL": {
+        "n": 14,
+        "macro_pairwise": 0.5179,
+        "subject_hit": "8/14",
+        "std_sep": -0.143,
+        "median_sep": 1.25,
+        "positive": 8,
+        "negative": 6,
+        "neutral": 0
+      },
+      "V2_DY_B": {
+        "n": 14,
+        "macro_pairwise": 0.6429,
+        "subject_hit": "9/14",
+        "std_sep": 0.3714,
+        "median_sep": 0.7297,
+        "positive": 9,
+        "negative": 5,
+        "neutral": 0
+      },
+      "delta_V2_minus_CONTROL": {
+        "macro_pairwise": 0.125,
+        "subject_hit_n": 1,
+        "std_sep": 0.5144,
+        "median_sep": -0.5203,
+        "positive": 1,
+        "negative": -1
+      }
+    }
+  },
+  "NEW_BLIND_USER_PILOT": {
+    "n": 4,
+    "kind": "BLIND_USER_QA_PILOT",
+    "not": [
+      "VALIDATION",
+      "ACCURACY_ESTIMATE",
+      "STATISTICAL_EVIDENCE"
+    ],
+    "charts": "anonymous Chart A / Chart B per participant",
+    "mapping_path": "test/blind_qa/pilot_4/BLIND_PILOT_AB_MAPPING.json",
+    "participant_ids": [
+      "P01",
+      "P02",
+      "P03",
+      "P04"
+    ]
+  },
+  "CONSUMED_HOLDOUT": {
+    "status": "ANNUAL_FAIL",
+    "n_eligible": 14,
+    "primary": {
+      "macro_pairwise": 0.3393,
+      "subject_hit": "4/14",
+      "subject_hit_rate": 0.2857,
+      "std_sep": -0.5605,
+      "median_sep": -1.1492,
+      "mean_sep": -1.5416
+    },
+    "control_scored": false,
+    "note": "Consumed V2-only holdout. Control was not scored on Validation B."
+  },
+  "raw_dev": {
+    "OLD_DEV": {
+      "CONTROL": {
+        "n": 56,
+        "macro_pairwise": 0.49981122888970414,
+        "subject_hit": "25/56",
+        "subject_hit_n": 25,
+        "std_sep": -0.024216766837116835,
+        "median_sep": -0.9309056956115747,
+        "mean_sep": -0.2354858610110712,
+        "positive": 25,
+        "neutral": 0,
+        "negative": 31
+      },
+      "V2_DY_B": {
+        "n": 56,
+        "macro_pairwise": 0.5749402978784106,
+        "subject_hit": "39/56",
+        "subject_hit_n": 39,
+        "std_sep": 0.22130264145352752,
+        "median_sep": 0.8291634953993103,
+        "mean_sep": 0.6143835469614123,
+        "positive": 39,
+        "neutral": 0,
+        "negative": 17
+      },
+      "delta_V2_minus_CONTROL": {
+        "macro_pairwise": 0.07512906898870647,
+        "subject_hit_n": 14,
+        "std_sep": 0.24551940829064434,
+        "median_sep": 1.760069191010885,
+        "positive": 14,
+        "negative": -14
+      }
+    },
+    "FRESH_A": {
+      "CONTROL": {
+        "n": 14,
+        "macro_pairwise": 0.5178571428571429,
+        "subject_hit": "8/14",
+        "subject_hit_n": 8,
+        "std_sep": -0.14299588527429827,
+        "median_sep": 1.25,
+        "mean_sep": -1.25,
+        "positive": 8,
+        "neutral": 0,
+        "negative": 6
+      },
+      "V2_DY_B": {
+        "n": 14,
+        "macro_pairwise": 0.6428571428571429,
+        "subject_hit": "9/14",
+        "subject_hit_n": 9,
+        "std_sep": 0.37141086581515476,
+        "median_sep": 0.7296886760458818,
+        "mean_sep": 0.9317540508179972,
+        "positive": 9,
+        "neutral": 0,
+        "negative": 5
+      },
+      "delta_V2_minus_CONTROL": {
+        "macro_pairwise": 0.125,
+        "subject_hit_n": 1,
+        "std_sep": 0.514406751089453,
+        "median_sep": -0.5203113239541182,
+        "positive": 1,
+        "negative": -1
+      }
+    }
+  }
+}

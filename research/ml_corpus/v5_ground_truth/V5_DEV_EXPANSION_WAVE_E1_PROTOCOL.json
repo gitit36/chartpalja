@@ -1,0 +1,38 @@
+{
+  "version": "V5_DEV_EXPANSION_WAVE_E1_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_NECESSARY_CONDITION_FAILURE_BEFORE_EXPANSION_MEMBERSHIP_SELECTION",
+  "trigger": "V5_PREPAIR_FEASIBILITY_FAIL_EXPANSION_REQUIRED",
+  "purpose": "Add one whole new outcome-blind DEV wave to improve pairable-subject coverage without changing, deleting, relabeling, or rebalancing the frozen original DEV corpus.",
+  "wave": {
+    "name": "V5_DEV_EXPANSION_E1",
+    "n": 160,
+    "axis_quotas": {
+      "COMPETITIVE": 40,
+      "PROJECT": 50,
+      "STATUS": 70
+    },
+    "rationale": "Use the same size and axis composition as the original DEV roster rather than targeting individual sparse subjects or changing outcome definitions after seeing coverage."
+  },
+  "candidate_rule": {
+    "source": "V5_IDENTITY_LINKAGE_AUDIT_CANDIDATE_POOL.csv",
+    "required_linkage_status": "PASS_EXACT_DOB",
+    "exclude_all_current_repaired_DEV_and_sealed_CONFIRM_identities": true,
+    "same_axis_only": true,
+    "selection_seed": 2026081703,
+    "selection_method": "SHA256 deterministic ordering within axis",
+    "event_outcomes_used": false,
+    "pairability_used": false,
+    "year_gap_used": false,
+    "chronology_used": false,
+    "astrology_used": false,
+    "control_used": false
+  },
+  "event_collection": {
+    "same_axis_contract_as_original_V5": true,
+    "all_eligible_major_events_under_bounded_sweep": true,
+    "do_not_seek_pair_friendly_events": true,
+    "do_not_replace_sparse_subjects": true,
+    "CONFIRM_remains_sealed": true
+  },
+  "after_wave_rule": "Freeze E1 events independently, append original frozen DEV + E1 frozen DEV, then rerun the same necessary-condition and deterministic 1-5y pairing/nuisance gate. Do not weaken thresholds if it fails again."
+}

@@ -1,0 +1,2804 @@
+{
+  "spec": "G_FRESH_VALIDATION_SPEC.md",
+  "status": "labels_frozen_ready_for_one_shot_scoring",
+  "labels_frozen": true,
+  "labels_frozen_at": "2026-08-12",
+  "candidate_model": "G_CLEAN_AXIS",
+  "scoring_status": "NOT_SCORED",
+  "collection_summary": {
+    "n_subjects": 30,
+    "n_validation_a": 15,
+    "n_validation_b": 15,
+    "n_female": 11,
+    "n_male": 19,
+    "roden_rating_counts": {
+      "AA": 19,
+      "A": 9,
+      "B": 2
+    },
+    "blocked_existing_names_checked": 58,
+    "overlap_with_existing_58": 0,
+    "birth_time_policy": "AA/A/B only; exact source-reported local civil time retained; engine input is LOCAL_TRUE_SOLAR; never convert foreign births to KST.",
+    "event_label_policy": "Model-blind, pre-scoring, high-salience public life events; obvious mixed positive/negative years avoided where practical.",
+    "note": "A few subjects have only one clean bad-year label rather than forcing a second ambiguous label."
+  },
+  "evaluation_precommit": {
+    "primary": [
+      "subject_hit_rate",
+      "pairwise_good_gt_bad",
+      "standardized_separation"
+    ],
+    "secondary": [
+      "auc_macro",
+      "auc_micro",
+      "per_subject_separation",
+      "worst_subjects"
+    ],
+    "clear_fail_conditions": [
+      "pairwise_good_gt_bad <= 0.50",
+      "standardized_separation <= 0",
+      "performance concentrated in only a few subjects",
+      "structural/saturation gate failure"
+    ],
+    "selection_rule": "Validation A is one-shot. If A causes any model change, A becomes development and Validation B stays untouched. Do not iterate on B."
+  },
+  "time_handling": {
+    "foreign_birth_rule": "Keep local civil birth date/time at birthplace. Never convert to Korea time.",
+    "engine_rule": "Convert local civil time to LOCAL_TRUE_SOLAR using birthplace longitude, historical standard/DST/war offset, and equation of time.",
+    "latitude_use": "Latitude is stored for provenance/location but longitude is the direct clock-time correction term; engine may use latitude elsewhere if required.",
+    "historical_note": "Astro-Databank effective time type/meridian is treated as source of truth when historical timezone rules differ from modern IANA assumptions.",
+    "pre_score_assertion": "Recompute all 30 with the engine existing true-solar helper and require <=1 minute difference from precomputed birth fields."
+  },
+  "split": {
+    "validation_a": [
+      "Bill Gates",
+      "Britney Spears",
+      "Johnny Depp",
+      "Michael Jordan",
+      "Tiger Woods",
+      "Roger Federer",
+      "Diana, Princess of Wales",
+      "Winston Churchill",
+      "Arnold Schwarzenegger",
+      "Martha Stewart",
+      "Robert Downey Jr.",
+      "Marilyn Monroe",
+      "Whitney Houston",
+      "George Clooney",
+      "Meryl Streep"
+    ],
+    "validation_b": [
+      "Steve Jobs",
+      "Elon Musk",
+      "Angelina Jolie",
+      "Tom Hanks",
+      "Serena Williams",
+      "LeBron James",
+      "Charles III",
+      "Elizabeth II",
+      "Albert Einstein",
+      "Sylvester Stallone",
+      "Adele",
+      "Kurt Cobain",
+      "Muhammad Ali",
+      "Nicolas Cage",
+      "Judy Garland"
+    ]
+  },
+  "subjects": [
+    {
+      "name": "Bill Gates",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "business/technology",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1955,
+        "m": 10,
+        "d": 28,
+        "h": 22,
+        "min": 7,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1955,
+        "m": 10,
+        "d": 28,
+        "h": 22,
+        "min": 0,
+        "place": "Seattle, Washington, USA",
+        "lat": 47.6,
+        "lon": -122.3333,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PST",
+        "civil_utc_offset_hours": -8,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -9.333,
+        "equation_of_time_minutes": 16.269,
+        "total_correction_minutes": 6.936,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: From memory. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Gates,_Bill",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1986,
+            "label": "Microsoft IPO로 기업 가치와 개인 자산이 크게 상승",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Bill_Gates"
+          },
+          {
+            "year": 1995,
+            "label": "Windows 95 출시와 Microsoft의 대중시장 지배력 확대",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Windows_95"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2000,
+            "label": "미국 연방법원의 Microsoft 반독점 소송에서 중대한 법적 패소와 회사 분할 명령",
+            "axis": "career/legal",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/United_States_v._Microsoft_Corp."
+          },
+          {
+            "year": 2021,
+            "label": "Melinda French Gates와 이혼",
+            "axis": "relationship",
+            "weight": 0.7,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Bill_Gates"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Steve Jobs",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "business/technology",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1955,
+        "m": 2,
+        "d": 24,
+        "h": 18,
+        "min": 52,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1955,
+        "m": 2,
+        "d": 24,
+        "h": 19,
+        "min": 15,
+        "place": "San Francisco, California, USA",
+        "lat": 37.7833,
+        "lon": -122.4167,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PST",
+        "civil_utc_offset_hours": -8,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -9.667,
+        "equation_of_time_minutes": -13.604,
+        "total_correction_minutes": -23.271,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Jobs,_Steve",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1976,
+            "label": "Apple 공동 창업과 Apple I 사업 시작",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Jobs,_Steve"
+          },
+          {
+            "year": 2007,
+            "label": "iPhone 공개로 Apple의 핵심 성장 국면 개시",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Steve_Jobs"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1985,
+            "label": "Apple 경영권 갈등 끝에 회사에서 퇴진",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Jobs,_Steve"
+          },
+          {
+            "year": 2004,
+            "label": "췌장 종양 진단 및 수술",
+            "axis": "health",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Jobs,_Steve"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Elon Musk",
+      "gender": "male",
+      "country_or_context": "South Africa/USA",
+      "career_type": "business/technology",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1971,
+        "m": 6,
+        "d": 28,
+        "h": 7,
+        "min": 20,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1971,
+        "m": 6,
+        "d": 28,
+        "h": 7,
+        "min": 30,
+        "place": "Pretoria, South Africa",
+        "lat": -25.75,
+        "lon": 28.1667,
+        "timezone": "Africa/Johannesburg",
+        "timezone_abbr_at_birth": "SAST",
+        "civil_utc_offset_hours": 2,
+        "standard_utc_offset_hours": 2,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -7.333,
+        "equation_of_time_minutes": -2.804,
+        "total_correction_minutes": -10.137,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_B",
+      "source_note": "Astro-Databank: Bio/autobiography (Walter Isaacson biography). Rodden rating B.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Musk,_Elon",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2010,
+            "label": "Tesla IPO로 전기차 사업의 자본시장 기반 확대",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Tesla,_Inc."
+          },
+          {
+            "year": 2020,
+            "label": "SpaceX Crew Dragon 첫 유인 궤도 비행 성공",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Musk,_Elon"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2000,
+            "label": "X.com/PayPal 경영진 갈등 속 CEO 자리에서 축출",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "medium",
+            "source": "https://en.wikipedia.org/wiki/Elon_Musk"
+          },
+          {
+            "year": 2016,
+            "label": "Falcon 9 발사대 폭발로 로켓과 위성 손실, 발사 일정 중단",
+            "axis": "career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/SpaceX"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Britney Spears",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "music/entertainment",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 12,
+        "d": 2,
+        "h": 1,
+        "min": 39,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 12,
+        "d": 2,
+        "h": 1,
+        "min": 30,
+        "place": "McComb, Mississippi, USA",
+        "lat": 31.25,
+        "lon": -90.45,
+        "timezone": "America/Chicago",
+        "timezone_abbr_at_birth": "CST",
+        "civil_utc_offset_hours": -6,
+        "standard_utc_offset_hours": -6,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -1.8,
+        "equation_of_time_minutes": 10.504,
+        "total_correction_minutes": 8.704,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: From memory. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Spears,_Britney",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1999,
+            "label": "...Baby One More Time으로 세계적 스타로 급부상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Britney_Spears"
+          },
+          {
+            "year": 2000,
+            "label": "Oops!... I Did It Again의 대규모 상업적 성공",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Britney_Spears"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2007,
+            "label": "공개적 정신건강 위기, 양육권 문제와 활동 혼란이 집중된 해",
+            "axis": "general",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Britney_Spears"
+          },
+          {
+            "year": 2019,
+            "label": "정신건강 치료 및 후견제도 갈등이 공개적으로 확대",
+            "axis": "health/legal",
+            "weight": 0.9,
+            "confidence": "medium",
+            "source": "https://en.wikipedia.org/wiki/Britney_Spears"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Angelina Jolie",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1975,
+        "m": 6,
+        "d": 4,
+        "h": 8,
+        "min": 18,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1975,
+        "m": 6,
+        "d": 4,
+        "h": 9,
+        "min": 9,
+        "place": "Los Angeles Cedars of Lebanon, California, USA",
+        "lat": 34.0961,
+        "lon": -118.2944,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PDT",
+        "civil_utc_offset_hours": -7,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 6.822,
+        "equation_of_time_minutes": 2.115,
+        "total_correction_minutes": -51.063,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: Quoted BC/BR. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Jolie,_Angelina",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2000,
+            "label": "Girl, Interrupted로 아카데미 여우조연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Jolie,_Angelina"
+          },
+          {
+            "year": 2014,
+            "label": "Maleficent 흥행 성공과 Brad Pitt와의 결혼",
+            "axis": "career/relationship",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Jolie,_Angelina"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2007,
+            "label": "어머니 Marcheline Bertrand 사망",
+            "axis": "family",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Jolie,_Angelina"
+          },
+          {
+            "year": 2016,
+            "label": "Brad Pitt와의 이혼 소송 제기",
+            "axis": "relationship",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Jolie,_Angelina"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Johnny Depp",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 6,
+        "d": 9,
+        "h": 7,
+        "min": 57,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 6,
+        "d": 9,
+        "h": 8,
+        "min": 44,
+        "place": "Owensboro, Kentucky, USA",
+        "lat": 37.7667,
+        "lon": -87.1167,
+        "timezone": "America/Chicago",
+        "timezone_abbr_at_birth": "CDT",
+        "civil_utc_offset_hours": -5,
+        "standard_utc_offset_hours": -6,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 11.533,
+        "equation_of_time_minutes": 1.219,
+        "total_correction_minutes": -47.248,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Depp,_Johnny",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2003,
+            "label": "Pirates of the Caribbean로 커리어 정점급 대중 성공과 오스카 후보",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Johnny_Depp"
+          },
+          {
+            "year": 2008,
+            "label": "Sweeney Todd로 골든글로브 남우주연상 수상",
+            "axis": "career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Johnny_Depp"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2016,
+            "label": "Amber Heard의 이혼 제기와 가정폭력 의혹, 같은 시기 모친상",
+            "axis": "relationship/reputation",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Depp,_Johnny"
+          },
+          {
+            "year": 2020,
+            "label": "영국 명예훼손 소송 패소로 평판과 커리어에 큰 타격",
+            "axis": "career/legal",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Depp_v_News_Group_Newspapers_Ltd"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Tom Hanks",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1956,
+        "m": 7,
+        "d": 9,
+        "h": 10,
+        "min": 4,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1956,
+        "m": 7,
+        "d": 9,
+        "h": 11,
+        "min": 17,
+        "place": "Concord, California, USA",
+        "lat": 37.9833,
+        "lon": -122.0333,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PDT",
+        "civil_utc_offset_hours": -7,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": -8.133,
+        "equation_of_time_minutes": -5.085,
+        "total_correction_minutes": -73.218,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Hanks,_Tom",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1994,
+            "label": "Philadelphia로 아카데미 남우주연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Hanks,_Tom"
+          },
+          {
+            "year": 1995,
+            "label": "Forrest Gump로 2년 연속 아카데미 남우주연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Hanks,_Tom"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1987,
+            "label": "첫 배우자 Samantha Lewes와 이혼",
+            "axis": "relationship",
+            "weight": 0.6,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Tom_Hanks"
+          },
+          {
+            "year": 2020,
+            "label": "COVID-19 확진 및 격리",
+            "axis": "health",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Hanks,_Tom"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Michael Jordan",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "sports/basketball",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 2,
+        "d": 17,
+        "h": 13,
+        "min": 30,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 2,
+        "d": 17,
+        "h": 13,
+        "min": 40,
+        "place": "Brooklyn, New York, USA",
+        "lat": 40.6333,
+        "lon": -73.9333,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EST",
+        "civil_utc_offset_hours": -5,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": 4.267,
+        "equation_of_time_minutes": -14.197,
+        "total_correction_minutes": -9.93,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: Birth certificate copy on file. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Jordan,_Michael",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1991,
+            "label": "Chicago Bulls 첫 NBA 우승과 Finals MVP",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Michael_Jordan"
+          },
+          {
+            "year": 1996,
+            "label": "복귀 후 Bulls 우승과 Finals MVP",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Michael_Jordan"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1985,
+            "label": "발 골절로 정규시즌 대부분 결장",
+            "axis": "health/career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Michael_Jordan"
+          },
+          {
+            "year": 2002,
+            "label": "무릎 부상과 수술로 시즌 조기 종료",
+            "axis": "health/career",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Michael_Jordan"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Serena Williams",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "sports/tennis",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 9,
+        "d": 26,
+        "h": 19,
+        "min": 1,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 9,
+        "d": 26,
+        "h": 20,
+        "min": 28,
+        "place": "Saginaw, Michigan, USA",
+        "lat": 43.4167,
+        "lon": -83.95,
+        "timezone": "America/Detroit",
+        "timezone_abbr_at_birth": "EDT",
+        "civil_utc_offset_hours": -4,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": -35.8,
+        "equation_of_time_minutes": 8.859,
+        "total_correction_minutes": -86.941,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: Quoted BC/BR / Hall of Records. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Williams,_Serena",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1999,
+            "label": "US Open 단식 우승으로 첫 그랜드슬램 단식 타이틀",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Williams,_Serena"
+          },
+          {
+            "year": 2017,
+            "label": "Australian Open 우승으로 오픈 시대 23번째 메이저 단식 우승",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Williams,_Serena"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2010,
+            "label": "발 부상과 반복 수술로 장기 이탈",
+            "axis": "health",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Williams,_Serena"
+          },
+          {
+            "year": 2011,
+            "label": "폐색전증과 혈종 진단으로 심각한 건강 위기",
+            "axis": "health",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Williams,_Serena"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Tiger Woods",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "sports/golf",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1975,
+        "m": 12,
+        "d": 30,
+        "h": 22,
+        "min": 55,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1975,
+        "m": 12,
+        "d": 30,
+        "h": 22,
+        "min": 50,
+        "place": "Long Beach, California, USA",
+        "lat": 33.7667,
+        "lon": -118.1833,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PST",
+        "civil_utc_offset_hours": -8,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": 7.267,
+        "equation_of_time_minutes": -2.205,
+        "total_correction_minutes": 5.062,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Woods,_Tiger",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2000,
+            "label": "US Open, British Open 등 압도적 성과와 커리어 그랜드슬램 완성",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Woods,_Tiger"
+          },
+          {
+            "year": 2019,
+            "label": "Masters 우승으로 장기 부진과 부상 이후 극적인 메이저 복귀",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Tiger_Woods"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2009,
+            "label": "차량 사고 이후 불륜 스캔들이 폭발하며 평판과 후원에 큰 타격",
+            "axis": "relationship/reputation",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Tiger_Woods"
+          },
+          {
+            "year": 2021,
+            "label": "고속 차량 사고로 다리에 중상을 입고 수술",
+            "axis": "health",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Tiger_Woods"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "LeBron James",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "sports/basketball",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1984,
+        "m": 12,
+        "d": 30,
+        "h": 15,
+        "min": 35,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1984,
+        "m": 12,
+        "d": 30,
+        "h": 16,
+        "min": 4,
+        "place": "Akron, Ohio, USA",
+        "lat": 41.0833,
+        "lon": -81.5167,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EST",
+        "civil_utc_offset_hours": -5,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -26.067,
+        "equation_of_time_minutes": -2.53,
+        "total_correction_minutes": -28.597,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: Birth certificate shown on ABC; copy referenced by ADB. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/James,_LeBron",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2012,
+            "label": "첫 NBA 우승, Finals MVP, 정규시즌 MVP",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/LeBron_James"
+          },
+          {
+            "year": 2016,
+            "label": "Cleveland Cavaliers를 창단 첫 NBA 우승으로 이끌고 Finals MVP",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/LeBron_James"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2011,
+            "label": "NBA Finals에서 Dallas Mavericks에 패배하며 큰 비판",
+            "axis": "career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/LeBron_James"
+          },
+          {
+            "year": 2019,
+            "label": "사타구니 부상과 함께 개인 커리어 최초 장기 플레이오프 공백",
+            "axis": "health/career",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/LeBron_James"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Roger Federer",
+      "gender": "male",
+      "country_or_context": "Switzerland",
+      "career_type": "sports/tennis",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 8,
+        "d": 8,
+        "h": 7,
+        "min": 4,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 8,
+        "d": 8,
+        "h": 8,
+        "min": 40,
+        "place": "Basel, Switzerland",
+        "lat": 47.55,
+        "lon": 7.5833,
+        "timezone": "Europe/Zurich",
+        "timezone_abbr_at_birth": "MEDT",
+        "civil_utc_offset_hours": 2,
+        "standard_utc_offset_hours": 1,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": -29.667,
+        "equation_of_time_minutes": -5.963,
+        "total_correction_minutes": -95.63,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: From memory. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Federer,_Roger",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2003,
+            "label": "Wimbledon 우승으로 첫 그랜드슬램 단식 타이틀",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Federer,_Roger"
+          },
+          {
+            "year": 2009,
+            "label": "French Open 우승으로 커리어 그랜드슬램 완성",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Roger_Federer"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2016,
+            "label": "무릎 수술과 부상으로 시즌을 조기 종료",
+            "axis": "health/career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Roger_Federer"
+          },
+          {
+            "year": 2020,
+            "label": "두 차례 무릎 수술로 투어 대부분을 결장",
+            "axis": "health/career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Roger_Federer"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Diana, Princess of Wales",
+      "gender": "female",
+      "country_or_context": "UK",
+      "career_type": "royalty/public life",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 7,
+        "d": 1,
+        "h": 18,
+        "min": 43,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 7,
+        "d": 1,
+        "h": 19,
+        "min": 45,
+        "place": "Sandringham, England, UK",
+        "lat": 52.8333,
+        "lon": 0.5,
+        "timezone": "Europe/London",
+        "timezone_abbr_at_birth": "BST",
+        "civil_utc_offset_hours": 1,
+        "standard_utc_offset_hours": 0,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 2.0,
+        "equation_of_time_minutes": -3.527,
+        "total_correction_minutes": -61.527,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: From memory; ADB primary time. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Diana,_Princess_of_Wales",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1982,
+            "label": "첫아들 Prince William 출생",
+            "axis": "family",
+            "weight": 0.7,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Diana,_Princess_of_Wales"
+          },
+          {
+            "year": 1984,
+            "label": "둘째 아들 Prince Harry 출생",
+            "axis": "family",
+            "weight": 0.7,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Diana,_Princess_of_Wales"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1992,
+            "label": "Charles 왕세자와의 공식 별거 발표",
+            "axis": "relationship",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Diana,_Princess_of_Wales"
+          },
+          {
+            "year": 1997,
+            "label": "파리 교통사고로 사망",
+            "axis": "general",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Death_of_Diana,_Princess_of_Wales"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Charles III",
+      "gender": "male",
+      "country_or_context": "UK",
+      "career_type": "royalty/public life",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1948,
+        "m": 11,
+        "d": 14,
+        "h": 21,
+        "min": 28,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1948,
+        "m": 11,
+        "d": 14,
+        "h": 21,
+        "min": 14,
+        "place": "London, England, UK",
+        "lat": 51.5,
+        "lon": -0.1667,
+        "timezone": "Europe/London",
+        "timezone_abbr_at_birth": "GMT",
+        "civil_utc_offset_hours": 0,
+        "standard_utc_offset_hours": 0,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -0.667,
+        "equation_of_time_minutes": 15.071,
+        "total_correction_minutes": 14.404,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: News report. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Charles_III,_King_of_the_United_Kingdom",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2022,
+            "label": "Elizabeth II 사망 후 영국 국왕 즉위",
+            "axis": "career/status",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Charles_III,_King_of_the_United_Kingdom"
+          },
+          {
+            "year": 2023,
+            "label": "Westminster Abbey에서 대관식 거행",
+            "axis": "career/status",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Charles_III,_King_of_the_United_Kingdom"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1992,
+            "label": "Diana 왕세자비와의 공식 별거 발표",
+            "axis": "relationship",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Charles_III"
+          },
+          {
+            "year": 2024,
+            "label": "암 진단 공개와 공적 업무 축소",
+            "axis": "health",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Charles_III"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Elizabeth II",
+      "gender": "female",
+      "country_or_context": "UK",
+      "career_type": "royalty/public life",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1926,
+        "m": 4,
+        "d": 21,
+        "h": 1,
+        "min": 41,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1926,
+        "m": 4,
+        "d": 21,
+        "h": 2,
+        "min": 40,
+        "place": "Mayfair, London, England, UK",
+        "lat": 51.5,
+        "lon": -0.15,
+        "timezone": "Europe/London",
+        "timezone_abbr_at_birth": "GDT",
+        "civil_utc_offset_hours": 1,
+        "standard_utc_offset_hours": 0,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": -0.6,
+        "equation_of_time_minutes": 1.131,
+        "total_correction_minutes": -59.469,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: Quoted BC/BR. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Elizabeth_II,_Queen_of_the_United_Kingdom",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1953,
+            "label": "영국 여왕 대관식",
+            "axis": "career/status",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Coronation_of_Elizabeth_II"
+          },
+          {
+            "year": 2012,
+            "label": "즉위 60주년 Diamond Jubilee를 성공적으로 치름",
+            "axis": "career/status",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Diamond_Jubilee_of_Elizabeth_II"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1992,
+            "label": "왕실의 연쇄적 가족 위기를 직접 annus horribilis라 표현한 해",
+            "axis": "family/reputation",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Annus_horribilis"
+          },
+          {
+            "year": 2021,
+            "label": "배우자 Prince Philip 사망",
+            "axis": "family",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Prince_Philip,_Duke_of_Edinburgh"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Winston Churchill",
+      "gender": "male",
+      "country_or_context": "UK",
+      "career_type": "politics/history",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1874,
+        "m": 11,
+        "d": 30,
+        "h": 1,
+        "min": 36,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1874,
+        "m": 11,
+        "d": 30,
+        "h": 1,
+        "min": 30,
+        "place": "Woodstock, England, UK",
+        "lat": 51.8667,
+        "lon": -1.35,
+        "timezone": "Europe/London",
+        "timezone_abbr_at_birth": "GMT",
+        "civil_utc_offset_hours": 0,
+        "standard_utc_offset_hours": 0,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -5.4,
+        "equation_of_time_minutes": 11.219,
+        "total_correction_minutes": 5.819,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: Father's same-day letter quoted by ADB. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Churchill,_Winston",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1940,
+            "label": "제2차 세계대전 중 영국 총리 취임",
+            "axis": "career/status",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Churchill,_Winston"
+          },
+          {
+            "year": 1953,
+            "label": "기사작위와 노벨문학상 수상",
+            "axis": "career/status",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Churchill,_Winston"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1921,
+            "label": "막내딸 Marigold가 세 살에 사망",
+            "axis": "family",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Churchill,_Winston"
+          },
+          {
+            "year": 1922,
+            "label": "총선에서 Dundee 의석을 잃어 하원의원직 상실",
+            "axis": "career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Winston_Churchill"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Albert Einstein",
+      "gender": "male",
+      "country_or_context": "Germany/Switzerland/USA",
+      "career_type": "science/academia",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1879,
+        "m": 3,
+        "d": 14,
+        "h": 11,
+        "min": 20,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1879,
+        "m": 3,
+        "d": 14,
+        "h": 11,
+        "min": 30,
+        "place": "Ulm, Germany",
+        "lat": 48.4,
+        "lon": 10.0,
+        "timezone": "LMT@10E",
+        "timezone_abbr_at_birth": "LMT",
+        "civil_utc_offset_hours": 0.6666666666666666,
+        "standard_utc_offset_hours": 0.6666666666666666,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -0.0,
+        "longitude_correction_minutes": 0.0,
+        "equation_of_time_minutes": -9.921,
+        "total_correction_minutes": -9.921,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: Birth certificate in Einstein Archive. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Einstein,_Albert",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1905,
+            "label": "Annus mirabilis 논문들로 상대성이론과 광전효과 연구의 돌파구",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Einstein,_Albert"
+          },
+          {
+            "year": 1922,
+            "label": "노벨물리학상 수상 발표 및 국제적 위상 확립",
+            "axis": "career/status",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Albert_Einstein"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1917,
+            "label": "심각한 소화기/간 질환과 쇠약으로 장기간 건강 악화",
+            "axis": "health",
+            "weight": 0.9,
+            "confidence": "medium",
+            "source": "https://en.wikipedia.org/wiki/Albert_Einstein"
+          },
+          {
+            "year": 1955,
+            "label": "대동맥류 파열로 사망",
+            "axis": "general",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Albert_Einstein"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Arnold Schwarzenegger",
+      "gender": "male",
+      "country_or_context": "Austria/USA",
+      "career_type": "film/politics",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1947,
+        "m": 7,
+        "d": 30,
+        "h": 3,
+        "min": 5,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1947,
+        "m": 7,
+        "d": 30,
+        "h": 4,
+        "min": 10,
+        "place": "Graz, Austria",
+        "lat": 47.0833,
+        "lon": 15.45,
+        "timezone": "Europe/Vienna",
+        "timezone_abbr_at_birth": "MEDT",
+        "civil_utc_offset_hours": 2,
+        "standard_utc_offset_hours": 1,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 1.8,
+        "equation_of_time_minutes": -6.573,
+        "total_correction_minutes": -64.773,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: From memory / quoted colleague. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2003,
+            "label": "California 주지사 선거 당선",
+            "axis": "career/status",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold"
+          },
+          {
+            "year": 2006,
+            "label": "California 주지사 재선",
+            "axis": "career/status",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1972,
+            "label": "부친 Gustav Schwarzenegger 사망",
+            "axis": "family",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold"
+          },
+          {
+            "year": 2011,
+            "label": "가정부와의 혼외자 존재 공개와 Maria Shriver와의 별거",
+            "axis": "relationship/reputation",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Martha Stewart",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "business/media",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1941,
+        "m": 8,
+        "d": 3,
+        "h": 12,
+        "min": 30,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1941,
+        "m": 8,
+        "d": 3,
+        "h": 13,
+        "min": 33,
+        "place": "Jersey City, New Jersey, USA",
+        "lat": 40.7333,
+        "lon": -74.0833,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EDT",
+        "civil_utc_offset_hours": -4,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 3.667,
+        "equation_of_time_minutes": -6.393,
+        "total_correction_minutes": -62.727,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Stewart,_Martha",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1997,
+            "label": "Martha Stewart Living Omnimedia 설립으로 미디어 사업 통합",
+            "axis": "career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Martha_Stewart"
+          },
+          {
+            "year": 1999,
+            "label": "Martha Stewart Living Omnimedia IPO로 큰 기업가치 형성",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Martha_Stewart"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2003,
+            "label": "증권거래 관련 혐의로 기소되고 회사 경영직에서 물러남",
+            "axis": "career/legal",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/ImClone_stock_trading_case"
+          },
+          {
+            "year": 2004,
+            "label": "허위진술 등 혐의 유죄평결과 징역형 선고",
+            "axis": "legal/reputation",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Martha_Stewart"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Sylvester Stallone",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1946,
+        "m": 7,
+        "d": 6,
+        "h": 18,
+        "min": 20,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1946,
+        "m": 7,
+        "d": 6,
+        "h": 19,
+        "min": 20,
+        "place": "New York, New York, USA",
+        "lat": 40.7167,
+        "lon": -74.0,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EDT",
+        "civil_utc_offset_hours": -4,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 4.0,
+        "equation_of_time_minutes": -4.473,
+        "total_correction_minutes": -60.473,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: From memory. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Stallone,_Sylvester",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1976,
+            "label": "Rocky 개봉으로 세계적 스타와 작가로 급부상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone"
+          },
+          {
+            "year": 2006,
+            "label": "Rocky Balboa로 장기 프랜차이즈와 커리어 평가 회복",
+            "axis": "career",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1987,
+            "label": "Brigitte Nielsen과 이혼 및 커리어 흥행 부진 국면",
+            "axis": "relationship/career",
+            "weight": 0.8,
+            "confidence": "medium",
+            "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone"
+          },
+          {
+            "year": 2012,
+            "label": "아들 Sage Stallone 사망",
+            "axis": "family",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Robert Downey Jr.",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1965,
+        "m": 4,
+        "d": 4,
+        "h": 13,
+        "min": 11,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1965,
+        "m": 4,
+        "d": 4,
+        "h": 13,
+        "min": 10,
+        "place": "Manhattan, New York, USA",
+        "lat": 40.7667,
+        "lon": -73.9833,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EST",
+        "civil_utc_offset_hours": -5,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": 4.067,
+        "equation_of_time_minutes": -3.422,
+        "total_correction_minutes": 0.645,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_A",
+      "source_note": "Astro-Databank: From memory / colleague quote from subject. Rodden rating A.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Downey,_Robert_Jr.",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2008,
+            "label": "Iron Man 성공으로 메이저 스타로 완전한 커리어 복귀",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Robert_Downey_Jr."
+          },
+          {
+            "year": 2024,
+            "label": "Oppenheimer로 아카데미 남우조연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Robert_Downey_Jr."
+          }
+        ],
+        "bad": [
+          {
+            "year": 1996,
+            "label": "약물 및 무기 관련 체포와 재활/구금 시작",
+            "axis": "legal/health",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Downey,_Robert_Jr."
+          },
+          {
+            "year": 1999,
+            "label": "보호관찰 위반으로 실형 선고 및 수감",
+            "axis": "legal/career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Downey,_Robert_Jr."
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Adele",
+      "gender": "female",
+      "country_or_context": "UK",
+      "career_type": "music/entertainment",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1988,
+        "m": 5,
+        "d": 5,
+        "h": 7,
+        "min": 22,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1988,
+        "m": 5,
+        "d": 5,
+        "h": 8,
+        "min": 19,
+        "place": "Tottenham, England, UK",
+        "lat": 51.5833,
+        "lon": -0.0667,
+        "timezone": "Europe/London",
+        "timezone_abbr_at_birth": "GDT",
+        "civil_utc_offset_hours": 1,
+        "standard_utc_offset_hours": 0,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": -0.267,
+        "equation_of_time_minutes": 3.546,
+        "total_correction_minutes": -56.721,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_B",
+      "source_note": "Astro-Databank: Bio/autobiography; biography includes chart time. Rodden rating B.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Adele",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 2008,
+            "label": "데뷔 앨범 19 발매와 국제적 성공 시작",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Adele"
+          },
+          {
+            "year": 2015,
+            "label": "앨범 25 발매와 기록적 판매 성공",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Adele"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2019,
+            "label": "Simon Konecki와의 결별/이혼 진행이 공개",
+            "axis": "relationship",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Adele"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Marilyn Monroe",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1926,
+        "m": 6,
+        "d": 1,
+        "h": 9,
+        "min": 40,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1926,
+        "m": 6,
+        "d": 1,
+        "h": 9,
+        "min": 30,
+        "place": "Los Angeles, California, USA",
+        "lat": 34.05,
+        "lon": -118.25,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PST",
+        "civil_utc_offset_hours": -8,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": 7.0,
+        "equation_of_time_minutes": 2.583,
+        "total_correction_minutes": 9.583,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Monroe,_Marilyn",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1953,
+            "label": "Niagara, Gentlemen Prefer Blondes 등으로 정상급 할리우드 스타로 부상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Marilyn_Monroe"
+          },
+          {
+            "year": 1960,
+            "label": "Some Like It Hot로 골든글로브 여우주연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Marilyn_Monroe"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1961,
+            "label": "Arthur Miller와 이혼 및 정신건강 위기로 병원 치료",
+            "axis": "relationship/health",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Marilyn_Monroe"
+          },
+          {
+            "year": 1962,
+            "label": "약물 과다복용으로 사망",
+            "axis": "general",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Death_of_Marilyn_Monroe"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Kurt Cobain",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "music/entertainment",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1967,
+        "m": 2,
+        "d": 20,
+        "h": 19,
+        "min": 9,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1967,
+        "m": 2,
+        "d": 20,
+        "h": 19,
+        "min": 38,
+        "place": "Aberdeen, Washington, USA",
+        "lat": 46.9833,
+        "lon": -123.8167,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PST",
+        "civil_utc_offset_hours": -8,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -15.267,
+        "equation_of_time_minutes": -14.007,
+        "total_correction_minutes": -29.274,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand / certificate shown in documentary. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Cobain,_Kurt",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1991,
+            "label": "Nirvana Nevermind 발매로 세계적 성공",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Cobain,_Kurt"
+          },
+          {
+            "year": 1992,
+            "label": "Courtney Love와 결혼하고 딸 Frances Bean 출생",
+            "axis": "relationship/family",
+            "weight": 0.7,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Cobain,_Kurt"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1994,
+            "label": "자살로 사망",
+            "axis": "general",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Cobain,_Kurt"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Whitney Houston",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "music/entertainment",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 8,
+        "d": 9,
+        "h": 19,
+        "min": 53,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 8,
+        "d": 9,
+        "h": 20,
+        "min": 55,
+        "place": "Newark, New Jersey, USA",
+        "lat": 40.7333,
+        "lon": -74.1667,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EDT",
+        "civil_utc_offset_hours": -4,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 3.333,
+        "equation_of_time_minutes": -5.777,
+        "total_correction_minutes": -62.443,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Houston,_Whitney",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1985,
+            "label": "데뷔 앨범 Whitney Houston의 대규모 상업적 성공",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Whitney_Houston"
+          },
+          {
+            "year": 1992,
+            "label": "The Bodyguard 및 사운드트랙의 세계적 성공",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Whitney_Houston"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2006,
+            "label": "Bobby Brown과의 결혼관계 파탄 및 이혼 절차",
+            "axis": "relationship",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Whitney_Houston"
+          },
+          {
+            "year": 2012,
+            "label": "약물 관련 익사 사고로 사망",
+            "axis": "general",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Whitney_Houston"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Muhammad Ali",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "sports/boxing",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1942,
+        "m": 1,
+        "d": 17,
+        "h": 18,
+        "min": 43,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1942,
+        "m": 1,
+        "d": 17,
+        "h": 18,
+        "min": 35,
+        "place": "Louisville, Kentucky, USA",
+        "lat": 38.25,
+        "lon": -85.7667,
+        "timezone": "America/Kentucky/Louisville",
+        "timezone_abbr_at_birth": "CST",
+        "civil_utc_offset_hours": -6,
+        "standard_utc_offset_hours": -6,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": 16.933,
+        "equation_of_time_minutes": -9.417,
+        "total_correction_minutes": 7.517,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Ali,_Muhammad",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1964,
+            "label": "Sonny Liston을 꺾고 세계 헤비급 챔피언 등극",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Muhammad_Ali"
+          },
+          {
+            "year": 1974,
+            "label": "Rumble in the Jungle에서 George Foreman을 꺾고 세계 챔피언 탈환",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Rumble_in_the_Jungle"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1967,
+            "label": "병역 거부로 유죄판결, 복싱 라이선스와 타이틀 박탈",
+            "axis": "legal/career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Muhammad_Ali"
+          },
+          {
+            "year": 1984,
+            "label": "파킨슨 증후군 진단",
+            "axis": "health",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Muhammad_Ali"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "George Clooney",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 5,
+        "d": 6,
+        "h": 2,
+        "min": 24,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 5,
+        "d": 6,
+        "h": 2,
+        "min": 58,
+        "place": "Lexington, Kentucky, USA",
+        "lat": 38.05,
+        "lon": -84.5,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EST",
+        "civil_utc_offset_hours": -5,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -38.0,
+        "equation_of_time_minutes": 3.526,
+        "total_correction_minutes": -34.474,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: Birth certificate in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Clooney,_George",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1994,
+            "label": "ER 출연으로 대중적 스타덤 진입",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Clooney,_George"
+          },
+          {
+            "year": 2006,
+            "label": "Syriana로 아카데미 남우조연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/George_Clooney"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1992,
+            "label": "Talia Balsam과 이혼",
+            "axis": "relationship",
+            "weight": 0.7,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Clooney,_George"
+          },
+          {
+            "year": 2018,
+            "label": "이탈리아에서 오토바이 충돌 사고로 부상",
+            "axis": "health",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/George_Clooney"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Nicolas Cage",
+      "gender": "male",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1964,
+        "m": 1,
+        "d": 7,
+        "h": 5,
+        "min": 31,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1964,
+        "m": 1,
+        "d": 7,
+        "h": 5,
+        "min": 30,
+        "place": "Harbor City, California, USA",
+        "lat": 33.7833,
+        "lon": -118.3,
+        "timezone": "America/Los_Angeles",
+        "timezone_abbr_at_birth": "PST",
+        "civil_utc_offset_hours": -8,
+        "standard_utc_offset_hours": -8,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": 6.8,
+        "equation_of_time_minutes": -5.4,
+        "total_correction_minutes": 1.4,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Cage,_Nicolas",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1996,
+            "label": "Leaving Las Vegas로 아카데미 남우주연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Nicolas_Cage"
+          },
+          {
+            "year": 2021,
+            "label": "Pig로 비평적 재평가와 커리어 회복",
+            "axis": "career",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Pig_(film)"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2009,
+            "label": "대규모 세금 채무와 부동산 처분 등 재정 위기 공개",
+            "axis": "financial",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Nicolas_Cage"
+          },
+          {
+            "year": 2019,
+            "label": "결혼 4일 만에 혼인 무효 신청",
+            "axis": "relationship",
+            "weight": 0.7,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Nicolas_Cage"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Meryl Streep",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "film/entertainment",
+      "split": "validation_a",
+      "birth": {
+        "calendar": "solar",
+        "y": 1949,
+        "m": 6,
+        "d": 22,
+        "h": 7,
+        "min": 6,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1949,
+        "m": 6,
+        "d": 22,
+        "h": 8,
+        "min": 5,
+        "place": "Summit, New Jersey, USA",
+        "lat": 40.7333,
+        "lon": -74.3667,
+        "timezone": "America/New_York",
+        "timezone_abbr_at_birth": "EDT",
+        "civil_utc_offset_hours": -4,
+        "standard_utc_offset_hours": -5,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": -60,
+        "longitude_correction_minutes": 2.533,
+        "equation_of_time_minutes": -1.512,
+        "total_correction_minutes": -58.978,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Streep,_Meryl",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1980,
+            "label": "Kramer vs. Kramer로 아카데미 여우조연상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Streep,_Meryl"
+          },
+          {
+            "year": 2012,
+            "label": "The Iron Lady로 세 번째 아카데미 연기상 수상",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Streep,_Meryl"
+          }
+        ],
+        "bad": [
+          {
+            "year": 2001,
+            "label": "모친 Mary Wilkinson Streep 사망",
+            "axis": "family",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Streep,_Meryl"
+          },
+          {
+            "year": 2003,
+            "label": "부친 Harry William Streep Jr. 사망",
+            "axis": "family",
+            "weight": 0.8,
+            "confidence": "high",
+            "source": "https://www.astro.com/astro-databank/Streep,_Meryl"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_a",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    },
+    {
+      "name": "Judy Garland",
+      "gender": "female",
+      "country_or_context": "USA",
+      "career_type": "film/music/entertainment",
+      "split": "validation_b",
+      "birth": {
+        "calendar": "solar",
+        "y": 1922,
+        "m": 6,
+        "d": 10,
+        "h": 5,
+        "min": 47,
+        "branch": null,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      },
+      "original_birth": {
+        "calendar": "solar",
+        "y": 1922,
+        "m": 6,
+        "d": 10,
+        "h": 6,
+        "min": 0,
+        "place": "Grand Rapids, Minnesota, USA",
+        "lat": 47.2333,
+        "lon": -93.5333,
+        "timezone": "America/Chicago",
+        "timezone_abbr_at_birth": "CST",
+        "civil_utc_offset_hours": -6,
+        "standard_utc_offset_hours": -6,
+        "note": "Source-reported local civil time. Do NOT convert to Korea time."
+      },
+      "true_solar_conversion": {
+        "civil_to_standard_minutes": 0,
+        "longitude_correction_minutes": -14.133,
+        "equation_of_time_minutes": 1.048,
+        "total_correction_minutes": -13.086,
+        "method": "local_civil + DST/war_to_standard + 4min_per_degree(longitude-standard_meridian) + NOAA_equation_of_time",
+        "engine_recompute_required_before_scoring": true,
+        "max_allowed_engine_delta_minutes": 1.0
+      },
+      "source_quality": "Rodden_AA",
+      "source_note": "Astro-Databank: BC/BR in hand. Rodden rating AA.",
+      "birth_source_url": "https://www.astro.com/astro-databank/Garland,_Judy",
+      "include_in_strict_validation": true,
+      "life_events": {
+        "good": [
+          {
+            "year": 1939,
+            "label": "The Wizard of Oz의 Dorothy 역으로 세계적 명성 확립",
+            "axis": "career",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Judy_Garland"
+          },
+          {
+            "year": 1955,
+            "label": "A Star Is Born으로 골든글로브 여우주연상 수상",
+            "axis": "career",
+            "weight": 0.9,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Judy_Garland"
+          }
+        ],
+        "bad": [
+          {
+            "year": 1964,
+            "label": "호주 공연 투어에서 건강/약물 문제와 공연 실패가 크게 표면화",
+            "axis": "health/career",
+            "weight": 0.8,
+            "confidence": "medium",
+            "source": "https://en.wikipedia.org/wiki/Judy_Garland"
+          },
+          {
+            "year": 1969,
+            "label": "약물 과다복용으로 사망",
+            "axis": "general",
+            "weight": 1.0,
+            "confidence": "high",
+            "source": "https://en.wikipedia.org/wiki/Judy_Garland"
+          }
+        ]
+      },
+      "yongshin_override": null,
+      "validation_tier": "fresh_validation_b",
+      "fresh_eligibility": {
+        "absent_from_yongshin_subjects_json": true,
+        "labels_created_blind_to_G_scores": true,
+        "model_scored_before_label_freeze": false
+      }
+    }
+  ]
+}

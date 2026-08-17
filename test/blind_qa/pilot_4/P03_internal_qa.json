@@ -1,0 +1,188 @@
+{
+  "participant_id": "P03",
+  "pilot_kind": "BLIND_USER_QA_PILOT",
+  "not_validation": true,
+  "engine_output_ref": "P03_engine.json",
+  "A_engine_headlines": {
+    "natal_match": "MATCH",
+    "daewoon_match": "MATCH",
+    "n_lived_years": 30,
+    "n_future_years_internal": 71
+  },
+  "B_top_bottom_score_years": {
+    "top_10pct_Y_years": [
+      1999,
+      2002,
+      2005
+    ],
+    "bottom_10pct_Y_years": [
+      2009,
+      2018,
+      2021
+    ],
+    "top_10pct_threshold": 64.4792,
+    "bottom_10pct_threshold": 59.7019,
+    "largest_positive_yoy": [
+      {
+        "from_year": 2021,
+        "to_year": 2022,
+        "delta_Y": 7.0636
+      },
+      {
+        "from_year": 2018,
+        "to_year": 2019,
+        "delta_Y": 6.3512
+      },
+      {
+        "from_year": 2009,
+        "to_year": 2010,
+        "delta_Y": 5.7786
+      },
+      {
+        "from_year": 2001,
+        "to_year": 2002,
+        "delta_Y": 3.9008
+      },
+      {
+        "from_year": 2013,
+        "to_year": 2014,
+        "delta_Y": 3.7634
+      }
+    ],
+    "largest_negative_yoy": [
+      {
+        "from_year": 2020,
+        "to_year": 2021,
+        "delta_Y": -5.6897
+      },
+      {
+        "from_year": 2008,
+        "to_year": 2009,
+        "delta_Y": -5.1362
+      },
+      {
+        "from_year": 2017,
+        "to_year": 2018,
+        "delta_Y": -3.4957
+      },
+      {
+        "from_year": 2005,
+        "to_year": 2006,
+        "delta_Y": -3.2328
+      },
+      {
+        "from_year": 1999,
+        "to_year": 2000,
+        "delta_Y": -2.9183
+      }
+    ],
+    "daewoon_boundary_years": [
+      1997,
+      2007,
+      2017
+    ]
+  },
+  "C_largest_transitions": {
+    "top_10pct_Y_years": [
+      1999,
+      2002,
+      2005
+    ],
+    "bottom_10pct_Y_years": [
+      2009,
+      2018,
+      2021
+    ],
+    "top_10pct_threshold": 64.4792,
+    "bottom_10pct_threshold": 59.7019,
+    "largest_positive_yoy": [
+      {
+        "from_year": 2021,
+        "to_year": 2022,
+        "delta_Y": 7.0636
+      },
+      {
+        "from_year": 2018,
+        "to_year": 2019,
+        "delta_Y": 6.3512
+      },
+      {
+        "from_year": 2009,
+        "to_year": 2010,
+        "delta_Y": 5.7786
+      },
+      {
+        "from_year": 2001,
+        "to_year": 2002,
+        "delta_Y": 3.9008
+      },
+      {
+        "from_year": 2013,
+        "to_year": 2014,
+        "delta_Y": 3.7634
+      }
+    ],
+    "largest_negative_yoy": [
+      {
+        "from_year": 2020,
+        "to_year": 2021,
+        "delta_Y": -5.6897
+      },
+      {
+        "from_year": 2008,
+        "to_year": 2009,
+        "delta_Y": -5.1362
+      },
+      {
+        "from_year": 2017,
+        "to_year": 2018,
+        "delta_Y": -3.4957
+      },
+      {
+        "from_year": 2005,
+        "to_year": 2006,
+        "delta_Y": -3.2328
+      },
+      {
+        "from_year": 1999,
+        "to_year": 2000,
+        "delta_Y": -2.9183
+      }
+    ],
+    "daewoon_boundary_years": [
+      1997,
+      2007,
+      2017
+    ]
+  },
+  "D_daewoon_boundaries": [
+    1997,
+    2007,
+    2017,
+    2027,
+    2037,
+    2047,
+    2057,
+    2067,
+    2077,
+    2087
+  ],
+  "E_participant_response_placeholders": {
+    "participant_good_periods": [],
+    "participant_bad_periods": [],
+    "participant_turning_points": [],
+    "participant_chart_fit_rating": null,
+    "participant_comments": null
+  },
+  "do_not_show_before_responses": true,
+  "F_ab_placeholders": {
+    "which_overall_flow": null,
+    "which_good_periods": null,
+    "which_difficult_periods": null,
+    "which_turning_points": null,
+    "fit_rating_A": null,
+    "fit_rating_B": null,
+    "brief_reason": null
+  },
+  "ab_model_names_hidden_from_participant": true
+}

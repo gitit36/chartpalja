@@ -1,0 +1,8 @@
+{
+  "url": "https://olympics.com/en/athletes/richard-douglas-fosbury",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "title": "",
+  "error": "ReadTimeout(ReadTimeoutError(\"HTTPSConnectionPool(host='olympics.com', port=443): Read timed out. (read timeout=25)\"))"
+}

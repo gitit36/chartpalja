@@ -1,0 +1,5 @@
+axis,role,current_subjects,current_pairs,minimum_subject_deficit_to_50,recommended_fresh_pairs_next_wave,expected_subjects_after_one_pair_per_new_subject
+COMPETITIVE,CORE_NEXT_DEV,26,43,24.0,30,56
+PROJECT,CORE_NEXT_DEV,33,40,17.0,25,58
+STATUS,CORE_NEXT_DEV,9,13,41.0,45,54
+RECOGNITION,EXPLORATORY_DEFER_FROM_CORE,3,4,,0,3

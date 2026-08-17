@@ -1,0 +1,21 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+4,1,V5DEVX_063,Jacques Prigent,COMPETITIVE,V5_WIKIDATA_EXPANSION,1927-09-26,"Gennevilliers, France",male,Q1678077,,JacquesPrigent1927
+4,2,V5DEVX_064,William Holden,PROJECT,V5_WIKIDATA_EXPANSION,1918-04-17,"O'Fallon, IL, United States",male,Q95002,,WilliamHolden1918
+4,3,V5DEVX_065,Christophe Lambert,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1964-10-10,"Fontenay-sous-Bois, France",male,Q2966327,AA,ChristopheLambert1964
+4,4,V5DEVX_066,Guido Ferracin,COMPETITIVE,V5_WIKIDATA_EXPANSION,1926-01-18,"Villamarzana, Italy",male,Q3779281,,GuidoFerracin1926
+4,5,V5DEVX_067,Roger Planchon,PROJECT,V5_WIKIDATA_EXPANSION,1931-09-12,"Saint-Chamond, France",male,Q374912,,RogerPlanchon1931
+4,6,V5DEVX_068,Christian Fouchet,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1911-11-17,"Saint-Germain-en-Laye, France",male,Q1079532,AA,ChristianFouchet1911
+4,7,V5DEVX_069,Mark McManus,COMPETITIVE,V5_WIKIDATA_EXPANSION,1935-02-21,"Bellshill, United Kingdom",male,Q3294174,,MarkMcManus1935
+4,8,V5DEVX_070,Bruce Lee,PROJECT,V5_WIKIDATA_EXPANSION,1940-11-27,"San Francisco, CA, United States",male,Q16397,,BruceLee1940
+4,9,V5DEVX_071,Bernard Manciet,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1923-09-27,"Sabres, France",male,Q2898291,AA,BernardManciet1923
+4,10,V5DEVX_072,Marc Raquil,COMPETITIVE,V5_WIKIDATA_EXPANSION,1977-04-02,"Créteil, France",male,Q250282,,MarcRaquil1977
+4,11,V5DEVX_073,Dean Stockwell,PROJECT,V5_WIKIDATA_EXPANSION,1936-03-05,"Los Angeles, CA, United States",male,Q345212,,DeanStockwell1936
+4,12,V5DEVX_074,Carlo De Benedetti,STATUS,V5_WIKIDATA_EXPANSION,1934-11-14,"Turin, Italy",male,Q123638,,CarloDeBenedetti1934
+4,13,V5DEVX_075,Kid Dussart,COMPETITIVE,V5_WIKIDATA_EXPANSION,1921-04-11,"Liège, Belgium",male,Q1740849,,KidDussart1921
+4,14,V5DEVX_076,Isabella Rossellini,PROJECT,V5_WIKIDATA_EXPANSION,1952-06-18,"Rome, Italy",female,Q203840,,IsabellaRossellini1952
+4,15,V5DEVX_077,Renato Martino,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1932-11-23,"Salerno, Italy",male,Q304056,AA,RenatoMartino1932
+4,16,V5DEVX_078,Lester Bangs,PROJECT,V5_WIKIDATA_EXPANSION,1948-12-13,"Escondido, CA, United States",male,Q195527,,LesterBangs1948
+4,17,V5DEVX_079,Bill Moyers,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1934-06-05,"Hugo, OK, United States",male,Q605370,AA,BillMoyers1934
+4,18,V5DEVX_080,Agostino Cacciavillan,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1926-08-14,"Noale, Italy",male,Q127937,AA,AgostinoCacciavillan1926
+4,19,V5DEVX_081,Paul Cellucci,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1948-04-24,"Marlborough, MA, United States",male,Q718335,AA,PaulCellucci1948
+4,20,V5DEVX_082,Joseph McCarthy,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1908-11-14,"Grand Chute, WI, United States",male,Q189197,AA,JosephMcCarthy1908

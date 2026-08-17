@@ -1,0 +1,243 @@
+{
+  "measured_at": "2026-08-15T12:10:44",
+  "protocol_version": "V2_VAL_B_PROTOCOL_1.1",
+  "model": "V2_DY_B",
+  "status": "ANNUAL_FAIL",
+  "n_eligible": 14,
+  "subject_hit_floor": 8,
+  "primary": {
+    "macro_pairwise": 0.3393,
+    "subject_hit": "4/14",
+    "subject_hit_rate": 0.2857,
+    "std_sep": -0.5605,
+    "median_sep": -1.1492,
+    "mean_sep": -1.5416
+  },
+  "bootstrap": {
+    "n": 5000,
+    "seed": 20260813,
+    "unit": "subject",
+    "median": 0.3393,
+    "ci95": [
+      0.1786,
+      0.5
+    ],
+    "P_pairwise_gt_0.50": 0.0224
+  },
+  "distribution": {
+    "positive": 4,
+    "neutral": 0,
+    "negative": 10,
+    "best": [
+      {
+        "name": "Adele",
+        "sep": 4.5046,
+        "pairwise": 1.0
+      },
+      {
+        "name": "Kurt Cobain",
+        "sep": 0.6526,
+        "pairwise": 0.5
+      },
+      {
+        "name": "Sylvester Stallone",
+        "sep": 0.2755,
+        "pairwise": 0.75
+      }
+    ],
+    "worst": [
+      {
+        "name": "Tom Hanks",
+        "sep": -8.4296,
+        "pairwise": 0.0
+      },
+      {
+        "name": "Nicolas Cage",
+        "sep": -5.8907,
+        "pairwise": 0.0
+      },
+      {
+        "name": "Elon Musk",
+        "sep": -4.1379,
+        "pairwise": 0.0
+      }
+    ]
+  },
+  "diagnostics_after_status": {
+    "same_D_pairwise": 0.25,
+    "cross_D_pairwise": 0.325,
+    "pair_convention": "1 / 0.5 / 0",
+    "B_PARENT_HELP": 0.0769,
+    "B_PARENT_HARM": 0.0962,
+    "B_PARENT_NET": -0.0192,
+    "parent_local": "annual_dev_B",
+    "D_p50": 62.1706,
+    "D_min": 59.0894,
+    "D_max": 65.25,
+    "abs_annual_dev_p90": 4.0285,
+    "Y_sat_frac": 0.0,
+    "Y_min": 51.6486,
+    "Y_max": 69.8761
+  },
+  "exclusions_preexisting": [
+    {
+      "name": "Albert Einstein",
+      "reason": "engine_year_out_of_range(1879)",
+      "encoded_in": "g_fresh_labels_frozen.json eligible_for_primary_validation"
+    }
+  ],
+  "subjects": [
+    {
+      "name": "Steve Jobs",
+      "pairwise": 0.25,
+      "hit": 0,
+      "sep": -1.8057,
+      "good_avg": 61.2002,
+      "bad_avg": 63.0059,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Elon Musk",
+      "pairwise": 0.0,
+      "hit": 0,
+      "sep": -4.1379,
+      "good_avg": 60.9381,
+      "bad_avg": 65.0761,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Angelina Jolie",
+      "pairwise": 0.5,
+      "hit": 0,
+      "sep": -0.108,
+      "good_avg": 62.6996,
+      "bad_avg": 62.8076,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Tom Hanks",
+      "pairwise": 0.0,
+      "hit": 0,
+      "sep": -8.4296,
+      "good_avg": 57.8764,
+      "bad_avg": 66.3059,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Serena Williams",
+      "pairwise": 0.0,
+      "hit": 0,
+      "sep": -1.4914,
+      "good_avg": 62.6787,
+      "bad_avg": 64.1702,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "LeBron James",
+      "pairwise": 0.5,
+      "hit": 0,
+      "sep": -1.4361,
+      "good_avg": 63.0374,
+      "bad_avg": 64.4735,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Charles III",
+      "pairwise": 0.5,
+      "hit": 1,
+      "sep": 0.1417,
+      "good_avg": 60.3001,
+      "bad_avg": 60.1583,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Elizabeth II",
+      "pairwise": 0.25,
+      "hit": 0,
+      "sep": -0.7277,
+      "good_avg": 62.5371,
+      "bad_avg": 63.2648,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Sylvester Stallone",
+      "pairwise": 0.75,
+      "hit": 1,
+      "sep": 0.2755,
+      "good_avg": 62.8732,
+      "bad_avg": 62.5977,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Adele",
+      "pairwise": 1.0,
+      "hit": 1,
+      "sep": 4.5046,
+      "good_avg": 66.1393,
+      "bad_avg": 61.6347,
+      "n_good": 2,
+      "n_bad": 1
+    },
+    {
+      "name": "Kurt Cobain",
+      "pairwise": 0.5,
+      "hit": 1,
+      "sep": 0.6526,
+      "good_avg": 63.3762,
+      "bad_avg": 62.7236,
+      "n_good": 2,
+      "n_bad": 1
+    },
+    {
+      "name": "Muhammad Ali",
+      "pairwise": 0.0,
+      "hit": 0,
+      "sep": -2.2671,
+      "good_avg": 59.8322,
+      "bad_avg": 62.0993,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Nicolas Cage",
+      "pairwise": 0.0,
+      "hit": 0,
+      "sep": -5.8907,
+      "good_avg": 56.6805,
+      "bad_avg": 62.5712,
+      "n_good": 2,
+      "n_bad": 2
+    },
+    {
+      "name": "Judy Garland",
+      "pairwise": 0.5,
+      "hit": 0,
+      "sep": -0.8622,
+      "good_avg": 62.3768,
+      "bad_avg": 63.239,
+      "n_good": 2,
+      "n_bad": 2
+    }
+  ],
+  "month_day_unchanged": {
+    "Month": {
+      "status": "V2_MONTH_TIMING_ONLY",
+      "policy": "MONTH_LOW_CONFIDENCE_TIMING"
+    },
+    "Day": {
+      "status": "V2_DAY_TIMING_ONLY",
+      "policy": "DAY_EXPLANATION_ONLY"
+    }
+  },
+  "validation_b_scored": true,
+  "used_as_development": false
+}

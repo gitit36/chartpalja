@@ -1,0 +1,55 @@
+{
+  "corpus_version": "SAJU_ML_CORPUS_V1",
+  "sha256": "4d3de2a50de488580b4f19e411a05d3e331ab0223f57da1a2941dbfefb03df19",
+  "subjects": 94,
+  "events_total": 736,
+  "events_ml_usable": 497,
+  "source_pool_counts": {
+    "OLD_DEV": 56,
+    "FRESH_A": 14,
+    "PUBLIC_DEV": 24
+  },
+  "domain_coverage": {
+    "Career": {
+      "positive_events": 253,
+      "negative_events": 62,
+      "positive_subjects": 87,
+      "negative_subjects": 37,
+      "subjects_with_both": 36,
+      "within_subject_ranking_pairs": 248
+    },
+    "Wealth": {
+      "positive_events": 2,
+      "negative_events": 5,
+      "positive_subjects": 2,
+      "negative_subjects": 5,
+      "subjects_with_both": 1,
+      "within_subject_ranking_pairs": 1
+    },
+    "Health": {
+      "positive_events": 4,
+      "negative_events": 81,
+      "positive_subjects": 4,
+      "negative_subjects": 56,
+      "subjects_with_both": 1,
+      "within_subject_ranking_pairs": 1
+    },
+    "Love": {
+      "positive_events": 42,
+      "negative_events": 33,
+      "positive_subjects": 30,
+      "negative_subjects": 23,
+      "subjects_with_both": 15,
+      "within_subject_ranking_pairs": 48
+    },
+    "Family": {
+      "positive_events": 24,
+      "negative_events": 15,
+      "positive_subjects": 15,
+      "negative_subjects": 14,
+      "subjects_with_both": 2,
+      "within_subject_ranking_pairs": 2
+    }
+  },
+  "forbidden_pools_present": false
+}

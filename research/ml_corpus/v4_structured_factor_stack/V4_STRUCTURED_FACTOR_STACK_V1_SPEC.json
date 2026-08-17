@@ -1,0 +1,57 @@
+{
+  "version": "V4_STRUCTURED_FACTOR_STACK_V1_SPEC",
+  "status": "PREREGISTERED_BEFORE_RUN",
+  "architecture": {
+    "name": "STRUCTURED_FACTOR_STACK_V1",
+    "control_used_as_predictor": false,
+    "axis_age_chronology_nuisance_used_as_predictor": false,
+    "stage1_blocks": [
+      "DW_BASIC",
+      "DW_TG10",
+      "DW_YONGSHIN",
+      "DW_UNSEONG",
+      "DW_RELATION",
+      "SW_BASIC",
+      "SW_TG10",
+      "SW_YONGSHIN",
+      "SW_UNSEONG",
+      "SW_RELATION",
+      "CTX_DW_SW_RELATION"
+    ],
+    "stage1": "Fixed-C L2 pairwise logistic per semantic block",
+    "stage2": "Fixed-C L2 pairwise logistic on cross-fitted factor scores",
+    "interaction": "Exactly one: mean(DW factor scores) * mean(SW factor scores)",
+    "C_stage1": 0.3,
+    "C_stage2": 0.3,
+    "excluded": [
+      "CONTROL_FIXED",
+      "age",
+      "axis",
+      "chronology",
+      "nuisance",
+      "coarse tengod duplicate",
+      "tgxstrength duplicate",
+      "shinsal core",
+      "engine hand-weighted summaries"
+    ],
+    "score_output": "latent annual score only; no 0-100 calibration before fresh confirmation"
+  },
+  "dev_gate": {
+    "overall_min": 0.55,
+    "delta_vs_control_min": 0.0,
+    "p10_min": 0.48,
+    "axis_floor_min": 0.45
+  },
+  "if_pass": "Freeze exact coefficients on all 101 consumed DEV pairs, then collect fresh confirmation DEV.",
+  "if_fail": "Reject and do not collect fresh confirmation for this architecture.",
+  "fresh_confirmation_promotion": {
+    "delta_vs_control_min": 0.01,
+    "bootstrap_P_delta_gt_0_min": 0.8
+  },
+  "holdouts": [
+    "NEW_CONFIRM sealed",
+    "Validation_B sealed",
+    "Public_CHECK sealed",
+    "Public_FINAL sealed"
+  ]
+}

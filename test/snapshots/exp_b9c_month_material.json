@@ -1,0 +1,299 @@
+{
+  "measured_at": "2026-08-12T02:42:18",
+  "phase": "B9C_month_material_diag",
+  "frozen_A": {
+    "alpha": 1.0,
+    "kappa": 0.0,
+    "version": "B9A_alpha_1"
+  },
+  "B9_B": "rejected_permanently",
+  "B9_D": "not_production_candidate",
+  "diagnostic": {
+    "recovery": {
+      "attempted": 2172,
+      "finite": 2172,
+      "nan": 0,
+      "inf": 0,
+      "finite_rate": 1.0
+    },
+    "E_dist": {
+      "min": 25.4286,
+      "p01": 33.2443,
+      "p50": 62.2857,
+      "p99": 90.3271,
+      "max": 98.2857,
+      "n": 2172
+    },
+    "Q_dist": {
+      "min": -50.0,
+      "p01": -32.8571,
+      "p50": 0.0,
+      "p99": 26.4667,
+      "max": 32.1429,
+      "n": 2172
+    },
+    "Q_abs_dist": {
+      "min": 0.0,
+      "p01": 0.0,
+      "p50": 8.3333,
+      "p99": 32.8571,
+      "max": 50.0,
+      "n": 2172
+    },
+    "per_year_median_Q": {
+      "max_abs": 0.0,
+      "invariant_ok": true,
+      "n_years": 181
+    },
+    "per_year_mean_Q": {
+      "min": -8.0952,
+      "p01": -7.6667,
+      "p50": -0.2381,
+      "p99": 4.5714,
+      "max": 4.7619,
+      "n": 181
+    },
+    "within_year_sd_Q": {
+      "p25": 9.2459,
+      "p50": 11.635,
+      "p75": 13.8567,
+      "p90": 17.0017,
+      "n": 181
+    },
+    "largest_outlier_subject_years": [
+      {
+        "name": "Monica Lewinsky",
+        "year": 1998,
+        "sd_Q": 17.148,
+        "max_abs_Q": 50.0,
+        "max_abs_E": 83.143,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          52.0,
+          72.0
+        ]
+      },
+      {
+        "name": "Lionel Messi",
+        "year": 2008,
+        "sd_Q": 18.46,
+        "max_abs_Q": 40.0,
+        "max_abs_E": 94.571,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          53.0,
+          76.0
+        ]
+      },
+      {
+        "name": "Lionel Messi",
+        "year": 2023,
+        "sd_Q": 19.337,
+        "max_abs_Q": 40.0,
+        "max_abs_E": 98.286,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          66.0,
+          89.0
+        ]
+      },
+      {
+        "name": "Barack Obama",
+        "year": 2008,
+        "sd_Q": 14.93,
+        "max_abs_Q": 38.571,
+        "max_abs_E": 80.429,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          56.0,
+          73.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 1993,
+        "sd_Q": 20.152,
+        "max_abs_Q": 38.571,
+        "max_abs_E": 95.143,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          47.0,
+          71.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 1994,
+        "sd_Q": 17.995,
+        "max_abs_Q": 38.571,
+        "max_abs_E": 90.714,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          55.0,
+          74.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 1998,
+        "sd_Q": 19.267,
+        "max_abs_Q": 38.571,
+        "max_abs_E": 95.0,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          59.0,
+          82.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 1999,
+        "sd_Q": 17.397,
+        "max_abs_Q": 37.143,
+        "max_abs_E": 90.857,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          57.0,
+          76.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 2024,
+        "sd_Q": 17.266,
+        "max_abs_Q": 37.143,
+        "max_abs_E": 91.143,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          61.0,
+          80.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 1983,
+        "sd_Q": 18.223,
+        "max_abs_Q": 35.714,
+        "max_abs_E": 93.476,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          45.0,
+          70.0
+        ]
+      },
+      {
+        "name": "Barack Obama",
+        "year": 2013,
+        "sd_Q": 14.729,
+        "max_abs_Q": 34.286,
+        "max_abs_E": 81.857,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          50.0,
+          67.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 1984,
+        "sd_Q": 17.579,
+        "max_abs_Q": 34.286,
+        "max_abs_E": 90.571,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          54.0,
+          72.0
+        ]
+      },
+      {
+        "name": "Michael Jackson",
+        "year": 2020,
+        "sd_Q": 13.922,
+        "max_abs_Q": 34.286,
+        "max_abs_E": 83.857,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          66.0,
+          82.0
+        ]
+      },
+      {
+        "name": "윤석열",
+        "year": 2017,
+        "sd_Q": 18.729,
+        "max_abs_Q": 34.286,
+        "max_abs_E": 90.286,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          60.0,
+          81.0
+        ]
+      },
+      {
+        "name": "Hillary Clinton",
+        "year": 1993,
+        "sd_Q": 15.756,
+        "max_abs_Q": 32.857,
+        "max_abs_E": 84.571,
+        "ctrl_near_wall_n": 0,
+        "ctrl_range": [
+          47.0,
+          66.0
+        ]
+      }
+    ],
+    "control_clip_saturation_cases": [],
+    "n_clip_cases": 0,
+    "variation": {
+      "annual_variation_sd": {
+        "p25": 3.0313,
+        "p50": 3.5225,
+        "p75": 5.0685,
+        "p90": 6.5177,
+        "n": 138
+      },
+      "monthly_variation_sd_beta1": {
+        "p25": 9.2459,
+        "p50": 11.635,
+        "p75": 13.8567,
+        "p90": 17.0017,
+        "n": 181
+      },
+      "month_to_year_ratio": {
+        "p50": 3.1243,
+        "p25": 2.3581,
+        "p75": 3.7035,
+        "p90": 4.2705,
+        "guard_median_lt_1": false,
+        "n": 181,
+        "probe_beta": 1.0,
+        "note": "ratio uses person median annual SD(S_raw-D) as denominator; monthly at β=1"
+      },
+      "median_annual": 3.5225,
+      "median_monthly_beta1": 11.635
+    },
+    "suggested_beta_sweep": {
+      "q_abs_p90": 21.4286,
+      "median_annual_variation": 3.5225,
+      "rationale": "choose β so β·|Q|_p90 is on the order of median annual variation; ratio guard pushes β down if month SD dominates",
+      "grid": [
+        0.05,
+        0.087,
+        0.1,
+        0.125,
+        0.188,
+        0.25,
+        0.312,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "beta_lo": 0.05,
+      "beta_hi": 0.25
+    },
+    "corpus": {
+      "n_subjects": 14,
+      "n_subject_years": 181
+    }
+  }
+}

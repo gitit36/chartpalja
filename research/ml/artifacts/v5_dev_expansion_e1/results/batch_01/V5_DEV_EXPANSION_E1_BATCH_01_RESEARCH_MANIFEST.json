@@ -1,0 +1,32 @@
+{
+  "version": "V5_DEV_EXPANSION_E1_BATCH_01_RESEARCH_V1",
+  "status": "E1_BATCH_01_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "roster_kind": "DEV_EXPANSION_E1_EXACT_DOB",
+  "expansion_wave": "E1",
+  "n_subjects": 21,
+  "n_event_rows": 54,
+  "eligible_rows": 50,
+  "excluded_rows": 4,
+  "subjects_with_positive": 19,
+  "subjects_with_negative": 7,
+  "subjects_with_both_polarities": 6,
+  "subjects_with_no_eligible_core_axis_event": 1,
+  "batch_subjects_sha256": "ea442ecd634713e59e6c327cbd20203b0702e67fb7c60a138cc5457bac74d7e0",
+  "events_sha256": "34c241dc6bb008aded46967e0360d73b99e271c7677c13f7a827e0e94dd65141",
+  "audit_sha256": "11b23d57f8ab8994ae1c7a86d8dc1ebc4aa4f3594113b77c0a03e234bb55c34a",
+  "rules": {
+    "expansion_wave": "E1",
+    "exact_DOB_frozen_roster_used": true,
+    "web_source_verification_performed": true,
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "no_pairability_used_for_selection": true,
+    "no_pair_gap_inspected": true,
+    "no_chronology_balancing_used_for_selection": true,
+    "preassigned_axis_immutable": true,
+    "ineligible_or_ambiguous_candidates_logged_not_relabelled": true,
+    "status_positive_is_direction_of_formal_authority_not_moral_approval": true,
+    "not_final_event_freeze": true
+  },
+  "next_rule": "Place E1 Batch 01 outputs under research/ml/artifacts/v5_dev_expansion_e1/results/batch_01/. Proceed with the frozen E1 Batch 02 roster. Do not generate or inspect local pairs/year gaps, generate astrology, score Control, or research CONFIRM."
+}

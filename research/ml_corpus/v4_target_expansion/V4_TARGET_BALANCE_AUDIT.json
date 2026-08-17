@@ -1,0 +1,43 @@
+{
+  "version": "V4_TARGET_BALANCE_AUDIT_V1",
+  "status": "V4_TARGET_MODEL_READY",
+  "created_at": "2026-08-16",
+  "metrics": {
+    "n_pairs": 100,
+    "n_unique_subjects": 69,
+    "pair_positive_earlier_share": 0.41,
+    "subject_macro_positive_earlier_share": 0.4528985507246377,
+    "pair_age_only_pairwise": 0.41,
+    "subject_macro_age_only_pairwise": 0.4528985507246377,
+    "median_abs_year_gap": 4.0,
+    "p90_abs_year_gap": 16.10000000000001,
+    "axis_counts": {
+      "COMPETITIVE": 43,
+      "PROJECT": 40,
+      "STATUS": 13,
+      "RECOGNITION": 4
+    },
+    "axis_shares": {
+      "COMPETITIVE": 0.43,
+      "PROJECT": 0.4,
+      "STATUS": 0.13,
+      "RECOGNITION": 0.04
+    },
+    "max_axis_share": 0.43,
+    "subjects_with_multiple_pairs": 21,
+    "max_pairs_per_subject": 5
+  },
+  "gates": {
+    "pair_count_at_least_100": true,
+    "unique_subjects_at_least_60": true,
+    "pair_positive_earlier_share_40_60": true,
+    "subject_macro_positive_earlier_share_40_60": true,
+    "pair_age_only_40_60": true,
+    "subject_macro_age_only_40_60": true,
+    "max_axis_share_le_45pct": true,
+    "at_least_3_axes": true,
+    "all_pairs_source_verified": true,
+    "same_year_pairs_zero": true
+  },
+  "interpretation": "Chronology is balanced at both pair-row and subject-macro levels. Future model training must use subject-equal pair weights; future evaluation must aggregate at subject level. Age-only and calendar-year-only remain mandatory baselines."
+}

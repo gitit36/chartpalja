@@ -1,0 +1,16 @@
+{
+  "version": "V4_TARGET_EXPANSION_FREEZE_MANIFEST_V1",
+  "status": "V4_TARGET_MODEL_READY",
+  "created_at": "2026-08-16",
+  "files": {
+    "V4_TARGET_EXPANSION_CORPUS.json": "24c89e318cda405c21d1259ff0cb17b0f9e5a085cf29d6a79baabe73d1cc97d3",
+    "V4_VERIFIED_MATCHED_PAIRS_100.csv": "2fbecb7803cb1c4bcae5594ec0739e5cf24d5aa449ee83f9cf6517f3d71a41cf",
+    "V4_EXPANSION_NEW_PAIRS_51.csv": "e6935acc9985be955e3678b0dda760e3d3dffa7642044a51236991d5d6e9c3f0",
+    "V4_EXPANSION_NEW_EVENTS.csv": "0c1287d7030acf983703e160a0b07b22af086ba77df55960e31f2f64ec68b8ff",
+    "V4_TARGET_BALANCE_AUDIT.json": "d9d7a6610a331b32074a47b1ded26668e80ddca9cd5321113461c8f4ee800540",
+    "V4_TARGET_EXPANSION_SUMMARY.json": "a25efda5472e7f7756b4452a802a0cb4639808b461e88e9641b17e7cc3154190"
+  },
+  "sealed_sets_loaded": false,
+  "new_confirm_loaded": false,
+  "model_or_feature_scores_used_to_select_pairs": false
+}

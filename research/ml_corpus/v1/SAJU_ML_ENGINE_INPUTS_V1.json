@@ -1,0 +1,1517 @@
+{
+  "version": "SAJU_ML_ENGINE_INPUTS_V1",
+  "created_at": "2026-08-15",
+  "purpose": "Derived X-side birth adapter. Kept separate from reality-label corpus.",
+  "rules": [
+    "Never use subject name as an ML feature.",
+    "OLD_DEV/FRESH_A frozen engine birth values come from their existing development source records.",
+    "PUBLIC_DEV uses the same runtime longitude-correction path used by the public-life experiment.",
+    "Validation B, Public CHECK and Public FINAL are absent."
+  ],
+  "subjects": [
+    {
+      "subject_id": "MLV1_OLD_001",
+      "name": "Donald Trump",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1946,
+        "m": 6,
+        "d": 14,
+        "h": 9,
+        "min": 59,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_002",
+      "name": "Barack Obama",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 8,
+        "d": 4,
+        "h": 18,
+        "min": 46,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_003",
+      "name": "Michael Jackson",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1958,
+        "m": 8,
+        "d": 29,
+        "h": 18,
+        "min": 42,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_004",
+      "name": "Justin Bieber",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1994,
+        "m": 3,
+        "d": 1,
+        "h": 0,
+        "min": 18,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_005",
+      "name": "Chris Brown",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1989,
+        "m": 5,
+        "d": 5,
+        "h": 11,
+        "min": 26,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_006",
+      "name": "Hillary Clinton",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1947,
+        "m": 10,
+        "d": 26,
+        "h": 19,
+        "min": 10,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_007",
+      "name": "Kamala Harris",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1964,
+        "m": 10,
+        "d": 20,
+        "h": 20,
+        "min": 34,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_008",
+      "name": "Al Gore",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1948,
+        "m": 3,
+        "d": 31,
+        "h": 12,
+        "min": 40,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_009",
+      "name": "Amy Klobuchar",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1960,
+        "m": 5,
+        "d": 24,
+        "h": 23,
+        "min": 46,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_010",
+      "name": "Monica Lewinsky",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1973,
+        "m": 7,
+        "d": 23,
+        "h": 11,
+        "min": 4,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_011",
+      "name": "Madonna",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1958,
+        "m": 8,
+        "d": 16,
+        "h": 6,
+        "min": 24,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_012",
+      "name": "Elizabeth Taylor",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1932,
+        "m": 2,
+        "d": 27,
+        "h": 2,
+        "min": 16,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_013",
+      "name": "Drake",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1986,
+        "m": 10,
+        "d": 24,
+        "h": 1,
+        "min": 29,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_014",
+      "name": "Diana Ross",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1944,
+        "m": 3,
+        "d": 26,
+        "h": 22,
+        "min": 7,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_015",
+      "name": "Dennis Rodman",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 5,
+        "d": 12,
+        "h": 23,
+        "min": 14,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_016",
+      "name": "John Ritter",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1948,
+        "m": 9,
+        "d": 17,
+        "h": 7,
+        "min": 11,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_017",
+      "name": "Sean Penn",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1960,
+        "m": 8,
+        "d": 17,
+        "h": 14,
+        "min": 19,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_018",
+      "name": "Björk",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1965,
+        "m": 11,
+        "d": 21,
+        "h": 7,
+        "min": 56,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_019",
+      "name": "Kylie Jenner",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1997,
+        "m": 8,
+        "d": 10,
+        "h": 16,
+        "min": 26,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_020",
+      "name": "윤석열",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1960,
+        "m": 12,
+        "d": 18,
+        "h": 22,
+        "min": 1,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_021",
+      "name": "김부겸",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "lunar",
+        "y": 1956,
+        "m": 12,
+        "d": 21,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_022",
+      "name": "김어준",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1968,
+        "m": 12,
+        "d": 4,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_023",
+      "name": "박나래",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1985,
+        "m": 10,
+        "d": 25,
+        "h": 0,
+        "min": 30,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_024",
+      "name": "박정희",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1917,
+        "m": 11,
+        "d": 14,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_025",
+      "name": "오세훈",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 1,
+        "d": 4,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_026",
+      "name": "홍준표",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1953,
+        "m": 11,
+        "d": 20,
+        "h": 2,
+        "min": 40,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_027",
+      "name": "문재인",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1953,
+        "m": 1,
+        "d": 24,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_028",
+      "name": "박근혜",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1952,
+        "m": 2,
+        "d": 2,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_029",
+      "name": "이건희",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1942,
+        "m": 1,
+        "d": 9,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_030",
+      "name": "이재용",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1968,
+        "m": 6,
+        "d": 23,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_031",
+      "name": "봉준호",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1969,
+        "m": 9,
+        "d": 14,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_032",
+      "name": "김연아",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1990,
+        "m": 9,
+        "d": 5,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_033",
+      "name": "손흥민",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1992,
+        "m": 7,
+        "d": 8,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_034",
+      "name": "장미희",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1958,
+        "m": 1,
+        "d": 27,
+        "h": 12,
+        "min": 0,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_035",
+      "name": "김희민",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1984,
+        "m": 10,
+        "d": 22,
+        "h": 10,
+        "min": 0,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_036",
+      "name": "박찬호",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "lunar",
+        "y": 1973,
+        "m": 6,
+        "d": 29,
+        "h": 15,
+        "min": 50,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_037",
+      "name": "박세리",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "lunar",
+        "y": 1977,
+        "m": 8,
+        "d": 16,
+        "h": 20,
+        "min": 0,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_038",
+      "name": "이명박",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1941,
+        "m": 12,
+        "d": 19,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_039",
+      "name": "조용필",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1950,
+        "m": 3,
+        "d": 21,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_040",
+      "name": "신성일",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1937,
+        "m": 5,
+        "d": 8,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_041",
+      "name": "남진",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1946,
+        "m": 10,
+        "d": 21,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_042",
+      "name": "정몽헌",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1948,
+        "m": 9,
+        "d": 14,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_043",
+      "name": "정몽구",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1938,
+        "m": 3,
+        "d": 19,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_044",
+      "name": "김우중",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1936,
+        "m": 12,
+        "d": 19,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_045",
+      "name": "김영삼",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1929,
+        "m": 1,
+        "d": 14,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_046",
+      "name": "노태우",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1932,
+        "m": 8,
+        "d": 17,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_047",
+      "name": "전두환",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1931,
+        "m": 3,
+        "d": 6,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_048",
+      "name": "정주영",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1915,
+        "m": 11,
+        "d": 25,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_049",
+      "name": "이병철",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1910,
+        "m": 2,
+        "d": 12,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_050",
+      "name": "신해철",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1968,
+        "m": 5,
+        "d": 6,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_051",
+      "name": "서태지",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1972,
+        "m": 3,
+        "d": 2,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_052",
+      "name": "노무현",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "lunar",
+        "y": 1946,
+        "m": 8,
+        "d": 6,
+        "h": null,
+        "min": null,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_053",
+      "name": "전소연",
+      "source_pool": "OLD_DEV",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1998,
+        "m": 8,
+        "d": 26,
+        "h": 17,
+        "min": 20,
+        "timezone_basis": "LOCAL_CIVIL"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_054",
+      "name": "강호동",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1970,
+        "m": 7,
+        "d": 14,
+        "h": 5,
+        "min": 58,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_055",
+      "name": "Lionel Messi",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1987,
+        "m": 6,
+        "d": 24,
+        "h": 19,
+        "min": 25,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_OLD_056",
+      "name": "권지용",
+      "source_pool": "OLD_DEV",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1988,
+        "m": 8,
+        "d": 18,
+        "h": null,
+        "min": null,
+        "timezone_basis": null
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_001",
+      "name": "Arnold Schwarzenegger",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1947,
+        "m": 7,
+        "d": 30,
+        "h": 3,
+        "min": 5,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_002",
+      "name": "Bill Gates",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1955,
+        "m": 10,
+        "d": 28,
+        "h": 22,
+        "min": 7,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_003",
+      "name": "Britney Spears",
+      "source_pool": "FRESH_A",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 12,
+        "d": 2,
+        "h": 1,
+        "min": 39,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_004",
+      "name": "Diana, Princess of Wales",
+      "source_pool": "FRESH_A",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 7,
+        "d": 1,
+        "h": 18,
+        "min": 43,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_005",
+      "name": "George Clooney",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1961,
+        "m": 5,
+        "d": 6,
+        "h": 2,
+        "min": 24,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_006",
+      "name": "Johnny Depp",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 6,
+        "d": 9,
+        "h": 7,
+        "min": 57,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_007",
+      "name": "Marilyn Monroe",
+      "source_pool": "FRESH_A",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1926,
+        "m": 6,
+        "d": 1,
+        "h": 9,
+        "min": 40,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_008",
+      "name": "Martha Stewart",
+      "source_pool": "FRESH_A",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1941,
+        "m": 8,
+        "d": 3,
+        "h": 12,
+        "min": 30,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_009",
+      "name": "Meryl Streep",
+      "source_pool": "FRESH_A",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1949,
+        "m": 6,
+        "d": 22,
+        "h": 7,
+        "min": 6,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_010",
+      "name": "Michael Jordan",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 2,
+        "d": 17,
+        "h": 13,
+        "min": 30,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_011",
+      "name": "Robert Downey Jr.",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1965,
+        "m": 4,
+        "d": 4,
+        "h": 13,
+        "min": 11,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_012",
+      "name": "Roger Federer",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1981,
+        "m": 8,
+        "d": 8,
+        "h": 7,
+        "min": 4,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_013",
+      "name": "Tiger Woods",
+      "source_pool": "FRESH_A",
+      "gender": "male",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1975,
+        "m": 12,
+        "d": 30,
+        "h": 22,
+        "min": 55,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_FA_014",
+      "name": "Whitney Houston",
+      "source_pool": "FRESH_A",
+      "gender": "female",
+      "mode": "frozen_engine_birth",
+      "engine_birth": {
+        "calendar": "solar",
+        "y": 1963,
+        "m": 8,
+        "d": 9,
+        "h": 19,
+        "min": 53,
+        "timezone_basis": "LOCAL_TRUE_SOLAR"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_001",
+      "name": "Aaron Spelling",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1923-04-22",
+        "time": "12:30",
+        "utc_offset": "-06:00",
+        "longitude": -96.796,
+        "latitude": 32.778,
+        "place": "Dallas, TX"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_002",
+      "name": "Amanda Knox",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1987-07-09",
+        "time": "02:47",
+        "utc_offset": "-07:00",
+        "longitude": -122.33,
+        "latitude": 47.603,
+        "place": "Seattle, WA"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_003",
+      "name": "Ann Wilson",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1950-06-19",
+        "time": "17:20",
+        "utc_offset": "-07:00",
+        "longitude": -117.164,
+        "latitude": 32.716,
+        "place": "San Diego, CA"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_004",
+      "name": "Ashley Judd",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1968-04-19",
+        "time": "13:12",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_005",
+      "name": "Billy Connolly",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1942-11-24",
+        "time": "04:30",
+        "utc_offset": "+01:00",
+        "longitude": -4.257,
+        "latitude": 55.866,
+        "place": "Glasgow"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_006",
+      "name": "Burt Reynolds",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1936-02-11",
+        "time": "12:10",
+        "utc_offset": "-05:00",
+        "longitude": -84.554,
+        "latitude": 42.734,
+        "place": "Lansing, MI"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_007",
+      "name": "Buzz Aldrin",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1930-01-20",
+        "time": "14:17",
+        "utc_offset": "-05:00",
+        "longitude": -74.202,
+        "latitude": 40.803,
+        "place": "Glen Ridge, NJ"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_008",
+      "name": "Diahann Carroll",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1935-07-17",
+        "time": "21:35",
+        "utc_offset": "-04:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_009",
+      "name": "Farrah Fawcett",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-02-02",
+        "time": "15:10",
+        "utc_offset": "-06:00",
+        "longitude": -97.404,
+        "latitude": 27.796,
+        "place": "Corpus Christi, TX"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_010",
+      "name": "Harrison Dillard",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1923-07-08",
+        "time": "07:32",
+        "utc_offset": "-04:00",
+        "longitude": -81.691,
+        "latitude": 41.505,
+        "place": "Cleveland, OH"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_011",
+      "name": "Harrison Ford",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1942-07-13",
+        "time": "11:41",
+        "utc_offset": "-05:00",
+        "longitude": -87.632,
+        "latitude": 41.883,
+        "place": "Chicago, IL"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_012",
+      "name": "Jeff Bridges",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1949-12-04",
+        "time": "23:58",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_013",
+      "name": "Jennifer Lawrence",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1990-08-15",
+        "time": "15:20",
+        "utc_offset": "-04:00",
+        "longitude": -85.654,
+        "latitude": 38.199,
+        "place": "Louisville, KY"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_014",
+      "name": "Laura Flessel",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1971-11-06",
+        "time": "16:15",
+        "utc_offset": "-04:00",
+        "longitude": -61.534,
+        "latitude": 16.238,
+        "place": "Pointe-a-Pitre"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_015",
+      "name": "Mark Ruffalo",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1967-11-22",
+        "time": "07:33",
+        "utc_offset": "-06:00",
+        "longitude": -87.823,
+        "latitude": 42.588,
+        "place": "Kenosha, WI"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_016",
+      "name": "Matthew Perry",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1969-08-19",
+        "time": "04:47",
+        "utc_offset": "-04:00",
+        "longitude": -73.203,
+        "latitude": 42.713,
+        "place": "Williamstown, MA"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_017",
+      "name": "Mick Fanning",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1981-06-13",
+        "time": "04:21",
+        "utc_offset": "+10:00",
+        "longitude": 150.694,
+        "latitude": -33.773,
+        "place": "Penrith, NSW"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_018",
+      "name": "Miley Cyrus",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1992-11-23",
+        "time": "16:19",
+        "utc_offset": "-06:00",
+        "longitude": -86.779,
+        "latitude": 36.166,
+        "place": "Nashville, TN"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_019",
+      "name": "Rock Hudson",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1925-11-17",
+        "time": "02:15",
+        "utc_offset": "-06:00",
+        "longitude": -87.735,
+        "latitude": 42.107,
+        "place": "Winnetka, IL"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_020",
+      "name": "Rocky Bleier",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-03-05",
+        "time": "08:15",
+        "utc_offset": "-06:00",
+        "longitude": -88.407,
+        "latitude": 44.262,
+        "place": "Appleton, WI"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_021",
+      "name": "Sally Ride",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1951-05-26",
+        "time": "08:11",
+        "utc_offset": "-07:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_022",
+      "name": "Salvador Allende",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1908-06-26",
+        "time": "01:30",
+        "utc_offset": "-04:43",
+        "longitude": -71.619,
+        "latitude": -33.046,
+        "place": "Valparaiso"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_023",
+      "name": "Steve McQueen",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1930-03-24",
+        "time": "12:15",
+        "utc_offset": "-06:00",
+        "longitude": -86.156,
+        "latitude": 39.768,
+        "place": "Indianapolis, IN"
+      }
+    },
+    {
+      "subject_id": "MLV1_PUB_024",
+      "name": "Whoopi Goldberg",
+      "source_pool": "PUBLIC_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1955-11-13",
+        "time": "12:48",
+        "utc_offset": "-05:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY"
+      }
+    }
+  ]
+}

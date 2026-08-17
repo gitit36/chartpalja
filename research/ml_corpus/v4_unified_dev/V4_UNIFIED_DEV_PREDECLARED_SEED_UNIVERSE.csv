@@ -1,0 +1,569 @@
+axis,seed_rank,name
+COMPETITIVE,1,A. J. Foyt
+COMPETITIVE,2,Serena Williams
+COMPETITIVE,3,Venus Williams
+COMPETITIVE,4,Roger Federer
+COMPETITIVE,5,Rafael Nadal
+COMPETITIVE,6,Novak Djokovic
+COMPETITIVE,7,Martina Navratilova
+COMPETITIVE,8,Steffi Graf
+COMPETITIVE,9,Monica Seles
+COMPETITIVE,10,Andre Agassi
+COMPETITIVE,11,Pete Sampras
+COMPETITIVE,12,Björn Borg
+COMPETITIVE,13,John McEnroe
+COMPETITIVE,14,Jimmy Connors
+COMPETITIVE,15,Michael Jordan
+COMPETITIVE,16,Kobe Bryant
+COMPETITIVE,17,Shaquille O'Neal
+COMPETITIVE,18,Magic Johnson
+COMPETITIVE,19,Larry Bird
+COMPETITIVE,20,Kareem Abdul-Jabbar
+COMPETITIVE,21,Stephen Curry
+COMPETITIVE,22,Kevin Durant
+COMPETITIVE,23,Tim Duncan
+COMPETITIVE,24,Dirk Nowitzki
+COMPETITIVE,25,Charles Barkley
+COMPETITIVE,26,Hakeem Olajuwon
+COMPETITIVE,27,Patrick Ewing
+COMPETITIVE,28,Isiah Thomas
+COMPETITIVE,29,Dwyane Wade
+COMPETITIVE,30,Allen Iverson
+COMPETITIVE,31,Scottie Pippen
+COMPETITIVE,32,Joe Montana
+COMPETITIVE,33,Peyton Manning
+COMPETITIVE,34,Eli Manning
+COMPETITIVE,35,Brett Favre
+COMPETITIVE,36,Aaron Rodgers
+COMPETITIVE,37,Drew Brees
+COMPETITIVE,38,Dan Marino
+COMPETITIVE,39,John Elway
+COMPETITIVE,40,Terry Bradshaw
+COMPETITIVE,41,Roger Staubach
+COMPETITIVE,42,Emmitt Smith
+COMPETITIVE,43,Jerry Rice
+COMPETITIVE,44,Babe Ruth
+COMPETITIVE,45,Hank Aaron
+COMPETITIVE,46,Willie Mays
+COMPETITIVE,47,Mickey Mantle
+COMPETITIVE,48,Ted Williams
+COMPETITIVE,49,Joe DiMaggio
+COMPETITIVE,50,Derek Jeter
+COMPETITIVE,51,Alex Rodriguez
+COMPETITIVE,52,Barry Bonds
+COMPETITIVE,53,Nolan Ryan
+COMPETITIVE,54,Sandy Koufax
+COMPETITIVE,55,Pete Rose
+COMPETITIVE,56,Mike Tyson
+COMPETITIVE,57,Sugar Ray Leonard
+COMPETITIVE,58,George Foreman
+COMPETITIVE,59,Joe Frazier
+COMPETITIVE,60,Floyd Mayweather Jr.
+COMPETITIVE,61,Manny Pacquiao
+COMPETITIVE,62,Oscar De La Hoya
+COMPETITIVE,63,Roberto Durán
+COMPETITIVE,64,Marvin Hagler
+COMPETITIVE,65,Thomas Hearns
+COMPETITIVE,66,Pelé
+COMPETITIVE,67,Diego Maradona
+COMPETITIVE,68,Cristiano Ronaldo
+COMPETITIVE,69,Zinedine Zidane
+COMPETITIVE,70,David Beckham
+COMPETITIVE,71,Thierry Henry
+COMPETITIVE,72,Ronaldinho
+COMPETITIVE,73,Neymar
+COMPETITIVE,74,Ayrton Senna
+COMPETITIVE,75,Michael Schumacher
+COMPETITIVE,76,Lewis Hamilton
+COMPETITIVE,77,Sebastian Vettel
+COMPETITIVE,78,Niki Lauda
+COMPETITIVE,79,Alain Prost
+COMPETITIVE,80,Jackie Stewart
+COMPETITIVE,81,Tiger Woods
+COMPETITIVE,82,Jack Nicklaus
+COMPETITIVE,83,Arnold Palmer
+COMPETITIVE,84,Phil Mickelson
+COMPETITIVE,85,Carl Lewis
+COMPETITIVE,86,Usain Bolt
+COMPETITIVE,87,Michael Phelps
+COMPETITIVE,88,Simone Biles
+COMPETITIVE,89,Nadia Comăneci
+COMPETITIVE,90,Jackie Joyner-Kersee
+COMPETITIVE,91,Florence Griffith Joyner
+COMPETITIVE,92,Mary Lou Retton
+COMPETITIVE,93,Wayne Gretzky
+COMPETITIVE,94,Mario Lemieux
+COMPETITIVE,95,Sidney Crosby
+COMPETITIVE,96,Gordie Howe
+COMPETITIVE,97,Lance Armstrong
+COMPETITIVE,98,Greg LeMond
+COMPETITIVE,99,Mark Spitz
+COMPETITIVE,100,Evander Holyfield
+COMPETITIVE,101,Lennox Lewis
+COMPETITIVE,102,Martina Hingis
+COMPETITIVE,103,Lindsay Davenport
+COMPETITIVE,104,Arantxa Sánchez Vicario
+COMPETITIVE,105,Gabriela Sabatini
+COMPETITIVE,106,Fernando Alonso
+COMPETITIVE,107,Kimi Räikkönen
+COMPETITIVE,108,Dale Earnhardt
+COMPETITIVE,109,Jeff Gordon
+COMPETITIVE,110,Richard Petty
+COMPETITIVE,111,Greg Norman
+COMPETITIVE,112,Seve Ballesteros
+COMPETITIVE,113,Annika Sörenstam
+COMPETITIVE,114,Nancy Lopez
+COMPETITIVE,115,Mia Hamm
+COMPETITIVE,116,Hope Solo
+PROJECT,1,Tom Cruise
+PROJECT,2,Brad Pitt
+PROJECT,3,Leonardo DiCaprio
+PROJECT,4,Robert Downey Jr.
+PROJECT,5,Will Smith
+PROJECT,6,Nicolas Cage
+PROJECT,7,Keanu Reeves
+PROJECT,8,Denzel Washington
+PROJECT,9,Tom Hanks
+PROJECT,10,Harrison Ford
+PROJECT,11,Al Pacino
+PROJECT,12,Robert De Niro
+PROJECT,13,Jack Nicholson
+PROJECT,14,Dustin Hoffman
+PROJECT,15,Kevin Costner
+PROJECT,16,John Travolta
+PROJECT,17,Mel Gibson
+PROJECT,18,Eddie Murphy
+PROJECT,19,Jim Carrey
+PROJECT,20,Adam Sandler
+PROJECT,21,Ben Affleck
+PROJECT,22,Matt Damon
+PROJECT,23,Joaquin Phoenix
+PROJECT,24,Christian Bale
+PROJECT,25,Julia Roberts
+PROJECT,26,Sandra Bullock
+PROJECT,27,Nicole Kidman
+PROJECT,28,Cate Blanchett
+PROJECT,29,Jodie Foster
+PROJECT,30,Demi Moore
+PROJECT,31,Sharon Stone
+PROJECT,32,Jennifer Aniston
+PROJECT,33,Reese Witherspoon
+PROJECT,34,Gwyneth Paltrow
+PROJECT,35,Halle Berry
+PROJECT,36,Charlize Theron
+PROJECT,37,Anne Hathaway
+PROJECT,38,Natalie Portman
+PROJECT,39,Emma Stone
+PROJECT,40,Jennifer Lawrence
+PROJECT,41,Scarlett Johansson
+PROJECT,42,Steven Spielberg
+PROJECT,43,Martin Scorsese
+PROJECT,44,Francis Ford Coppola
+PROJECT,45,George Lucas
+PROJECT,46,James Cameron
+PROJECT,47,Ridley Scott
+PROJECT,48,Quentin Tarantino
+PROJECT,49,Tim Burton
+PROJECT,50,Oliver Stone
+PROJECT,51,Woody Allen
+PROJECT,52,David Lynch
+PROJECT,53,Spike Lee
+PROJECT,54,Peter Jackson
+PROJECT,55,Sofia Coppola
+PROJECT,56,Kathryn Bigelow
+PROJECT,57,Ron Howard
+PROJECT,58,Robert Zemeckis
+PROJECT,59,Brian De Palma
+PROJECT,60,Madonna
+PROJECT,61,Michael Jackson
+PROJECT,62,Prince
+PROJECT,63,David Bowie
+PROJECT,64,Elton John
+PROJECT,65,Bruce Springsteen
+PROJECT,66,Paul McCartney
+PROJECT,67,John Lennon
+PROJECT,68,Mick Jagger
+PROJECT,69,Keith Richards
+PROJECT,70,Mariah Carey
+PROJECT,71,Celine Dion
+PROJECT,72,Janet Jackson
+PROJECT,73,Cher
+PROJECT,74,Barbra Streisand
+PROJECT,75,Diana Ross
+PROJECT,76,Tina Turner
+PROJECT,77,Stevie Wonder
+PROJECT,78,Bob Dylan
+PROJECT,79,Neil Young
+PROJECT,80,Billy Joel
+PROJECT,81,Sting
+PROJECT,82,Phil Collins
+PROJECT,83,George Michael
+PROJECT,84,Bono
+PROJECT,85,Aretha Franklin
+PROJECT,86,Dolly Parton
+PROJECT,87,Shania Twain
+PROJECT,88,Bette Midler
+PROJECT,89,Liza Minnelli
+PROJECT,90,Whoopi Goldberg
+PROJECT,91,Sigourney Weaver
+PROJECT,92,Michelle Pfeiffer
+PROJECT,93,Susan Sarandon
+PROJECT,94,Glenn Close
+PROJECT,95,Geena Davis
+PROJECT,96,Jamie Lee Curtis
+PROJECT,97,Meg Ryan
+PROJECT,98,Robin Williams
+PROJECT,99,Bill Murray
+PROJECT,100,Steve Martin
+PROJECT,101,Dan Aykroyd
+PROJECT,102,Gene Hackman
+PROJECT,103,Michael Douglas
+PROJECT,104,Kirk Douglas
+PROJECT,105,Anthony Hopkins
+PROJECT,106,Sean Connery
+PROJECT,107,Clint Eastwood
+STATUS,1,George H. W. Bush
+STATUS,2,George W. Bush
+STATUS,3,Bill Clinton
+STATUS,4,Jimmy Carter
+STATUS,5,Richard Nixon
+STATUS,6,Ronald Reagan
+STATUS,7,John F. Kennedy
+STATUS,8,Lyndon B. Johnson
+STATUS,9,Harry S. Truman
+STATUS,10,Dwight D. Eisenhower
+STATUS,11,Al Gore
+STATUS,12,Hillary Clinton
+STATUS,13,John McCain
+STATUS,14,Mitt Romney
+STATUS,15,Bernie Sanders
+STATUS,16,Nancy Pelosi
+STATUS,17,Newt Gingrich
+STATUS,18,Paul Ryan
+STATUS,19,John Kerry
+STATUS,20,Ted Kennedy
+STATUS,21,Robert F. Kennedy
+STATUS,22,George McGovern
+STATUS,23,Bob Dole
+STATUS,24,Sarah Palin
+STATUS,25,Mike Pence
+STATUS,26,Kamala Harris
+STATUS,27,Joe Biden
+STATUS,28,Dick Cheney
+STATUS,29,Colin Powell
+STATUS,30,Rudy Giuliani
+STATUS,31,Gavin Newsom
+STATUS,32,Andrew Cuomo
+STATUS,33,Margaret Thatcher
+STATUS,34,Tony Blair
+STATUS,35,Gordon Brown
+STATUS,36,David Cameron
+STATUS,37,Theresa May
+STATUS,38,Boris Johnson
+STATUS,39,Charles de Gaulle
+STATUS,40,François Mitterrand
+STATUS,41,Jacques Chirac
+STATUS,42,Nicolas Sarkozy
+STATUS,43,François Hollande
+STATUS,44,Emmanuel Macron
+STATUS,45,Angela Merkel
+STATUS,46,Helmut Kohl
+STATUS,47,Gerhard Schröder
+STATUS,48,Silvio Berlusconi
+STATUS,49,Romano Prodi
+STATUS,50,Matteo Renzi
+STATUS,51,Pierre Trudeau
+STATUS,52,Justin Trudeau
+STATUS,53,Bob Hawke
+STATUS,54,John Howard
+STATUS,55,Kevin Rudd
+STATUS,56,Julia Gillard
+STATUS,57,Indira Gandhi
+STATUS,58,Rajiv Gandhi
+STATUS,59,Jawaharlal Nehru
+STATUS,60,Benjamin Netanyahu
+STATUS,61,Golda Meir
+STATUS,62,Yitzhak Rabin
+STATUS,63,Shimon Peres
+STATUS,64,Mikhail Gorbachev
+STATUS,65,Boris Yeltsin
+STATUS,66,Nelson Mandela
+STATUS,67,F. W. de Klerk
+STATUS,68,Luiz Inácio Lula da Silva
+STATUS,69,Dilma Rousseff
+STATUS,70,Fernando Henrique Cardoso
+STATUS,71,Salvador Allende
+STATUS,72,Fidel Castro
+STATUS,73,Hugo Chávez
+STATUS,74,Shinzo Abe
+STATUS,75,Yasuhiro Nakasone
+STATUS,76,Junichiro Koizumi
+STATUS,77,Lech Wałęsa
+STATUS,78,Václav Havel
+STATUS,79,Alexander Dubček
+STATUS,80,Helmut Schmidt
+STATUS,81,Willy Brandt
+STATUS,82,Konrad Adenauer
+STATUS,83,Harold Wilson
+STATUS,84,Edward Heath
+STATUS,85,James Callaghan
+STATUS,86,John Major
+STATUS,87,Harold Macmillan
+STATUS,88,Anthony Eden
+STATUS,89,Clement Attlee
+STATUS,90,Pierre Mendès France
+STATUS,91,Valéry Giscard d'Estaing
+STATUS,92,Georges Pompidou
+STATUS,93,François Fillon
+STATUS,94,Ségolène Royal
+STATUS,95,Jean-Marie Le Pen
+STATUS,96,Marine Le Pen
+STATUS,97,José María Aznar
+STATUS,98,Felipe González
+STATUS,99,José Luis Rodríguez Zapatero
+STATUS,100,Adolfo Suárez
+STATUS,101,Sandro Pertini
+STATUS,102,Giulio Andreotti
+STATUS,103,Bettino Craxi
+STATUS,104,Alcide De Gasperi
+STATUS,105,François Bayrou
+STATUS,106,Jean Chrétien
+STATUS,107,Brian Mulroney
+STATUS,108,Kim Campbell
+STATUS,109,Paul Martin
+STATUS,110,Stephen Harper
+STATUS,111,Malcolm Fraser
+STATUS,112,Gough Whitlam
+STATUS,113,Paul Keating
+STATUS,114,Malcolm Turnbull
+STATUS,115,Walter Mondale
+STATUS,116,Hubert Humphrey
+STATUS,117,Spiro Agnew
+STATUS,118,Henry Kissinger
+STATUS,119,Madeleine Albright
+STATUS,120,Condoleezza Rice
+STATUS,121,John Edwards
+STATUS,122,Howard Dean
+STATUS,123,Michael Dukakis
+STATUS,124,Gary Hart
+STATUS,125,Jesse Jackson
+STATUS,126,Ross Perot
+STATUS,127,Ralph Nader
+STATUS,128,Pat Buchanan
+STATUS,129,Jerry Brown
+STATUS,130,Pete Wilson
+STATUS,131,Gray Davis
+STATUS,132,Mario Cuomo
+STATUS,133,Nelson Rockefeller
+STATUS,134,Adlai Stevenson II
+STATUS,135,George Wallace
+STATUS,136,Strom Thurmond
+STATUS,137,Barry Goldwater
+STATUS,138,John Connally
+STATUS,139,Sam Nunn
+STATUS,140,John Glenn
+STATUS,141,Daniel Patrick Moynihan
+STATUS,142,Tip O'Neill
+STATUS,143,Geraldine Ferraro
+STATUS,144,George Shultz
+STATUS,145,Cyrus Vance
+STATUS,146,Dean Rusk
+STATUS,147,Warren Christopher
+STATUS,148,Caspar Weinberger
+STATUS,149,Robert McNamara
+STATUS,150,Donald Rumsfeld
+STATUS,151,Lloyd Bentsen
+STATUS,152,Edmund Muskie
+STATUS,153,Birch Bayh
+STATUS,154,Frank Church
+STATUS,155,Paul Tsongas
+STATUS,156,Eugene McCarthy
+STATUS,157,Henry M. Jackson
+STATUS,158,Tom Daschle
+STATUS,159,Trent Lott
+STATUS,160,Howard Baker
+STATUS,161,Bob Kerrey
+STATUS,162,Bill Bradley
+STATUS,163,Jerry Falwell
+STATUS,164,Pat Robertson
+STATUS,165,John Anderson
+STATUS,166,Mo Udall
+STATUS,167,Henry Cabot Lodge Jr.
+STATUS,168,George Romney
+STATUS,169,Richard Lugar
+STATUS,170,Alan Cranston
+STATUS,171,Gary Bauer
+STATUS,172,Jack Kemp
+STATUS,173,Phil Gramm
+STATUS,174,Wesley Clark
+STATUS,175,Bill Richardson
+STATUS,176,Tom Vilsack
+STATUS,177,Chris Dodd
+STATUS,178,Joe Lieberman
+STATUS,179,Dennis Kucinich
+STATUS,180,Fred Thompson
+STATUS,181,Rick Santorum
+STATUS,182,Mike Huckabee
+STATUS,183,Michael Foot
+STATUS,184,Neil Kinnock
+STATUS,185,William Hague
+STATUS,186,Jeremy Corbyn
+STATUS,187,Michael Heseltine
+STATUS,188,Kenneth Clarke
+STATUS,189,Peter Mandelson
+STATUS,190,Tony Benn
+STATUS,191,Enoch Powell
+STATUS,192,Barbara Castle
+STATUS,193,Roy Jenkins
+STATUS,194,David Owen
+STATUS,195,Shirley Williams
+STATUS,196,Paddy Ashdown
+STATUS,197,Robin Cook
+STATUS,198,Douglas Hurd
+STATUS,199,Geoffrey Howe
+STATUS,200,Norman Tebbit
+STATUS,201,Michael Portillo
+STATUS,202,John Prescott
+STATUS,203,David Steel
+STATUS,204,Menzies Campbell
+STATUS,205,Alex Salmond
+STATUS,206,Gerry Adams
+STATUS,207,John Hume
+STATUS,208,Lionel Jospin
+STATUS,209,Michel Rocard
+STATUS,210,Edouard Balladur
+STATUS,211,Alain Juppe
+STATUS,212,Dominique de Villepin
+STATUS,213,Jean-Pierre Raffarin
+STATUS,214,Simone Veil
+STATUS,215,Jacques Delors
+STATUS,216,Laurent Fabius
+STATUS,217,Bernard Kouchner
+STATUS,218,Robert Badinter
+STATUS,219,Jean-Pierre Chevenement
+STATUS,220,Raymond Barre
+STATUS,221,Pierre Mauroy
+STATUS,222,Edith Cresson
+STATUS,223,Franz Josef Strauss
+STATUS,224,Edmund Stoiber
+STATUS,225,Joschka Fischer
+STATUS,226,Oskar Lafontaine
+STATUS,227,Wolfgang Schaeuble
+STATUS,228,Frank-Walter Steinmeier
+STATUS,229,Horst Seehofer
+STATUS,230,Hans-Dietrich Genscher
+STATUS,231,Kurt Georg Kiesinger
+STATUS,232,Bruno Kreisky
+STATUS,233,Kurt Waldheim
+STATUS,234,Aldo Moro
+STATUS,235,Amintore Fanfani
+STATUS,236,Giorgio Napolitano
+STATUS,237,Carlo Azeglio Ciampi
+STATUS,238,Massimo D'Alema
+STATUS,239,Walter Veltroni
+STATUS,240,Giuliano Amato
+STATUS,241,Pier Luigi Bersani
+STATUS,242,Oscar Luigi Scalfaro
+STATUS,243,Giovanni Spadolini
+STATUS,244,Ciriaco De Mita
+STATUS,245,Lamberto Dini
+STATUS,246,Lester B. Pearson
+STATUS,247,John Diefenbaker
+STATUS,248,Joe Clark
+STATUS,249,Robert Stanfield
+STATUS,250,Ed Broadbent
+STATUS,251,Tommy Douglas
+STATUS,252,Jean Charest
+STATUS,253,Preston Manning
+STATUS,254,Stockwell Day
+STATUS,255,Robert Bourassa
+STATUS,256,Rene Levesque
+STATUS,257,Lucien Bouchard
+STATUS,258,Robert Menzies
+STATUS,259,William McMahon
+STATUS,260,John Gorton
+STATUS,261,Arthur Calwell
+STATUS,262,Andrew Peacock
+STATUS,263,Kim Beazley
+STATUS,264,Mark Latham
+STATUS,265,Bob Brown
+STATUS,266,Alexander Downer
+STATUS,267,Don Dunstan
+STATUS,268,Helen Clark
+STATUS,269,David Lange
+STATUS,270,Robert Muldoon
+STATUS,271,Jim Bolger
+STATUS,272,Geoffrey Palmer
+STATUS,273,Morarji Desai
+STATUS,274,Lal Bahadur Shastri
+STATUS,275,Atal Bihari Vajpayee
+STATUS,276,Manmohan Singh
+STATUS,277,Sonia Gandhi
+STATUS,278,L. K. Advani
+STATUS,279,P. V. Narasimha Rao
+STATUS,280,V. P. Singh
+STATUS,281,Charan Singh
+STATUS,282,Jayaprakash Narayan
+STATUS,283,Zulfikar Ali Bhutto
+STATUS,284,Benazir Bhutto
+STATUS,285,Pervez Musharraf
+STATUS,286,Kakuei Tanaka
+STATUS,287,Takeo Fukuda
+STATUS,288,Masayoshi Ohira
+STATUS,289,Zenko Suzuki
+STATUS,290,Noboru Takeshita
+STATUS,291,Toshiki Kaifu
+STATUS,292,Kiichi Miyazawa
+STATUS,293,Ryutaro Hashimoto
+STATUS,294,Keizo Obuchi
+STATUS,295,Taro Aso
+STATUS,296,Yukio Hatoyama
+STATUS,297,Naoto Kan
+STATUS,298,Ichiro Ozawa
+STATUS,299,Menachem Begin
+STATUS,300,Moshe Dayan
+STATUS,301,Ariel Sharon
+STATUS,302,Ehud Barak
+STATUS,303,Ehud Olmert
+STATUS,304,Yitzhak Shamir
+STATUS,305,Chaim Herzog
+STATUS,306,Abba Eban
+STATUS,307,Moshe Sharett
+STATUS,308,Augusto Pinochet
+STATUS,309,Michelle Bachelet
+STATUS,310,Patricio Aylwin
+STATUS,311,Ricardo Lagos
+STATUS,312,Eduardo Frei Montalva
+STATUS,313,Ernesto Zedillo
+STATUS,314,Vicente Fox
+STATUS,315,Carlos Salinas de Gortari
+STATUS,316,Felipe Calderon
+STATUS,317,Andres Manuel Lopez Obrador
+STATUS,318,Carlos Menem
+STATUS,319,Raul Alfonsin
+STATUS,320,Fernando de la Rua
+STATUS,321,Alan Garcia
+STATUS,322,Alejandro Toledo
+STATUS,323,Alberto Fujimori
+STATUS,324,Julius Nyerere
+STATUS,325,Kenneth Kaunda
+STATUS,326,Desmond Tutu
+STATUS,327,Thabo Mbeki
+STATUS,328,Frederik Willem de Klerk
+STATUS,329,Wim Kok
+STATUS,330,Ruud Lubbers
+STATUS,331,Dries van Agt
+STATUS,332,Joop den Uyl
+STATUS,333,Pim Fortuyn
+STATUS,334,Carl Bildt
+STATUS,335,Olof Palme
+STATUS,336,Gro Harlem Brundtland
+STATUS,337,Kjell Magne Bondevik
+STATUS,338,Mauno Koivisto
+STATUS,339,Martti Ahtisaari
+STATUS,340,Tarja Halonen
+STATUS,341,Urho Kekkonen
+STATUS,342,Vaclav Klaus
+STATUS,343,Milos Zeman
+STATUS,344,Aleksander Kwasniewski
+STATUS,345,Bronislaw Komorowski

@@ -1,0 +1,14 @@
+{
+  "version": "V5_E1_SOURCE_SEMANTIC_QA_DECISION_V1",
+  "status": "V5_E1_SOURCE_SEMANTIC_MANUAL_BACKFILL_REQUIRED",
+  "assembled_events_sha256": "8f50385eb0c1bf8cf24b3368b95d043b17f7292439cfe77ef0a558659e7a9c72",
+  "source_auto_results_sha256": "43e875271ebd4c187cec2291b2eb6159e7f1b9c5b9670b205b9ec7febab901cd",
+  "eligible_source_manual_review_sha256": "ae71d4789977b6dbe80171dbde2b839b10f48a446901cedbe6180333ad0ed45b",
+  "eligible_semantic_manual_review_sha256": "61dbac7e889b80ffda0f83839de0cd954c57fc21981dd53203f315493b92c0b4",
+  "same_year_collision_review_sha256": "c7a6e85b4e8fa92e982d61f77f86703f26176c508b6db1b2b1d9c998e8bda50e",
+  "summary_sha256": "26f5debb3b3d6610902fb79720d60dc64b06c2e7b8e94573f4805f6d522870bb",
+  "event_freeze_allowed": false,
+  "pairing_allowed": false,
+  "astrology_generation_allowed": false,
+  "confirm_event_research_allowed": false
+}

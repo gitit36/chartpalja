@@ -1,0 +1,31 @@
+{
+  "version": "V4_UNIFIED_DEV_WAVE2_SOURCE_COLLECTION_V1",
+  "status": "V4_UNIFIED_DEV_WAVE2_SOURCE_COLLECTION_COMPLETE",
+  "roster_status": "V4_UNIFIED_DEV_WAVE2_SUBJECT_UNIVERSE_FROZEN",
+  "roster_sha256": "afd9cf204f26ccf00b384e41d8de06d708f641892211f5226462b178caaf1e27",
+  "n_frozen_subjects": 44,
+  "n_pairable_subjects": 28,
+  "n_unpairable_subjects": 16,
+  "n_verified_selected_events": 56,
+  "pair_axis_counts": {
+    "COMPETITIVE": 3,
+    "PROJECT": 6,
+    "STATUS": 19
+  },
+  "axis_pairability": {
+    "COMPETITIVE": 1.0,
+    "PROJECT": 0.75,
+    "STATUS": 0.5757575757575758
+  },
+  "positive_earlier_share": 0.75,
+  "median_abs_year_gap": [
+    3,
+    5
+  ],
+  "same_year_pairs": 0,
+  "collection_scope": "BOUNDED_MAJOR_EVENT_SOURCE_SWEEP",
+  "important_caveat": "This is a bounded, conservative major-event source sweep, not exhaustive whole-life event enumeration. All 44 frozen members were retained; ambiguous cases remain UNPAIRABLE_THIS_WAVE rather than being forced into target labels.",
+  "astrology_scored": false,
+  "sealed_holdouts_loaded": false,
+  "next_rule": "Run notebook 10 freeze/QA. If Wave 1 + Wave 2 frozen usable pairs meet all axis targets, freeze the combined corpus and proceed only to a separate feature-generation preregistration/gate; do not score astrology inside this collection phase."
+}

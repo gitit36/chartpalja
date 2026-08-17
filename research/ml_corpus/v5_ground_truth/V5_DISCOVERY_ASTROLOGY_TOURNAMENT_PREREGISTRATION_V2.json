@@ -1,0 +1,116 @@
+{
+  "version": "V5_DISCOVERY_ASTROLOGY_TOURNAMENT_PREREGISTRATION_V2",
+  "created_date": "2026-08-17",
+  "status": "PREDECLARED_BEFORE_V5_ASTROLOGY_FEATURE_GENERATION_REVISED_AUTO_SELECTION",
+  "supersedes": "V5_DISCOVERY_ASTROLOGY_TOURNAMENT_PREREGISTRATION_V1",
+  "required_input_status": "V5_DISCOVERY_FASTTRACK_READY_FOR_ASTROLOGY_AND_MODEL_DEVELOPMENT",
+  "role": "EXPLORATORY_DEV_WITH_SEALED_CONFIRM",
+  "design_change_reason": "Reduce analyst-chosen architecture multiplicity. Freeze one broad, theory-bounded astrology feature universe and let regularization/hyperparameters be selected only inside subject-disjoint inner CV.",
+  "three_model_roles": {
+    "ASTROLOGY_ONLY": "Candidate production signal. Uses astrology primitives only. No age/calendar/axis/wave or Production Control.",
+    "NUISANCE_ONLY": "Dataset-bias diagnostic. Uses chronology/age/axis/collection-wave structure only. It is not a production model.",
+    "NUISANCE_PLUS_ASTROLOGY": "Incremental-signal diagnostic. Tests whether the exact same astrology feature universe adds out-of-sample information after nuisance structure is already available. It is not a production model."
+  },
+  "astrology_feature_universe": {
+    "name": "ALL_ORTHODOX_DYNAMIC_V1",
+    "included_families": [
+      "Daewoon/Sewoon dynamic element, yin-yang and branch encodings",
+      "exact 10-Ten-God stem encodings",
+      "exact 10-Ten-God branch hidden-stem distributions",
+      "dynamic-to-natal stem/branch relations",
+      "Daewoon-to-Sewoon relations",
+      "Yongshin/Heeshin/Gishin/Gushin fit primitives",
+      "12-Unseong primitives",
+      "exact dynamic Ten-God x natal-strength interactions"
+    ],
+    "excluded": {
+      "Production_Control_or_candle_close": "Leakage / benchmark contamination.",
+      "nuisance_age_calendar_axis_wave": "Diagnostic covariates only, never astrology candidate features.",
+      "static_natal_only_features": "Within-subject pair differences cancel static natal-only quantities; including them adds columns without pair signal.",
+      "flattened_shinsal_runtime_tree": "Not a stable bounded primitive universe: prior V4 implementation recursively flattened keyword-matching engine subtrees, making dimensionality/version lineage harder to control. May be tested later only as a separately frozen sensitivity universe."
+    },
+    "feature_screening_before_fit": [
+      "drop exact zero-variance columns using TRAIN fold only",
+      "drop exact duplicate columns using TRAIN fold only",
+      "no outcome-based univariate screening"
+    ]
+  },
+  "winner_eligible_models": [
+    {
+      "name": "ALL_ORTHODOX_RIDGE_AUTO",
+      "purpose": "Dense shrinkage baseline over the full frozen astrology universe.",
+      "model": "StandardScaler + LogisticRegression(L2)",
+      "inner_cv_grid": {
+        "C": [
+          0.03,
+          0.1,
+          0.3,
+          1.0,
+          3.0
+        ]
+      }
+    },
+    {
+      "name": "ALL_ORTHODOX_ELASTICNET_AUTO",
+      "purpose": "Primary automatic feature-selection model over the same full frozen universe.",
+      "model": "StandardScaler + LogisticRegression(ElasticNet, saga)",
+      "inner_cv_grid": {
+        "C": [
+          0.03,
+          0.1,
+          0.3,
+          1.0
+        ],
+        "l1_ratio": [
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ]
+      },
+      "feature_selection_rule": "A coefficient is selected only by the fitted ElasticNet inside each training fold. No manual feature inclusion/removal after seeing scores."
+    }
+  ],
+  "diagnostic_only_models": [
+    {
+      "name": "TG10_RIDGE_DIAGNOSTIC",
+      "purpose": "Theory sanity check only; cannot win or define the final architecture."
+    }
+  ],
+  "validation": {
+    "outer_repeats": 5,
+    "outer_folds": 5,
+    "inner_folds": 3,
+    "subject_disjoint": true,
+    "primary_metric": "subject_macro_pairwise_accuracy",
+    "secondary_metrics": [
+      "repeat_p10",
+      "subject-bootstrap conditional delta of nuisance+astrology vs nuisance",
+      "BROAD sensitivity",
+      "collection-wave robustness",
+      "ElasticNet feature-selection frequency"
+    ],
+    "model_selection_dataset": "PRIMARY_TRUSTED only",
+    "BROAD_role": "predeclared sensitivity only; cannot create a new architecture"
+  },
+  "promotion_gates": {
+    "astrology_only_subject_macro_min": 0.55,
+    "astrology_only_repeat_p10_min": 0.48,
+    "nuisance_plus_astrology_delta_min": 0.01,
+    "bootstrap_probability_delta_gt_0_min": 0.8,
+    "broad_astrology_only_subject_macro_min": 0.52,
+    "broad_incremental_delta_min": 0.0,
+    "supported_wave_floor": 0.45
+  },
+  "winner_rule": "Only the two full-universe automatic models are winner-eligible. Among models passing every frozen gate, choose higher PRIMARY astrology-only subject-macro accuracy; tie-break by larger conditional delta, then Ridge for simplicity.",
+  "hard_rules": {
+    "CONFIRM_loaded_or_researched": false,
+    "Production_Control_scored": false,
+    "pair_membership_changed": false,
+    "event_labels_changed": false,
+    "axis_specific_astrology_coefficients": false,
+    "manual_post_score_feature_selection": false
+  },
+  "next_if_winner": "Freeze the astrology-only full-PRIMARY model and coefficients, then benchmark once against Production Control without retuning. Only after that may sealed CONFIRM be opened/researched.",
+  "next_if_no_winner": "Keep CONFIRM sealed. Diagnose representation on DEV only; do not add hand-picked features based on leaderboard results."
+}

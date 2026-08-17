@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
-import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
+import { getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
 import { buildCompatibilitySummaryPrompt, scrubBreakdownKeyLeakage } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
@@ -15,6 +15,8 @@ import { weekdayLabelFromDate } from '@/lib/saju/week-chart-data'
 import { pillarToHangul } from '@/lib/saju/hanja-hangul'
 import { buildRelationshipSeries } from '@/lib/compat/relationship-score'
 import { findMonthlyTargetYear } from '@/lib/saju/json-slices'
+import { generationLockKey, withGenerationLock } from '@/lib/ai/generation-lock'
+import { persistFortuneJsonAndConsume } from '@/lib/ai/persist-reading'
 
 const MAX_YEAR_RANGE = 30
 const THIS_YEAR = new Date().getFullYear()
@@ -291,61 +293,83 @@ export async function GET(
       )
     }
 
-    // Phase 2: load reports only when generating
-    const [selfReport, partnerReport] = await Promise.all([
-      prisma.sajuEntry.findUnique({ where: { id }, select: { sajuReportJson: true } }),
-      prisma.sajuEntry.findUnique({ where: { id: overlayId }, select: { sajuReportJson: true } }),
-    ])
-    const reportA = selfReport?.sajuReportJson as SajuReportJson | null
-    const reportB = partnerReport?.sajuReportJson as SajuReportJson | null
-    if (!reportA) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
-    if (!reportB) {
-      return NextResponse.json({ error: '비교 대상을 찾을 수 없습니다.' }, { status: 404 })
-    }
+    const summary = await withGenerationLock(
+      generationLockKey(['period-compat', id, overlayId, cacheKey]),
+      async () => {
+        const fresh = await prisma.sajuEntry.findUnique({
+          where: { id },
+          select: { fortuneJson: true },
+        })
+        const freshFortune = (fresh?.fortuneJson && typeof fresh.fortuneJson === 'object')
+          ? fresh.fortuneJson as Record<string, unknown>
+          : {}
+        if (freshFortune[cacheKey]) {
+          return scrubBreakdownKeyLeakage(String(freshFortune[cacheKey]))
+        }
 
-    const entry: EntryRow = { ...entryMeta, sajuReportJson: reportA }
-    const partner: EntryRow = { ...partnerMeta, sajuReportJson: reportB }
-    const birthYearA = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
-    const birthYearB = partner.birthDate ? parseInt(partner.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
-    const chartA = buildLifeChartData(reportA.chartData as ChartPayload | undefined, reportA, birthYearA)
-    const chartB = buildLifeChartData(reportB.chartData as ChartPayload | undefined, reportB, birthYearB)
+        const [selfReport, partnerReport] = await Promise.all([
+          prisma.sajuEntry.findUnique({ where: { id }, select: { sajuReportJson: true } }),
+          prisma.sajuEntry.findUnique({ where: { id: overlayId }, select: { sajuReportJson: true } }),
+        ])
+        const reportA = selfReport?.sajuReportJson as SajuReportJson | null
+        const reportB = partnerReport?.sajuReportJson as SajuReportJson | null
+        if (!reportA) throw new Error('No saju data')
+        if (!reportB) throw new Error('비교 대상을 찾을 수 없습니다.')
 
-    let periodFacts: string
-    if (selectedDates) {
-      periodFacts = await weekFactLines(nameA, nameB, entry, partner, selectedDates)
-    } else if (monthStr) {
-      periodFacts = monthFactLines(nameA, nameB, reportA, reportB, monthStart, monthEnd, targetYear)
-    } else {
-      periodFacts = yearFactLines(
-        nameA, nameB, chartA, chartB, reportA, reportB, birthYearA, birthYearB, yearStart, yearEnd,
-      )
-    }
+        const entry: EntryRow = { ...entryMeta, sajuReportJson: reportA }
+        const partner: EntryRow = { ...partnerMeta, sajuReportJson: reportB }
+        const birthYearA = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
+        const birthYearB = partner.birthDate ? parseInt(partner.birthDate.slice(0, 4), 10) : THIS_YEAR - 30
+        const chartA = buildLifeChartData(reportA.chartData as ChartPayload | undefined, reportA, birthYearA)
+        const chartB = buildLifeChartData(reportB.chartData as ChartPayload | undefined, reportB, birthYearB)
 
-    const prompt = buildCompatibilitySummaryPrompt(
-      reportA,
-      reportB,
-      entry.gender,
-      partner.gender,
-      nameA,
-      nameB,
-      startYear,
-      endYear,
-      { birthYearA, birthYearB, periodLabel, periodFacts },
+        let periodFacts: string
+        if (selectedDates) {
+          periodFacts = await weekFactLines(nameA, nameB, entry, partner, selectedDates)
+        } else if (monthStr) {
+          periodFacts = monthFactLines(nameA, nameB, reportA, reportB, monthStart, monthEnd, targetYear)
+        } else {
+          periodFacts = yearFactLines(
+            nameA, nameB, chartA, chartB, reportA, reportB, birthYearA, birthYearB, yearStart, yearEnd,
+          )
+        }
+
+        const prompt = buildCompatibilitySummaryPrompt(
+          reportA,
+          reportB,
+          entry.gender,
+          partner.gender,
+          nameA,
+          nameB,
+          startYear,
+          endYear,
+          { birthYearA, birthYearB, periodLabel, periodFacts },
+        )
+        const text = scrubBreakdownKeyLeakage((await callGemini(prompt, {
+          feature: 'period_compat',
+          meta: { entryId: id, overlayId, cacheKey, periodLabel },
+        })).trim())
+
+        await persistFortuneJsonAndConsume({
+          entryId: id,
+          fortuneJson: { ...freshFortune, [cacheKey]: text } as object,
+          userId: user.id,
+          cost: READING_COST.period,
+          reason: 'use:period',
+        })
+        return text
+      },
     )
-    const summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
-      feature: 'period_compat',
-      meta: { entryId: id, overlayId, cacheKey, periodLabel },
-    })).trim())
-
-    await prisma.sajuEntry.update({
-      where: { id },
-      data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
-    })
-    await consumeUnits(user.id, READING_COST.period, 'use:period')
 
     return NextResponse.json({ ...responseMeta, summary })
   } catch (error) {
     console.error('GET /api/saju/[id]/fortune/compat error:', error)
-    return NextResponse.json({ error: 'Failed' }, { status: 500 })
+    const raw = error instanceof Error ? error.message : 'Failed'
+    if (raw.includes('insufficient_ju')) {
+      return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period }, { status: 402 })
+    }
+    return NextResponse.json({
+      error: '해설을 불러오는 중 문제가 발생했습니다. 잠시 후 다시 열어보면 이미 생성됐을 수 있어요.',
+    }, { status: 500 })
   }
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
-import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
+import { getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
 import { buildYearSummaryPrompt, buildRangeSummaryPrompt, buildMonthlySummaryPrompt, buildWeeklySummaryPrompt, scrubBreakdownKeyLeakage } from '@/lib/ai/fortune-prompt'
 import type { SajuReportJson } from '@/types/saju-report'
@@ -15,8 +15,52 @@ import { hydrateWeekSeries } from '@/lib/saju/hydrate-week-series'
 import { weekdayLabelFromDate } from '@/lib/saju/week-chart-data'
 import { findMonthlyTargetYear } from '@/lib/saju/json-slices'
 import { extractYongshinOverride } from '@/lib/saju/daily-fortune'
+import { generationLockKey, withGenerationLock } from '@/lib/ai/generation-lock'
+import { persistFortuneJsonAndConsume } from '@/lib/ai/persist-reading'
 
 const MAX_YEAR_RANGE = 30
+
+async function readPeriodCache(entryId: string, cacheKey: string): Promise<string | null> {
+  const row = await prisma.sajuEntry.findUnique({
+    where: { id: entryId },
+    select: { fortuneJson: true },
+  })
+  const cache = row?.fortuneJson && typeof row.fortuneJson === 'object'
+    ? row.fortuneJson as Record<string, unknown>
+    : null
+  if (cache && cache[cacheKey] != null) return scrubBreakdownKeyLeakage(String(cache[cacheKey]))
+  return null
+}
+
+async function generatePeriodLocked(
+  entryId: string,
+  userId: string,
+  cacheKey: string,
+  generate: () => Promise<string>,
+): Promise<string> {
+  return withGenerationLock(generationLockKey(['period', entryId, cacheKey]), async () => {
+    const hit = await readPeriodCache(entryId, cacheKey)
+    if (hit != null) return hit
+    const summary = await generate()
+    const row = await prisma.sajuEntry.findUnique({
+      where: { id: entryId },
+      select: { fortuneJson: true },
+    })
+    const existing = row?.fortuneJson && typeof row.fortuneJson === 'object'
+      ? row.fortuneJson as Record<string, unknown>
+      : {}
+    // 다른 키가 동시에 쓰였을 수 있어 최신 기준으로 merge
+    if (existing[cacheKey] != null) return scrubBreakdownKeyLeakage(String(existing[cacheKey]))
+    await persistFortuneJsonAndConsume({
+      entryId,
+      fortuneJson: { ...existing, [cacheKey]: summary } as object,
+      userId,
+      cost: READING_COST.period,
+      reason: 'use:period',
+    })
+    return summary
+  })
+}
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
@@ -241,18 +285,13 @@ export async function GET(
       }
 
       const promptDays = days.map((d) => ({ ...d, score: d.score as number }))
-      const prompt = buildWeeklySummaryPrompt(report, promptDays, { birthYear, job: entry.job })
-      const summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
-        feature: weekStart === weekEnd ? 'period_week' : 'period_week_range',
-        meta: { entryId: id, weekStart, weekEnd, dates: selectedDates },
-      })).trim())
-
-      const existingFortune = fortuneCache ?? {}
-      await prisma.sajuEntry.update({
-        where: { id },
-        data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
+      const summary = await generatePeriodLocked(id, user.id, cacheKey, async () => {
+        const prompt = buildWeeklySummaryPrompt(report, promptDays, { birthYear, job: entry.job })
+        return scrubBreakdownKeyLeakage((await callGemini(prompt, {
+          feature: weekStart === weekEnd ? 'period_week' : 'period_week_range',
+          meta: { entryId: id, weekStart, weekEnd, dates: selectedDates },
+        })).trim())
       })
-      await consumeUnits(user.id, READING_COST.period, 'use:period')
 
       return NextResponse.json({
         weekStart,
@@ -347,23 +386,17 @@ export async function GET(
         ? `${targetYear}년 기조: ${yearContextParts.join(' · ')}`
         : undefined
 
-      const prompt = buildMonthlySummaryPrompt(report, monthlyData, targetYear, {
-        birthYear,
-        job: entry.job,
-        yearContext,
+      const summary = await generatePeriodLocked(id, user.id, cacheKey, async () => {
+        const prompt = buildMonthlySummaryPrompt(report, monthlyData, targetYear, {
+          birthYear,
+          job: entry.job,
+          yearContext,
+        })
+        return scrubBreakdownKeyLeakage((await callGemini(prompt, {
+          feature: monthStart === monthEnd ? 'period_month' : 'period_month_range',
+          meta: { entryId: id, year: targetYear, monthStart, monthEnd },
+        })).trim())
       })
-      const summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
-        feature: monthStart === monthEnd ? 'period_month' : 'period_month_range',
-        meta: { entryId: id, year: targetYear, monthStart, monthEnd },
-      })).trim())
-
-      const existingFortune = fortuneCache ?? {}
-      await prisma.sajuEntry.update({
-        where: { id },
-        data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
-      })
-
-      await consumeUnits(user.id, READING_COST.period, 'use:period')
 
       return NextResponse.json({
         month: monthStart,
@@ -398,41 +431,38 @@ export async function GET(
     if (!report) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
     const chartPayload = report.chartData as ChartPayload | undefined
     const chartData = chartPayload ? buildLifeChartData(chartPayload, report, birthYear) : null
-
-    let summary: string
     const rawTimeline = chartPayload?.['연도별_타임라인']
 
-    if (isRange) {
-      const yearDataArr: YearChartData[] = []
-      for (let y = yearStart; y <= yearEnd; y++) {
-        yearDataArr.push(buildYearChartDataFromSources(y, chartData, rawTimeline))
+    const summary = await generatePeriodLocked(id, user.id, cacheKey, async () => {
+      if (isRange) {
+        const yearDataArr: YearChartData[] = []
+        for (let y = yearStart; y <= yearEnd; y++) {
+          yearDataArr.push(buildYearChartDataFromSources(y, chartData, rawTimeline))
+        }
+        const prompt = buildRangeSummaryPrompt(report, yearDataArr, { birthYear, job: entry.job })
+        return scrubBreakdownKeyLeakage((await callGemini(prompt, {
+          feature: 'period_year_range',
+          meta: { entryId: id, yearStart, yearEnd, years: yearEnd - yearStart + 1 },
+        })).trim())
       }
-      const prompt = buildRangeSummaryPrompt(report, yearDataArr, { birthYear, job: entry.job })
-      summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
-        feature: 'period_year_range',
-        meta: { entryId: id, yearStart, yearEnd, years: yearEnd - yearStart + 1 },
-      })).trim())
-    } else {
       const yearChartData = buildYearChartDataFromSources(yearStart, chartData, rawTimeline)
       const prompt = buildYearSummaryPrompt(report, yearChartData, { birthYear, job: entry.job })
-      summary = scrubBreakdownKeyLeakage((await callGemini(prompt, {
+      return scrubBreakdownKeyLeakage((await callGemini(prompt, {
         feature: 'period_year',
         meta: { entryId: id, year: yearStart },
       })).trim())
-    }
-
-    const existingFortune = fortuneCache ?? {}
-    await prisma.sajuEntry.update({
-      where: { id },
-      data: { fortuneJson: { ...existingFortune, [cacheKey]: summary } as object },
     })
-
-    await consumeUnits(user.id, READING_COST.period, 'use:period')
 
     return NextResponse.json({ year: yearStart, yearEnd: isRange ? yearEnd : undefined, summary })
   } catch (error) {
     console.error('Year summary error:', error)
-    const msg = error instanceof Error ? error.message : 'Failed'
+    const raw = error instanceof Error ? error.message : 'Failed'
+    if (raw.includes('insufficient_ju')) {
+      return NextResponse.json({ error: '구간 해설 이용권이 부족합니다.', needed: READING_COST.period }, { status: 402 })
+    }
+    const msg = raw.includes('GEMINI') || raw.includes('Failed')
+      ? '해설을 불러오는 중 문제가 발생했습니다. 잠시 후 다시 열어보면 이미 생성됐을 수 있어요.'
+      : raw
     return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

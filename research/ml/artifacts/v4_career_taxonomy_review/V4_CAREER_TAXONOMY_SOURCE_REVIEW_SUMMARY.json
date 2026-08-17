@@ -1,0 +1,172 @@
+{
+  "version": "V4_CAREER_TAXONOMY_SOURCE_REVIEW_20260816",
+  "rows_reviewed": 414,
+  "taxonomy_decision_counts": {
+    "CONFIRMED": 320,
+    "CONFIRMED_NONPAIRABLE": 45,
+    "REJECT_BINARY_TRANSITION": 31,
+    "REJECT_BINARY_AMBIGUOUS": 17,
+    "SOURCE_CONTRADICTED": 1
+  },
+  "final_axis_counts": {
+    "PROJECT": 99,
+    "COMPETITIVE": 78,
+    "RECOGNITION": 77,
+    "MILESTONE_OTHER": 45,
+    "STATUS": 37,
+    "TRANSITION": 31,
+    "DISRUPTION_HEALTH": 25,
+    "UNRESOLVED": 17,
+    "DISRUPTION_LEGAL_REPUTATION": 5
+  },
+  "final_polarity_counts": {
+    "positive": 239,
+    "negative": 126,
+    "unassigned": 48,
+    "invalid": 1
+  },
+  "secondary_source_status_counts": {
+    "NOT_CONFIRMED_THIS_PASS": 298,
+    "CONFIRMED": 110,
+    "PARTIAL": 5,
+    "CONTRADICTED": 1
+  },
+  "final_review_status_counts": {
+    "TAXONOMY_CONFIRMED_SECONDARY_UNCONFIRMED": 208,
+    "MODEL_ELIGIBLE_SOURCE_CONFIRMED": 95,
+    "CONFIRMED_TAXONOMY_NONPAIRABLE": 45,
+    "REJECT_TRANSITION_NONBINARY": 31,
+    "REJECT_TAXONOMY_AMBIGUOUS": 17,
+    "CONFIRMED_BUT_NO_CONFIRMED_OPPOSITE_PAIR": 12,
+    "TAXONOMY_CONFIRMED_SOURCE_PARTIAL": 5,
+    "REJECT_SOURCE_CONTRADICTED": 1
+  },
+  "model_eligible_events": 95,
+  "model_ready_pairs": 49,
+  "model_ready_subjects": 46,
+  "model_ready_axis_counts": {
+    "PROJECT": 20,
+    "COMPETITIVE": 18,
+    "STATUS": 7,
+    "RECOGNITION": 4
+  },
+  "source_contradictions": [
+    {
+      "name": "Al Unser",
+      "event_id": "MLV2_DEV_062_E0003",
+      "year": 1993,
+      "description": "Failed to qualify for the Indianapolis 500 late in his driving career.",
+      "secondary_source_note": "Corpus says failed to qualify; official results show he qualified, started 23rd and finished 12th. Remove event."
+    }
+  ],
+  "policy": {
+    "all_414_taxonomy_decided": true,
+    "source1_present_reviewed_all_rows": true,
+    "independent_secondary_search_targeted_to_same_axis_pair_candidates": true,
+    "nonpairable_rows_not_force_second_sourced": true,
+    "model_eligible_requires_both_polarities_secondary_confirmed_same_subject_axis": true,
+    "transition_never_binary_by_default": true,
+    "no_local_nonevent_controls": true,
+    "age_baseline_required_future_modeling": true
+  },
+  "important_corrections": [
+    {
+      "name": "Al Unser",
+      "year": 1993,
+      "action": "REMOVE",
+      "reason": "Official IMS results contradict corpus claim; he qualified and finished 12th."
+    },
+    {
+      "name": "Carson Daly",
+      "year": 2019,
+      "action": "TRANSITION_UNASSIGNED",
+      "reason": "End of Last Call is a transition/step-away, not automatic Career-negative."
+    },
+    {
+      "name": "Serge Gainsbourg",
+      "year": 1991,
+      "action": "TRANSITION_UNASSIGNED",
+      "reason": "Death is not a Career-negative performance outcome."
+    },
+    {
+      "name": "Steve Fossett",
+      "year": 2007,
+      "action": "TRANSITION_UNASSIGNED",
+      "reason": "Death/disappearance is not a Career-negative performance outcome."
+    }
+  ],
+  "source_pair_eligible_events": 95,
+  "source_verified_pair_candidates": 49,
+  "source_verified_pair_subjects": 46,
+  "v4_model_eligible_events": 0,
+  "v4_model_ready_pairs": 0,
+  "chronology_gate": {
+    "status": "FAIL_LIFECYCLE_CONFOUNDING_REMAINS",
+    "pairs": 49,
+    "subjects": 46,
+    "positive_earlier_share_micro": 0.8367346938775511,
+    "positive_earlier_share_subject_macro": 0.8369565217391305,
+    "mean_abs_year_gap": 9.448979591836734,
+    "median_abs_year_gap": 5.0,
+    "by_axis": {
+      "COMPETITIVE": {
+        "pairs": 18,
+        "subjects": 17,
+        "positive_earlier_share": 0.7222222222222222,
+        "median_abs_year_gap": 3.0
+      },
+      "PROJECT": {
+        "pairs": 20,
+        "subjects": 19,
+        "positive_earlier_share": 0.95,
+        "median_abs_year_gap": 10.5
+      },
+      "RECOGNITION": {
+        "pairs": 4,
+        "subjects": 3,
+        "positive_earlier_share": 0.5,
+        "median_abs_year_gap": 9.5
+      },
+      "STATUS": {
+        "pairs": 7,
+        "subjects": 7,
+        "positive_earlier_share": 1.0,
+        "median_abs_year_gap": 5.0
+      }
+    },
+    "gap_sensitivity": {
+      "gap_le_1": {
+        "pairs": 8,
+        "subjects": 8,
+        "positive_earlier_share": 0.625
+      },
+      "gap_le_2": {
+        "pairs": 10,
+        "subjects": 10,
+        "positive_earlier_share": 0.6
+      },
+      "gap_le_3": {
+        "pairs": 16,
+        "subjects": 16,
+        "positive_earlier_share": 0.6875
+      },
+      "gap_le_5": {
+        "pairs": 26,
+        "subjects": 26,
+        "positive_earlier_share": 0.7692307692307693
+      },
+      "gap_le_7": {
+        "pairs": 29,
+        "subjects": 29,
+        "positive_earlier_share": 0.7931034482758621
+      },
+      "gap_le_10": {
+        "pairs": 34,
+        "subjects": 34,
+        "positive_earlier_share": 0.8235294117647058
+      }
+    },
+    "decision": "Do not run V4 pairwise ML on these pairs yet."
+  },
+  "next_step": "Expand/relabel development data to obtain same-mechanism comparisons with chronology/lifecycle balance; then freeze a new pair construction rule before feature/model testing."
+}

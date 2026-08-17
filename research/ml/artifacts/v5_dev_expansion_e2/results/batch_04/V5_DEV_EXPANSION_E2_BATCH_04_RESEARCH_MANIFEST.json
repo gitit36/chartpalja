@@ -1,0 +1,55 @@
+{
+  "version": "V5_DEV_EXPANSION_E2_BATCH_04_RESEARCH_MANIFEST_V1",
+  "status": "E2_BATCH_04_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "batch_id": 4,
+  "frozen_subjects_n": 20,
+  "event_rows_n": 28,
+  "eligible_event_rows_n": 26,
+  "excluded_audit_rows_n": 2,
+  "subjects_with_eligible_positive_n": 17,
+  "subjects_with_eligible_negative_n": 5,
+  "subjects_with_both_polarities_n": 4,
+  "subjects_with_no_eligible_core_axis_event_n": 2,
+  "eligible_by_axis": {
+    "COMPETITIVE": 5,
+    "PROJECT": 7,
+    "STATUS": 14
+  },
+  "eligible_positive_by_axis": {
+    "COMPETITIVE": 4,
+    "PROJECT": 7,
+    "STATUS": 10
+  },
+  "eligible_negative_by_axis": {
+    "COMPETITIVE": 1,
+    "PROJECT": 0,
+    "STATUS": 4
+  },
+  "unique_source_urls_n": 24,
+  "events_sha256": "cf6f0ebc3f3e5076997b87bd892866110254809830e79351e64f9ba682450dba",
+  "subject_sweep_audit_sha256": "e5b62ca080f0fd853f012c7794e430a037cf241a97da4ba73562d8557fffb53b",
+  "frozen_worklist_sha256": "c3cd8c091d33d285b67c1ec7d8b1894cc4644de0547b490f0134a9c3a3246af9",
+  "freeze_decision_sha256": "fadb0baf16269aaf4ee475dae23970073c460ba9ecc816d2d1f894e7a2303898",
+  "research_contract": {
+    "collection_scope": "BOUNDED_MAJOR_EVENT_SOURCE_SWEEP",
+    "same_frozen_axis_contract_as_original_V5_and_E1": true,
+    "all_subjects_swept_once": true,
+    "do_not_seek_pair_friendly_events": true,
+    "sparse_subjects_retained": true,
+    "source_quality_recorded": true,
+    "excluded_candidates_logged_for_audit": true
+  },
+  "hard_rules": {
+    "membership_changed": false,
+    "axis_changed": false,
+    "pairability_used_to_select_events": false,
+    "pair_gap_inspected": false,
+    "pairs_generated": false,
+    "chronology_balanced": false,
+    "astrology_generated": false,
+    "control_scored": false,
+    "confirm_researched": false,
+    "event_freeze_performed": false
+  },
+  "next_rule": "Continue the remaining E2 batches under the same frozen bounded source-sweep contract."
+}

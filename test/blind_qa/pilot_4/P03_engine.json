@@ -1,0 +1,1234 @@
+{
+  "participant_id": "P03",
+  "pilot_kind": "BLIND_USER_QA_PILOT",
+  "model": "V2_DY_B",
+  "formula": {
+    "D_B": "clamp(60 + 3 * h_B)",
+    "annual_dev_B": "0.65*A_G + 0.35*B_trigger",
+    "Y": "clamp(D_B + annual_dev_B)"
+  },
+  "z_params_source": "OLD_DEV + FRESH_A_DEV only",
+  "civil_kst_input": "1997-03-06 03:20",
+  "timezone": "Asia/Seoul",
+  "engine_clock_notes": {
+    "year_month_day": "calculate_saju use_solar_time=True city=Seoul",
+    "hour_pillar": "civil KST half-hour (반시) correction",
+    "daewoon_start": "civil KST birth datetime vs 절"
+  },
+  "gender": "male",
+  "natal_engine": [
+    "丁丑",
+    "癸卯",
+    "丁未",
+    "辛丑"
+  ],
+  "natal_reference_qa": {
+    "status": "MATCH",
+    "engine": [
+      "丁丑",
+      "癸卯",
+      "丁未",
+      "辛丑"
+    ],
+    "reference": [
+      "丁丑",
+      "癸卯",
+      "丁未",
+      "辛丑"
+    ],
+    "diffs": [],
+    "material_day_or_hour_mismatch": false
+  },
+  "daewoon_reference_qa": {
+    "status": "MATCH",
+    "engine_sequence": [
+      "壬寅",
+      "辛丑",
+      "庚子",
+      "己亥",
+      "戊戌",
+      "丁酉",
+      "丙申",
+      "乙未",
+      "甲午",
+      "癸巳"
+    ],
+    "reference_sequence": [
+      "庚子",
+      "己亥",
+      "戊戌",
+      "丁酉",
+      "丙申",
+      "乙未",
+      "甲午"
+    ],
+    "reference_is_contiguous_subsequence": true,
+    "first_mismatch": null,
+    "year_claim_deltas": [
+      {
+        "pillar": "己亥",
+        "claim_year": 2027,
+        "engine_start_year": 2027,
+        "delta": 0
+      },
+      {
+        "pillar": "戊戌",
+        "claim_year": 2037,
+        "engine_start_year": 2037,
+        "delta": 0
+      }
+    ],
+    "engine_current_2026": "庚子",
+    "reference_current_2026": "庚子",
+    "direction": "역행",
+    "start_age": 0.0,
+    "start_age_precise": 0.1
+  },
+  "daewoon_blocks": [
+    {
+      "pillar": "壬寅",
+      "stem": "壬",
+      "branch": "寅",
+      "start_age_years": 0.1,
+      "end_age_years": 10.1,
+      "start_year": 1997,
+      "end_year": 2007,
+      "end_exclusive": true,
+      "D_B": 63.5356,
+      "n_years_in_slice": 10,
+      "Y_mean": 63.715,
+      "Y_median": 63.5706,
+      "Y_min": 60.0398,
+      "Y_max": 66.9982,
+      "Y_range": 6.9584
+    },
+    {
+      "pillar": "辛丑",
+      "stem": "辛",
+      "branch": "丑",
+      "start_age_years": 10.1,
+      "end_age_years": 20.1,
+      "start_year": 2007,
+      "end_year": 2017,
+      "end_exclusive": true,
+      "D_B": 61.7144,
+      "n_years_in_slice": 10,
+      "Y_mean": 61.7913,
+      "Y_median": 62.0294,
+      "Y_min": 56.0474,
+      "Y_max": 64.2854,
+      "Y_range": 8.238
+    },
+    {
+      "pillar": "庚子",
+      "stem": "庚",
+      "branch": "子",
+      "start_age_years": 20.1,
+      "end_age_years": 30.1,
+      "start_year": 2017,
+      "end_year": 2027,
+      "end_exclusive": true,
+      "D_B": 62.625,
+      "n_years_in_slice": 10,
+      "Y_mean": 61.426,
+      "Y_median": 62.4479,
+      "Y_min": 56.4587,
+      "Y_max": 63.8365,
+      "Y_range": 7.3779
+    },
+    {
+      "pillar": "己亥",
+      "stem": "己",
+      "branch": "亥",
+      "start_age_years": 30.1,
+      "end_age_years": 40.1,
+      "start_year": 2027,
+      "end_year": 2037,
+      "end_exclusive": true,
+      "D_B": 61.5,
+      "n_years_in_slice": 10,
+      "Y_mean": 60.6809,
+      "Y_median": 61.57,
+      "Y_min": 56.7915,
+      "Y_max": 64.5992,
+      "Y_range": 7.8077
+    },
+    {
+      "pillar": "戊戌",
+      "stem": "戊",
+      "branch": "戌",
+      "start_age_years": 40.1,
+      "end_age_years": 50.1,
+      "start_year": 2037,
+      "end_year": 2047,
+      "end_exclusive": true,
+      "D_B": 61.7144,
+      "n_years_in_slice": 10,
+      "Y_mean": 61.4878,
+      "Y_median": 61.8194,
+      "Y_min": 58.4619,
+      "Y_max": 63.7879,
+      "Y_range": 5.326
+    },
+    {
+      "pillar": "丁酉",
+      "stem": "丁",
+      "branch": "酉",
+      "start_age_years": 50.1,
+      "end_age_years": 60.1,
+      "start_year": 2047,
+      "end_year": 2057,
+      "end_exclusive": true,
+      "D_B": 62.625,
+      "n_years_in_slice": 10,
+      "Y_mean": 62.6605,
+      "Y_median": 63.01,
+      "Y_min": 60.1969,
+      "Y_max": 64.8203,
+      "Y_range": 4.6234
+    },
+    {
+      "pillar": "丙申",
+      "stem": "丙",
+      "branch": "申",
+      "start_age_years": 60.1,
+      "end_age_years": 70.1,
+      "start_year": 2057,
+      "end_year": 2067,
+      "end_exclusive": true,
+      "D_B": 62.625,
+      "n_years_in_slice": 10,
+      "Y_mean": 62.4036,
+      "Y_median": 62.6484,
+      "Y_min": 58.3503,
+      "Y_max": 64.9726,
+      "Y_range": 6.6223
+    },
+    {
+      "pillar": "乙未",
+      "stem": "乙",
+      "branch": "未",
+      "start_age_years": 70.1,
+      "end_age_years": 80.1,
+      "start_year": 2067,
+      "end_year": 2077,
+      "end_exclusive": true,
+      "D_B": 64.125,
+      "n_years_in_slice": 10,
+      "Y_mean": 64.0362,
+      "Y_median": 64.44,
+      "Y_min": 57.3179,
+      "Y_max": 67.247,
+      "Y_range": 9.9291
+    },
+    {
+      "pillar": "甲午",
+      "stem": "甲",
+      "branch": "午",
+      "start_age_years": 80.1,
+      "end_age_years": 90.1,
+      "start_year": 2077,
+      "end_year": 2087,
+      "end_exclusive": true,
+      "D_B": 63.5356,
+      "n_years_in_slice": 10,
+      "Y_mean": 62.244,
+      "Y_median": 63.3081,
+      "Y_min": 56.4592,
+      "Y_max": 64.7696,
+      "Y_range": 8.3104
+    },
+    {
+      "pillar": "癸巳",
+      "stem": "癸",
+      "branch": "巳",
+      "start_age_years": 90.1,
+      "end_age_years": 100.1,
+      "start_year": 2087,
+      "end_year": 2097,
+      "end_exclusive": true,
+      "D_B": 60.9106,
+      "n_years_in_slice": 11,
+      "Y_mean": 60.3662,
+      "Y_median": 60.8406,
+      "Y_min": 56.3386,
+      "Y_max": 64.5847,
+      "Y_range": 8.2461
+    }
+  ],
+  "lived_years": [
+    {
+      "calendar_year": 1997,
+      "age": 0,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "丁丑",
+      "D_B": 63.5356,
+      "AnnualDev_B": -3.4958,
+      "Y": 60.0398,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 1998,
+      "age": 1,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "戊寅",
+      "D_B": 63.5356,
+      "AnnualDev_B": -0.1486,
+      "Y": 63.387,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 1999,
+      "age": 2,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "己卯",
+      "D_B": 63.5356,
+      "AnnualDev_B": 2.2624,
+      "Y": 65.7979,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2000,
+      "age": 3,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "庚辰",
+      "D_B": 63.5356,
+      "AnnualDev_B": -0.656,
+      "Y": 62.8796,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2001,
+      "age": 4,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "辛巳",
+      "D_B": 63.5356,
+      "AnnualDev_B": -0.4381,
+      "Y": 63.0975,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2002,
+      "age": 5,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "壬午",
+      "D_B": 63.5356,
+      "AnnualDev_B": 3.4627,
+      "Y": 66.9982,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2003,
+      "age": 6,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "癸未",
+      "D_B": 63.5356,
+      "AnnualDev_B": 0.8854,
+      "Y": 64.421,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2004,
+      "age": 7,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "甲申",
+      "D_B": 63.5356,
+      "AnnualDev_B": 0.2186,
+      "Y": 63.7542,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2005,
+      "age": 8,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "乙酉",
+      "D_B": 63.5356,
+      "AnnualDev_B": 1.4682,
+      "Y": 65.0038,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2006,
+      "age": 9,
+      "daewoon_pillar": "壬寅",
+      "sewoon_pillar": "丙戌",
+      "D_B": 63.5356,
+      "AnnualDev_B": -1.7646,
+      "Y": 61.7709,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2007,
+      "age": 10,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "丁亥",
+      "D_B": 61.7144,
+      "AnnualDev_B": 1.5047,
+      "Y": 63.2192,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2008,
+      "age": 11,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "戊子",
+      "D_B": 61.7144,
+      "AnnualDev_B": -0.5308,
+      "Y": 61.1836,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2009,
+      "age": 12,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "己丑",
+      "D_B": 61.7144,
+      "AnnualDev_B": -5.667,
+      "Y": 56.0474,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2010,
+      "age": 13,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "庚寅",
+      "D_B": 61.7144,
+      "AnnualDev_B": 0.1116,
+      "Y": 61.8261,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2011,
+      "age": 14,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "辛卯",
+      "D_B": 61.7144,
+      "AnnualDev_B": 1.5686,
+      "Y": 63.283,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2012,
+      "age": 15,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "壬辰",
+      "D_B": 61.7144,
+      "AnnualDev_B": 0.5184,
+      "Y": 62.2328,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2013,
+      "age": 16,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "癸巳",
+      "D_B": 61.7144,
+      "AnnualDev_B": -1.1924,
+      "Y": 60.522,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2014,
+      "age": 17,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "甲午",
+      "D_B": 61.7144,
+      "AnnualDev_B": 2.571,
+      "Y": 64.2854,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2015,
+      "age": 18,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "乙未",
+      "D_B": 61.7144,
+      "AnnualDev_B": 2.115,
+      "Y": 63.8294,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2016,
+      "age": 19,
+      "daewoon_pillar": "辛丑",
+      "sewoon_pillar": "丙申",
+      "D_B": 61.7144,
+      "AnnualDev_B": -0.2304,
+      "Y": 61.484,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2017,
+      "age": 20,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "丁酉",
+      "D_B": 62.625,
+      "AnnualDev_B": -2.4688,
+      "Y": 60.1562,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2018,
+      "age": 21,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "戊戌",
+      "D_B": 62.625,
+      "AnnualDev_B": -5.9646,
+      "Y": 56.6604,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2019,
+      "age": 22,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "己亥",
+      "D_B": 62.625,
+      "AnnualDev_B": 0.3867,
+      "Y": 63.0117,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2020,
+      "age": 23,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "庚子",
+      "D_B": 62.625,
+      "AnnualDev_B": -0.4766,
+      "Y": 62.1484,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2021,
+      "age": 24,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "辛丑",
+      "D_B": 62.625,
+      "AnnualDev_B": -6.1663,
+      "Y": 56.4587,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2022,
+      "age": 25,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "壬寅",
+      "D_B": 62.625,
+      "AnnualDev_B": 0.8973,
+      "Y": 63.5223,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2023,
+      "age": 26,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "癸卯",
+      "D_B": 62.625,
+      "AnnualDev_B": -0.1775,
+      "Y": 62.4475,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2024,
+      "age": 27,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "甲辰",
+      "D_B": 62.625,
+      "AnnualDev_B": -0.1767,
+      "Y": 62.4483,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2025,
+      "age": 28,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "乙巳",
+      "D_B": 62.625,
+      "AnnualDev_B": 1.2115,
+      "Y": 63.8365,
+      "daewoon_transition": false,
+      "explanation_context_confidence": null
+    },
+    {
+      "calendar_year": 2026,
+      "age": 29,
+      "daewoon_pillar": "庚子",
+      "sewoon_pillar": "丙午",
+      "D_B": 62.625,
+      "AnnualDev_B": 0.9453,
+      "Y": 63.5703,
+      "daewoon_transition": true,
+      "explanation_context_confidence": null
+    }
+  ],
+  "future_years_internal_only": [
+    {
+      "calendar_year": 2027,
+      "age": 30,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "丁未",
+      "D_B": 61.5,
+      "AnnualDev_B": 1.6216,
+      "Y": 63.1216
+    },
+    {
+      "calendar_year": 2028,
+      "age": 31,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "戊申",
+      "D_B": 61.5,
+      "AnnualDev_B": -3.9739,
+      "Y": 57.5261
+    },
+    {
+      "calendar_year": 2029,
+      "age": 32,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "己酉",
+      "D_B": 61.5,
+      "AnnualDev_B": -2.629,
+      "Y": 58.871
+    },
+    {
+      "calendar_year": 2030,
+      "age": 33,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "庚戌",
+      "D_B": 61.5,
+      "AnnualDev_B": -4.7085,
+      "Y": 56.7915
+    },
+    {
+      "calendar_year": 2031,
+      "age": 34,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "辛亥",
+      "D_B": 61.5,
+      "AnnualDev_B": 0.4587,
+      "Y": 61.9587
+    },
+    {
+      "calendar_year": 2032,
+      "age": 35,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "壬子",
+      "D_B": 61.5,
+      "AnnualDev_B": 1.5028,
+      "Y": 63.0028
+    },
+    {
+      "calendar_year": 2033,
+      "age": 36,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "癸丑",
+      "D_B": 61.5,
+      "AnnualDev_B": -4.1927,
+      "Y": 57.3073
+    },
+    {
+      "calendar_year": 2034,
+      "age": 37,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "甲寅",
+      "D_B": 61.5,
+      "AnnualDev_B": 0.9499,
+      "Y": 62.4499
+    },
+    {
+      "calendar_year": 2035,
+      "age": 38,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "乙卯",
+      "D_B": 61.5,
+      "AnnualDev_B": 3.0992,
+      "Y": 64.5992
+    },
+    {
+      "calendar_year": 2036,
+      "age": 39,
+      "daewoon_pillar": "己亥",
+      "sewoon_pillar": "丙辰",
+      "D_B": 61.5,
+      "AnnualDev_B": -0.3187,
+      "Y": 61.1813
+    },
+    {
+      "calendar_year": 2037,
+      "age": 40,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "丁巳",
+      "D_B": 61.7144,
+      "AnnualDev_B": -0.0396,
+      "Y": 61.6749
+    },
+    {
+      "calendar_year": 2038,
+      "age": 41,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "戊午",
+      "D_B": 61.7144,
+      "AnnualDev_B": 0.6007,
+      "Y": 62.3151
+    },
+    {
+      "calendar_year": 2039,
+      "age": 42,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "己未",
+      "D_B": 61.7144,
+      "AnnualDev_B": 0.2496,
+      "Y": 61.964
+    },
+    {
+      "calendar_year": 2040,
+      "age": 43,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "庚申",
+      "D_B": 61.7144,
+      "AnnualDev_B": -2.073,
+      "Y": 59.6415
+    },
+    {
+      "calendar_year": 2041,
+      "age": 44,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "辛酉",
+      "D_B": 61.7144,
+      "AnnualDev_B": -2.2643,
+      "Y": 59.4502
+    },
+    {
+      "calendar_year": 2042,
+      "age": 45,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "壬戌",
+      "D_B": 61.7144,
+      "AnnualDev_B": -0.5814,
+      "Y": 61.133
+    },
+    {
+      "calendar_year": 2043,
+      "age": 46,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "癸亥",
+      "D_B": 61.7144,
+      "AnnualDev_B": 1.3025,
+      "Y": 63.0169
+    },
+    {
+      "calendar_year": 2044,
+      "age": 47,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "甲子",
+      "D_B": 61.7144,
+      "AnnualDev_B": 2.0735,
+      "Y": 63.7879
+    },
+    {
+      "calendar_year": 2045,
+      "age": 48,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "乙丑",
+      "D_B": 61.7144,
+      "AnnualDev_B": -3.2526,
+      "Y": 58.4619
+    },
+    {
+      "calendar_year": 2046,
+      "age": 49,
+      "daewoon_pillar": "戊戌",
+      "sewoon_pillar": "丙寅",
+      "D_B": 61.7144,
+      "AnnualDev_B": 1.7179,
+      "Y": 63.4323
+    },
+    {
+      "calendar_year": 2047,
+      "age": 50,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "丁卯",
+      "D_B": 62.625,
+      "AnnualDev_B": 2.1953,
+      "Y": 64.8203
+    },
+    {
+      "calendar_year": 2048,
+      "age": 51,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "戊辰",
+      "D_B": 62.625,
+      "AnnualDev_B": -1.7527,
+      "Y": 60.8723
+    },
+    {
+      "calendar_year": 2049,
+      "age": 52,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "己巳",
+      "D_B": 62.625,
+      "AnnualDev_B": -0.1023,
+      "Y": 62.5227
+    },
+    {
+      "calendar_year": 2050,
+      "age": 53,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "庚午",
+      "D_B": 62.625,
+      "AnnualDev_B": 1.5701,
+      "Y": 64.1951
+    },
+    {
+      "calendar_year": 2051,
+      "age": 54,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "辛未",
+      "D_B": 62.625,
+      "AnnualDev_B": 1.1554,
+      "Y": 63.7804
+    },
+    {
+      "calendar_year": 2052,
+      "age": 55,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "壬申",
+      "D_B": 62.625,
+      "AnnualDev_B": 0.8723,
+      "Y": 63.4973
+    },
+    {
+      "calendar_year": 2053,
+      "age": 56,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "癸酉",
+      "D_B": 62.625,
+      "AnnualDev_B": -2.4281,
+      "Y": 60.1969
+    },
+    {
+      "calendar_year": 2054,
+      "age": 57,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "甲戌",
+      "D_B": 62.625,
+      "AnnualDev_B": -1.7233,
+      "Y": 60.9017
+    },
+    {
+      "calendar_year": 2055,
+      "age": 58,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "乙亥",
+      "D_B": 62.625,
+      "AnnualDev_B": -0.881,
+      "Y": 61.744
+    },
+    {
+      "calendar_year": 2056,
+      "age": 59,
+      "daewoon_pillar": "丁酉",
+      "sewoon_pillar": "丙子",
+      "D_B": 62.625,
+      "AnnualDev_B": 1.4488,
+      "Y": 64.0738
+    },
+    {
+      "calendar_year": 2057,
+      "age": 60,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "丁丑",
+      "D_B": 62.625,
+      "AnnualDev_B": -4.2747,
+      "Y": 58.3503
+    },
+    {
+      "calendar_year": 2058,
+      "age": 61,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "戊寅",
+      "D_B": 62.625,
+      "AnnualDev_B": -1.1157,
+      "Y": 61.5093
+    },
+    {
+      "calendar_year": 2059,
+      "age": 62,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "己卯",
+      "D_B": 62.625,
+      "AnnualDev_B": 1.856,
+      "Y": 64.481
+    },
+    {
+      "calendar_year": 2060,
+      "age": 63,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "庚辰",
+      "D_B": 62.625,
+      "AnnualDev_B": -0.7961,
+      "Y": 61.8289
+    },
+    {
+      "calendar_year": 2061,
+      "age": 64,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "辛巳",
+      "D_B": 62.625,
+      "AnnualDev_B": -0.4363,
+      "Y": 62.1887
+    },
+    {
+      "calendar_year": 2062,
+      "age": 65,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "壬午",
+      "D_B": 62.625,
+      "AnnualDev_B": 2.3476,
+      "Y": 64.9726
+    },
+    {
+      "calendar_year": 2063,
+      "age": 66,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "癸未",
+      "D_B": 62.625,
+      "AnnualDev_B": 0.483,
+      "Y": 63.108
+    },
+    {
+      "calendar_year": 2064,
+      "age": 67,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "甲申",
+      "D_B": 62.625,
+      "AnnualDev_B": 0.6463,
+      "Y": 63.2713
+    },
+    {
+      "calendar_year": 2065,
+      "age": 68,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "乙酉",
+      "D_B": 62.625,
+      "AnnualDev_B": 1.1506,
+      "Y": 63.7756
+    },
+    {
+      "calendar_year": 2066,
+      "age": 69,
+      "daewoon_pillar": "丙申",
+      "sewoon_pillar": "丙戌",
+      "D_B": 62.625,
+      "AnnualDev_B": -2.0751,
+      "Y": 60.5499
+    },
+    {
+      "calendar_year": 2067,
+      "age": 70,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "丁亥",
+      "D_B": 64.125,
+      "AnnualDev_B": 1.6412,
+      "Y": 65.7662
+    },
+    {
+      "calendar_year": 2068,
+      "age": 71,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "戊子",
+      "D_B": 64.125,
+      "AnnualDev_B": -1.4649,
+      "Y": 62.6601
+    },
+    {
+      "calendar_year": 2069,
+      "age": 72,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "己丑",
+      "D_B": 64.125,
+      "AnnualDev_B": -6.8071,
+      "Y": 57.3179
+    },
+    {
+      "calendar_year": 2070,
+      "age": 73,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "庚寅",
+      "D_B": 64.125,
+      "AnnualDev_B": -0.0614,
+      "Y": 64.0636
+    },
+    {
+      "calendar_year": 2071,
+      "age": 74,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "辛卯",
+      "D_B": 64.125,
+      "AnnualDev_B": 1.0267,
+      "Y": 65.1517
+    },
+    {
+      "calendar_year": 2072,
+      "age": 75,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "壬辰",
+      "D_B": 64.125,
+      "AnnualDev_B": 0.6914,
+      "Y": 64.8164
+    },
+    {
+      "calendar_year": 2073,
+      "age": 76,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "癸巳",
+      "D_B": 64.125,
+      "AnnualDev_B": -1.4453,
+      "Y": 62.6797
+    },
+    {
+      "calendar_year": 2074,
+      "age": 77,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "甲午",
+      "D_B": 64.125,
+      "AnnualDev_B": 2.9993,
+      "Y": 67.1243
+    },
+    {
+      "calendar_year": 2075,
+      "age": 78,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "乙未",
+      "D_B": 64.125,
+      "AnnualDev_B": 3.122,
+      "Y": 67.247
+    },
+    {
+      "calendar_year": 2076,
+      "age": 79,
+      "daewoon_pillar": "乙未",
+      "sewoon_pillar": "丙申",
+      "D_B": 64.125,
+      "AnnualDev_B": -0.5897,
+      "Y": 63.5353
+    },
+    {
+      "calendar_year": 2077,
+      "age": 80,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "丁酉",
+      "D_B": 63.5356,
+      "AnnualDev_B": -1.8173,
+      "Y": 61.7183
+    },
+    {
+      "calendar_year": 2078,
+      "age": 81,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "戊戌",
+      "D_B": 63.5356,
+      "AnnualDev_B": -5.6324,
+      "Y": 57.9031
+    },
+    {
+      "calendar_year": 2079,
+      "age": 82,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "己亥",
+      "D_B": 63.5356,
+      "AnnualDev_B": 0.7188,
+      "Y": 64.2544
+    },
+    {
+      "calendar_year": 2080,
+      "age": 83,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "庚子",
+      "D_B": 63.5356,
+      "AnnualDev_B": -1.7415,
+      "Y": 61.794
+    },
+    {
+      "calendar_year": 2081,
+      "age": 84,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "辛丑",
+      "D_B": 63.5356,
+      "AnnualDev_B": -7.0763,
+      "Y": 56.4592
+    },
+    {
+      "calendar_year": 2082,
+      "age": 85,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "壬寅",
+      "D_B": 63.5356,
+      "AnnualDev_B": 1.0065,
+      "Y": 64.5421
+    },
+    {
+      "calendar_year": 2083,
+      "age": 86,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "癸卯",
+      "D_B": 63.5356,
+      "AnnualDev_B": -0.4468,
+      "Y": 63.0888
+    },
+    {
+      "calendar_year": 2084,
+      "age": 87,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "甲辰",
+      "D_B": 63.5356,
+      "AnnualDev_B": -0.0082,
+      "Y": 63.5274
+    },
+    {
+      "calendar_year": 2085,
+      "age": 88,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "乙巳",
+      "D_B": 63.5356,
+      "AnnualDev_B": 0.8477,
+      "Y": 64.3832
+    },
+    {
+      "calendar_year": 2086,
+      "age": 89,
+      "daewoon_pillar": "甲午",
+      "sewoon_pillar": "丙午",
+      "D_B": 63.5356,
+      "AnnualDev_B": 1.2341,
+      "Y": 64.7696
+    },
+    {
+      "calendar_year": 2087,
+      "age": 90,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "丁未",
+      "D_B": 60.9106,
+      "AnnualDev_B": 1.808,
+      "Y": 62.7186
+    },
+    {
+      "calendar_year": 2088,
+      "age": 91,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "戊申",
+      "D_B": 60.9106,
+      "AnnualDev_B": -3.0136,
+      "Y": 57.897
+    },
+    {
+      "calendar_year": 2089,
+      "age": 92,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "己酉",
+      "D_B": 60.9106,
+      "AnnualDev_B": -1.4843,
+      "Y": 59.4262
+    },
+    {
+      "calendar_year": 2090,
+      "age": 93,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "庚戌",
+      "D_B": 60.9106,
+      "AnnualDev_B": -3.7837,
+      "Y": 57.1269
+    },
+    {
+      "calendar_year": 2091,
+      "age": 94,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "辛亥",
+      "D_B": 60.9106,
+      "AnnualDev_B": 1.348,
+      "Y": 62.2586
+    },
+    {
+      "calendar_year": 2092,
+      "age": 95,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "壬子",
+      "D_B": 60.9106,
+      "AnnualDev_B": 2.3979,
+      "Y": 63.3085
+    },
+    {
+      "calendar_year": 2093,
+      "age": 96,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "癸丑",
+      "D_B": 60.9106,
+      "AnnualDev_B": -3.1545,
+      "Y": 57.7561
+    },
+    {
+      "calendar_year": 2094,
+      "age": 97,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "甲寅",
+      "D_B": 60.9106,
+      "AnnualDev_B": -4.5719,
+      "Y": 56.3386
+    },
+    {
+      "calendar_year": 2095,
+      "age": 98,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "乙卯",
+      "D_B": 60.9106,
+      "AnnualDev_B": 3.6742,
+      "Y": 64.5847
+    },
+    {
+      "calendar_year": 2096,
+      "age": 99,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "丙辰",
+      "D_B": 60.9106,
+      "AnnualDev_B": 0.8615,
+      "Y": 61.772
+    },
+    {
+      "calendar_year": 2097,
+      "age": 100,
+      "daewoon_pillar": "癸巳",
+      "sewoon_pillar": "丁巳",
+      "D_B": 60.9106,
+      "AnnualDev_B": -0.07,
+      "Y": 60.8406
+    }
+  ],
+  "month_day_excluded_from_pilot_chart": true,
+  "life_history_used": false
+}

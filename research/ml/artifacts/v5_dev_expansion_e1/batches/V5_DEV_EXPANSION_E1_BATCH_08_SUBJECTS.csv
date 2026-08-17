@@ -1,0 +1,20 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+8,1,V5DEVX_142,Stan Smith,COMPETITIVE,V5_WIKIDATA_EXPANSION,1946-12-14,"Pasadena, TX, United States",male,Q54657,,StanSmith1946
+8,2,V5DEVX_143,Scott Grimes,PROJECT,V5_WIKIDATA_EXPANSION,1971-07-09,"Lowell, MA, United States",male,Q316231,,ScottGrimes1971
+8,3,V5DEVX_144,Gérard Blitz,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1912-02-28,"Antwerp, Belgium",male,Q377155,AA,GérardBlitz1912
+8,4,V5DEVX_145,Piero Taruffi,COMPETITIVE,V5_WIKIDATA_EXPANSION,1906-10-12,"Albano Laziale, Italia",male,Q171578,,PieroTaruffi1906
+8,5,V5DEVX_146,Marilou Berry,PROJECT,V5_WIKIDATA_EXPANSION,1983-02-01,"Paris, France",female,Q201810,,MarilouBerry1983
+8,6,V5DEVX_147,Michele Sindona,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1920-05-08,"Patti, Italy",male,Q920324,AA,MicheleSindona1920
+8,7,V5DEVX_148,Omar Camporese,COMPETITIVE,V5_WIKIDATA_EXPANSION,1968-05-08,"Bologna, Italy",male,Q321420,,OmarCamporese1968
+8,8,V5DEVX_149,Luis Buñuel,PROJECT,V5_WIKIDATA_EXPANSION,1900-02-22,"Calanda, Spain",male,Q51545,,LuisBuñuel1900
+8,9,V5DEVX_150,Ted Turner,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1938-11-19,"Cincinnati, OH, United States",male,Q193368,AA,TedTurner1938
+8,10,V5DEVX_151,Pierluigi Collina,COMPETITIVE,V5_WIKIDATA_EXPANSION,1960-02-13,"Bologna, Italy",male,Q485885,,PierluigiCollina1960
+8,11,V5DEVX_152,Jerry Zucker,PROJECT,V5_WIKIDATA_EXPANSION,1950-03-11,"Milwaukee, WI, United States",male,Q363666,,JerryZucker1950
+8,12,V5DEVX_153,David M. Kennedy,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1905-07-21,"Randolph, UT, United States",male,Q1175386,AA,DavidM.Kennedy1905
+8,13,V5DEVX_154,Richard Gasquet,COMPETITIVE,V5_WIKIDATA_EXPANSION,1986-06-18,"Sérignan, France",male,Q209436,,RichardGasquet1986
+8,14,V5DEVX_155,Mariangela Melato,PROJECT,V5_WIKIDATA_EXPANSION,1941-09-19,"Milan, Italy",female,Q106927,,MariangelaMelato1941
+8,15,V5DEVX_156,Roger Rocher,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1920-02-06,"Champlost, France",male,Q3439419,AA,RogerRocher1920
+8,16,V5DEVX_157,Fons Rademakers,PROJECT,V5_WIKIDATA_EXPANSION,1920-09-05,"Roosendaal, Netherlands",male,Q470831,,FonsRademakers1920
+8,17,V5DEVX_158,Roger Staubach,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1942-02-05,"Cincinnati, OH, United States",male,Q736932,AA,RogerStaubach1942
+8,18,V5DEVX_159,Christian Pineau,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1904-10-14,"Chaumont, France",male,Q661825,AA,ChristianPineau1904
+8,19,V5DEVX_160,Dean Martin,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1917-06-07,"Steubenville, OH, United States",male,Q215359,AA,DeanMartin1917

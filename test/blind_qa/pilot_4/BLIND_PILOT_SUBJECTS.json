@@ -1,0 +1,107 @@
+{
+  "pilot_kind": "BLIND_USER_QA_PILOT",
+  "not": [
+    "VALIDATION",
+    "ACCURACY_ESTIMATE",
+    "STATISTICAL_EVIDENCE"
+  ],
+  "timezone": "Asia/Seoul",
+  "model": "V2_DY_B",
+  "lived_through": 2026,
+  "subjects": [
+    {
+      "id": "P01",
+      "gender": "male",
+      "solar_birth_kst": "1967-03-11 17:40",
+      "lunar_metadata_reference_only": "1967-02-01",
+      "natal_reference": [
+        "丁未",
+        "癸卯",
+        "甲戌",
+        "癸酉"
+      ],
+      "daewoon_reference": [
+        "壬寅",
+        "辛丑",
+        "庚子",
+        "己亥",
+        "戊戌",
+        "丁酉",
+        "丙申",
+        "乙未",
+        "甲午"
+      ]
+    },
+    {
+      "id": "P02",
+      "gender": "female",
+      "solar_birth_kst": "1969-03-11 12:15",
+      "lunar_metadata_reference_only": "1969-01-23",
+      "natal_reference": [
+        "己酉",
+        "丁卯",
+        "乙酉",
+        "壬午"
+      ],
+      "daewoon_reference": [
+        "戊辰",
+        "己巳",
+        "庚午",
+        "辛未",
+        "壬申",
+        "癸酉",
+        "甲戌",
+        "乙亥",
+        "丙子",
+        "丁丑"
+      ]
+    },
+    {
+      "id": "P03",
+      "gender": "male",
+      "solar_birth_kst": "1997-03-06 03:20",
+      "lunar_metadata_reference_only": null,
+      "natal_reference": [
+        "丁丑",
+        "癸卯",
+        "丁未",
+        "辛丑"
+      ],
+      "daewoon_reference": [
+        "庚子",
+        "己亥",
+        "戊戌",
+        "丁酉",
+        "丙申",
+        "乙未",
+        "甲午"
+      ]
+    },
+    {
+      "id": "P04",
+      "gender": "male",
+      "solar_birth_kst": "2000-12-21 14:10",
+      "lunar_metadata_reference_only": null,
+      "natal_reference": [
+        "庚辰",
+        "戊子",
+        "癸丑",
+        "己未"
+      ],
+      "daewoon_reference": [
+        "庚寅",
+        "辛卯",
+        "壬辰",
+        "癸巳",
+        "甲午",
+        "乙未",
+        "丙申",
+        "丁酉",
+        "戊戌"
+      ]
+    }
+  ],
+  "real_names_present": false,
+  "life_history_used": false,
+  "validation_b_used": false
+}

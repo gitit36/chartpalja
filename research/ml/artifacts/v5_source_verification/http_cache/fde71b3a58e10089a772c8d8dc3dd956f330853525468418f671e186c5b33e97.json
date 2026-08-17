@@ -1,0 +1,9 @@
+{
+  "url": "https://www.ottovonhabsburg.org/content.asp?ID=1030&lang=en",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='www.ottovonhabsburg.org', port=443): Max retries exceeded with url: /content.asp?ID=1030&lang=en (Caused by SSLError(SSLError(1, '[SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1076)')))\"))"
+}

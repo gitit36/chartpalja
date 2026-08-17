@@ -1,0 +1,4 @@
+axis,target_pairs,wave1_pairs,wave2_pairs,combined_pairs,deficit,target_met
+COMPETITIVE,30,28,3,31,0,True
+PROJECT,25,19,6,25,0,True
+STATUS,45,26,19,45,0,True

@@ -1,0 +1,18 @@
+{
+  "version": "V4_UNIFIED_DEV_COMBINED_FEATURE_GATE_PRECHECK_V1",
+  "status": "READY_TO_CREATE_FEATURE_GENERATION_GATE",
+  "combined_pairs": 101,
+  "axis_counts": {
+    "COMPETITIVE": 31,
+    "PROJECT": 25,
+    "STATUS": 45
+  },
+  "targets": {
+    "COMPETITIVE": 30,
+    "PROJECT": 25,
+    "STATUS": 45
+  },
+  "all_targets_met": true,
+  "astrology_feature_generation_allowed_now": false,
+  "reason": "The event corpus may proceed to a separate preregistered feature-generation gate only after this freeze. This notebook intentionally does not expose astrology features."
+}

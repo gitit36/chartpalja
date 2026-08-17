@@ -1,0 +1,56 @@
+{
+  "version": "V4_UNIFIED_DEV_WAVE1_FREEZE_DECISION_V1",
+  "notebook_version": "SAJU_ML_V4_UNIFIED_DEV_WAVE1_FREEZE_QA_20260816",
+  "created_at": "2026-08-16T20:39:30",
+  "status": "V4_UNIFIED_DEV_WAVE1_FROZEN_NEEDS_ADDITIONAL_WAVE",
+  "wave1": {
+    "n_pairs": 73,
+    "n_subjects": 73,
+    "positive_earlier_share": 0.4931506849315068,
+    "median_abs_year_gap": 3.0,
+    "same_year_pairs": 0,
+    "n_unpairable": 27,
+    "axis_counts": {
+      "COMPETITIVE": 28,
+      "PROJECT": 19,
+      "STATUS": 26
+    },
+    "axis_pairability": {
+      "COMPETITIVE": 0.9333333333333333,
+      "PROJECT": 0.76,
+      "STATUS": 0.5777777777777777
+    },
+    "chronology_40_60": true,
+    "collection_scope": "BOUNDED_MAJOR_EVENT_SOURCE_SWEEP"
+  },
+  "target_pairs": {
+    "COMPETITIVE": 30,
+    "PROJECT": 25,
+    "STATUS": 45
+  },
+  "pair_deficits": {
+    "COMPETITIVE": 2,
+    "PROJECT": 6,
+    "STATUS": 19
+  },
+  "recommended_wave2_roster_axis_counts": {
+    "COMPETITIVE": 3,
+    "PROJECT": 8,
+    "STATUS": 33
+  },
+  "recommended_wave2_total_subjects": 44,
+  "rules": {
+    "subject_replacement_wave1": false,
+    "directional_chronology_backfill": false,
+    "wave2_selection_may_use_axis_deficit": true,
+    "wave2_selection_may_use_chronology_direction": false,
+    "astrology_feature_generation_allowed": false
+  },
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "next_rule": "Freeze Wave 1. If additional wave required, freeze a completely fresh subject roster using only axis deficits and observed pairability rates; do not condition membership on positive-earlier/later chronology and do not generate astrology features yet."
+}

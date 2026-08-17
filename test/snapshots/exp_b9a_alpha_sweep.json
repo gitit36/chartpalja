@@ -1,0 +1,646 @@
+{
+  "measured_at": "2026-08-12T02:34:37",
+  "phase": "B9A_alpha_sweep",
+  "fixed": {
+    "d_source": "engine_pillar_종합운점수",
+    "centering": "median",
+    "G": "arm_b.year_score_pure_from_meta",
+    "R": false,
+    "interaction": false,
+    "month": "irrelevant_to_this_sweep"
+  },
+  "alphas": [
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    2.0,
+    2.5,
+    3.0
+  ],
+  "selection_rule": [
+    "hard structural gates must pass",
+    "optimize holdout, not train",
+    "prefer stable train/holdout",
+    "if predictive materially tied, prefer smaller alpha"
+  ],
+  "thresholds": {
+    "median_invariant_max": 1.0,
+    "pop_mean_drift_max": 2.0,
+    "saturation_max": 0.02
+  },
+  "B7_reference": {
+    "arm": "B7_reference",
+    "version": "B7_dae_first",
+    "note": "reference only — not promote candidate; not additive hierarchy",
+    "display_saturation_rate": 0.015,
+    "sigma": 10.279,
+    "predictive": {
+      "train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 8,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 7.612071243896551,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 5,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 3.731437802722817,
+        "hard_fail": 0,
+        "near_miss": 0
+      },
+      "all": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 13,
+        "fail": 0,
+        "rate": 100.0,
+        "avg_sep": 6.119519920368191,
+        "hard_fail": 0,
+        "near_miss": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "alpha": 0.25,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.1619,
+        "max_abs_block_mean_drift": 1.0382,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 0.753,
+          "p50": 0.876,
+          "p75": 1.262,
+          "p90": 1.625,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 6,
+          "fail": 2,
+          "rate": 75.0,
+          "avg_sep": 0.7012853893954469,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 0.9231876131594987,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 9,
+          "fail": 4,
+          "rate": 69.23076923076923,
+          "avg_sep": 0.7866323985354668,
+          "hard_fail": 3,
+          "near_miss": 1
+        }
+      }
+    },
+    {
+      "alpha": 0.5,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.3238,
+        "max_abs_block_mean_drift": 2.0765,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 1.507,
+          "p50": 1.752,
+          "p75": 2.524,
+          "p90": 3.25,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 6,
+          "fail": 2,
+          "rate": 75.0,
+          "avg_sep": 1.5361507232031402,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 1.4009403919581687,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 9,
+          "fail": 4,
+          "rate": 69.23076923076923,
+          "avg_sep": 1.484146749647382,
+          "hard_fail": 3,
+          "near_miss": 1
+        }
+      }
+    },
+    {
+      "alpha": 0.75,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.4857,
+        "max_abs_block_mean_drift": 3.1147,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 2.26,
+          "p50": 2.628,
+          "p75": 3.787,
+          "p90": 4.875,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 6,
+          "fail": 2,
+          "rate": 75.0,
+          "avg_sep": 2.371016057010838,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 1.87869317075684,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 9,
+          "fail": 4,
+          "rate": 69.23076923076923,
+          "avg_sep": 2.1816611007593,
+          "hard_fail": 3,
+          "near_miss": 1
+        }
+      }
+    },
+    {
+      "alpha": 1.0,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.6476,
+        "max_abs_block_mean_drift": 4.1529,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 3.013,
+          "p50": 3.504,
+          "p75": 5.049,
+          "p90": 6.5,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 6,
+          "fail": 2,
+          "rate": 75.0,
+          "avg_sep": 3.2058813908185364,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 2.3564459495555186,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 9,
+          "fail": 4,
+          "rate": 69.23076923076923,
+          "avg_sep": 2.879175451871222,
+          "hard_fail": 3,
+          "near_miss": 1
+        }
+      }
+    },
+    {
+      "alpha": 1.25,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.8095,
+        "max_abs_block_mean_drift": 5.1912,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 3.767,
+          "p50": 4.38,
+          "p75": 6.311,
+          "p90": 8.125,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 7,
+          "fail": 1,
+          "rate": 87.5,
+          "avg_sep": 4.040746724626229,
+          "hard_fail": 1,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 2.834198728354184,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 10,
+          "fail": 3,
+          "rate": 76.92307692307692,
+          "avg_sep": 3.5766898029831347,
+          "hard_fail": 3,
+          "near_miss": 0
+        }
+      }
+    },
+    {
+      "alpha": 1.5,
+      "structure": {
+        "gated": false,
+        "pop_mean_raw_drift": -0.9714,
+        "max_abs_block_mean_drift": 6.2294,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.00071,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 4.52,
+          "p50": 5.255,
+          "p75": 7.573,
+          "p90": 9.75,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 7,
+          "fail": 1,
+          "rate": 87.5,
+          "avg_sep": 4.875612058433928,
+          "hard_fail": 1,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 3.3119515071528567,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 10,
+          "fail": 3,
+          "rate": 76.92307692307692,
+          "avg_sep": 4.274204154095054,
+          "hard_fail": 3,
+          "near_miss": 0
+        }
+      }
+    },
+    {
+      "alpha": 2.0,
+      "structure": {
+        "gated": false,
+        "pop_mean_raw_drift": -1.2952,
+        "max_abs_block_mean_drift": 8.3059,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.00143,
+        "display_saturation_rate": 0.00214,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 6.026,
+          "p50": 7.007,
+          "p75": 10.098,
+          "p90": 12.999,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 7,
+          "fail": 1,
+          "rate": 87.5,
+          "avg_sep": 6.545342726049319,
+          "hard_fail": 1,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 4.267457064750204,
+          "hard_fail": 2,
+          "near_miss": 0
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 10,
+          "fail": 3,
+          "rate": 76.92307692307692,
+          "avg_sep": 5.66923285631889,
+          "hard_fail": 3,
+          "near_miss": 0
+        }
+      }
+    },
+    {
+      "alpha": 2.5,
+      "structure": {
+        "gated": false,
+        "pop_mean_raw_drift": -1.619,
+        "max_abs_block_mean_drift": 10.3824,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.00571,
+        "display_saturation_rate": 0.01214,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": true,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 7.533,
+          "p50": 8.759,
+          "p75": 12.622,
+          "p90": 16.249,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 7,
+          "fail": 1,
+          "rate": 87.5,
+          "avg_sep": 8.215073393664708,
+          "hard_fail": 1,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 5.222962622347548,
+          "hard_fail": 1,
+          "near_miss": 1
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 10,
+          "fail": 3,
+          "rate": 76.92307692307692,
+          "avg_sep": 7.064261558542724,
+          "hard_fail": 2,
+          "near_miss": 1
+        }
+      }
+    },
+    {
+      "alpha": 3.0,
+      "structure": {
+        "gated": false,
+        "pop_mean_raw_drift": -1.9428,
+        "max_abs_block_mean_drift": 12.4588,
+        "median_block_median_drift": 0.0,
+        "median_abs_block_median_drift": 0.0,
+        "raw_oor_rate": 0.01571,
+        "display_saturation_rate": 0.02071,
+        "dae_sd_zero": true,
+        "median_invariant_ok": true,
+        "pop_mean_ok": true,
+        "saturation_ok": false,
+        "missing_d_years_total": 0,
+        "shock_sd": {
+          "p25": 9.04,
+          "p50": 10.511,
+          "p75": 15.146,
+          "p90": 19.499,
+          "n_blocks": 139
+        },
+        "n_subjects": 14
+      },
+      "predictive": {
+        "train": {
+          "n": 9,
+          "evalable": 8,
+          "pass": 7,
+          "fail": 1,
+          "rate": 87.5,
+          "avg_sep": 9.65772072794677,
+          "hard_fail": 1,
+          "near_miss": 0
+        },
+        "holdout": {
+          "n": 5,
+          "evalable": 5,
+          "pass": 3,
+          "fail": 2,
+          "rate": 60.0,
+          "avg_sep": 6.1706110370877525,
+          "hard_fail": 0,
+          "near_miss": 2
+        },
+        "all": {
+          "n": 14,
+          "evalable": 13,
+          "pass": 10,
+          "fail": 3,
+          "rate": 76.92307692307692,
+          "avg_sep": 8.316524693000996,
+          "hard_fail": 1,
+          "near_miss": 2
+        }
+      }
+    }
+  ],
+  "selected": {
+    "alpha": 1.25,
+    "structure": {
+      "gated": true,
+      "pop_mean_raw_drift": -0.8095,
+      "max_abs_block_mean_drift": 5.1912,
+      "median_block_median_drift": 0.0,
+      "median_abs_block_median_drift": 0.0,
+      "raw_oor_rate": 0.0,
+      "display_saturation_rate": 0.0,
+      "dae_sd_zero": true,
+      "median_invariant_ok": true,
+      "pop_mean_ok": true,
+      "saturation_ok": true,
+      "missing_d_years_total": 0,
+      "shock_sd": {
+        "p25": 3.767,
+        "p50": 4.38,
+        "p75": 6.311,
+        "p90": 8.125,
+        "n_blocks": 139
+      },
+      "n_subjects": 14
+    },
+    "predictive": {
+      "train": {
+        "n": 9,
+        "evalable": 8,
+        "pass": 7,
+        "fail": 1,
+        "rate": 87.5,
+        "avg_sep": 4.040746724626229,
+        "hard_fail": 1,
+        "near_miss": 0
+      },
+      "holdout": {
+        "n": 5,
+        "evalable": 5,
+        "pass": 3,
+        "fail": 2,
+        "rate": 60.0,
+        "avg_sep": 2.834198728354184,
+        "hard_fail": 2,
+        "near_miss": 0
+      },
+      "all": {
+        "n": 14,
+        "evalable": 13,
+        "pass": 10,
+        "fail": 3,
+        "rate": 76.92307692307692,
+        "avg_sep": 3.5766898029831347,
+        "hard_fail": 3,
+        "near_miss": 0
+      }
+    },
+    "rank_note": "gated → holdout rate → holdout sep → stability → smaller α"
+  }
+}

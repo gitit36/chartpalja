@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-08-17T01:58:08",
+  "notebook_version": "SAJU_ML_V4_CONTEXTUAL_SEMANTIC_STACK_V1_20260817",
+  "spec_sha256": "89b7c1181e0219bafccc63d1913431fb357145a79758158dea78877978e35dd8",
+  "pair_sha256": "5c4cecc76e2059fc6276564b4be13638ffc4b5b11b5773dd5954ed98e7dad31b",
+  "w1_roster_sha256": "8fc11f61c5102f3c2caa9890ec82819e164178ac0a96f4d721f4e13767fdc9a7",
+  "w2_roster_sha256": "afd9cf204f26ccf00b384e41d8de06d708f641892211f5226462b178caaf1e27",
+  "saju_engine_sha256": "d39e0c4d777ae3a19394c9175319a4f8a6a709c2b4d34400965b618ffbfdad1e",
+  "orthodox_helper_sha256": "8db818ad59ed5109fdb658fe778deeffc883f55b6f0af924d9786487bbbd3390",
+  "frozen_model_sha256": null,
+  "frozen_weights_sha256": null
+}

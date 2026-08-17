@@ -1,0 +1,20 @@
+{
+  "version": "V4_UNIFIED_DEV_SUBJECT_ROSTER_FREEZE_V1",
+  "notebook_version": "SAJU_ML_V4_UNIFIED_DEV_SUBJECT_ROSTER_FREEZE_20260816",
+  "created_at": "2026-08-16T20:00:30",
+  "status": "V4_UNIFIED_DEV_SUBJECT_UNIVERSE_FROZEN",
+  "n_subjects": 100,
+  "axis_counts": {
+    "STATUS": 45,
+    "COMPETITIVE": 30,
+    "PROJECT": 25
+  },
+  "roster_sha256": "8fc11f61c5102f3c2caa9890ec82819e164178ac0a96f4d721f4e13767fdc9a7",
+  "selection_seed": 20260816,
+  "birth_source_url": "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv",
+  "prior_development_names_excluded": 232,
+  "astrology_scored": false,
+  "event_collection_started": false,
+  "sealed_holdouts_loaded": false,
+  "next_rule": "Do not change subject membership after event collection begins. Collect all source-verifiable opposite-polarity Career events on each subject's preassigned axis, then apply the minimum-absolute-year-gap pair rule."
+}

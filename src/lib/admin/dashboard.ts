@@ -1,13 +1,13 @@
 import { UserRole } from '@prisma/client'
 import { prisma } from '@/lib/db/prisma'
 import {
-  type AdminRangeKey,
+  type AdminRange,
   eachKstDateKey,
   formatKstDate,
   formatKstDateTime,
-  rangeStart,
   startOfKstDay,
 } from './dates'
+import { getGrowthMetrics } from './growth'
 
 function excludeNicknames(): string[] {
   const raw = process.env.ADMIN_DASHBOARD_EXCLUDE_NICKNAMES ?? '이상진'
@@ -100,13 +100,16 @@ function funnelRates(step1: number, step2: number, step3: number) {
   }
 }
 
-export async function getDashboardData(range: AdminRangeKey) {
-  const since = rangeStart(range)
+export async function getDashboardData(range: AdminRange) {
+  const since = range.start
+  const until = range.endExclusive
+  const inRange = { gte: since, lt: until }
   const now = new Date()
   const todayStart = startOfKstDay(now)
-  const dateKeys = eachKstDateKey(since)
+  const dateKeys = eachKstDateKey(since, until)
   const nowYear = new Date(now.getTime() + 9 * 60 * 60 * 1000).getUTCFullYear()
   const exclude = excludeNicknames()
+  const growthPromise = getGrowthMetrics(since, until, dateKeys)
 
   const [
     usersInRange,
@@ -130,26 +133,26 @@ export async function getDashboardData(range: AdminRangeKey) {
     entriesBefore,
   ] = await Promise.all([
     prisma.user.findMany({
-      where: { createdAt: { gte: since }, role: UserRole.USER },
+      where: { createdAt: inRange, role: UserRole.USER },
       select: { id: true, createdAt: true },
     }),
     prisma.sajuEntry.findMany({
-      where: { createdAt: { gte: since } },
+      where: { createdAt: inRange },
       select: { createdAt: true, userId: true, guestId: true },
     }),
     prisma.sajuEntry.count({
-      where: { createdAt: { gte: since }, userId: null, guestId: { not: null } },
+      where: { createdAt: inRange, userId: null, guestId: { not: null } },
     }),
     prisma.paymentOrder.findMany({
-      where: { status: 'paid', paidAt: { gte: since } },
+      where: { status: 'paid', paidAt: inRange },
       select: { amount: true, currency: true, paidAt: true, productCode: true, userId: true, paymentMethod: true },
     }),
     prisma.couponRedemption.count({
-      where: { createdAt: { gte: since } },
+      where: { createdAt: inRange },
     }),
     prisma.entitlementLedger.aggregate({
       where: {
-        createdAt: { gte: since },
+        createdAt: inRange,
         delta: { lt: 0 },
         reason: { startsWith: 'use:' },
       },
@@ -158,7 +161,7 @@ export async function getDashboardData(range: AdminRangeKey) {
     prisma.inquiry.count({ where: { status: 'open' } }),
     prisma.sajuEntry.findMany({
       where: {
-        updatedAt: { gte: since },
+        updatedAt: inRange,
         userId: { not: null },
         user: {
           nickname: { not: null },
@@ -187,29 +190,29 @@ export async function getDashboardData(range: AdminRangeKey) {
       _count: true,
     }),
     prisma.sajuEntry.findMany({
-      where: { createdAt: { gte: since } },
+      where: { createdAt: inRange },
       select: { gender: true, birthDate: true, dayElement: true, userId: true, guestId: true },
     }),
     prisma.entitlementLedger.findMany({
       where: {
-        createdAt: { gte: since },
+        createdAt: inRange,
         delta: { lt: 0 },
         reason: { in: ['use:fortune', 'use:period', 'use:compat'] },
       },
       select: { reason: true, delta: true },
     }),
     prisma.paymentOrder.findMany({
-      where: { status: 'paid', paidAt: { gte: since }, paymentMethod: { not: null } },
+      where: { status: 'paid', paidAt: inRange, paymentMethod: { not: null } },
       select: { paymentMethod: true },
     }),
     prisma.sajuEntry.count({
-      where: { createdAt: { gte: since }, isShared: true },
+      where: { createdAt: inRange, isShared: true },
     }),
     prisma.sajuEntry.groupBy({
       by: ['userId'],
       where: {
         userId: { not: null },
-        createdAt: { gte: since },
+        createdAt: inRange,
         user: { role: UserRole.USER },
       },
       _count: { _all: true },
@@ -217,6 +220,8 @@ export async function getDashboardData(range: AdminRangeKey) {
     prisma.user.count({ where: { createdAt: { lt: since }, role: UserRole.USER } }),
     prisma.sajuEntry.count({ where: { createdAt: { lt: since } } }),
   ])
+
+  const growth = await growthPromise
 
   const signupIds = usersInRange.map((u) => u.id)
 
@@ -376,8 +381,12 @@ export async function getDashboardData(range: AdminRangeKey) {
   const cohort = funnelRates(cohortSignup, cohortWithEntry, cohortPaid)
 
   return {
-    range,
+    range: range.preset,
+    rangeLabel: range.label,
+    fromKey: range.fromKey,
+    toKey: range.toKey,
     since: since.toISOString(),
+    until: until.toISOString(),
     summary: {
       signups,
       entries: entriesInRange.length,
@@ -396,6 +405,12 @@ export async function getDashboardData(range: AdminRangeKey) {
       payConvertRate: cohort.rate13,
       entryConvertRate: cohort.rate12,
       zeroBalanceRate: pct(zeroBalance, balanceTotal),
+      dau: growth.latest.dau,
+      nau: growth.latest.nau,
+      eau: growth.latest.eau,
+      rau: growth.latest.rau,
+      stickinessWau: growth.latest.stickinessWau,
+      stickinessMau: growth.latest.stickinessMau,
       today: {
         signups: usersToday,
         entries: entriesToday,
@@ -494,6 +509,7 @@ export async function getDashboardData(range: AdminRangeKey) {
       ],
       compositionTotal,
     },
+    growth,
     recentLookups: recentLookups.map((row) => ({
       entryId: row.id,
       customerNickname: row.user?.nickname ?? '(없음)',

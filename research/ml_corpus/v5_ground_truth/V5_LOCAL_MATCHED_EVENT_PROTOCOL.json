@@ -1,0 +1,88 @@
+{
+  "version": "V5_LOCAL_MATCHED_EVENT_PROTOCOL_V1",
+  "status": "PREDECLARED_BEFORE_V5_EVENT_COLLECTION",
+  "purpose": "Build a fresh development corpus that reduces lifecycle/chronology confounding before any astrology feature generation.",
+  "rosters": {
+    "DEV": {
+      "COMPETITIVE": 40,
+      "PROJECT": 50,
+      "STATUS": 70,
+      "TOTAL": 160
+    },
+    "CONFIRM": {
+      "COMPETITIVE": 20,
+      "PROJECT": 25,
+      "STATUS": 35,
+      "TOTAL": 80
+    }
+  },
+  "selection": {
+    "source": "Existing V4 role-only predeclared seed universe + frozen VedAstro/Rodden-AA birth snapshot",
+    "birth_year_min": 1900,
+    "birth_year_max": 1995,
+    "rodden_rating": "AA",
+    "selection_seed": 2026081701,
+    "membership_information_allowed": [
+      "identity",
+      "preassigned axis",
+      "gender guardrail",
+      "birth availability/quality",
+      "birth year",
+      "deterministic hash"
+    ],
+    "membership_information_forbidden": [
+      "event outcome",
+      "event chronology",
+      "pairability",
+      "astrology feature",
+      "astrology score",
+      "Control score",
+      "sealed holdout information"
+    ],
+    "female_guardrail_min_share_if_available": 0.2
+  },
+  "event_collection": {
+    "collect_DEV_only_initially": true,
+    "CONFIRM_event_collection_forbidden_until_candidate_frozen": true,
+    "bounded_source_sweep": true,
+    "record_all_eligible_major_events": true,
+    "no_subject_replacement_after_event_collection_starts": true,
+    "routine_term_completion_not_automatically_negative_status": true,
+    "legal_health_reputation_disruption_not_silently_relabelled_as_status": true
+  },
+  "pairing": {
+    "freeze_events_before_pairing": true,
+    "same_subject": true,
+    "same_axis": true,
+    "opposite_polarity": true,
+    "same_year_forbidden": true,
+    "min_abs_year_gap": 1,
+    "max_abs_year_gap": 5,
+    "use_all_eligible_local_pairs": true,
+    "no_directional_pair_selection": true,
+    "training_pair_weight": "1 / number_of_eligible_pairs_for_subject",
+    "evaluation": "subject-macro first; pair-macro secondary"
+  },
+  "pre_astrology_quality_gate": {
+    "minimum_pairable_subjects": {
+      "TOTAL": 80,
+      "COMPETITIVE": 20,
+      "PROJECT": 20,
+      "STATUS": 25
+    },
+    "overall_positive_earlier_share_range": [
+      0.4,
+      0.6
+    ],
+    "axis_positive_earlier_share_soft_range": [
+      0.3,
+      0.7
+    ],
+    "cross_validated_age_axis_nuisance_accuracy_max": 0.6,
+    "if_gate_fails": "Do not delete/relabel/rebalance existing subjects or events. Add a completely new whole roster wave under the same frozen protocol, then recompute the gate."
+  },
+  "astrology": {
+    "generation_forbidden_until_DEV_event_freeze_and_quality_gate_pass": true,
+    "CONFIRM_generation_forbidden_until_one_candidate_is_frozen": true
+  }
+}

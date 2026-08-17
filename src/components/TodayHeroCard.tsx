@@ -63,6 +63,8 @@ export interface TodayHeroCardProps {
 }
 
 const DOMAIN_ORDER = ['직업', '재물', '연애', '대인', '학업', '건강'] as const
+/** 연·월 5축과 달리 대리/이벤트 보정 축 — UI에 참고 표기 */
+const DOMAIN_REF_KEYS = new Set(['대인', '학업'])
 
 function domainTone(score: number): string {
   if (score >= 70) return 'text-cp-line bg-cp-line/15'
@@ -149,9 +151,15 @@ export function TodayHeroCard({
             {domainRows.map((d) => (
               <span
                 key={d.key}
+                title={DOMAIN_REF_KEYS.has(d.key) ? '정식 5축이 아닌 참고 점수예요' : undefined}
                 className={`inline-flex items-baseline gap-0.5 rounded-md px-1.5 py-0.5 text-[11px] tabular-nums ${domainTone(d.score)}`}
               >
-                <span className="opacity-90 font-medium">{d.key}</span>
+                <span className="opacity-90 font-medium">
+                  {d.key}
+                  {DOMAIN_REF_KEYS.has(d.key) ? (
+                    <span className="opacity-70 font-normal">·참고</span>
+                  ) : null}
+                </span>
                 <span className="font-bold">{d.score}</span>
               </span>
             ))}

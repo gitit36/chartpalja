@@ -1,0 +1,6 @@
+check,passed,details
+frozen_tengod_columns_present,True,missing=[]
+binary_values,True,non_binary_cells=0
+dw_onehot_sum_1,True,bad_rows=0
+sw_onehot_sum_1,True,bad_rows=0
+unique_subject_year_keys,True,duplicate_keys=0

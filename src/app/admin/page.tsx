@@ -1,8 +1,8 @@
-import Link from 'next/link'
 import { getDashboardData } from '@/lib/admin/dashboard'
-import { parseRangeKey, type AdminRangeKey } from '@/lib/admin/dates'
+import { formatKstDate, parseAdminRange, startOfKstDay } from '@/lib/admin/dates'
 import { MetricCard, MetricGroup, StatusBadge } from '@/components/admin/AdminUi'
-import { DashboardCharts, FunnelStrip } from '@/components/admin/DashboardCharts'
+import { AdminRangePicker } from '@/components/admin/AdminRangePicker'
+import { DashboardCharts, FunnelStrip, GrowthCharts } from '@/components/admin/DashboardCharts'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,27 +10,16 @@ function formatWon(n: number) {
   return `${n.toLocaleString('ko-KR')}원`
 }
 
-const RANGES: { key: AdminRangeKey; label: string }[] = [
-  { key: '1d', label: '오늘' },
-  { key: '7d', label: '7일' },
-  { key: '30d', label: '30일' },
-]
-
-const RANGE_LABEL: Record<AdminRangeKey, string> = {
-  '1d': '오늘',
-  '7d': '최근 7일',
-  '30d': '최근 30일',
-}
-
 export default async function AdminDashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ range?: string }>
+  searchParams: Promise<{ range?: string; from?: string; to?: string }>
 }) {
   const sp = await searchParams
-  const range = parseRangeKey(sp.range)
+  const range = parseAdminRange(sp)
   const data = await getDashboardData(range)
   const s = data.summary
+  const todayKey = formatKstDate(startOfKstDay())
 
   const topGender = [...data.charts.gender].sort((a, b) => b.count - a.count)[0]
   const topAge = [...data.charts.age].sort((a, b) => b.count - a.count)[0]
@@ -41,22 +30,15 @@ export default async function AdminDashboardPage({
         <div>
           <h1 className="text-xl font-bold">대시보드</h1>
           <p className="mt-1 text-sm text-cp-muted">
-            {RANGE_LABEL[range]} 기준 · 상단 기간을 바꾸면 아래 수치가 함께 갱신됩니다
+            {data.rangeLabel} 기준 · 상단 기간을 바꾸면 아래 수치가 함께 갱신됩니다
           </p>
         </div>
-        <div className="flex gap-1 rounded-xl border border-cp-border bg-cp-raised p-1">
-          {RANGES.map((r) => (
-            <Link
-              key={r.key}
-              href={`/admin?range=${r.key}`}
-              className={`rounded-lg px-3 py-1.5 text-sm ${
-                range === r.key ? 'bg-cp-surface text-cp-text' : 'text-cp-muted hover:text-cp-secondary'
-              }`}
-            >
-              {r.label}
-            </Link>
-          ))}
-        </div>
+        <AdminRangePicker
+          preset={range.preset}
+          fromKey={range.fromKey}
+          toKey={range.toKey}
+          todayKey={todayKey}
+        />
       </div>
 
       <div className="space-y-3">
@@ -66,6 +48,16 @@ export default async function AdminDashboardPage({
             label="사주 생성"
             value={s.entries}
             hint={`게스트 ${s.guestEntries} · 오늘 ${s.today.entries}`}
+          />
+          <MetricCard
+            label="DAU"
+            value={s.dau}
+            hint={`NAU ${s.nau} · EAU ${s.eau} · RAU ${s.rau}`}
+          />
+          <MetricCard
+            label="고착도"
+            value={`${s.stickinessWau}%`}
+            hint={`DAU/WAU · DAU/MAU ${s.stickinessMau}%`}
           />
           <MetricCard
             label="코호트 전환"
@@ -78,6 +70,8 @@ export default async function AdminDashboardPage({
             hint={`기간 내 생성 · ${s.shareRate}%`}
           />
         </MetricGroup>
+
+        <GrowthCharts data={data} />
 
         <MetricGroup title="매출">
           <MetricCard label="결제 건수" value={s.paidOrders} hint={`오늘 ${s.today.paidOrders}`} />
@@ -183,7 +177,7 @@ export default async function AdminDashboardPage({
           <div>
             <p className="text-sm font-semibold">최근 사주 조회</p>
             <p className="text-[11px] text-cp-dim mt-0.5">
-              {RANGE_LABEL[range]} 내 갱신분 · updatedAt 기준
+              {data.rangeLabel} 내 갱신분 · updatedAt 기준
             </p>
           </div>
           <StatusBadge tone="muted">최신 40건</StatusBadge>

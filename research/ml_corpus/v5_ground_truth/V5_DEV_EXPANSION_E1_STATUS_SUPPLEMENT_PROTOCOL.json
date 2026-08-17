@@ -1,0 +1,46 @@
+{
+  "version": "V5_DEV_EXPANSION_E1_STATUS_SUPPLEMENT_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_STATUS_CANDIDATE_SUPPLY_FAILURE_BEFORE_SUPPLEMENT_QUERY",
+  "trigger": {
+    "observed_supply_fact": "The previously audited unused PASS_EXACT_DOB STATUS candidate pool contains 36 identities.",
+    "frozen_E1_STATUS_quota": 70,
+    "reason_for_action": "candidate identity supply insufficiency only"
+  },
+  "rule": "Do not lower E1 axis quotas. Expand STATUS candidate supply without using outcomes or pairability.",
+  "status_supplement_role_qids": {
+    "diplomat": "Q193391",
+    "judge": "Q16533",
+    "civil_servant": "Q212238",
+    "military_officer": "Q189290",
+    "entrepreneur": "Q131524",
+    "banker": "Q806798"
+  },
+  "selection_information_allowed": [
+    "Wikidata occupation identity",
+    "English person label",
+    "Wikidata date of birth P569 for identity linkage only",
+    "frozen Rodden-AA birth snapshot identity fields"
+  ],
+  "identity_linkage": {
+    "required_rodden_grade": "AA",
+    "birth_year_window": [
+      1900,
+      1995
+    ],
+    "normalized_name_must_be_unique_in_AA_snapshot": true,
+    "Wikidata_P569_calendar_date_must_exactly_equal_Rodden_AA_birth_date": true,
+    "unknown_month_or_day_rejected": true,
+    "exclude_current_repaired_DEV_and_sealed_CONFIRM": true
+  },
+  "forbidden": {
+    "event_outcomes": true,
+    "event_years": true,
+    "pairability": true,
+    "pair_gap": true,
+    "chronology": true,
+    "astrology": true,
+    "control": true,
+    "confirm_event_research": true
+  },
+  "after_supply_rule": "Apply the original frozen SHA256 selection seed/order across the combined permitted exact-DOB candidate pool; preserve E1 quotas C40/P50/S70."
+}

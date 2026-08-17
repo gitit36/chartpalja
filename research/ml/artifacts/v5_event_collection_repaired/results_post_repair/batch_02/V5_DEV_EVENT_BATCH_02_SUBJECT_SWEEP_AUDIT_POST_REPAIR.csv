@@ -1,0 +1,22 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,sweep_status,eligible_positive_events,eligible_negative_events,excluded_logged_candidates,source_rows_logged,notes
+2,1,V5DEV_006,Nathalie Simon,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,0,2,No eligible negative event found in first-pass bounded sweep.
+2,2,V5DEV_043,Lynn Anderson,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,0,1,3,No eligible negative event found in first-pass bounded sweep.
+2,3,V5DEV_098,Donatella Versace,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+2,4,V5DEV_039,Andreas Ostler,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,3,1,0,4,Both polarities observed in first-pass bounded sweep.
+2,5,V5DEV_086,Nora Arnezeder,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,1,2,No eligible negative event found in first-pass bounded sweep.
+2,6,V5DEV_101,Queen Latifah,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event found in first-pass bounded sweep.
+2,7,V5DEV_018,Armin Hary,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,3,0,1,4,No eligible negative event found in first-pass bounded sweep.
+2,8,V5DEV_064,Gus Van Sant,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,3,1,0,4,Both polarities observed in first-pass bounded sweep.
+2,9,V5DEV_099,Magda Goebbels,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,0,0,2,2,No eligible core-axis event found in first-pass bounded sweep; only excluded audit candidates logged.
+2,11,V5DEV_089,Hans Quest,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,1,2,No eligible negative event found in first-pass bounded sweep.
+2,12,V5DEV_096,Heidi Fleiss,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,0,0,3,3,No eligible core-axis event found in first-pass bounded sweep; only excluded audit candidates logged.
+2,13,V5DEV_027,Cosimo Pinto,COMPETITIVE,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,4,0,1,5,No eligible negative event found in first-pass bounded sweep.
+2,14,V5DEV_062,O. W. Fischer,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+2,15,V5DEV_155,Gerhard Stoltenberg,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,3,1,0,4,Both polarities observed in first-pass bounded sweep.
+2,16,V5DEV_084,Mia Martini,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,4,1,0,5,Both polarities observed in first-pass bounded sweep.
+2,17,V5DEV_100,Sandra Day O'Connor,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,5,0,1,6,No eligible negative event found in first-pass bounded sweep.
+2,18,V5DEV_071,Charlton Heston,PROJECT,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,0,0,1,No eligible negative event found in first-pass bounded sweep.
+2,19,V5DEV_125,Neel Kashkari,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,1,1,0,2,Both polarities observed in first-pass bounded sweep.
+2,21,V5DEV_126,Adolf Eichmann,STATUS,COMPLETE_FIRST_PASS_BOUNDED_SWEEP,2,1,0,3,Both polarities observed in first-pass bounded sweep.
+2,10,V5DEV_035,Benoît Paire,COMPETITIVE,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,3,2,0,5,Both polarities observed in repaired-slot bounded sweep.
+2,20,V5DEV_110,Thomas P. O'Neill III,STATUS,COMPLETE_REPAIRED_SLOT_BOUNDED_SWEEP,2,1,0,3,Both polarities observed in repaired-slot bounded sweep.

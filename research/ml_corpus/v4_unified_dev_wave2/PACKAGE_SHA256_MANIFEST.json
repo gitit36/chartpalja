@@ -1,0 +1,43 @@
+{
+  "package": "SAJU_ML_V4_UNIFIED_DEV_WAVE2_ROSTER_FREEZE_READY",
+  "created_at": "2026-08-16T20:40:00+09:00",
+  "files": {
+    "09_saju_ml_v4_unified_dev_wave2_subject_roster_freeze.ipynb": {
+      "sha256": "380a1a11263e0a4397ded4d3207130a68ddaa628d8417f81b3407271c4c3d154",
+      "size_bytes": 26432
+    },
+    "V4_UNIFIED_DEV_WAVE2_PREDECLARED_SEED_UNIVERSE_R3.csv": {
+      "sha256": "ee3eaf2c907462a4152140350219787630dec7c82c00dd0a0a32f378c4666f29",
+      "size_bytes": 127025
+    },
+    "V4_UNIFIED_DEV_WAVE2_COLLECTION_CONTRACT.json": {
+      "sha256": "1b25f8ab9321c18b72a28e0fd30439c343475ba87345a199e83f0497bb0a638e",
+      "size_bytes": 4328
+    },
+    "README_WAVE2.md": {
+      "sha256": "6886a4fcc82beaf8aef9857be6a9e2bbd397b3a35942b01d386343f09835144f",
+      "size_bytes": 2277
+    }
+  },
+  "preflight_seed_resolution_against_public_AA_snapshot_after_wave1_exclusion_only": [
+    {
+      "axis": "COMPETITIVE",
+      "seeds": 304,
+      "resolved_aa": 59,
+      "fresh_aa_1900_1995_after_wave1": 56
+    },
+    {
+      "axis": "PROJECT",
+      "seeds": 193,
+      "resolved_aa": 76,
+      "fresh_aa_1900_1995_after_wave1": 73
+    },
+    {
+      "axis": "STATUS",
+      "seeds": 418,
+      "resolved_aa": 69,
+      "fresh_aa_1900_1995_after_wave1": 50
+    }
+  ],
+  "note": "Preflight counts do not include the user's repo-local prior development exclusions; the notebook applies those at runtime before selection."
+}

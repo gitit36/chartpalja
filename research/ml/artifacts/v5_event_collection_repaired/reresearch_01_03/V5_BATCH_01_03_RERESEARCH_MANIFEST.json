@@ -1,0 +1,25 @@
+{
+  "version": "V5_BATCH_01_03_RERESEARCH_V1",
+  "status": "V5_BATCH_01_03_REPAIRED_SLOTS_RERESEARCH_COMPLETE_READY_FOR_MERGE_VALIDATION",
+  "n_subjects": 6,
+  "n_event_rows": 26,
+  "eligible_rows": 24,
+  "excluded_rows": 2,
+  "subjects_with_positive": 6,
+  "subjects_with_negative": 5,
+  "subjects_with_both_polarities": 5,
+  "subjects_with_no_eligible_core_axis_event": 0,
+  "reresearch_subjects_sha256": "56fcbed95e981c9b7574cc9b719f1dce969347ad2afa91e37a719d5aedbac1e3",
+  "events_sha256": "d3310c940baa1badbe714e39f31bdd0291f9737e232ec2e0b74cfaf783050152",
+  "audit_sha256": "485f5bc968432ab50fa2230a477df5df83f9b49df22eb88d70f4e0595afdeb2d",
+  "rules": {
+    "only_fixed_18C_subject_ids_researched": true,
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "no_pairability_used_for_selection": true,
+    "no_chronology_balancing_used_for_selection": true,
+    "preassigned_axis_immutable": true,
+    "not_final_event_freeze": true
+  },
+  "next_rule": "Merge these repaired-slot rows with 18C sanitized Batch 1-3 results; validate all original subject slots are restored before Batch 4 resumes."
+}

@@ -1,0 +1,90 @@
+{
+  "version": "V5_DEV_EXPANSION_E1_BATCH_02_08_COLLECTION_SUMMARY_V1",
+  "status": "E1_BATCH_02_08_FIRST_PASS_COLLECTION_COMPLETE_REQUIRES_E1_SOURCE_GATE",
+  "batches": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "n_subjects": 139,
+  "n_event_rows": 279,
+  "eligible_rows": 237,
+  "excluded_rows": 42,
+  "batch_summaries": [
+    {
+      "batch": 2,
+      "subjects": 21,
+      "event_rows": 40,
+      "eligible": 30,
+      "excluded": 10,
+      "subjects_both": 6,
+      "subjects_no_eligible": 7
+    },
+    {
+      "batch": 3,
+      "subjects": 20,
+      "event_rows": 43,
+      "eligible": 35,
+      "excluded": 8,
+      "subjects_both": 6,
+      "subjects_no_eligible": 4
+    },
+    {
+      "batch": 4,
+      "subjects": 20,
+      "event_rows": 36,
+      "eligible": 31,
+      "excluded": 5,
+      "subjects_both": 2,
+      "subjects_no_eligible": 5
+    },
+    {
+      "batch": 5,
+      "subjects": 20,
+      "event_rows": 42,
+      "eligible": 36,
+      "excluded": 6,
+      "subjects_both": 5,
+      "subjects_no_eligible": 5
+    },
+    {
+      "batch": 6,
+      "subjects": 20,
+      "event_rows": 38,
+      "eligible": 35,
+      "excluded": 3,
+      "subjects_both": 6,
+      "subjects_no_eligible": 3
+    },
+    {
+      "batch": 7,
+      "subjects": 19,
+      "event_rows": 40,
+      "eligible": 37,
+      "excluded": 3,
+      "subjects_both": 3,
+      "subjects_no_eligible": 1
+    },
+    {
+      "batch": 8,
+      "subjects": 19,
+      "event_rows": 40,
+      "eligible": 33,
+      "excluded": 7,
+      "subjects_both": 5,
+      "subjects_no_eligible": 4
+    }
+  ],
+  "rules": {
+    "no_pair_gap_inspected": true,
+    "no_pairing_performed": true,
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "confirm_researched": false,
+    "requires_E1_wide_source_gate": true
+  }
+}

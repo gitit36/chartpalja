@@ -1,0 +1,9 @@
+{
+  "url": "https://media.renaultgroup.com/renault-group-pays-tribute-to-mr-louis-schweitzer-chairman-and-chief-executive-officer-of-the-group-from-1992-to-2005/?lang=eng",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='media.renaultgroup.com', port=443): Max retries exceeded with url: /renault-group-pays-tribute-to-mr-louis-schweitzer-chairman-and-chief-executive-officer-of-the-group-from-1992-to-2005/?lang=eng (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1076)')))\"))"
+}

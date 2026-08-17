@@ -1,0 +1,9 @@
+{
+  "url": "https://www.dhm.de/lemo/biografie/magda-goebbels",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='www.dhm.de', port=443): Max retries exceeded with url: /lemo/biografie/magda-goebbels (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: self signed certificate in certificate chain (_ssl.c:1076)')))\"))"
+}

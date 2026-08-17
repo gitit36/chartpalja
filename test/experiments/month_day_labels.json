@@ -1,0 +1,259 @@
+{
+  "version": 1,
+  "schema": {
+    "fields": ["year", "month", "day?", "label", "weight", "confidence", "source"],
+    "month": "1-12 required for month KPI",
+    "day": "1-31 optional; required for day KPI",
+    "confidence": "high|medium|low — low는 1차 분리도 분모에서 제외",
+    "note": "연도 life_events와 별도 큐레이션. 공개 사건 날짜만. 엔진/연 라벨 KPI와 독립."
+  },
+  "subjects": {
+    "Donald Trump": {
+      "good": [
+        {"year": 1977, "month": 4, "day": 7, "label": "Ivana Trump와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1983, "month": 11, "day": 30, "label": "Trump Tower 오픈", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1987, "month": 11, "day": 1, "label": "The Art of the Deal 출간", "weight": 0.8, "confidence": "medium", "source": "publisher"},
+        {"year": 2004, "month": 1, "day": 8, "label": "The Apprentice 첫 방송", "weight": 1.0, "confidence": "high", "source": "imdb"},
+        {"year": 2005, "month": 1, "day": 22, "label": "Melania Trump와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2016, "month": 11, "day": 8, "label": "미국 대통령 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2017, "month": 1, "day": 20, "label": "제45대 대통령 취임", "weight": 1.0, "confidence": "high", "source": "whitehouse"},
+        {"year": 2024, "month": 11, "day": 5, "label": "미국 대통령 재선 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2025, "month": 1, "day": 20, "label": "제47대 대통령 취임", "weight": 1.0, "confidence": "high", "source": "whitehouse"}
+      ],
+      "bad": [
+        {"year": 1991, "month": 3, "day": 17, "label": "Trump Taj Mahal Chapter 11", "weight": 1.0, "confidence": "high", "source": "reuters"},
+        {"year": 1992, "month": 3, "day": 1, "label": "Ivana Trump와 이혼 확정(연라벨 1991 근사→1992 사용)", "weight": 0.7, "confidence": "medium", "source": "court", "exclude_from_year_align": true},
+        {"year": 1999, "month": 6, "day": 8, "label": "Marla Maples와 이혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2019, "month": 12, "day": 18, "label": "1차 탄핵소추", "weight": 1.0, "confidence": "high", "source": "congress"},
+        {"year": 2020, "month": 11, "day": 3, "label": "대선 패배", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2021, "month": 1, "day": 6, "label": "1월 6일 국회의사당 난입", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2023, "month": 3, "day": 30, "label": "뉴욕 형사 기소", "weight": 1.0, "confidence": "high", "source": "court"},
+        {"year": 2024, "month": 5, "day": 30, "label": "형사 유죄 평결", "weight": 1.0, "confidence": "high", "source": "court"},
+        {"year": 2024, "month": 7, "day": 13, "label": "유세 중 총격 피격", "weight": 1.0, "confidence": "high", "source": "news"}
+      ]
+    },
+    "Barack Obama": {
+      "good": [
+        {"year": 1992, "month": 10, "day": 3, "label": "Michelle과 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1996, "month": 11, "day": 5, "label": "일리노이 주 상원의원 당선", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1998, "month": 7, "day": 4, "label": "딸 Malia 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2001, "month": 6, "day": 10, "label": "딸 Sasha 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2004, "month": 11, "day": 2, "label": "연방 상원의원 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2008, "month": 11, "day": 4, "label": "미국 대통령 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2009, "month": 1, "day": 20, "label": "대통령 취임", "weight": 1.0, "confidence": "high", "source": "whitehouse"},
+        {"year": 2011, "month": 5, "day": 2, "label": "빈라덴 사살 작전", "weight": 1.0, "confidence": "high", "source": "whitehouse"},
+        {"year": 2012, "month": 11, "day": 6, "label": "대통령 재선", "weight": 1.0, "confidence": "high", "source": "fec"}
+      ],
+      "bad": [
+        {"year": 2000, "month": 3, "day": 21, "label": "연방 하원 경선 패배", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2010, "month": 11, "day": 2, "label": "중간선거 대패", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2013, "month": 10, "day": 1, "label": "Healthcare.gov 장애 국면", "weight": 0.9, "confidence": "medium", "source": "news"},
+        {"year": 2014, "month": 11, "day": 4, "label": "중간선거 패배", "weight": 1.0, "confidence": "high", "source": "fec"}
+      ]
+    },
+    "Michael Jackson": {
+      "good": [
+        {"year": 1982, "month": 11, "day": 30, "label": "Thriller 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1983, "month": 3, "day": 25, "label": "Motown 25 문워크", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1984, "month": 2, "day": 28, "label": "Grammy 대성공", "weight": 1.0, "confidence": "high", "source": "grammy"},
+        {"year": 1987, "month": 8, "day": 31, "label": "Bad 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1991, "month": 11, "day": 26, "label": "Dangerous 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1994, "month": 5, "day": 26, "label": "Lisa Marie Presley와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1995, "month": 6, "day": 20, "label": "HIStory 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1997, "month": 2, "day": 13, "label": "아들 Prince 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1998, "month": 4, "day": 3, "label": "딸 Paris 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"}
+      ],
+      "bad": [
+        {"year": 1984, "month": 1, "day": 27, "label": "Pepsi 광고 화상 사고", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 1993, "month": 8, "day": 17, "label": "성추문 의혹 공개", "weight": 0.8, "confidence": "medium", "source": "news"},
+        {"year": 1996, "month": 1, "day": 18, "label": "Lisa Marie와 이혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1999, "month": 10, "day": 8, "label": "Debbie Rowe와 이혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2002, "month": 11, "day": 19, "label": "호텔 발코니 아기 노출 논란", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2005, "month": 6, "day": 13, "label": "아동 성추행 재판 평결일(무죄·평판타격)", "weight": 1.0, "confidence": "high", "source": "court"},
+        {"year": 2009, "month": 6, "day": 25, "label": "사망", "weight": 1.0, "confidence": "high", "source": "news"}
+      ]
+    },
+    "Justin Bieber": {
+      "good": [
+        {"year": 2009, "month": 11, "day": 17, "label": "My World 발매·데뷔", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2010, "month": 1, "day": 18, "label": "Baby 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2015, "month": 11, "day": 13, "label": "Purpose 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2018, "month": 9, "day": 13, "label": "Hailey Baldwin과 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2021, "month": 3, "day": 19, "label": "Justice 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2024, "month": 8, "day": 26, "label": "첫아들 Jack 출생 공개", "weight": 0.9, "confidence": "medium", "source": "news"}
+      ],
+      "bad": [
+        {"year": 2014, "month": 1, "day": 23, "label": "마이애미 체포", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2017, "month": 7, "day": 24, "label": "Purpose Tour 잔여 일정 취소", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2020, "month": 1, "day": 8, "label": "라임병 진단 공개", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2022, "month": 9, "day": 14, "label": "건강 문제로 투어 중단", "weight": 1.0, "confidence": "high", "source": "news"}
+      ]
+    },
+    "Chris Brown": {
+      "good": [
+        {"year": 2005, "month": 11, "day": 29, "label": "데뷔 앨범 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2011, "month": 3, "day": 22, "label": "F.A.M.E. 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2012, "month": 2, "day": 12, "label": "그래미 수상", "weight": 1.0, "confidence": "high", "source": "grammy"},
+        {"year": 2015, "month": 1, "day": 19, "label": "딸 Royalty 공개", "weight": 0.9, "confidence": "medium", "source": "news"}
+      ],
+      "bad": [
+        {"year": 2009, "month": 2, "day": 8, "label": "Rihanna 폭행 사건", "weight": 1.0, "confidence": "high", "source": "court"},
+        {"year": 2014, "month": 3, "day": 14, "label": "구금·법적 리스크 정점", "weight": 0.9, "confidence": "medium", "source": "news"},
+        {"year": 2017, "month": 2, "day": 8, "label": "Karrueche Tran 접근금지명령", "weight": 1.0, "confidence": "high", "source": "court"},
+        {"year": 2025, "month": 5, "day": 21, "label": "영국 중상해 혐의 체포", "weight": 1.0, "confidence": "high", "source": "news"}
+      ]
+    },
+    "Hillary Clinton": {
+      "good": [
+        {"year": 1975, "month": 10, "day": 11, "label": "Bill Clinton과 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1980, "month": 2, "day": 27, "label": "딸 Chelsea 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1992, "month": 11, "day": 3, "label": "Bill 대통령 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 1993, "month": 1, "day": 20, "label": "First Lady 취임", "weight": 1.0, "confidence": "high", "source": "whitehouse"},
+        {"year": 2000, "month": 11, "day": 7, "label": "뉴욕주 상원의원 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2009, "month": 1, "day": 21, "label": "국무장관 취임", "weight": 1.0, "confidence": "high", "source": "state"},
+        {"year": 2016, "month": 7, "day": 28, "label": "민주당 대선후보 수락", "weight": 1.0, "confidence": "high", "source": "dnc"}
+      ],
+      "bad": [
+        {"year": 1994, "month": 9, "day": 26, "label": "건강보험 개혁안 좌절", "weight": 0.9, "confidence": "medium", "source": "congress"},
+        {"year": 1998, "month": 1, "day": 21, "label": "Lewinsky 스캔들 공개", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2008, "month": 6, "day": 7, "label": "민주당 경선 패배 인정", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2015, "month": 3, "day": 2, "label": "이메일 서버 논란 본격화", "weight": 0.9, "confidence": "medium", "source": "news"},
+        {"year": 2016, "month": 11, "day": 8, "label": "대선 패배", "weight": 1.0, "confidence": "high", "source": "fec"}
+      ]
+    },
+    "Kamala Harris": {
+      "good": [
+        {"year": 2003, "month": 12, "day": 9, "label": "SF District Attorney 당선", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2010, "month": 11, "day": 2, "label": "California AG 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2014, "month": 8, "day": 22, "label": "Douglas Emhoff와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2016, "month": 11, "day": 8, "label": "미국 상원의원 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2020, "month": 11, "day": 3, "label": "부통령 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2021, "month": 1, "day": 20, "label": "부통령 취임", "weight": 1.0, "confidence": "high", "source": "whitehouse"},
+        {"year": 2024, "month": 8, "day": 22, "label": "민주당 대선후보 수락", "weight": 1.0, "confidence": "high", "source": "dnc"}
+      ],
+      "bad": [
+        {"year": 2019, "month": 12, "day": 3, "label": "대선 경선 중도 하차", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2024, "month": 11, "day": 5, "label": "대선 패배", "weight": 1.0, "confidence": "high", "source": "fec"}
+      ]
+    },
+    "Al Gore": {
+      "good": [
+        {"year": 1970, "month": 5, "day": 19, "label": "Tipper Gore와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1976, "month": 11, "day": 2, "label": "하원의원 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 1984, "month": 11, "day": 6, "label": "상원의원 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 1992, "month": 11, "day": 3, "label": "부통령 당선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 1993, "month": 1, "day": 20, "label": "부통령 취임", "weight": 1.0, "confidence": "high", "source": "whitehouse"},
+        {"year": 1996, "month": 11, "day": 5, "label": "부통령 재선", "weight": 1.0, "confidence": "high", "source": "fec"},
+        {"year": 2006, "month": 5, "day": 24, "label": "An Inconvenient Truth 개봉", "weight": 1.0, "confidence": "high", "source": "imdb"},
+        {"year": 2007, "month": 12, "day": 10, "label": "노벨평화상 수상", "weight": 1.0, "confidence": "high", "source": "nobel"}
+      ],
+      "bad": [
+        {"year": 1988, "month": 4, "day": 21, "label": "민주당 경선 중도 하차", "weight": 0.9, "confidence": "medium", "source": "news"},
+        {"year": 1989, "month": 4, "day": 3, "label": "아들 교통사고 중상", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2000, "month": 12, "day": 12, "label": "대선 재검표 패소(Bush v. Gore)", "weight": 1.0, "confidence": "high", "source": "scotus"},
+        {"year": 2010, "month": 6, "day": 1, "label": "Tipper와 별거 발표", "weight": 1.0, "confidence": "high", "source": "news"}
+      ]
+    },
+    "Monica Lewinsky": {
+      "good": [
+        {"year": 2015, "month": 3, "day": 20, "label": "TED The Price of Shame", "weight": 1.0, "confidence": "high", "source": "ted"},
+        {"year": 2021, "month": 9, "day": 7, "label": "Impeachment ACS 방영 시작", "weight": 0.9, "confidence": "medium", "source": "imdb"}
+      ],
+      "bad": [
+        {"year": 1998, "month": 1, "day": 21, "label": "스캔들 공개", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 1998, "month": 8, "day": 6, "label": "대배심 증언", "weight": 1.0, "confidence": "high", "source": "court"}
+      ]
+    },
+    "Madonna": {
+      "good": [
+        {"year": 1984, "month": 11, "day": 12, "label": "Like a Virgin 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1985, "month": 8, "day": 16, "label": "Sean Penn과 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1989, "month": 3, "day": 21, "label": "Like a Prayer 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1990, "month": 3, "day": 27, "label": "Vogue 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1996, "month": 10, "day": 14, "label": "딸 Lourdes 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1998, "month": 3, "day": 3, "label": "Ray of Light 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2000, "month": 8, "day": 11, "label": "아들 Rocco 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2000, "month": 12, "day": 22, "label": "Guy Ritchie와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2008, "month": 3, "day": 10, "label": "Rock Hall 입성", "weight": 1.0, "confidence": "high", "source": "rockhall"}
+      ],
+      "bad": [
+        {"year": 1989, "month": 9, "day": 14, "label": "Sean Penn과 이혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1992, "month": 10, "day": 21, "label": "Erotica 발매·Sex 논란", "weight": 0.9, "confidence": "medium", "source": "discogs"},
+        {"year": 2008, "month": 11, "day": 15, "label": "Guy Ritchie와 이혼 확정 국면", "weight": 0.9, "confidence": "medium", "source": "news"},
+        {"year": 2023, "month": 6, "day": 28, "label": "건강 악화로 투어 연기", "weight": 1.0, "confidence": "high", "source": "news"}
+      ]
+    },
+    "Dennis Rodman": {
+      "good": [
+        {"year": 1989, "month": 6, "day": 13, "label": "NBA 우승(Piston)", "weight": 1.0, "confidence": "high", "source": "nba"},
+        {"year": 1990, "month": 6, "day": 14, "label": "NBA 우승·수비왕", "weight": 1.0, "confidence": "high", "source": "nba"},
+        {"year": 1996, "month": 6, "day": 16, "label": "Bulls 우승", "weight": 1.0, "confidence": "high", "source": "nba"},
+        {"year": 1997, "month": 6, "day": 13, "label": "Bulls 우승", "weight": 1.0, "confidence": "high", "source": "nba"},
+        {"year": 1998, "month": 6, "day": 14, "label": "Bulls 우승", "weight": 1.0, "confidence": "high", "source": "nba"},
+        {"year": 1998, "month": 11, "day": 14, "label": "Carmen Electra와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2011, "month": 8, "day": 12, "label": "Basketball Hall of Fame", "weight": 1.0, "confidence": "high", "source": "hoophall"}
+      ],
+      "bad": [
+        {"year": 1999, "month": 4, "day": 1, "label": "Carmen Electra 혼인 무효", "weight": 0.9, "confidence": "medium", "source": "news"},
+        {"year": 1999, "month": 4, "day": 15, "label": "Lakers 방출", "weight": 1.0, "confidence": "high", "source": "nba"},
+        {"year": 2012, "month": 1, "day": 1, "label": "Michelle Moyer와 이혼 확정", "weight": 0.8, "confidence": "medium", "source": "news"},
+        {"year": 2014, "month": 1, "day": 6, "label": "북한 방문 논란 정점", "weight": 0.8, "confidence": "medium", "source": "news"}
+      ]
+    },
+    "Björk": {
+      "good": [
+        {"year": 1986, "month": 6, "day": 8, "label": "아들 Sindri 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 1993, "month": 7, "day": 5, "label": "Debut 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 1995, "month": 6, "day": 13, "label": "Post 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2000, "month": 5, "day": 20, "label": "칸 여우주연상", "weight": 1.0, "confidence": "high", "source": "festival-cannes"},
+        {"year": 2001, "month": 8, "day": 27, "label": "Vespertine 발매", "weight": 1.0, "confidence": "high", "source": "discogs"},
+        {"year": 2002, "month": 10, "day": 3, "label": "딸 Ísadóra 출생", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2015, "month": 1, "day": 20, "label": "Vulnicura 발매", "weight": 1.0, "confidence": "high", "source": "discogs"}
+      ],
+      "bad": [
+        {"year": 1996, "month": 9, "day": 12, "label": "스토커 사건(리카르도 로페즈)", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2008, "month": 3, "day": 2, "label": "상하이 공연 Tibet 발언 논란", "weight": 0.8, "confidence": "medium", "source": "news"},
+        {"year": 2013, "month": 9, "day": 1, "label": "Matthew Barney와 결별", "weight": 0.8, "confidence": "medium", "source": "news"}
+      ]
+    },
+    "윤석열": {
+      "good": [
+        {"year": 2012, "month": 3, "day": 1, "label": "김건희와 결혼", "weight": 0.8, "confidence": "medium", "source": "news"},
+        {"year": 2017, "month": 5, "day": 19, "label": "서울중앙지검장 임명", "weight": 1.0, "confidence": "high", "source": "moj"},
+        {"year": 2019, "month": 7, "day": 25, "label": "검찰총장 임명", "weight": 1.0, "confidence": "high", "source": "moj"},
+        {"year": 2021, "month": 11, "day": 5, "label": "국민의힘 대선후보 선출", "weight": 1.0, "confidence": "high", "source": "party"},
+        {"year": 2022, "month": 5, "day": 10, "label": "대통령 취임", "weight": 1.0, "confidence": "high", "source": "gov"}
+      ],
+      "bad": [
+        {"year": 2020, "month": 12, "day": 16, "label": "법무부 징계 국면", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2024, "month": 12, "day": 3, "label": "비상계엄 선포", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2024, "month": 12, "day": 14, "label": "탄핵소추안 가결", "weight": 1.0, "confidence": "high", "source": "assembly"},
+        {"year": 2025, "month": 4, "day": 4, "label": "헌법재판소 탄핵 인용·파면", "weight": 1.0, "confidence": "high", "source": "ccourt"}
+      ]
+    },
+    "Lionel Messi": {
+      "good": [
+        {"year": 2004, "month": 10, "day": 16, "label": "Barcelona 1군 데뷔", "weight": 1.0, "confidence": "high", "source": "fcbarcelona"},
+        {"year": 2005, "month": 7, "day": 10, "label": "U-20 월드컵 우승", "weight": 1.0, "confidence": "high", "source": "fifa"},
+        {"year": 2008, "month": 8, "day": 23, "label": "베이징 올림픽 금", "weight": 1.0, "confidence": "high", "source": "olympics"},
+        {"year": 2009, "month": 5, "day": 27, "label": "UCL 우승(트레블)", "weight": 1.0, "confidence": "high", "source": "uefa"},
+        {"year": 2011, "month": 5, "day": 28, "label": "UCL 우승", "weight": 1.0, "confidence": "high", "source": "uefa"},
+        {"year": 2012, "month": 11, "day": 2, "label": "아들 Thiago 출생", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2015, "month": 6, "day": 6, "label": "UCL 우승(트레블)", "weight": 1.0, "confidence": "high", "source": "uefa"},
+        {"year": 2017, "month": 6, "day": 30, "label": "Antonela와 결혼", "weight": 1.0, "confidence": "high", "source": "wikipedia"},
+        {"year": 2021, "month": 7, "day": 10, "label": "Copa América 우승", "weight": 1.0, "confidence": "high", "source": "conmebol"},
+        {"year": 2022, "month": 12, "day": 18, "label": "FIFA 월드컵 우승", "weight": 1.0, "confidence": "high", "source": "fifa"},
+        {"year": 2023, "month": 10, "day": 30, "label": "8번째 Ballon d'Or", "weight": 1.0, "confidence": "high", "source": "francefootball"},
+        {"year": 2024, "month": 7, "day": 14, "label": "Copa América 2연패", "weight": 1.0, "confidence": "high", "source": "conmebol"}
+      ],
+      "bad": [
+        {"year": 2006, "month": 3, "day": 7, "label": "중족골 골절", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2014, "month": 7, "day": 13, "label": "월드컵 결승 패배", "weight": 1.0, "confidence": "high", "source": "fifa"},
+        {"year": 2016, "month": 6, "day": 26, "label": "Copa 결승 패배·은퇴 선언", "weight": 1.0, "confidence": "high", "source": "conmebol"},
+        {"year": 2016, "month": 7, "day": 6, "label": "세금사기 유죄 판결", "weight": 1.0, "confidence": "high", "source": "court"},
+        {"year": 2020, "month": 8, "day": 25, "label": "Barcelona 이적 요청 공개", "weight": 1.0, "confidence": "high", "source": "news"},
+        {"year": 2021, "month": 8, "day": 5, "label": "Barcelona 결별·PSG 이적", "weight": 1.0, "confidence": "high", "source": "fcbarcelona"}
+      ]
+    }
+  }
+}

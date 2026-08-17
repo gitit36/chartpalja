@@ -1985,9 +1985,10 @@ def _shinsal_dom_adj(shinsal_list, d: str) -> float:
     return total
 
 def _domain_anchor(base: float) -> float:
-    """원국/대운 base를 중앙(5)으로 끌어와 상·하단 여유를 만든다.
+    """원국→대운 전환 시 base를 중앙(5)으로 끌어와 상·하단 여유를 만든다.
     base가 10에 붙어 있으면(예: 직업) 위쪽 변동이 천장에 잘려 수평선이 되므로,
-    압축을 충분히 줘서 기간별 보정(adj)이 보일 헤드룸을 확보한다."""
+    압축을 충분히 줘서 기간별 보정(adj)이 보일 헤드룸을 확보한다.
+    ※ 세운/월운/일운에서는 재적용하지 않는다(이중 압축 → 진폭 붕괴 방지)."""
     return 5.0 + (base - 5.0) * 0.62
 
 def _domain_soft_clamp(x: float) -> float:
@@ -2001,42 +2002,129 @@ def _domain_soft_clamp(x: float) -> float:
     return round(x, 2)
 
 
+def _refine_domain_scores(
+    base_dom: Dict[str, float],
+    yfit: Dict[str, float],
+    ten_gods: List[str],
+    shinsal_list: Optional[List] = None,
+    *,
+    yong_w: float = 0.5,
+    hui_w: float = 0.3,
+    gi_w: float = 0.4,
+    gu_w: float = 0.0,
+    reanchor: bool = False,
+    soft_clamp: bool = True,
+    extra_adj: Optional[Dict[str, float]] = None,
+) -> Dict[str, float]:
+    """상위 기간 도메인(0~10)에 이번 기간 보정만 가산.
+    reanchor=True 는 원국→대운 한 번만. 세운/월운/일운은 False로 이중 앵커를 막는다.
+    soft_clamp=False 는 체인 중간값(월운 base용 세운 raw) — 최종 표시 계층에서만 True."""
+    out: Dict[str, float] = {}
+    for d in ("직업", "재물", "건강", "연애", "결혼"):
+        base = float(base_dom.get(d, 5.0))
+        if reanchor:
+            base = _domain_anchor(base)
+        sens = _DOMAIN_YFIT_SENS.get(d, 1.0)
+        adj = 0.0
+        adj += float(yfit.get("용신부합", 0) or 0) * yong_w * sens
+        adj += float(yfit.get("희신부합", 0) or 0) * hui_w * sens
+        adj -= float(yfit.get("기신부합", 0) or 0) * gi_w * sens
+        if gu_w:
+            adj -= float(yfit.get("구신부합", 0) or 0) * gu_w * sens
+        for tg in ten_gods:
+            if tg:
+                adj += _TG_DOM.get(tg, {}).get(d, 0.0) * _DOMAIN_TG_AMP
+        adj += _shinsal_dom_adj(shinsal_list, d)
+        if extra_adj:
+            adj += float(extra_adj.get(d, 0.0))
+        raw = base + adj
+        out[d] = _domain_soft_clamp(raw) if soft_clamp else round(raw, 2)
+    return out
+
+
+# 세운 도메인 보정 가중 (연 타임라인·월 base 공유)
+_SW_DOMAIN_W = dict(yong_w=0.5, hui_w=0.3, gi_w=0.4, gu_w=0.25)
+_MW_DOMAIN_W = dict(yong_w=0.4, hui_w=0.2, gi_w=0.3, gu_w=0.2)
+_DW_DOMAIN_W = dict(yong_w=0.8, hui_w=0.4, gi_w=0.8, gu_w=0.4)
+_DAY_DOMAIN_W = dict(yong_w=0.4, hui_w=0.2, gi_w=0.3, gu_w=0.2)
+
+
+def _sewoon_domain_scores(
+    dw_domains: Dict[str, float],
+    sw_yfit: Dict[str, float],
+    sw_ten_gods: List[str],
+    sw_shinsal: Optional[List] = None,
+    *,
+    soft_clamp: bool = True,
+) -> Dict[str, float]:
+    """대운 도메인 → 세운 도메인 (월운 체인의 base로도 사용)."""
+    return _refine_domain_scores(
+        dw_domains, sw_yfit, sw_ten_gods, sw_shinsal,
+        reanchor=False, soft_clamp=soft_clamp, **_SW_DOMAIN_W,
+    )
+
+
 # 도메인 raw 합산은 "무한합산 후 [0,10] 클램프" 구조라 도메인별 체계적 편향이
-# 사람과 무관하게 고정됐다. (모집단 480 샘플 측정값 — 클램프 전 raw 분포)
-#   직업 μ8.1·σ1.5(천장 포화)  연애 μ6.6·σ1.3  재물 μ4.3·σ2.1
-#   결혼 μ4.5·σ1.6            건강 μ-1.7·σ4.0(바닥 포화)
-# 도메인별 z-score 정규화로 각 도메인을 동일 중심(5)·동일 분산으로 맞춰
-# 포화를 제거하고 "그 사람의 상대적 강약"만 남긴다.
+# 사람과 무관하게 고정됐다. → z-score 정규화로 중심·분산을 맞춘다.
+# 캘리브 상수: scripts/recalibrate_domain_calib.py 재측정
+#   n=1500 seed=42 (raw μ·σ — 클램프 전)
+#   직업 μ8.09·σ1.59  재물 μ4.34·σ2.07  건강 μ-2.47·σ3.68
+#   연애 μ6.74·σ1.33  결혼 μ4.64·σ1.64
 _DOMAIN_CALIB = {
-    "직업": (8.11, 1.47), "재물": (4.29, 2.12), "건강": (-1.66, 3.98),
-    "연애": (6.59, 1.25), "결혼": (4.47, 1.60),
+    "직업": (8.09, 1.59), "재물": (4.34, 2.07), "건강": (-2.47, 3.68),
+    "연애": (6.74, 1.33), "결혼": (4.64, 1.64),
 }
 _DOMAIN_TARGET_MEAN = 5.0
 _DOMAIN_TARGET_STD = 1.6
 
-def domain_score(geok:str,shinsal_hits:List[str],ten_gods_all:Dict[str,str],verdict:str)->Dict[str,Any]:
-    dom={"직업":5.0,"재물":5.0,"건강":5.0,"연애":5.0,"결혼":5.0}
-    risk={"직업":0.0,"재물":0.0,"건강":0.0,"연애":0.0,"결혼":0.0}
+def _domain_raw_scores(
+    geok: str,
+    shinsal_hits: List[str],
+    ten_gods_all: Dict[str, str],
+    verdict: str,
+) -> Dict[str, float]:
+    """캘리브레이션 전 raw 도메인 점수 (클램프/z-score 없음)."""
+    dom = {"직업": 5.0, "재물": 5.0, "건강": 5.0, "연애": 5.0, "결혼": 5.0}
+    risk = {"직업": 0.0, "재물": 0.0, "건강": 0.0, "연애": 0.0, "결혼": 0.0}
     for tg in ten_gods_all.values():
-        for d,w in _TG_DOM.get(tg,{}).items(): dom[d]+=w
-    for d,w in _GEOK_DOM.get(geok,{}).items(): dom[d]+=w
-    if verdict in _STRONG_VERDICTS: dom["직업"]+=0.3; dom["건강"]+=0.2
-    elif verdict in _WEAK_VERDICTS: dom["건강"]-=0.3
+        for d, w in _TG_DOM.get(tg, {}).items():
+            dom[d] += w
+    for d, w in _GEOK_DOM.get(geok, {}).items():
+        dom[d] += w
+    if verdict in _STRONG_VERDICTS:
+        dom["직업"] += 0.3
+        dom["건강"] += 0.2
+    elif verdict in _WEAK_VERDICTS:
+        dom["건강"] -= 0.3
     for name in shinsal_hits:
-        for k,bmap in _SHINSAL_DOM.items():
+        for k, bmap in _SHINSAL_DOM.items():
             if k.split("(")[0] in name or name.split("(")[0] in k:
-                for d,w in bmap.items(): dom[d]+=w
-        for k,pmap in _RISK_PENALTY.items():
+                for d, w in bmap.items():
+                    dom[d] += w
+        for k, pmap in _RISK_PENALTY.items():
             if k.split("(")[0] in name or name.split("(")[0] in k:
-                for d,p in pmap.items(): risk[d]+=p
-    for d in dom:
-        raw = dom[d] - risk[d]
+                for d, p in pmap.items():
+                    risk[d] += p
+    return {d: dom[d] - risk[d] for d in dom}
+
+
+def domain_score(geok:str,shinsal_hits:List[str],ten_gods_all:Dict[str,str],verdict:str)->Dict[str,Any]:
+    raws = _domain_raw_scores(geok, shinsal_hits, ten_gods_all, verdict)
+    risk_only = {}
+    # 리스크 페널티 표기용 (raw 재계산과 동일 규칙 — 표시용으로만)
+    for name in shinsal_hits:
+        for k, pmap in _RISK_PENALTY.items():
+            if k.split("(")[0] in name or name.split("(")[0] in k:
+                for d, p in pmap.items():
+                    risk_only[d] = risk_only.get(d, 0.0) + p
+    dom: Dict[str, float] = {}
+    for d, raw in raws.items():
         mu, sd = _DOMAIN_CALIB.get(d, (5.0, 2.0))
         z = (raw - mu) / sd if sd > 0 else 0.0
         dom[d] = max(0.0, min(10.0, round(_DOMAIN_TARGET_MEAN + z * _DOMAIN_TARGET_STD, 1)))
     def _g(v): return "High🟢" if v>=7 else ("Mid⚪" if v>=4 else "Low🔴")
     return {"점수":dom,"등급":{d:_g(v) for d,v in dom.items()},
-            "리스크페널티":{d:round(v,1) for d,v in risk.items() if v>0}}
+            "리스크페널티":{d:round(v,1) for d,v in risk_only.items() if v>0}}
 
 # ──────────────────────────────────────────────
 # SECTION 13 : 신살 계산 엔진 [Q1 + Q4 확장]
@@ -2690,6 +2778,14 @@ def build_sewoon(now, n=20):
 MONTH_BD = [315, 345, 15, 45, 75, 105, 135, 165, 195, 225, 255, 285]
 MONTH_BRL = list('寅卯辰巳午未申酉戌亥子丑')
 
+# Calendar boundary policies (V2 foundation — do not conflate):
+# HISTORICAL_EXPERIMENT_YEAR — civil Gregorian year in build_yearly_timeline
+#   (frozen V2_DY_B development labels/scores; do not silently rewrite)
+# LIVE_ACTIVE_SEWOON — 立春 → next 立春 (product hierarchy / Month / Day)
+# Month boundaries — solar 節 intervals (MONTH_BD)
+SEWOON_BOUNDARY_LIVE = "LIVE_ACTIVE_SEWOON_LICHUN"
+SEWOON_BOUNDARY_HISTORICAL_EXPERIMENT = "HISTORICAL_EXPERIMENT_YEAR_CIVIL"
+
 
 def _fms(ys):
     '''연상기월법 — 연간→월간 시작 천간'''
@@ -2706,16 +2802,38 @@ def _fms(ys):
     raise ValueError(f'Invalid year stem: {ys}')
 
 
+def _wolwoon_term_boundaries(ey: int):
+    """
+    12 solar-節 starts for saju year ey (立春 ey → 立春 ey+1), plus end.
+
+    MONTH_BD degrees map to 寅..丑. 子=大雪 falls in Gregorian Dec of ey;
+    丑=小寒 falls in Gregorian Jan of ey+1 — must NOT use _term_deg(ey, 285),
+    which resolves to 小寒 of January ey (before 立春) and inverts 子 / stretches 丑.
+    """
+    ip0 = ipchun(ey)
+    ip1 = ipchun(ey + 1)
+    bds = []
+    for deg in MONTH_BD:
+        # Prefer the occurrence inside [立春 ey, 立春 ey+1).
+        cands = (_term_deg(ey - 1, deg), _term_deg(ey, deg), _term_deg(ey + 1, deg))
+        chosen = next((c for c in cands if ip0 <= c < ip1), None)
+        if chosen is None:
+            # Fallback: first term strictly after previous boundary (or ip0).
+            prev = bds[-1] if bds else ip0
+            after = sorted(c for c in cands if c > prev)
+            if not after:
+                raise RuntimeError(f"wolwoon term missing deg={deg} ey={ey}")
+            chosen = after[0]
+        bds.append(chosen)
+    bds.append(ip1)
+    return bds
+
+
 def build_wolwoon(now):
-    '''월운 12개월분 생성'''
+    '''월운 12개월분 생성 (節 경계; 子=大雪→小寒, 丑=小寒→立春)'''
     ey, ygz = _year_gz(now)
     ys = ygz[0]
-    bds = [_term_deg(ey, d) for d in MONTH_BD]
-    ip = ipchun(ey)
-    bds.sort()
-    si = min(range(len(bds)), key=lambda i: abs((bds[i] - ip).total_seconds()))
-    bds = bds[si:] + bds[:si]
-    bds.append(ipchun(ey + 1))
+    bds = _wolwoon_term_boundaries(ey)
     fs = _fms(ys)
     ssi = HEAVENLY_STEMS.index(fs)
     return [
@@ -2726,6 +2844,93 @@ def build_wolwoon(now):
         }
         for i in range(12)
     ]
+
+
+def historical_experiment_sewoon_gz(civil_year: int) -> str:
+    """Frozen V2 DY experiment path: civil-year sewoon (matches build_yearly_timeline)."""
+    return _sewoon_gz(int(civil_year))
+
+
+def live_active_sewoon_year(now) -> int:
+    """LIVE_ACTIVE_SEWOON: 立春-based saju year index."""
+    ey, _ = _year_gz(now)
+    return int(ey)
+
+
+def live_active_sewoon(now) -> Dict[str, Any]:
+    """Current Sewoon pillar window using 立春 → next 立春."""
+    ey, gz = _year_gz(now)
+    return {
+        "year": int(ey),
+        "ganzhi": gz,
+        "start": ipchun(ey).isoformat(),
+        "end": ipchun(ey + 1).isoformat(),
+        "boundary_policy": SEWOON_BOUNDARY_LIVE,
+    }
+
+
+def live_active_wolwoon(now) -> Dict[str, Any]:
+    """Current month pillar from solar-節 wolwoon for the live 立春 year."""
+    months = build_wolwoon(now)
+    for m in months:
+        s = datetime.fromisoformat(m["start"])
+        e = datetime.fromisoformat(m["end"])
+        if s <= now < e:
+            return {**m, "boundary_policy": "SOLAR_JEOL"}
+    # Exact end-of-year boundary → next 寅 of following saju year
+    last = months[-1]
+    if now == datetime.fromisoformat(last["end"]):
+        nxt = build_wolwoon(now + timedelta(seconds=1))[0]
+        return {**nxt, "boundary_policy": "SOLAR_JEOL"}
+    raise ValueError(f"now outside wolwoon span: {now.isoformat()}")
+
+
+def live_active_daewoon(dw_detail: List[Dict[str, Any]], now) -> Optional[Dict[str, Any]]:
+    """
+    Active Daewoon for live hierarchy: look up by LIVE 立春 year (not civil Jan 1).
+    Blocks themselves remain start_year/end_year from 起運 (unchanged policy).
+    """
+    if not dw_detail:
+        return None
+    ey = live_active_sewoon_year(now)
+    for d in dw_detail:
+        if int(d["start_year"]) <= ey < int(d["end_year"]):
+            return d
+    if ey < int(dw_detail[0]["start_year"]):
+        return dw_detail[0]
+    return dw_detail[-1]
+
+
+def live_hierarchy_at(now, r: Optional[Dict[str, Any]] = None,
+                     dw_detail: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
+    """
+    Natal → active Daewoon → active Sewoon → active Wolwoon for product/live context.
+    Does not alter HISTORICAL_EXPERIMENT_YEAR scoring.
+    """
+    sw = live_active_sewoon(now)
+    ww = live_active_wolwoon(now)
+    dw = live_active_daewoon(dw_detail or [], now) if dw_detail is not None else None
+    natal = None
+    if r is not None:
+        natal = {
+            "pillars": r.get("원국"),
+            "yongshin": r.get("용신"),
+            "geokguk": r.get("격국"),
+            "strength": r.get("신강신약"),
+        }
+    return {
+        "at": now.isoformat(),
+        "natal": natal,
+        "daewoon": dw,
+        "sewoon": sw,
+        "wolwoon": ww,
+        "policies": {
+            "sewoon_live": SEWOON_BOUNDARY_LIVE,
+            "sewoon_historical_experiment": SEWOON_BOUNDARY_HISTORICAL_EXPERIMENT,
+            "month": "SOLAR_JEOL",
+            "day_boundary": "DEFERRED_PHASE_4",
+        },
+    }
 
 
 # ── 성별/순역행 ───────────────────────────────
@@ -4507,28 +4712,15 @@ def build_daewoon_detail(r: Dict[str, Any]) -> List[Dict[str, Any]]:
         composite = _comp_result["score"]
         composite_breakdown = _comp_result["breakdown"]
 
-        # 도메인 점수 (원국 base ± 대운 보정)
+        # 도메인 점수 (원국 base ± 대운 보정) — 원국→대운만 reanchor
         base_dom = r["DomainScore"]["점수"].copy()
-        dom: Dict[str, float] = {}
-
-        for d in ("직업", "재물", "건강", "연애", "결혼"):
-            adj = 0.0
-            sens = _DOMAIN_YFIT_SENS.get(d, 1.0)
-            adj += float(yfit["용신부합"]) * 0.8 * sens
-            adj += float(yfit["희신부합"]) * 0.4 * sens
-            adj -= float(yfit["기신부합"]) * 0.8 * sens
-            adj -= float(yfit.get("구신부합", 0)) * 0.4 * sens
-
-            for tg in (tg_stem, tg_branch):
-                adj += _TG_DOM.get(tg, {}).get(d, 0.0) * _DOMAIN_TG_AMP
-
-            # 대운 기간 신살의 도메인 효과 (도메인별 변별력)
-            adj += _shinsal_dom_adj(gil + hyung, d)
-
-            # [v5] 도메인에서도 감쇠승수 적용 (과잉 penalty는 종합운에만)
-            adj += _UNSEONG_SCORE.get(unseong, 0) * 0.05 * _unseong_mult(unseong, verdict, geok_type)
-
-            dom[d] = _domain_soft_clamp(_domain_anchor(base_dom[d]) + adj)
+        uns_extra = _UNSEONG_SCORE.get(unseong, 0) * 0.05 * _unseong_mult(unseong, verdict, geok_type)
+        dom = _refine_domain_scores(
+            base_dom, yfit, [tg_stem, tg_branch], gil + hyung,
+            reanchor=True, soft_clamp=True,
+            extra_adj={d: uns_extra for d in ("직업", "재물", "건강", "연애", "결혼")},
+            **_DW_DOMAIN_W,
+        )
 
         dw_ypower = _calc_yongshin_power(yfit)
         dw_energy = _calc_energy_field(rels_w_orig, yong_info=yong, inc_stem=stem, inc_branch=branch,
@@ -4745,20 +4937,11 @@ def build_yearly_timeline(
             [sw_tg_stem, sw_tg_branch, dw["십성_천간"], dw["십성_지지"]],
         )
 
-        # 도메인 점수
-        dom: Dict[str, float] = {}
-        for d in ("직업", "재물", "건강", "연애", "결혼"):
-            base = dw["domainScore"].get(d, 5.0)
-            adj = 0.0
-            sens = _DOMAIN_YFIT_SENS.get(d, 1.0)
-            adj += float(sw_yfit["용신부합"]) * 0.5 * sens
-            adj += float(sw_yfit["희신부합"]) * 0.3 * sens
-            adj -= float(sw_yfit["기신부합"]) * 0.4 * sens
-            for tg in (sw_tg_stem, sw_tg_branch):
-                adj += _TG_DOM.get(tg, {}).get(d, 0.0) * _DOMAIN_TG_AMP
-            # 세운 기간 신살의 도메인 효과 (연도별 변별력의 핵심)
-            adj += _shinsal_dom_adj(sw_gil + sw_hyung, d)
-            dom[d] = _domain_soft_clamp(_domain_anchor(base) + adj)
+        # 도메인 점수 (대운 → 세운, 표시용 soft_clamp)
+        dom = _sewoon_domain_scores(
+            dw["domainScore"], sw_yfit, [sw_tg_stem, sw_tg_branch], sw_gil + sw_hyung,
+            soft_clamp=True,
+        )
 
         timeline.append({
             "year": year,
@@ -4993,6 +5176,16 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
     synergy = max(-5, min(5, rel_syn_mt * 0.7 + score_syn_mt * 0.3))
     sw_base_score = max(0, min(100, round(dw_t * 0.6 + sw_ind * 0.4 + synergy)))
 
+    # 세운 도메인 (월운 체인의 base) — soft_clamp=False 로 이중 클램프 완화
+    sw_yfit = _check_yongshin_fit(sw_s, sw_b, yong, ds)
+    sw_tg_stem = ten_god(ds, sw_s)
+    sw_tg_branch = branch_main_tg(ds, sw_b)
+    sw_gil, sw_hyung = _check_incoming_shinsal(sw_b, ds, yb, o_branches)
+    sw_domains = _sewoon_domain_scores(
+        dw["domainScore"], sw_yfit, [sw_tg_stem, sw_tg_branch], sw_gil + sw_hyung,
+        soft_clamp=False,
+    )
+
     # 연간 기준 월간 산출
     try:
         now_proxy = datetime(target_year, 6, 15, tzinfo=KST)
@@ -5158,21 +5351,11 @@ def build_monthly_timeline(r, dw_detail, target_year: int) -> List[Dict[str, Any
             ],
         )
 
-        # ── 도메인 점수 ──────────────────────
-        dom = {}
-        for d in ("직업", "재물", "건강", "연애", "결혼"):
-            base = dw["domainScore"].get(d, 5.0)
-            adj = 0.0
-            sens = _DOMAIN_YFIT_SENS.get(d, 1.0)
-            adj += float(m_yfit["용신부합"]) * 0.4 * sens
-            adj += float(m_yfit["희신부합"]) * 0.2 * sens
-            adj -= float(m_yfit["기신부합"]) * 0.3 * sens
-            for tg in (m_tg_stem, m_tg_branch):
-                adj += _TG_DOM.get(tg, {}).get(d, 0.0) * _DOMAIN_TG_AMP
-            # 월별 신살의 도메인 효과
-            adj += _shinsal_dom_adj(all_gil + all_hyung, d)
-
-            dom[d] = _domain_soft_clamp(_domain_anchor(base) + adj)
+        # ── 도메인 점수 (세운 raw → 월운 보정, 최종 soft_clamp) ──
+        dom = _refine_domain_scores(
+            sw_domains, m_yfit, [m_tg_stem, m_tg_branch], m_gil + m_hyung,
+            reanchor=False, soft_clamp=True, **_MW_DOMAIN_W,
+        )
 
         timeline.append({
             "month": month_num,
@@ -5358,9 +5541,35 @@ def _resolve_daily_upper_context(
     }
 
 
-def _domain_10_to_100(v: float) -> float:
-    """월운/대운 도메인(0~10) → 일운 UI 스케일(0~100)."""
-    return max(0.0, min(100.0, float(v) * 10.0))
+def _domain_10_to_100(v: float, apply_bias: bool = True) -> float:
+    """도메인(0~10) → UI/일운 스케일(0~100). 종합운과 겹쳐 볼 때 축을 맞추려 SCORE_BIAS 가산."""
+    x = float(v) * 10.0
+    if apply_bias:
+        x += _SCORE_BIAS
+    return max(0.0, min(100.0, x))
+
+
+# 차트/클라가 옛 페이로드를 구분하고 재생성할 때 쓰는 스키마 버전
+SCORE_SCHEMA_VERSION = "7.1-domain-chain"
+
+
+def civil_sexagenary_day(year: int, month: int, day: int) -> str:
+    """
+    Civil calendar date → 日柱 (ENGINE_POLICY for 일운).
+
+    Policy A: civil midnight / civil YYYY-MM-DD rollover — NOT 子時.
+    Aligned to sajupy/enrich natal day pillar for noon on the same civil date.
+    (Legacy JD epoch comment claimed 1983-01-27=甲子 but was +47 vs sajupy; corrected.)
+    """
+    y, m, d_val = int(year), int(month), int(day)
+    if m <= 2:
+        y -= 1
+        m += 12
+    jd = int(365.25 * (y + 4716)) + int(30.6001 * (m + 1)) + d_val - 1524.5
+    base_jd = 2445336.5
+    # Systematic align to sajupy civil-day sequence (see V2_DAY_CALENDAR_AUDIT.md)
+    day_offset = (int(jd - base_jd) - 47) % 60
+    return HEAVENLY_STEMS[day_offset % 10] + EARTHLY_BRANCHES[day_offset % 12]
 
 
 def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, Any]:
@@ -5368,20 +5577,13 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
     특정 날짜의 일진(日辰) 해석 (v6.5).
     최종점수 = 월운종합×DAY_BLEND_MW + 일운독립×DAY_BLEND_DW + 시너지
     일운독립은 세운/월운과 동일하게 용신 fit·상위운 관계·오행균형·병인해소·삼합을 반영.
+
+    Day boundary: civil YYYY-MM-DD (no 子時 rollover). Hour is not part of the API.
     """
     target_dt = datetime.strptime(target_date_str, "%Y-%m-%d")
 
-    # 율리우스 일수 기반 일진 산출
-    y, m, d_val = target_dt.year, target_dt.month, target_dt.day
-    if m <= 2:
-        y -= 1
-        m += 12
-    jd = int(365.25 * (y + 4716)) + int(30.6001 * (m + 1)) + d_val - 1524.5
-    base_jd = 2445336.5  # 1983-01-27 = 甲子日
-    day_offset = int(jd - base_jd) % 60
-    d_stem = HEAVENLY_STEMS[day_offset % 10]
-    d_branch = EARTHLY_BRANCHES[day_offset % 12]
-    d_pillar = d_stem + d_branch
+    d_pillar = civil_sexagenary_day(target_dt.year, target_dt.month, target_dt.day)
+    d_stem, d_branch = d_pillar[0], d_pillar[1]
 
     ds = r["원국"]["day"][0]
     db = r["원국"]["day"][1]
@@ -5543,7 +5745,8 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
     )
     d_unseong_score = _UNSEONG_SCORE.get(d_unseong, 0)
 
-    # ── 도메인: 월운(0~10) base + 일진 이벤트 보정 → 0~100 ──
+    # ── 도메인: 월운(0~10) base + 일진 보정 (연·월과 동일 레시피) → 0~100 ──
+    # SCORE_BIAS/이벤트 혼합을 쓰지 않아 차트 도메인(×10)과 스케일·의미가 맞음.
     _, _, rel_keys_o = _extract_rel_keys(d_rels_orig, d_unseong)
     _, _, rel_keys_dw = _extract_rel_keys(d_rels_dw, d_unseong)
     _, _, rel_keys_sw = _extract_rel_keys(d_rels_sw, d_unseong)
@@ -5558,32 +5761,32 @@ def build_daily_fortune(r: Dict[str, Any], target_date_str: str) -> Dict[str, An
         [tg_stem, tg_branch] + [t for t in dw_tgs if t],
     )
 
-    event_100 = {
-        "연애": float(_d_events.get("연애_결혼", 50)),
-        "재물": float(_d_events.get("재물_기회", 50)),
-        "학업": float(_d_events.get("학업_시험", 50)),
-        "직업": float(_d_events.get("이직_전환", 50)),
-        "건강": float(100 - _d_events.get("건강_주의", 50)),
-        "대인": float(100 - _d_events.get("대인_갈등", 50)),
-    }
     mw_dom = ctx["mw_domains"]
-    # 월운에 없는 학업·대인은 이벤트 비중을 높임
+    dom10 = _refine_domain_scores(
+        mw_dom, d_yfit, [tg_stem, tg_branch], d_gil + d_hyung,
+        reanchor=False, soft_clamp=True, **_DAY_DOMAIN_W,
+    )
+
+    def _d100(v10: float) -> int:
+        return int(max(0, min(100, round(_domain_10_to_100(v10)))))
+
+    love100 = _d100((dom10["연애"] + dom10["결혼"]) / 2.0)
+    job100 = _d100(dom10["직업"])
+    # 학업·대인: 월운에 없는 축 → 근접 도메인 + 이벤트 소폭 가산(혼합 비중·bias 없음)
+    study100 = int(max(0, min(100, round(
+        job100 + (float(_d_events.get("학업_시험", 50)) - 50.0) * 0.2
+    ))))
+    social100 = int(max(0, min(100, round(
+        love100 + (50.0 - float(_d_events.get("대인_갈등", 50))) * 0.2
+    ))))
+
     운세도메인 = {
-        "연애": _uplift_composite(
-            mw_w * _domain_10_to_100((mw_dom["연애"] + mw_dom["결혼"]) / 2.0)
-            + d_w * event_100["연애"]
-        ),
-        "재물": _uplift_composite(
-            mw_w * _domain_10_to_100(mw_dom["재물"]) + d_w * event_100["재물"]
-        ),
-        "직업": _uplift_composite(
-            mw_w * _domain_10_to_100(mw_dom["직업"]) + d_w * event_100["직업"]
-        ),
-        "건강": _uplift_composite(
-            mw_w * _domain_10_to_100(mw_dom["건강"]) + d_w * event_100["건강"]
-        ),
-        "학업": _uplift_composite(0.35 * _domain_10_to_100(mw_dom["직업"]) + 0.65 * event_100["학업"]),
-        "대인": _uplift_composite(0.35 * _domain_10_to_100(mw_dom["연애"]) + 0.65 * event_100["대인"]),
+        "연애": love100,
+        "재물": _d100(dom10["재물"]),
+        "직업": job100,
+        "건강": _d100(dom10["건강"]),
+        "학업": study100,
+        "대인": social100,
     }
 
     return {
@@ -5665,6 +5868,9 @@ def build_chart_payload(r, include_monthly_year: int = None):
             "strength": r["신강신약"]["판정"],
             "geokguk": r["격국"]["격국"],
             "geokgukType": r["격국"].get("격국유형", "정격"),
+            "scoreSchemaVersion": SCORE_SCHEMA_VERSION,
+            "scoreBias": _SCORE_BIAS,
+            "domainScale": "0-10-engine",
             "yongshin": {
                 "label": yong.get("용신", ""),
                 "element": yong.get("용신_오행", "")

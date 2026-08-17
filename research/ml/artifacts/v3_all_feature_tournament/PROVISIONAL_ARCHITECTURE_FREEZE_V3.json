@@ -1,0 +1,52 @@
+{
+  "version": "SAJU_ML_PROVISIONAL_ARCHITECTURE_FREEZE_V3",
+  "notebook_version": "SAJU_ML_ALL_FEATURE_TOURNAMENT_V3_20260815",
+  "created_at": "2026-08-15T19:31:35",
+  "status": "DISCOVERY_ARCHITECTURE_FROZEN_FOR_NEW_DEV_2",
+  "winner": "TENGOD_FIXED",
+  "reason": "No challenger met the predeclared improvement/stability rule.",
+  "discovery_pool": {
+    "V1_pairable_subjects": 23,
+    "V2_NEW_DEV_subjects": 70,
+    "combined_subjects": 93,
+    "NEW_CONFIRM_loaded": false
+  },
+  "winner_nested_metrics": {
+    "model": "TENGOD_FIXED",
+    "pairwise_mean": 0.5787320925771218,
+    "pairwise_median": 0.5488721804511278,
+    "pairwise_sd": 0.10946152167429378,
+    "pairwise_p10": 0.4759259259259259,
+    "pairwise_p90": 0.7512531328320802,
+    "hit_mean": 0.6038986354775828,
+    "selected_features_mean": 10.0,
+    "delta_vs_TENGOD": 0.0
+  },
+  "winner_parameters": {
+    "model": "Pairwise Logistic Regression",
+    "penalty": "l2",
+    "C": 0.3
+  },
+  "n_selected_features": 10,
+  "selected_features": [
+    "tengod__dw_group_peer",
+    "tengod__dw_group_output",
+    "tengod__dw_group_wealth",
+    "tengod__dw_group_officer",
+    "tengod__dw_group_resource",
+    "tengod__sw_group_peer",
+    "tengod__sw_group_output",
+    "tengod__sw_group_wealth",
+    "tengod__sw_group_officer",
+    "tengod__sw_group_resource"
+  ],
+  "feature_families": {
+    "tengod": 10
+  },
+  "integrity": {
+    "V1_corpus_sha256": "4d3de2a50de488580b4f19e411a05d3e331ab0223f57da1a2941dbfefb03df19",
+    "V2_NEW_DEV_sha256": "acc665b0a9525214a8ecc1c7302d399309a1969aabb7e77952f82e889f93b748",
+    "V1_3_extended_sha256": "f714165545f95b33329b7ac2d40a96d5a8fe74d12f40f661fcdb048cb0831123"
+  },
+  "next_rule": "Do not tune this architecture on NEW_DEV_2. Construct a completely new Career corpus, apply this frozen architecture once, and report external replication before opening any sealed confirmation set."
+}

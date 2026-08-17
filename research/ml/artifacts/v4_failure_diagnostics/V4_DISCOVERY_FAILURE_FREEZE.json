@@ -1,0 +1,31 @@
+{
+  "version": "V4_DISCOVERY_FAILURE_FREEZE_V1",
+  "created_at": "2026-08-16T19:46:38",
+  "source_notebook_version": "SAJU_ML_V4_FEATURE_MODEL_TOURNAMENT_R2_20260816",
+  "status": "V4_NO_ARCHITECTURE_SURVIVES_DISCOVERY_GATE",
+  "winner": null,
+  "reason": "No astrology architecture passed all predeclared V4 discovery gates.",
+  "hashes": {
+    "pairs": "129510f50bf64ee431a50ea72d458790d2f3e8cc1e5e2b89fd4966ac1eef9c74",
+    "target_decision": "3a5282f484c43c7b8eaf35b8cdbbbbcbcf05e0fb81889d28cf7aae75a2679b92",
+    "tournament_decision": "aa08cb2614ef7c02116630c97102908e3f4e5a33b1e444003d3b011b1e179258",
+    "gates": "cdf5318ca7d698c752022e1c928ec3e135ebfc67cea0e20c8e2dc5ae001199e3",
+    "leaderboard": "5b6dcc3a3b94e2209dbbeb7ddcac79291c775bf47653745a8a5f95da1fa903ca",
+    "bootstrap": "e2a3cff8c3573e6b4254273690a6a3d76c7b21cca53002d1e74c829afb61185c",
+    "origin": "79fa544e794b87b5fdb440f0bbe3a76b96c967e2cc8cc9c51a890cbe6f5af214"
+  },
+  "target": {
+    "n_pairs": 100,
+    "n_subjects": 69,
+    "target_decision_sha256": "3a5282f484c43c7b8eaf35b8cdbbbbcbcf05e0fb81889d28cf7aae75a2679b92",
+    "pairs_sha256": "129510f50bf64ee431a50ea72d458790d2f3e8cc1e5e2b89fd4966ac1eef9c74",
+    "origin_guard_required": true
+  },
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "rule": "Immutable failed discovery evidence. Do not retune a winner on this 100-pair target. Diagnostics may guide the design of a NEW development wave only."
+}

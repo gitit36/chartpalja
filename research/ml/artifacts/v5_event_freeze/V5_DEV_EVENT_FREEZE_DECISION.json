@@ -1,0 +1,10 @@
+{
+  "version": "V5_DEV_EVENT_FREEZE_DECISION_V1",
+  "status": "V5_DEV_EVENT_CORPUS_FROZEN_READY_FOR_LOCAL_PAIRING_NUISANCE_GATE",
+  "full_corpus_sha256": "1750c3481ba5f5a957c713b89bff4b58648e3c7f1706d1867795575640689fe4",
+  "eligible_corpus_sha256": "a125435a67afc56539b6bdebdf3c56ab02f7a551e472da3026454c51e2e06e87",
+  "manifest_sha256": "f34079c4d46fd8d38f9058ea64457a2e30f05dfc2bb71cc2cf4a6d2403a7139b",
+  "pairing_may_begin": true,
+  "astrology_generation_allowed": false,
+  "confirm_event_research_allowed": false
+}

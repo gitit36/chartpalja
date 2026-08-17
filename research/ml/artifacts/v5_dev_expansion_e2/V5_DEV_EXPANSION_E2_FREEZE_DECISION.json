@@ -1,0 +1,40 @@
+{
+  "version": "V5_DEV_EXPANSION_E2_FREEZE_DECISION_V1",
+  "notebook_version": "SAJU_ML_V5_DEV_EXPANSION_E2_ROSTER_FREEZE_20260817",
+  "created_at": "2026-08-17T06:19:50",
+  "status": "V5_DEV_EXPANSION_E2_ROSTER_FROZEN_READY_FOR_EVENT_COLLECTION",
+  "trigger_gate_status": "V5_COMBINED_PREPAIR_FEASIBILITY_FAIL_EXPANSION_E2_REQUIRED",
+  "n_subjects": 160,
+  "axis_counts": {
+    "COMPETITIVE": 40,
+    "PROJECT": 50,
+    "STATUS": 70
+  },
+  "roster_sha256": "0a6be64984c7f7c32037100b45ac41296f81616f4eecf42e49f4e1de3bf69d4c",
+  "worklist_sha256": "c3cd8c091d33d285b67c1ec7d8b1894cc4644de0547b490f0134a9c3a3246af9",
+  "candidate_supply_sha256": "8c414fb225ca61d05f3b1b0e6dd6a4c72c08b05114d8d5545b1c4c64e733d20b",
+  "combined_prepair_decision_sha256": "3d616d89df93906e88bc03c5ca9c814566fa08c48f5c2d13f3b3a392b40c8351",
+  "E1_roster_sha256": "76d262c64cc7a83cf6845e96627b8d3cab9be4278fec2c6f07572cc3d1b8e39e",
+  "E1_freeze_decision_sha256": "8b21ad8450a9c032a189fe68ffe9804baf7316113844fc399a284bbc223e2686",
+  "E2_protocol_sha256": "cbbf14e6b66e2048694d5897ff3a8b1aefb911f7cb97ecb883bcb5554f1920fc",
+  "selection_seed": 2026081704,
+  "rules": {
+    "exact_DOB_candidates_only": true,
+    "repaired_DEV_identity_reused": false,
+    "sealed_CONFIRM_identity_reused": false,
+    "E1_identity_reused": false,
+    "event_outcomes_used_for_membership": false,
+    "pairability_used_for_membership": false,
+    "pair_gap_used_for_membership": false,
+    "chronology_used_for_membership": false,
+    "astrology_used_for_membership": false,
+    "control_used_for_membership": false,
+    "project_oversampled_after_observed_deficit": false,
+    "axis_quotas_changed": false,
+    "confirm_remains_sealed": true
+  },
+  "event_collection_may_begin": true,
+  "pair_generation_allowed": false,
+  "astrology_generation_allowed": false,
+  "next_rule": "Collect E2 events under the same frozen bounded source-sweep axis contract. Do not inspect 1-5y pair gaps until E2 event corpus is independently frozen."
+}

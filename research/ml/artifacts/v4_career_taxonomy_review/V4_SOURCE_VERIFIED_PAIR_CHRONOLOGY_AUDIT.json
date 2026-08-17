@@ -1,0 +1,66 @@
+{
+  "pairs": 49,
+  "subjects": 46,
+  "positive_earlier_share_micro": 0.8367346938775511,
+  "positive_earlier_share_subject_macro": 0.8369565217391305,
+  "mean_abs_year_gap": 9.448979591836734,
+  "median_abs_year_gap": 5.0,
+  "by_axis": {
+    "COMPETITIVE": {
+      "pairs": 18,
+      "subjects": 17,
+      "positive_earlier_share": 0.7222222222222222,
+      "median_abs_year_gap": 3.0
+    },
+    "PROJECT": {
+      "pairs": 20,
+      "subjects": 19,
+      "positive_earlier_share": 0.95,
+      "median_abs_year_gap": 10.5
+    },
+    "RECOGNITION": {
+      "pairs": 4,
+      "subjects": 3,
+      "positive_earlier_share": 0.5,
+      "median_abs_year_gap": 9.5
+    },
+    "STATUS": {
+      "pairs": 7,
+      "subjects": 7,
+      "positive_earlier_share": 1.0,
+      "median_abs_year_gap": 5.0
+    }
+  },
+  "gap_sensitivity": {
+    "gap_le_1": {
+      "pairs": 8,
+      "subjects": 8,
+      "positive_earlier_share": 0.625
+    },
+    "gap_le_2": {
+      "pairs": 10,
+      "subjects": 10,
+      "positive_earlier_share": 0.6
+    },
+    "gap_le_3": {
+      "pairs": 16,
+      "subjects": 16,
+      "positive_earlier_share": 0.6875
+    },
+    "gap_le_5": {
+      "pairs": 26,
+      "subjects": 26,
+      "positive_earlier_share": 0.7692307692307693
+    },
+    "gap_le_7": {
+      "pairs": 29,
+      "subjects": 29,
+      "positive_earlier_share": 0.7931034482758621
+    },
+    "gap_le_10": {
+      "pairs": 34,
+      "subjects": 34,
+      "positive_earlier_share": 0.8235294117647058
+    }
+  }
+}

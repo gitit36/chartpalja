@@ -1,0 +1,1205 @@
+{
+  "measured_at": "2026-08-13T03:02:49",
+  "phase": "V2_DAY",
+  "validation_b_scored": false,
+  "production_v2_day_wired": false,
+  "parents": {
+    "DY": "V2_DY_B",
+    "Month": "M1_CONSERVATIVE",
+    "Month_status": "V2_MONTH_TIMING_ONLY"
+  },
+  "composition": "DayScore = clamp(M_parent + DailyDev)",
+  "calendar_audit": {
+    "policy": {
+      "choice": "A_CIVIL_MIDNIGHT",
+      "not_chosen": "B_ZI_SHI_ROLLOVER",
+      "reason": "Production 일운 API is civil YYYY-MM-DD; natal early_zi is birth-only school variant",
+      "neutral_lookup_time": "12:00 KST",
+      "helper": "civil_sexagenary_day"
+    },
+    "foundation_ok": true,
+    "legacy_bug_fixed": {
+      "issue": "build_daily_fortune JD epoch was +47 vs sajupy/enrich",
+      "fix": "civil_sexagenary_day aligns to sajupy; still civil midnight (not 子時)"
+    }
+  },
+  "date_freeze": {
+    "n_events": 163,
+    "n_positive": 101,
+    "n_negative": 62,
+    "n_subjects": 14,
+    "by_pool": {
+      "OLD_DEV": {
+        "n_events": 163,
+        "n_subjects": 14
+      },
+      "FRESH_A_DEV": {
+        "n_events": 0,
+        "n_subjects": 0
+      }
+    },
+    "sparse": true,
+    "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/V2_DAY_EVALUABLE_FREEZE.json"
+  },
+  "feature_duplication_audit": [
+    {
+      "feature": "day_month_relations_contextual",
+      "class": "NEW_DAY_INFORMATION",
+      "note": "PRIMARY Day↔Wolwoon timing"
+    },
+    {
+      "feature": "day_yongshin_fit_net",
+      "class": "RELATED_BUT_DIFFERENT_TIMESCALE",
+      "note": "Day pillar fit; not Month M1 month_yongshin_fit"
+    },
+    {
+      "feature": "day_fav_unfav_supply",
+      "class": "RELATED_BUT_DIFFERENT_TIMESCALE",
+      "note": "Day-pillar element supply"
+    },
+    {
+      "feature": "day_natal_relations_contextual",
+      "class": "NEW_DAY_INFORMATION",
+      "note": "Day↔natal; Month↔natal already in M — different pillar/timescale"
+    },
+    {
+      "feature": "day_sewoon_relations_contextual",
+      "class": "RELATED_BUT_DIFFERENT_TIMESCALE",
+      "note": "D2 only when nonredundant vs Day↔Month"
+    },
+    {
+      "feature": "day_daewoon_relations",
+      "class": "DUPLICATE",
+      "note": "Excluded from DailyDev (not proven independent)"
+    },
+    {
+      "feature": "event_intensity",
+      "class": "NEW_DAY_INFORMATION",
+      "note": "Explanation-only — not in DailyDev valence"
+    },
+    {
+      "feature": "M1 month features / G / B_trigger / D struct",
+      "class": "ALREADY_IN_MONTH/YEAR",
+      "note": "Excluded from DailyDev"
+    },
+    {
+      "feature": "legacy build_daily_fortune 종합",
+      "class": "DUPLICATE",
+      "note": "Reference only"
+    }
+  ],
+  "amplitudes": {
+    "CONSERVATIVE": 0.55,
+    "BALANCED": 0.9,
+    "EXPRESSIVE": 1.35
+  },
+  "weights": {
+    "day_month": 0.45,
+    "day_natal_struct": 0.3,
+    "day_natal_rel": 0.25,
+    "day_sewoon_d2": 0.12
+  },
+  "results": {
+    "D1_CONSERVATIVE": {
+      "candidate": "V2_DAY_LOCAL",
+      "cand_code": "D1",
+      "amplitude": "CONSERVATIVE",
+      "amp_value": 0.55,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.4785,
+        "window_pm1_hit": 0.865,
+        "window_pm3_hit": 1.0,
+        "pos_mean_DailyDev": -0.009,
+        "neg_mean_DailyDev": 0.019,
+        "pos_neg_sep": -0.0279,
+        "pos_mean_percentile": 0.4899,
+        "neg_mean_percentile": 0.5139,
+        "subject_hit_rate": 0.6429,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "sep": -0.1639,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "sep": -0.0999,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "sep": 0.0758,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "sep": 0.0176,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "sep": 0.1992,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "sep": -0.2251,
+            "hit": 0
+          },
+          {
+            "name": "Kamala Harris",
+            "sep": 0.0978,
+            "hit": 1
+          },
+          {
+            "name": "Al Gore",
+            "sep": 0.0509,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "sep": 0.1454,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "sep": -0.2964,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "sep": 0.0041,
+            "hit": 1
+          },
+          {
+            "name": "Björk",
+            "sep": -0.0955,
+            "hit": 0
+          },
+          {
+            "name": "윤석열",
+            "sep": 0.0646,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "sep": 0.0226,
+            "hit": 1
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_wolwoon_blocks": 2042,
+        "frac_median_abs_lt_0.12": 1.0,
+        "abs_DailyDev_p50": 0.1394,
+        "abs_DailyDev_p75": 0.2404,
+        "abs_DailyDev_p90": 0.3603,
+        "abs_DailyDev_p95": 0.4439,
+        "abs_DailyDev_max": 0.7087,
+        "abs_MonthlyDev_p90": 1.0507,
+        "abs_annual_dev_p90": 4.3236,
+        "day_over_month_p90_ratio": 0.3429,
+        "day_over_annual_p90_ratio": 0.0833,
+        "within_wolwoon_range_p50": 0.8328,
+        "adj_jump_p50": 0.2021,
+        "adj_jump_p90": 0.5028,
+        "adj_jump_p95": 0.5995,
+        "month_boundary_jump_p90": 0.3428,
+        "frac_cross_M_parent": 0.4918,
+        "saturation_frac": 0.0,
+        "dates_unique_ok": true,
+        "behavior_qa": {
+          "fav_day_in_hard_month": 308,
+          "hard_day_in_fav_month": 1093,
+          "fav_day_in_hard_sewoon": 316,
+          "hard_day_in_fav_sewoon": 1093,
+          "n_months": 2042
+        },
+        "fav_month_in_hard_D_flag": 0,
+        "fav_month_in_hard_D_note": "recorded from Month closure; D/Y not reopened"
+      }
+    },
+    "D1_BALANCED": {
+      "candidate": "V2_DAY_LOCAL",
+      "cand_code": "D1",
+      "amplitude": "BALANCED",
+      "amp_value": 0.9,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.4785,
+        "window_pm1_hit": 0.865,
+        "window_pm3_hit": 1.0,
+        "pos_mean_DailyDev": -0.0147,
+        "neg_mean_DailyDev": 0.031,
+        "pos_neg_sep": -0.0457,
+        "pos_mean_percentile": 0.4899,
+        "neg_mean_percentile": 0.5139,
+        "subject_hit_rate": 0.6429,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "sep": -0.2683,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "sep": -0.1635,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "sep": 0.1241,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "sep": 0.0288,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "sep": 0.3259,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "sep": -0.3683,
+            "hit": 0
+          },
+          {
+            "name": "Kamala Harris",
+            "sep": 0.16,
+            "hit": 1
+          },
+          {
+            "name": "Al Gore",
+            "sep": 0.0832,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "sep": 0.2379,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "sep": -0.4851,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "sep": 0.0067,
+            "hit": 1
+          },
+          {
+            "name": "Björk",
+            "sep": -0.1562,
+            "hit": 0
+          },
+          {
+            "name": "윤석열",
+            "sep": 0.1056,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "sep": 0.0369,
+            "hit": 1
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_wolwoon_blocks": 2042,
+        "frac_median_abs_lt_0.12": 1.0,
+        "abs_DailyDev_p50": 0.2282,
+        "abs_DailyDev_p75": 0.3934,
+        "abs_DailyDev_p90": 0.5895,
+        "abs_DailyDev_p95": 0.7263,
+        "abs_DailyDev_max": 1.1597,
+        "abs_MonthlyDev_p90": 1.0507,
+        "abs_annual_dev_p90": 4.3236,
+        "day_over_month_p90_ratio": 0.5611,
+        "day_over_annual_p90_ratio": 0.1363,
+        "within_wolwoon_range_p50": 1.3628,
+        "adj_jump_p50": 0.3308,
+        "adj_jump_p90": 0.8228,
+        "adj_jump_p95": 0.981,
+        "month_boundary_jump_p90": 0.561,
+        "frac_cross_M_parent": 0.4918,
+        "saturation_frac": 0.0,
+        "dates_unique_ok": true,
+        "behavior_qa": {
+          "fav_day_in_hard_month": 317,
+          "hard_day_in_fav_month": 1302,
+          "fav_day_in_hard_sewoon": 326,
+          "hard_day_in_fav_sewoon": 1293,
+          "n_months": 2042
+        },
+        "fav_month_in_hard_D_flag": 0,
+        "fav_month_in_hard_D_note": "recorded from Month closure; D/Y not reopened"
+      }
+    },
+    "D1_EXPRESSIVE": {
+      "candidate": "V2_DAY_LOCAL",
+      "cand_code": "D1",
+      "amplitude": "EXPRESSIVE",
+      "amp_value": 1.35,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.4785,
+        "window_pm1_hit": 0.865,
+        "window_pm3_hit": 1.0,
+        "pos_mean_DailyDev": -0.0221,
+        "neg_mean_DailyDev": 0.0465,
+        "pos_neg_sep": -0.0686,
+        "pos_mean_percentile": 0.4899,
+        "neg_mean_percentile": 0.5139,
+        "subject_hit_rate": 0.6429,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "sep": -0.4024,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "sep": -0.2453,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "sep": 0.1861,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "sep": 0.0431,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "sep": 0.4888,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "sep": -0.5525,
+            "hit": 0
+          },
+          {
+            "name": "Kamala Harris",
+            "sep": 0.24,
+            "hit": 1
+          },
+          {
+            "name": "Al Gore",
+            "sep": 0.1248,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "sep": 0.3569,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "sep": -0.7276,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "sep": 0.0101,
+            "hit": 1
+          },
+          {
+            "name": "Björk",
+            "sep": -0.2343,
+            "hit": 0
+          },
+          {
+            "name": "윤석열",
+            "sep": 0.1584,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "sep": 0.0554,
+            "hit": 1
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_wolwoon_blocks": 2042,
+        "frac_median_abs_lt_0.12": 1.0,
+        "abs_DailyDev_p50": 0.3422,
+        "abs_DailyDev_p75": 0.5901,
+        "abs_DailyDev_p90": 0.8843,
+        "abs_DailyDev_p95": 1.0895,
+        "abs_DailyDev_max": 1.7395,
+        "abs_MonthlyDev_p90": 1.0507,
+        "abs_annual_dev_p90": 4.3236,
+        "day_over_month_p90_ratio": 0.8416,
+        "day_over_annual_p90_ratio": 0.2045,
+        "within_wolwoon_range_p50": 2.0442,
+        "adj_jump_p50": 0.4961,
+        "adj_jump_p90": 1.2342,
+        "adj_jump_p95": 1.4715,
+        "month_boundary_jump_p90": 0.8415,
+        "frac_cross_M_parent": 0.4918,
+        "saturation_frac": 0.0,
+        "dates_unique_ok": true,
+        "behavior_qa": {
+          "fav_day_in_hard_month": 318,
+          "hard_day_in_fav_month": 1316,
+          "fav_day_in_hard_sewoon": 327,
+          "hard_day_in_fav_sewoon": 1304,
+          "n_months": 2042
+        },
+        "fav_month_in_hard_D_flag": 0,
+        "fav_month_in_hard_D_note": "recorded from Month closure; D/Y not reopened"
+      }
+    },
+    "D2_CONSERVATIVE": {
+      "candidate": "V2_DAY_CONTEXTUAL",
+      "cand_code": "D2",
+      "amplitude": "CONSERVATIVE",
+      "amp_value": 0.55,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.4601,
+        "window_pm1_hit": 0.8712,
+        "window_pm3_hit": 1.0,
+        "pos_mean_DailyDev": -0.0109,
+        "neg_mean_DailyDev": 0.0113,
+        "pos_neg_sep": -0.0221,
+        "pos_mean_percentile": 0.4946,
+        "neg_mean_percentile": 0.5087,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "sep": -0.1515,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "sep": -0.1,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "sep": 0.0911,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "sep": -0.0153,
+            "hit": 0
+          },
+          {
+            "name": "Chris Brown",
+            "sep": 0.233,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "sep": -0.1904,
+            "hit": 0
+          },
+          {
+            "name": "Kamala Harris",
+            "sep": 0.0841,
+            "hit": 1
+          },
+          {
+            "name": "Al Gore",
+            "sep": 0.069,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "sep": 0.1441,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "sep": -0.3053,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "sep": 0.0275,
+            "hit": 1
+          },
+          {
+            "name": "Björk",
+            "sep": -0.113,
+            "hit": 0
+          },
+          {
+            "name": "윤석열",
+            "sep": 0.0903,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "sep": 0.0004,
+            "hit": 1
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_wolwoon_blocks": 2042,
+        "frac_median_abs_lt_0.12": 1.0,
+        "abs_DailyDev_p50": 0.142,
+        "abs_DailyDev_p75": 0.2456,
+        "abs_DailyDev_p90": 0.3626,
+        "abs_DailyDev_p95": 0.4437,
+        "abs_DailyDev_max": 0.7369,
+        "abs_MonthlyDev_p90": 1.0507,
+        "abs_annual_dev_p90": 4.3236,
+        "day_over_month_p90_ratio": 0.3451,
+        "day_over_annual_p90_ratio": 0.0839,
+        "within_wolwoon_range_p50": 0.8381,
+        "adj_jump_p50": 0.2046,
+        "adj_jump_p90": 0.5043,
+        "adj_jump_p95": 0.6045,
+        "month_boundary_jump_p90": 0.4128,
+        "frac_cross_M_parent": 0.4922,
+        "saturation_frac": 0.0,
+        "dates_unique_ok": true,
+        "behavior_qa": {
+          "fav_day_in_hard_month": 308,
+          "hard_day_in_fav_month": 1114,
+          "fav_day_in_hard_sewoon": 316,
+          "hard_day_in_fav_sewoon": 1111,
+          "n_months": 2042
+        },
+        "fav_month_in_hard_D_flag": 0,
+        "fav_month_in_hard_D_note": "recorded from Month closure; D/Y not reopened"
+      }
+    },
+    "D2_BALANCED": {
+      "candidate": "V2_DAY_CONTEXTUAL",
+      "cand_code": "D2",
+      "amplitude": "BALANCED",
+      "amp_value": 0.9,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.4601,
+        "window_pm1_hit": 0.8712,
+        "window_pm3_hit": 1.0,
+        "pos_mean_DailyDev": -0.0178,
+        "neg_mean_DailyDev": 0.0184,
+        "pos_neg_sep": -0.0362,
+        "pos_mean_percentile": 0.4946,
+        "neg_mean_percentile": 0.5087,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "sep": -0.2479,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "sep": -0.1637,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "sep": 0.1491,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "sep": -0.025,
+            "hit": 0
+          },
+          {
+            "name": "Chris Brown",
+            "sep": 0.3813,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "sep": -0.3115,
+            "hit": 0
+          },
+          {
+            "name": "Kamala Harris",
+            "sep": 0.1375,
+            "hit": 1
+          },
+          {
+            "name": "Al Gore",
+            "sep": 0.113,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "sep": 0.2359,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "sep": -0.4996,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "sep": 0.0451,
+            "hit": 1
+          },
+          {
+            "name": "Björk",
+            "sep": -0.1849,
+            "hit": 0
+          },
+          {
+            "name": "윤석열",
+            "sep": 0.1478,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "sep": 0.0007,
+            "hit": 1
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_wolwoon_blocks": 2042,
+        "frac_median_abs_lt_0.12": 1.0,
+        "abs_DailyDev_p50": 0.2324,
+        "abs_DailyDev_p75": 0.4019,
+        "abs_DailyDev_p90": 0.5933,
+        "abs_DailyDev_p95": 0.726,
+        "abs_DailyDev_max": 1.2058,
+        "abs_MonthlyDev_p90": 1.0507,
+        "abs_annual_dev_p90": 4.3236,
+        "day_over_month_p90_ratio": 0.5647,
+        "day_over_annual_p90_ratio": 0.1372,
+        "within_wolwoon_range_p50": 1.3714,
+        "adj_jump_p50": 0.3348,
+        "adj_jump_p90": 0.8252,
+        "adj_jump_p95": 0.9891,
+        "month_boundary_jump_p90": 0.6754,
+        "frac_cross_M_parent": 0.4922,
+        "saturation_frac": 0.0,
+        "dates_unique_ok": true,
+        "behavior_qa": {
+          "fav_day_in_hard_month": 317,
+          "hard_day_in_fav_month": 1311,
+          "fav_day_in_hard_sewoon": 326,
+          "hard_day_in_fav_sewoon": 1301,
+          "n_months": 2042
+        },
+        "fav_month_in_hard_D_flag": 0,
+        "fav_month_in_hard_D_note": "recorded from Month closure; D/Y not reopened"
+      }
+    },
+    "D2_EXPRESSIVE": {
+      "candidate": "V2_DAY_CONTEXTUAL",
+      "cand_code": "D2",
+      "amplitude": "EXPRESSIVE",
+      "amp_value": 1.35,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.4601,
+        "window_pm1_hit": 0.8712,
+        "window_pm3_hit": 1.0,
+        "pos_mean_DailyDev": -0.0267,
+        "neg_mean_DailyDev": 0.0276,
+        "pos_neg_sep": -0.0544,
+        "pos_mean_percentile": 0.4946,
+        "neg_mean_percentile": 0.5087,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "sep": -0.3718,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "sep": -0.2455,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "sep": 0.2237,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "sep": -0.0374,
+            "hit": 0
+          },
+          {
+            "name": "Chris Brown",
+            "sep": 0.572,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "sep": -0.4672,
+            "hit": 0
+          },
+          {
+            "name": "Kamala Harris",
+            "sep": 0.2063,
+            "hit": 1
+          },
+          {
+            "name": "Al Gore",
+            "sep": 0.1695,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "sep": 0.3538,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "sep": -0.7493,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "sep": 0.0676,
+            "hit": 1
+          },
+          {
+            "name": "Björk",
+            "sep": -0.2773,
+            "hit": 0
+          },
+          {
+            "name": "윤석열",
+            "sep": 0.2218,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "sep": 0.0011,
+            "hit": 1
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_wolwoon_blocks": 2042,
+        "frac_median_abs_lt_0.12": 1.0,
+        "abs_DailyDev_p50": 0.3486,
+        "abs_DailyDev_p75": 0.6028,
+        "abs_DailyDev_p90": 0.89,
+        "abs_DailyDev_p95": 1.0891,
+        "abs_DailyDev_max": 1.8087,
+        "abs_MonthlyDev_p90": 1.0507,
+        "abs_annual_dev_p90": 4.3236,
+        "day_over_month_p90_ratio": 0.8471,
+        "day_over_annual_p90_ratio": 0.2058,
+        "within_wolwoon_range_p50": 2.0571,
+        "adj_jump_p50": 0.5022,
+        "adj_jump_p90": 1.2378,
+        "adj_jump_p95": 1.4837,
+        "month_boundary_jump_p90": 1.0131,
+        "frac_cross_M_parent": 0.4922,
+        "saturation_frac": 0.0,
+        "dates_unique_ok": true,
+        "behavior_qa": {
+          "fav_day_in_hard_month": 318,
+          "hard_day_in_fav_month": 1316,
+          "fav_day_in_hard_sewoon": 327,
+          "hard_day_in_fav_sewoon": 1304,
+          "n_months": 2042
+        },
+        "fav_month_in_hard_D_flag": 0,
+        "fav_month_in_hard_D_note": "recorded from Month closure; D/Y not reopened"
+      }
+    }
+  },
+  "winner": "D1_CONSERVATIVE",
+  "status": "V2_DAY_TIMING_ONLY",
+  "status_reason": "hierarchy/coherence pass but exact-date evidence insufficient for accuracy claim (sparse=True, n=163, hit=0.4785, sep=-0.0279)",
+  "mapped_events_n": 163,
+  "traces_sample": [
+    {
+      "name": "Donald Trump",
+      "label": "Ivana Trump와 결혼",
+      "polarity": "positive",
+      "date": "1977-04-07",
+      "M_parent": 61.506108000000005,
+      "day_pillar": "甲午",
+      "Day_Month": "",
+      "Day_Natal": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['반합(火반합:午戌)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지형(자형:午刑午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간합(甲己)', '천간정극(甲克己)', '지지합(午未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['천간합(甲己)', '천간정극(甲克己)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": -0.65,
+        "supply": 1.0,
+        "month_rel": 0.0,
+        "natal_rel": -0.37500000000000006,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "정관",
+        "branch": "편인"
+      },
+      "event_intensity": 1.5,
+      "raw": -0.06600000000000003,
+      "local_median": -0.17325000000000004,
+      "DailyDev": 0.05898750000000001,
+      "DayScore": 61.565095500000005,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "Trump Tower 오픈",
+      "polarity": "positive",
+      "date": "1983-11-30",
+      "M_parent": 68.5536098497066,
+      "day_pillar": "壬戌",
+      "Day_Month": "",
+      "Day_Natal": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['천간충(壬↯丙)', '천간편극(壬克丙)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['반합(火반합:戌午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['지지파(戌×未)', '지지형(지세지형:戌刑未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['원진(戌↔巳)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": -0.44999999999999996,
+        "supply": 0.0,
+        "month_rel": 0.0,
+        "natal_rel": -1.0,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "정재",
+        "branch": "겁재"
+      },
+      "event_intensity": 3.8,
+      "raw": -0.32425,
+      "local_median": -0.21325,
+      "DailyDev": -0.06105,
+      "DayScore": 68.49255984970661,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "The Art of the Deal 출간",
+      "polarity": "positive",
+      "date": "1987-11-01",
+      "M_parent": 64.7854729122066,
+      "day_pillar": "甲寅",
+      "Day_Month": "천간충(甲↯庚) 반합(火반합:寅戌)",
+      "Day_Natal": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['반합(火반합:寅戌)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['반합(火반합:寅午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간합(甲己)', '천간정극(甲克己)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['천간합(甲己)', '천간정극(甲克己)', '지지해(寅↦巳)', '지지형(무은지형:寅刑巳)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": 0.35,
+        "supply": 1.0,
+        "month_rel": 0.0,
+        "natal_rel": -0.325,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "정관",
+        "branch": "정관"
+      },
+      "event_intensity": 3.8,
+      "raw": 0.1115,
+      "local_median": -0.186375,
+      "DailyDev": 0.16383125,
+      "DayScore": 64.9493041622066,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "The Apprentice 첫 방송",
+      "polarity": "positive",
+      "date": "2004-01-08",
+      "M_parent": 60.91927675,
+      "day_pillar": "丙戌",
+      "Day_Month": "지지형(지세지형:戌刑丑)",
+      "Day_Natal": "{'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['반합(火반합:戌午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['지지파(戌×未)', '지지형(지세지형:戌刑未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['원진(戌↔巳)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": -1.1500000000000001,
+        "supply": -1.0,
+        "month_rel": -0.55,
+        "natal_rel": -1.0750000000000002,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "정인",
+        "branch": "겁재"
+      },
+      "event_intensity": 2.3,
+      "raw": -0.8410000000000001,
+      "local_median": -0.069875,
+      "DailyDev": -0.42411875000000004,
+      "DayScore": 60.495158,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "Melania Trump와 결혼",
+      "polarity": "positive",
+      "date": "2005-01-22",
+      "M_parent": 62.588279500000006,
+      "day_pillar": "丙午",
+      "Day_Month": "지지해(午↦丑) 원진(午↔丑)",
+      "Day_Natal": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['반합(火반합:午戌)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지형(자형:午刑午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['지지합(午未)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": -1.3,
+        "supply": 0.0,
+        "month_rel": -0.45,
+        "natal_rel": -0.7000000000000001,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "정인",
+        "branch": "편인"
+      },
+      "event_intensity": 2.3,
+      "raw": -0.5920000000000001,
+      "local_median": -0.06599999999999998,
+      "DailyDev": -0.2893000000000001,
+      "DayScore": 62.29897950000001,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "미국 대통령 당선",
+      "polarity": "positive",
+      "date": "2016-11-08",
+      "M_parent": 64.00342475,
+      "day_pillar": "甲午",
+      "Day_Month": "천간합(甲己) 천간정극(甲克己)",
+      "Day_Natal": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['반합(火반합:午戌)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지형(자형:午刑午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간합(甲己)', '천간정극(甲克己)', '지지합(午未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['천간합(甲己)', '천간정극(甲克己)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": -0.65,
+        "supply": 1.0,
+        "month_rel": 1.0,
+        "natal_rel": -0.37500000000000006,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "정관",
+        "branch": "편인"
+      },
+      "event_intensity": 1.5,
+      "raw": 0.384,
+      "local_median": -0.257875,
+      "DailyDev": 0.35303125,
+      "DayScore": 64.356456,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "label": "세금사기 유죄 판결",
+      "polarity": "negative",
+      "date": "2016-07-06",
+      "M_parent": 62.6890239002934,
+      "day_pillar": "己丑",
+      "Day_Month": "천간합(己甲) 지지해(丑↦午) 원진(丑↔午)",
+      "Day_Natal": "{'with': '월주(丙午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지해(丑↦午)', '원진(丑↔午)']} {'with': '일주(甲辰)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간합(己甲)', '지지파(丑×辰)']} {'with': '시주(癸酉)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['천간편극(己克癸)', '반합(金반합:丑酉)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": -0.35,
+        "supply": -1.0,
+        "month_rel": -0.35,
+        "natal_rel": -0.575,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "정재",
+        "branch": "정재"
+      },
+      "event_intensity": 2.1,
+      "raw": -0.494,
+      "local_median": -0.07274999999999998,
+      "DailyDev": -0.23168750000000002,
+      "DayScore": 62.4573364002934,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "label": "Barcelona 이적 요청 공개",
+      "polarity": "negative",
+      "date": "2020-08-25",
+      "M_parent": 64.9553040877934,
+      "day_pillar": "庚子",
+      "Day_Month": "천간충(庚↯甲) 천간편극(庚克甲) 반합(水반합:子申)",
+      "Day_Natal": "{'with': '연주(丁卯)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['지지형(무례지형:子刑卯)']} {'with': '월주(丙午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지충(子↯午)']} {'with': '일주(甲辰)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간충(庚↯甲)', '천간편극(庚克甲)', '반합(水반합:子辰)']} {'with': '시주(癸酉)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['지지파(子×酉)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": 1.35,
+        "supply": 1.0,
+        "month_rel": 0.0,
+        "natal_rel": -1.0,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "편관",
+        "branch": "정인"
+      },
+      "event_intensity": 3.8,
+      "raw": 0.10775000000000001,
+      "local_median": -0.019250000000000003,
+      "DailyDev": 0.06985000000000001,
+      "DayScore": 65.0251540877934,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "label": "Barcelona 결별·PSG 이적",
+      "polarity": "negative",
+      "date": "2021-08-05",
+      "M_parent": 63.62075190029339,
+      "day_pillar": "乙酉",
+      "Day_Month": "",
+      "Day_Natal": "{'with': '연주(丁卯)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['지지충(酉↯卯)']} {'with': '일주(甲辰)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['지지합(酉辰)']} {'with': '시주(癸酉)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['지지형(자형:酉刑酉)']}",
+      "Day_Sewoon": "N/A (D1)",
+      "valence": {
+        "fit_net": 1.0,
+        "supply": 1.0,
+        "month_rel": 0.0,
+        "natal_rel": -0.55,
+        "sw_rel": 0.0
+      },
+      "ten_god": {
+        "stem": "겁재",
+        "branch": "정관"
+      },
+      "event_intensity": 3.0,
+      "raw": 0.16249999999999998,
+      "local_median": -0.131625,
+      "DailyDev": 0.16176875,
+      "DayScore": 63.78252065029339,
+      "NUMERIC_SCORE_DRIVER": [
+        "month_rel",
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    }
+  ],
+  "hashes": {
+    "experiment_v2_day.py": "40f999119437f222",
+    "V2_DAY_EVALUABLE_FREEZE.json": "838de9396c6116b6"
+  },
+  "next": "FULL HIERARCHY QA (not another Day candidate phase)"
+}

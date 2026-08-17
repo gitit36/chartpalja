@@ -1,0 +1,9 @@
+{
+  "url": "https://www.emilianoadinolfi.it/pugilato-adinolfi-domenico/",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='www.emilianoadinolfi.it', port=443): Max retries exceeded with url: /pugilato-adinolfi-domenico/ (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1076)')))\"))"
+}

@@ -1,0 +1,4 @@
+preassigned_axis,n_subjects,n_female,birth_year_min,birth_year_max,female_share
+COMPETITIVE,3,1,1940,1969,0.3333333333333333
+PROJECT,8,4,1907,1954,0.5
+STATUS,33,2,1904,1970,0.06060606060606061

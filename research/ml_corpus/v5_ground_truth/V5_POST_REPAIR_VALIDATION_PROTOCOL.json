@@ -1,0 +1,29 @@
+{
+  "version": "V5_POST_REPAIR_VALIDATION_AND_SANITIZATION_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_IDENTITY_REPAIR_BEFORE_EVENT_RESEARCH_RESUMPTION",
+  "purpose": "Validate the repaired V5 roster, preserve unaffected Batch 1-3 event research, invalidate only previously researched slots whose identity changed, and emit a fixed re-research worklist before Batch 4 resumes.",
+  "validation": {
+    "selected_identity_rule": "Every DEV and CONFIRM selected slot must be PASS_EXACT_DOB.",
+    "subject_id_preserved": true,
+    "axis_preserved": true,
+    "batch_schedule_preserved": true,
+    "no_duplicate_identity_across_DEV_CONFIRM": true,
+    "event_content_not_used_for_membership_or_repair": true
+  },
+  "sanitization": {
+    "scope": "Existing Batch 1-3 results only",
+    "drop_rule": "Drop all prior event/audit rows whose subject_id is in V5_EVENT_RESEARCH_INVALIDATED_SLOTS.csv.",
+    "retain_rule": "Keep every other previously collected Batch 1-3 row unchanged.",
+    "never_relabel_or_edit_retained_events": true,
+    "do_not_use_event_polarity_or_pairability_for_sanitization": true
+  },
+  "resume_gate": {
+    "after_18C": "Only fixed re-research slots may be researched.",
+    "batch_04_may_resume": false,
+    "after_reresearch_merge_and_validation": "Batch 4 may resume using repaired Batch 04 subject file."
+  },
+  "confirm": {
+    "details_remain_sealed": true,
+    "do_not_export_confirm_details_for_user_return": true
+  }
+}

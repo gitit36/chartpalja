@@ -1,0 +1,166 @@
+{
+  "measured_at": "2026-08-12T02:37:06",
+  "phase": "B9A_alpha_diag_final",
+  "note": "1.25 was provisional until this diagnostic",
+  "alphas": [
+    0.75,
+    1.0,
+    1.25
+  ],
+  "material_eps": {
+    "std_sep": 0.05,
+    "rank": 0.02,
+    "hit_pp": 1.0
+  },
+  "selection_rule": [
+    "structural gates first",
+    "prioritize holdout directional/ranking/standardized separation",
+    "raw separation secondary (α-inflated)",
+    "if 1.25 not material vs 1.0 on normalized holdout → select 1.0",
+    "prefer smaller alpha when effectively tied"
+  ],
+  "results": [
+    {
+      "alpha": 0.75,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.4863,
+        "max_abs_block_mean_drift": 3.1147,
+        "median_block_median_drift": 0.0,
+        "annual_shock_sd": {
+          "p25": 2.26,
+          "p50": 2.628,
+          "p75": 3.787,
+          "p90": 4.875,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.3731,
+        "raw_sep_median": 3.1121,
+        "pooled_sd": 12.9764,
+        "std_sep": 0.1829,
+        "pairwise_good_gt_bad": 0.6002,
+        "auc_macro": 0.6002,
+        "auc_micro": 0.5578,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.8787,
+        "raw_sep_median": 0.7517,
+        "pooled_sd": 13.3353,
+        "std_sep": 0.1409,
+        "pairwise_good_gt_bad": 0.5933,
+        "auc_macro": 0.5933,
+        "auc_micro": 0.4968,
+        "n_eval": 5,
+        "n_persons": 5
+      }
+    },
+    {
+      "alpha": 1.0,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.6484,
+        "max_abs_block_mean_drift": 4.1529,
+        "median_block_median_drift": 0.0,
+        "annual_shock_sd": {
+          "p25": 3.013,
+          "p50": 3.504,
+          "p75": 5.049,
+          "p90": 6.5,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0
+      },
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.2087,
+        "raw_sep_median": 3.5897,
+        "pooled_sd": 13.3342,
+        "std_sep": 0.2406,
+        "pairwise_good_gt_bad": 0.6451,
+        "auc_macro": 0.6451,
+        "auc_micro": 0.5793,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3564,
+        "raw_sep_median": 1.0467,
+        "pooled_sd": 13.602,
+        "std_sep": 0.1732,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5032,
+        "n_eval": 5,
+        "n_persons": 5
+      }
+    },
+    {
+      "alpha": 1.25,
+      "structure": {
+        "gated": true,
+        "pop_mean_raw_drift": -0.8105,
+        "max_abs_block_mean_drift": 5.1912,
+        "median_block_median_drift": 0.0,
+        "annual_shock_sd": {
+          "p25": 3.767,
+          "p50": 4.38,
+          "p75": 6.311,
+          "p90": 8.125,
+          "n_blocks": 139
+        },
+        "raw_oor_rate": 0.0,
+        "display_saturation_rate": 0.0
+      },
+      "train": {
+        "hit_rate": 87.5,
+        "hit": "7/8",
+        "raw_sep_mean": 4.0442,
+        "raw_sep_median": 4.1996,
+        "pooled_sd": 13.7858,
+        "std_sep": 0.2934,
+        "pairwise_good_gt_bad": 0.6573,
+        "auc_macro": 0.6573,
+        "auc_micro": 0.5964,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.8342,
+        "raw_sep_median": 1.3417,
+        "pooled_sd": 13.9448,
+        "std_sep": 0.2032,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5116,
+        "n_eval": 5,
+        "n_persons": 5
+      }
+    }
+  ],
+  "decision": {
+    "alpha": 1.0,
+    "reason": "1.25 does not materially improve holdout std_sep/ranking/hit vs 1.0 (eps std_sep=0.05, rank=0.02, hit=1.0pp); prefer smaller alpha",
+    "compare_125_vs_100": {
+      "std_sep_gain": 0.03,
+      "pairwise_gain": 0.0,
+      "hit_gain_pp": 0.0,
+      "raw_sep_gain": 0.4778
+    }
+  }
+}

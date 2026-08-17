@@ -1,0 +1,22 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+1,1,V5DEVX_001,Bitti Bergamo,COMPETITIVE,V5_WIKIDATA_EXPANSION,1930-01-01,"Venice, Italy",male,Q3640511,,BittiBergamo1930
+1,2,V5DEVX_002,Ricky Tognazzi,PROJECT,V5_WIKIDATA_EXPANSION,1955-05-01,"Milan, Italy",male,Q367489,,RickyTognazzi1955
+1,3,V5DEVX_003,Michelle Kwan,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1980-07-07,"Los Angeles, CA, United States",female,Q235254,AA,MichelleKwan1980
+1,4,V5DEVX_004,Jérôme Le Banner,COMPETITIVE,V5_WIKIDATA_EXPANSION,1972-12-26,"Le Havre, France",male,Q726232,,JérômeLeBanner1972
+1,5,V5DEVX_005,Dany Dauberson,PROJECT,V5_WIKIDATA_EXPANSION,1925-01-16,"Le Creusot, France",female,Q297817,,DanyDauberson1925
+1,6,V5DEVX_006,Jacques Chaine,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1915-03-31,"Lyon, France",male,Q3158486,AA,JacquesChaine1915
+1,7,V5DEVX_007,Gianluca Rinaldini,COMPETITIVE,V5_WIKIDATA_EXPANSION,1959-08-10,"Faenza, Italy",male,Q5558152,,GianlucaRinaldini1959
+1,8,V5DEVX_008,Wolfgang Staudte,PROJECT,V5_WIKIDATA_EXPANSION,1906-10-09,"Saarbrücken, Germany",male,Q69159,,WolfgangStaudte1906
+1,9,V5DEVX_009,Tony Blair,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1953-05-06,"Edinburgh, United Kingdom",male,Q9545,AA,TonyBlair1953
+1,10,V5DEVX_010,Duilio Loi,COMPETITIVE,V5_WIKIDATA_EXPANSION,1929-04-19,"Trieste, Italy",male,Q328126,,DuilioLoi1929
+1,11,V5DEVX_011,Pier Paolo Pasolini,PROJECT,V5_WIKIDATA_EXPANSION,1922-03-05,"Bologna, Italy",male,Q25120,,PierPaoloPasolini1922
+1,12,V5DEVX_012,Kenneth Rush,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1910-01-17,"Walla Walla, WA, United States",male,Q822359,AA,KennethRush1910
+1,13,V5DEVX_013,Jean Le Sueur,COMPETITIVE,V5_WIKIDATA_EXPANSION,1910-06-24,"Dieppe, France",male,Q3173111,,JeanLesueur1910
+1,14,V5DEVX_014,Susan Boyle,PROJECT,V5_WIKIDATA_EXPANSION,1961-04-01,"Blackburn, Aberdeen, United Kingdom",female,Q83493,,SusanBoyle1961
+1,15,V5DEVX_015,François-Régis Bastide,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1926-07-01,"Biarritz, France",male,Q3083655,AA,FrancoisRegisBastide1926
+1,16,V5DEVX_016,Barry Gibb,PROJECT,V5_WIKIDATA_EXPANSION,1946-09-01,"Douglas, Isle of Man",male,Q296872,,BarryGibb1946
+1,17,V5DEVX_017,Artur Axmann,STATUS,V5_WIKIDATA_EXPANSION,1913-02-18,"Hagen, Germany",male,Q60574,,ArturAxmann1913
+1,18,V5DEVX_018,Ed Harris,PROJECT,V5_WIKIDATA_EXPANSION,1950-11-28,"Englewood Cliffs, NJ, United States",male,Q104791,,EdHarris1950
+1,19,V5DEVX_019,Ashley Olsen,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1986-06-13,"Los Angeles, CA, United States",female,Q1193914,AA,AshleyOlsen1986
+1,20,V5DEVX_020,Silvio Santos,STATUS,V5_WIKIDATA_EXPANSION,1930-12-12,"Rio de Janeiro, Brazil",male,Q1395208,,SilvioSantos1930
+1,21,V5DEVX_021,Stephen Breyer,STATUS,V5_WIKIDATA_EXPANSION,1938-08-15,"San Francisco, CA, United States",male,Q11124,,StephenBreyer1938

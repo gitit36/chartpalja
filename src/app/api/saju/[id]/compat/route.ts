@@ -1,19 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
 import { getUserFromSession } from '@/lib/auth/session'
-import { consumeUnits, getBalance } from '@/lib/payment/entitlement'
+import { getBalance } from '@/lib/payment/entitlement'
 import { READING_COST } from '@/lib/payment/products'
 import { buildCompatibilityReportPrompt } from '@/lib/ai/fortune-prompt'
 import { classifyCompat } from '@/lib/compat/classify'
 import { buildRelationshipSeries, buildCompatCard } from '@/lib/compat/relationship-score'
 import { canAccessPartnerEntry, parseRelationshipParam } from '@/lib/compat/access'
 import { compatStorageKey } from '@/lib/compat/relationship'
-import type { CompatReportEntry, RelationshipType } from '@/lib/compat/types'
+import type { CompatReportEntry } from '@/lib/compat/types'
 import type { SajuReportJson } from '@/types/saju-report'
 import { callGemini } from '@/lib/ai/gemini'
+import { generationLockKey, withGenerationLock } from '@/lib/ai/generation-lock'
+import { persistFortuneJsonAndConsume } from '@/lib/ai/persist-reading'
 
 function getGuestId(req: NextRequest): string | null {
   return req.headers.get('x-guest-id') || null
+}
+
+function readCompatFromFortune(
+  fortuneJson: unknown,
+  compatKey: string,
+  overlayId: string,
+  relationship: string,
+): CompatReportEntry | null {
+  if (!fortuneJson || typeof fortuneJson !== 'object') return null
+  const existingFortune = fortuneJson as Record<string, unknown>
+  const legacyKey = `compat_${overlayId}`
+  const existingCompat = (existingFortune[compatKey] ?? (
+    relationship === 'romance' ? existingFortune[legacyKey] : undefined
+  )) as CompatReportEntry | undefined
+  if (!existingCompat?.text) return null
+  return { ...existingCompat, relationship: existingCompat.relationship ?? relationship as CompatReportEntry['relationship'] }
 }
 
 export async function POST(
@@ -37,7 +55,6 @@ export async function POST(
     }
 
     const guestId = getGuestId(request)
-    // Phase 1: auth + fortune cache — skip both sajuReportJson blobs on cache hit
     const entry = await prisma.sajuEntry.findUnique({
       where: { id },
       select: {
@@ -64,16 +81,9 @@ export async function POST(
     }
 
     const compatKey = compatStorageKey(overlayId, relationship)
-    const existingFortune = (entry.fortuneJson && typeof entry.fortuneJson === 'object')
-      ? entry.fortuneJson as Record<string, unknown>
-      : {}
-    const legacyKey = `compat_${overlayId}`
-    const existingCompat = (existingFortune[compatKey] ?? (
-      relationship === 'romance' ? existingFortune[legacyKey] : undefined
-    )) as CompatReportEntry | undefined
-    if (existingCompat?.text) {
-      const normalized = { ...existingCompat, relationship: existingCompat.relationship ?? relationship }
-      return NextResponse.json({ compat: normalized, cached: true })
+    const cached = readCompatFromFortune(entry.fortuneJson, compatKey, overlayId, relationship)
+    if (cached) {
+      return NextResponse.json({ compat: cached, cached: true })
     }
 
     const balance = await getBalance(user.id)
@@ -84,73 +94,92 @@ export async function POST(
       )
     }
 
-    // Phase 2: load both reports only when generating
-    const [selfReport, partner] = await Promise.all([
-      prisma.sajuEntry.findUnique({ where: { id }, select: { sajuReportJson: true } }),
-      prisma.sajuEntry.findUnique({
-        where: { id: overlayId },
-        select: { sajuReportJson: true, name: true, gender: true, birthDate: true },
-      }),
-    ])
-    const reportA = selfReport?.sajuReportJson as SajuReportJson | null
-    if (!reportA) return NextResponse.json({ error: 'No saju data' }, { status: 400 })
-    if (!partner?.sajuReportJson) {
-      return NextResponse.json({ error: '비교 대상을 찾을 수 없습니다.' }, { status: 404 })
-    }
+    const lockKey = generationLockKey(['compat', id, overlayId, relationship])
+    const compatEntry = await withGenerationLock(lockKey, async () => {
+      // 락 진입 후 캐시 재확인 (동시 요청이 이미 저장했을 수 있음)
+      const fresh = await prisma.sajuEntry.findUnique({
+        where: { id },
+        select: { fortuneJson: true },
+      })
+      const again = readCompatFromFortune(fresh?.fortuneJson, compatKey, overlayId, relationship)
+      if (again) return again
 
-    const reportB = partner.sajuReportJson as SajuReportJson
-    const birthYearA = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
-    const birthYearB = partner.birthDate ? parseInt(partner.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
-    const compatType = classifyCompat(reportA, birthYearA, reportB, birthYearB)
+      const [selfReport, partner] = await Promise.all([
+        prisma.sajuEntry.findUnique({ where: { id }, select: { sajuReportJson: true } }),
+        prisma.sajuEntry.findUnique({
+          where: { id: overlayId },
+          select: { sajuReportJson: true, name: true, gender: true, birthDate: true },
+        }),
+      ])
+      const reportA = selfReport?.sajuReportJson as SajuReportJson | null
+      if (!reportA) throw new Error('No saju data')
+      if (!partner?.sajuReportJson) throw new Error('비교 대상을 찾을 수 없습니다.')
 
-    const prompt = buildCompatibilityReportPrompt(
-      reportA,
-      reportB,
-      entry.gender ?? 'male',
-      partner.gender ?? 'male',
-      entry.name ?? '나',
-      partner.name ?? '상대',
-      compatType,
-      relationship,
-      { birthYearA, birthYearB },
-    )
-    const text = (await callGemini(prompt, {
-      feature: 'compat',
-      meta: { entryId: id, overlayId, relationship },
-    })).trim()
+      const reportB = partner.sajuReportJson as SajuReportJson
+      const birthYearA = entry.birthDate ? parseInt(entry.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
+      const birthYearB = partner.birthDate ? parseInt(partner.birthDate.slice(0, 4), 10) : new Date().getFullYear() - 30
+      const compatType = classifyCompat(reportA, birthYearA, reportB, birthYearB)
 
-    // 관계 케미 스냅샷 — 두 리포트가 이미 로드된 이 시점에 계산해 저장하면
-    // 이후 카드 렌더 시 추가 fetch/지연이 전혀 없다.
-    const series = buildRelationshipSeries(reportA, birthYearA, reportB, birthYearB)
-    const card = buildCompatCard(series) ?? undefined
-    const flow = series.map(p => ({ y: p.year, s: p.score }))
+      const prompt = buildCompatibilityReportPrompt(
+        reportA,
+        reportB,
+        entry.gender ?? 'male',
+        partner.gender ?? 'male',
+        entry.name ?? '나',
+        partner.name ?? '상대',
+        compatType,
+        relationship,
+        { birthYearA, birthYearB },
+      )
+      const text = (await callGemini(prompt, {
+        feature: 'compat',
+        meta: { entryId: id, overlayId, relationship },
+      })).trim()
 
-    const compatEntry: CompatReportEntry = {
-      partnerId: overlayId,
-      partnerName: partner.name ?? '상대',
-      partnerGender: partner.gender ?? 'male',
-      relationship,
-      type: compatType,
-      text,
-      createdAt: new Date().toISOString(),
-      card,
-      flow,
-    }
+      const series = buildRelationshipSeries(reportA, birthYearA, reportB, birthYearB)
+      const card = buildCompatCard(series) ?? undefined
+      const flow = series.map(p => ({ y: p.year, s: p.score }))
 
-    const mergedFortune = { ...existingFortune, [compatKey]: compatEntry }
-    await prisma.sajuEntry.update({
-      where: { id },
-      data: { fortuneJson: mergedFortune as object },
+      const created: CompatReportEntry = {
+        partnerId: overlayId,
+        partnerName: partner.name ?? '상대',
+        partnerGender: partner.gender ?? 'male',
+        relationship,
+        type: compatType,
+        text,
+        createdAt: new Date().toISOString(),
+        card,
+        flow,
+      }
+
+      const existingFortune = (fresh?.fortuneJson && typeof fresh.fortuneJson === 'object')
+        ? fresh.fortuneJson as Record<string, unknown>
+        : {}
+      await persistFortuneJsonAndConsume({
+        entryId: id,
+        fortuneJson: { ...existingFortune, [compatKey]: created } as object,
+        userId: user.id,
+        cost: READING_COST.compat,
+        reason: 'use:compat',
+      })
+      return created
     })
-
-    await consumeUnits(user.id, READING_COST.compat, 'use:compat')
 
     return NextResponse.json({ compat: compatEntry })
   } catch (error) {
     console.error('Compat API error:', error)
     const raw = error instanceof Error ? error.message : 'Failed'
+    if (raw.includes('insufficient_ju')) {
+      return NextResponse.json({ error: '이용권이 부족합니다.', needed: READING_COST.compat }, { status: 402 })
+    }
+    if (raw === 'No saju data') {
+      return NextResponse.json({ error: 'No saju data' }, { status: 400 })
+    }
+    if (raw === '비교 대상을 찾을 수 없습니다.') {
+      return NextResponse.json({ error: raw }, { status: 404 })
+    }
     const isApiKeyError = raw.includes('GEMINI_API_KEY')
-    const msg = isApiKeyError ? raw : '궁합 해설 생성 중 문제가 발생했습니다.'
+    const msg = isApiKeyError ? raw : '궁합 해설 생성 중 문제가 발생했습니다. 잠시 후 다시 열어보면 이미 생성됐을 수 있어요.'
     return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

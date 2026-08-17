@@ -1,0 +1,1614 @@
+{
+  "version": "SAJU_ML_ENGINE_INPUTS_V2_R2",
+  "created_at": "2026-08-15",
+  "purpose": "X-side birth adapter for V2 new subjects. Contains no life-event labels.",
+  "rules": {
+    "mode": "public_runtime_longitude_correction",
+    "use_solar_time_in_BirthInput": false,
+    "reason": "Apply longitude correction before BirthInput, matching ML V1 Public DEV path and avoiding double correction.",
+    "labels_forbidden": true
+  },
+  "subjects": [
+    {
+      "subject_id": "MLV2_DEV_001",
+      "name": "Aaron Eckhart",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1968-03-12",
+        "time": "18:50",
+        "utc_offset": "-08:00",
+        "longitude": -122.16,
+        "latitude": 37.445,
+        "place": "Palo Alto, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_002",
+      "name": "Abigail Johnson",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1961-12-19",
+        "time": "14:45",
+        "utc_offset": "-05:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_003",
+      "name": "Jennifer Aniston",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1969-02-11",
+        "time": "22:22",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_004",
+      "name": "Jennifer Coolidge",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1961-06-01",
+        "time": "13:09",
+        "utc_offset": "-04:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_005",
+      "name": "Julia Roberts",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1967-10-28",
+        "time": "00:16",
+        "utc_offset": "-04:00",
+        "longitude": -84.392,
+        "latitude": 33.749,
+        "place": "Atlanta, GA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_006",
+      "name": "Julianne Moore",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1960-12-03",
+        "time": "17:53",
+        "utc_offset": "-05:00",
+        "longitude": -78.884,
+        "latitude": 35.054,
+        "place": "Fayetteville, NC, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_007",
+      "name": "Julie Delpy",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1969-12-21",
+        "time": "22:40",
+        "utc_offset": "+01:00",
+        "longitude": 2.351,
+        "latitude": 48.857,
+        "place": "Paris, France"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_008",
+      "name": "Jenna Elfman",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1971-09-30",
+        "time": "17:50",
+        "utc_offset": "-07:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_009",
+      "name": "Katy Perry",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1984-10-25",
+        "time": "07:58",
+        "utc_offset": "-07:00",
+        "longitude": -119.698,
+        "latitude": 34.421,
+        "place": "Santa Barbara, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_010",
+      "name": "Amber Tamblyn",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1983-05-14",
+        "time": "04:45",
+        "utc_offset": "-07:00",
+        "longitude": -118.492,
+        "latitude": 34.011,
+        "place": "Santa Monica, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_011",
+      "name": "Antonio Banderas",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1960-08-10",
+        "time": "21:00",
+        "utc_offset": "+01:00",
+        "longitude": -4.42,
+        "latitude": 36.72,
+        "place": "Malaga, Spain"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_012",
+      "name": "Billy Crystal",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1948-03-14",
+        "time": "07:48",
+        "utc_offset": "-05:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_013",
+      "name": "Billy Dee Williams",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1937-04-06",
+        "time": "21:51",
+        "utc_offset": "-05:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_014",
+      "name": "Steve Prefontaine",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1951-01-25",
+        "time": "08:05",
+        "utc_offset": "-08:00",
+        "longitude": -124.219,
+        "latitude": 43.368,
+        "place": "Coos Bay, OR, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_015",
+      "name": "Cameron Diaz",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1972-08-30",
+        "time": "02:53",
+        "utc_offset": "-07:00",
+        "longitude": -117.164,
+        "latitude": 32.716,
+        "place": "San Diego, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_016",
+      "name": "Carson Daly",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1973-06-22",
+        "time": "09:06",
+        "utc_offset": "-07:00",
+        "longitude": -118.492,
+        "latitude": 34.011,
+        "place": "Santa Monica, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_017",
+      "name": "Cher",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-05-20",
+        "time": "07:25",
+        "utc_offset": "-08:00",
+        "longitude": -115.566,
+        "latitude": 32.793,
+        "place": "El Centro, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_018",
+      "name": "Cheech Marin",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-07-13",
+        "time": "13:00",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_019",
+      "name": "Cindy Crawford",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1966-02-20",
+        "time": "14:08",
+        "utc_offset": "-06:00",
+        "longitude": -88.751,
+        "latitude": 41.93,
+        "place": "DeKalb, IL, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_020",
+      "name": "Cindy Sherman",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1954-01-19",
+        "time": "04:27",
+        "utc_offset": "-05:00",
+        "longitude": -74.202,
+        "latitude": 40.803,
+        "place": "Glen Ridge, NJ, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_021",
+      "name": "Clint Eastwood",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1930-05-31",
+        "time": "17:35",
+        "utc_offset": "-08:00",
+        "longitude": -122.42,
+        "latitude": 37.78,
+        "place": "San Francisco, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_022",
+      "name": "Glenn Close",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-03-19",
+        "time": "14:12",
+        "utc_offset": "-05:00",
+        "longitude": -73.629,
+        "latitude": 41.027,
+        "place": "Greenwich, CT, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_023",
+      "name": "Goldie Hawn",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1945-11-21",
+        "time": "09:20",
+        "utc_offset": "-05:00",
+        "longitude": -77.02,
+        "latitude": 38.892,
+        "place": "Washington, DC, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_024",
+      "name": "Gonzalo Higuain",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1987-12-10",
+        "time": "06:30",
+        "utc_offset": "+01:00",
+        "longitude": -4.487,
+        "latitude": 48.39,
+        "place": "Brest, France"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_025",
+      "name": "Gwyneth Paltrow",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1972-09-27",
+        "time": "17:25",
+        "utc_offset": "-07:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_026",
+      "name": "Helen Hunt",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1963-06-15",
+        "time": "12:55",
+        "utc_offset": "-07:00",
+        "longitude": -118.394,
+        "latitude": 34.022,
+        "place": "Culver City, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_027",
+      "name": "Jamie Lee Curtis",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1958-11-22",
+        "time": "08:37",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_028",
+      "name": "Jane Curtin",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-09-06",
+        "time": "14:00",
+        "utc_offset": "-04:00",
+        "longitude": -71.3,
+        "latitude": 42.293,
+        "place": "Wellesley, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_029",
+      "name": "Jeff Bagwell",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1968-05-27",
+        "time": "14:03",
+        "utc_offset": "-04:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_030",
+      "name": "Jodie Foster",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1962-11-19",
+        "time": "08:14",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_031",
+      "name": "Jon Bon Jovi",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1962-03-02",
+        "time": "20:45",
+        "utc_offset": "-05:00",
+        "longitude": -74.266,
+        "latitude": 40.52,
+        "place": "Perth Amboy, NJ, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_032",
+      "name": "Jon Huntsman",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1960-03-26",
+        "time": "11:58",
+        "utc_offset": "-08:00",
+        "longitude": -122.228,
+        "latitude": 37.485,
+        "place": "Redwood City, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_033",
+      "name": "Kevin Costner",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1955-01-18",
+        "time": "21:40",
+        "utc_offset": "-08:00",
+        "longitude": -118.199,
+        "latitude": 33.928,
+        "place": "Lynwood, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_034",
+      "name": "Kevin Kline",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-10-24",
+        "time": "09:11",
+        "utc_offset": "-06:00",
+        "longitude": -90.201,
+        "latitude": 38.635,
+        "place": "St. Louis, MO, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_035",
+      "name": "Kirsten Dunst",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1982-04-30",
+        "time": "13:00",
+        "utc_offset": "-04:00",
+        "longitude": -74.072,
+        "latitude": 40.072,
+        "place": "Point Pleasant, NJ, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_036",
+      "name": "Laura Dern",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1967-02-10",
+        "time": "07:48",
+        "utc_offset": "-08:00",
+        "longitude": -118.492,
+        "latitude": 34.011,
+        "place": "Santa Monica, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_037",
+      "name": "Laura Pausini",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1974-05-16",
+        "time": "17:00",
+        "utc_offset": "+01:00",
+        "longitude": 11.846,
+        "latitude": 44.361,
+        "place": "Solarolo, Italy"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_038",
+      "name": "Leonardo DiCaprio",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1974-11-11",
+        "time": "02:47",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_039",
+      "name": "Leonardo Del Vecchio",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1935-05-22",
+        "time": "03:30",
+        "utc_offset": "+01:00",
+        "longitude": 9.188,
+        "latitude": 45.464,
+        "place": "Milan, Italy"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_040",
+      "name": "Lisa Kudrow",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1963-07-30",
+        "time": "04:37",
+        "utc_offset": "-07:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_041",
+      "name": "Lisa Ling",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1973-08-30",
+        "time": "06:53",
+        "utc_offset": "-07:00",
+        "longitude": -121.328,
+        "latitude": 38.626,
+        "place": "Carmichael, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_042",
+      "name": "Mark Knopfler",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1949-08-12",
+        "time": "21:50",
+        "utc_offset": "+01:00",
+        "longitude": -4.257,
+        "latitude": 55.866,
+        "place": "Glasgow, UK"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_043",
+      "name": "Mark Spitz",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1950-02-10",
+        "time": "17:45",
+        "utc_offset": "-08:00",
+        "longitude": -121.002,
+        "latitude": 37.641,
+        "place": "Modesto, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_044",
+      "name": "Matthew McConaughey",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1969-11-04",
+        "time": "19:34",
+        "utc_offset": "-06:00",
+        "longitude": -99.787,
+        "latitude": 29.211,
+        "place": "Uvalde, TX, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_045",
+      "name": "Michelle Pfeiffer",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1958-04-29",
+        "time": "08:11",
+        "utc_offset": "-07:00",
+        "longitude": -117.87,
+        "latitude": 33.75,
+        "place": "Santa Ana, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_046",
+      "name": "Milton Nascimento",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1942-10-26",
+        "time": "18:00",
+        "utc_offset": "-03:00",
+        "longitude": -43.179,
+        "latitude": -22.901,
+        "place": "Rio de Janeiro, Brazil"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_047",
+      "name": "Paul Molitor",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1956-08-22",
+        "time": "03:23",
+        "utc_offset": "-05:00",
+        "longitude": -93.094,
+        "latitude": 44.944,
+        "place": "St. Paul, MN, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_048",
+      "name": "Robin Quivers",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1952-08-08",
+        "time": "05:30",
+        "utc_offset": "-04:00",
+        "longitude": -76.612,
+        "latitude": 39.29,
+        "place": "Baltimore, MD, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_049",
+      "name": "Sally Field",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-11-06",
+        "time": "04:23",
+        "utc_offset": "-08:00",
+        "longitude": -118.141,
+        "latitude": 34.15,
+        "place": "Pasadena, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_050",
+      "name": "Sigourney Weaver",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1949-10-08",
+        "time": "18:15",
+        "utc_offset": "-05:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_051",
+      "name": "Steve Martin",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1945-08-14",
+        "time": "05:54",
+        "utc_offset": "-05:00",
+        "longitude": -97.13,
+        "latitude": 31.557,
+        "place": "Waco, TX, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_052",
+      "name": "Steve Miller",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1943-10-05",
+        "time": "10:31",
+        "utc_offset": "-05:00",
+        "longitude": -87.909,
+        "latitude": 43.041,
+        "place": "Milwaukee, WI, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_053",
+      "name": "Steve Perry",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1949-01-22",
+        "time": "18:05",
+        "utc_offset": "-08:00",
+        "longitude": -119.646,
+        "latitude": 36.328,
+        "place": "Hanford, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_054",
+      "name": "Uma Thurman",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1970-04-29",
+        "time": "13:51",
+        "utc_offset": "-04:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_055",
+      "name": "Umberto Eco",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1932-01-05",
+        "time": "18:30",
+        "utc_offset": "+01:00",
+        "longitude": 8.617,
+        "latitude": 44.913,
+        "place": "Alessandria, Italy"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_056",
+      "name": "Denzel Washington",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1954-12-28",
+        "time": "00:09",
+        "utc_offset": "-05:00",
+        "longitude": -73.837,
+        "latitude": 40.913,
+        "place": "Mount Vernon, NY, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_057",
+      "name": "Diane Keaton",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-01-05",
+        "time": "02:49",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_058",
+      "name": "George Takei",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1937-04-20",
+        "time": "02:10",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_059",
+      "name": "Angus Young",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1955-03-31",
+        "time": "20:10",
+        "utc_offset": "+00:00",
+        "longitude": -4.257,
+        "latitude": 55.866,
+        "place": "Glasgow, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_060",
+      "name": "Serge Gainsbourg",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1928-04-02",
+        "time": "04:55",
+        "utc_offset": "+00:00",
+        "longitude": 2.351,
+        "latitude": 48.857,
+        "place": "Paris, France"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_061",
+      "name": "Al Jarreau",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-03-12",
+        "time": "01:20",
+        "utc_offset": "-06:00",
+        "longitude": -87.909,
+        "latitude": 43.041,
+        "place": "Milwaukee, WI, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_062",
+      "name": "Al Unser",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1939-05-29",
+        "time": "08:10",
+        "utc_offset": "-07:00",
+        "longitude": -106.649,
+        "latitude": 35.084,
+        "place": "Albuquerque, NM, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_063",
+      "name": "John Krasinski",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1979-10-20",
+        "time": "20:44",
+        "utc_offset": "-04:00",
+        "longitude": -71.212,
+        "latitude": 42.338,
+        "place": "Newton, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_064",
+      "name": "Steve Fossett",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1944-04-22",
+        "time": "01:58",
+        "utc_offset": "-05:00",
+        "longitude": -88.819,
+        "latitude": 35.614,
+        "place": "Jackson, TN, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_065",
+      "name": "Ann Jillian",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1950-01-29",
+        "time": "14:19",
+        "utc_offset": "-05:00",
+        "longitude": -71.105,
+        "latitude": 42.365,
+        "place": "Cambridge, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_066",
+      "name": "Mark Hamill",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1951-09-25",
+        "time": "14:43",
+        "utc_offset": "-07:00",
+        "longitude": -122.272,
+        "latitude": 37.805,
+        "place": "Oakland, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_067",
+      "name": "John Nash",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1928-06-13",
+        "time": "07:00",
+        "utc_offset": "-04:00",
+        "longitude": -81.223,
+        "latitude": 37.27,
+        "place": "Bluefield, WV, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_068",
+      "name": "Chris Evert",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1954-12-21",
+        "time": "04:30",
+        "utc_offset": "-05:00",
+        "longitude": -80.144,
+        "latitude": 26.124,
+        "place": "Fort Lauderdale, FL, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_069",
+      "name": "Roberta Flack",
+      "source_pool": "NEW_DEV",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1937-02-10",
+        "time": "06:30",
+        "utc_offset": "-05:00",
+        "longitude": -82.55,
+        "latitude": 35.596,
+        "place": "Asheville, NC, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_DEV_070",
+      "name": "Steve Forbes",
+      "source_pool": "NEW_DEV",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-07-18",
+        "time": "01:35",
+        "utc_offset": "-04:00",
+        "longitude": -74.482,
+        "latitude": 40.797,
+        "place": "Morristown, NJ, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_001",
+      "name": "Steve Jobs",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1955-02-24",
+        "time": "19:15",
+        "utc_offset": "-08:00",
+        "longitude": -122.42,
+        "latitude": 37.78,
+        "place": "San Francisco, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_002",
+      "name": "Richard Nixon",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1913-01-09",
+        "time": "21:35",
+        "utc_offset": "-08:00",
+        "longitude": -117.824,
+        "latitude": 33.889,
+        "place": "Yorba Linda, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_003",
+      "name": "Jimmy Carter",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1924-10-01",
+        "time": "07:00",
+        "utc_offset": "-05:00",
+        "longitude": -84.394,
+        "latitude": 32.034,
+        "place": "Plains, GA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_004",
+      "name": "John McCain",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1936-08-29",
+        "time": "18:25",
+        "utc_offset": "-05:00",
+        "longitude": -79.807,
+        "latitude": 8.875,
+        "place": "El Coco, La Chorrera, Panama"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_005",
+      "name": "Muhammad Ali",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1942-01-17",
+        "time": "18:35",
+        "utc_offset": "-05:00",
+        "longitude": -85.654,
+        "latitude": 38.199,
+        "place": "Louisville, KY, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_006",
+      "name": "Serena Williams",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1981-09-26",
+        "time": "20:28",
+        "utc_offset": "-04:00",
+        "longitude": -83.946,
+        "latitude": 43.42,
+        "place": "Saginaw, MI, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_007",
+      "name": "Venus Williams",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1980-06-17",
+        "time": "14:12",
+        "utc_offset": "-07:00",
+        "longitude": -118.199,
+        "latitude": 33.928,
+        "place": "Lynwood, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_008",
+      "name": "Steffi Graf",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1969-06-14",
+        "time": "04:40",
+        "utc_offset": "+01:00",
+        "longitude": 8.477,
+        "latitude": 49.485,
+        "place": "Mannheim, Germany"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_009",
+      "name": "Jimi Hendrix",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1942-11-27",
+        "time": "10:15",
+        "utc_offset": "-07:00",
+        "longitude": -122.33,
+        "latitude": 47.603,
+        "place": "Seattle, WA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_010",
+      "name": "Richard Pryor",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-12-01",
+        "time": "13:02",
+        "utc_offset": "-06:00",
+        "longitude": -89.574,
+        "latitude": 40.746,
+        "place": "Peoria Heights, IL, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_011",
+      "name": "Ryan Leaf",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1976-05-15",
+        "time": "09:59",
+        "utc_offset": "-06:00",
+        "longitude": -111.306,
+        "latitude": 47.506,
+        "place": "Great Falls, MT, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_012",
+      "name": "Chris Noth",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1954-11-13",
+        "time": "00:59",
+        "utc_offset": "-06:00",
+        "longitude": -89.385,
+        "latitude": 43.074,
+        "place": "Madison, WI, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_013",
+      "name": "Tatum O'Neal",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1963-11-05",
+        "time": "03:38",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_014",
+      "name": "Chris Farley",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1964-02-15",
+        "time": "15:34",
+        "utc_offset": "-06:00",
+        "longitude": -89.385,
+        "latitude": 43.074,
+        "place": "Madison, WI, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_015",
+      "name": "Roberto Benigni",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1952-10-27",
+        "time": "13:00",
+        "utc_offset": "+01:00",
+        "longitude": 11.916,
+        "latitude": 43.342,
+        "place": "Castiglion Fiorentino, Italy"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_016",
+      "name": "Steve Carell",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1962-08-16",
+        "time": "08:59",
+        "utc_offset": "-04:00",
+        "longitude": -71.355,
+        "latitude": 42.459,
+        "place": "Concord, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_017",
+      "name": "Angelina Jolie",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1975-06-04",
+        "time": "09:09",
+        "utc_offset": "-07:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_018",
+      "name": "Tom Hanks",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1956-07-09",
+        "time": "11:17",
+        "utc_offset": "-07:00",
+        "longitude": -122.031,
+        "latitude": 37.979,
+        "place": "Concord, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_019",
+      "name": "John Fogerty",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1945-05-28",
+        "time": "19:28",
+        "utc_offset": "-07:00",
+        "longitude": -122.27,
+        "latitude": 37.869,
+        "place": "Berkeley, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_020",
+      "name": "Emeril Lagasse",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1959-10-15",
+        "time": "07:40",
+        "utc_offset": "-04:00",
+        "longitude": -71.155,
+        "latitude": 41.701,
+        "place": "Fall River, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_021",
+      "name": "Raquel Welch",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-09-05",
+        "time": "14:04",
+        "utc_offset": "-05:00",
+        "longitude": -87.642,
+        "latitude": 41.501,
+        "place": "Chicago Heights, IL, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_022",
+      "name": "Ted Danson",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-12-29",
+        "time": "22:58",
+        "utc_offset": "-08:00",
+        "longitude": -117.164,
+        "latitude": 32.716,
+        "place": "San Diego, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_023",
+      "name": "Al Pacino",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-04-25",
+        "time": "11:02",
+        "utc_offset": "-05:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_024",
+      "name": "George W. Bush",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-07-06",
+        "time": "07:26",
+        "utc_offset": "-04:00",
+        "longitude": -72.924,
+        "latitude": 41.308,
+        "place": "New Haven, CT, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_025",
+      "name": "Elvis Presley",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1935-01-08",
+        "time": "04:35",
+        "utc_offset": "-06:00",
+        "longitude": -88.703,
+        "latitude": 34.257,
+        "place": "Tupelo, MS, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_026",
+      "name": "Steve Wozniak",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1950-08-11",
+        "time": "09:45",
+        "utc_offset": "-07:00",
+        "longitude": -121.888,
+        "latitude": 37.335,
+        "place": "San Jose, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_027",
+      "name": "Jimmy Connors",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1952-09-02",
+        "time": "10:30",
+        "utc_offset": "-05:00",
+        "longitude": -90.155,
+        "latitude": 38.623,
+        "place": "East Saint Louis, IL, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_028",
+      "name": "Chris Evans",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1981-06-13",
+        "time": "18:16",
+        "utc_offset": "-04:00",
+        "longitude": -71.413,
+        "latitude": 42.383,
+        "place": "Sudbury, MA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_029",
+      "name": "Taylor Hackford",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1944-12-31",
+        "time": "21:04",
+        "utc_offset": "-07:00",
+        "longitude": -119.698,
+        "latitude": 34.421,
+        "place": "Santa Barbara, CA, USA"
+      }
+    },
+    {
+      "subject_id": "MLV2_CFM_030",
+      "name": "Patrick Roy",
+      "source_pool": "NEW_CONFIRM",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1965-10-05",
+        "time": "11:07",
+        "utc_offset": "-04:00",
+        "longitude": -71.207,
+        "latitude": 46.814,
+        "place": "Quebec City, QC, Canada"
+      }
+    }
+  ],
+  "revision_note": "Engine-range QA: all birth years must be within sajupy 1900–2100."
+}

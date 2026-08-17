@@ -5,6 +5,7 @@ import type { ChartDatum, TransitionYear, ThreeYearContext, LifetimeSummary } fr
 import { extractTransitionYears, extract3YearContext, extractLifetimeSummary } from '@/lib/saju/life-chart-data'
 import { formatTipsForPrompt, selectSajuTips } from '@/lib/ai/saju-tip-cards'
 import { calcManAgeOrYearDiff, manAgeInCalendarYear } from '@/lib/saju/man-age'
+import { domain10To100 } from '@/lib/saju/score-scale'
 
 const TEN_GOD_KR: Record<string, string> = {
   "比肩": "비견", "劫財": "겁재", "食神": "식신", "傷官": "상관",
@@ -13,6 +14,18 @@ const TEN_GOD_KR: Record<string, string> = {
 }
 
 function tgKr(tg: string): string { return TEN_GOD_KR[tg] ?? tg }
+
+/** 엔진 연·월 도메인(0~10) → 종합운과 같은 0~100 표기 (SCORE_BIAS 포함) */
+function domainOn100(v: number): number {
+  return domain10To100(v)
+}
+
+function formatDomainParts(parts: Array<[string, number | null | undefined]>): string {
+  return parts
+    .filter(([, v]) => v != null && !Number.isNaN(v))
+    .map(([label, v]) => `${label} ${domainOn100(v as number)}`)
+    .join(', ')
+}
 
 const PILLAR_NAMES = ['연주', '월주', '일주', '시주'] as const
 
@@ -442,7 +455,10 @@ function extractCoreData(report: SajuReportJson, opts?: { birthYear?: number }) 
   const domainRaw = report.DomainScore as Record<string, unknown> | undefined
   const domainScores = domainRaw?.점수 as Record<string, number> | undefined
   const domainStr = domainScores
-    ? Object.entries(domainScores).map(([k, v]) => `${k}: ${v}`).join(', ') : ''
+    ? Object.entries(domainScores)
+        .map(([k, v]) => `${k}: ${domainOn100(Number(v))}`)
+        .join(', ')
+    : ''
 
   const daewoon = report.대운?.대운기둥10
   const inp = report.입력정보 ?? {}
@@ -593,7 +609,7 @@ ${top.map(t => `- ${t.year}년(만 ${t.age}세): ${t.reason}`).join('\n')}`
 ## 올해(${currentYear}년) 상세
 - ★★ ${scoreFraming}
 - 세운: ${cy.sewoonPillar} / 천간 ${cy.sewoonTgStem}(${cy.sewoonStemElement}), 지지 ${cy.sewoonTgBranch}(${cy.sewoonBranchElement}), 12운성 ${cy.sewoon12unseong}
-- 영역별: 직업 ${cy.domainJob}, 재물 ${cy.domainWealth}, 건강 ${cy.domainHealth}, 연애 ${cy.domainLove}, 결혼 ${cy.domainMarriage}
+- 영역별(0~100, 종합과 동일 스케일): 직업 ${domainOn100(cy.domainJob)}, 재물 ${domainOn100(cy.domainWealth)}, 건강 ${domainOn100(cy.domainHealth)}, 연애 ${domainOn100(cy.domainLove)}, 결혼 ${domainOn100(cy.domainMarriage)}
 - 에너지장: ${cy.energyTotal.toFixed(1)}(${cy.energyDirection >= 0 ? '긍정' : '도전'} ${Math.abs(cy.energyDirection).toFixed(1)}) / 용신력 ${cy.yongshinPower} / 균형도 ${cy.ohangBalance.toFixed(2)}
 - 십성 TOP3: ${tengoStr}
 - 관계: 원국↔세운 ${cy.sewoonRelsOrig} / 일주↔세운 ${cy.sewoonIljuRel}
@@ -897,13 +913,13 @@ export function buildYearSummaryPrompt(
   const d = extractCoreData(report, opts)
   const age = manAgeInCalendarYear(yearData.year, d.birthYear)
 
-  const domainStr = [
-    yearData.domainJob != null ? `직업 ${yearData.domainJob}` : '',
-    yearData.domainWealth != null ? `재물 ${yearData.domainWealth}` : '',
-    yearData.domainHealth != null ? `건강 ${yearData.domainHealth}` : '',
-    yearData.domainLove != null ? `연애 ${yearData.domainLove}` : '',
-    yearData.domainMarriage != null ? `결혼 ${yearData.domainMarriage}` : '',
-  ].filter(Boolean).join(', ')
+  const domainStr = formatDomainParts([
+    ['직업', yearData.domainJob],
+    ['재물', yearData.domainWealth],
+    ['건강', yearData.domainHealth],
+    ['연애', yearData.domainLove],
+    ['결혼', yearData.domainMarriage],
+  ])
   const evtParts = [
     (yearData.eventCareer ?? 0) > 40 ? `이직 ${yearData.eventCareer}%` : '',
     (yearData.eventLove ?? 0) > 40 ? `연애 ${yearData.eventLove}%` : '',
@@ -935,7 +951,7 @@ export function buildYearSummaryPrompt(
 - 종합점수: ${yearData.score}점 (대운기반 ${yearData.trend ?? '?'}점) / 시즌: ${yearData.seasonTag ?? '?'} ${yearData.seasonEmoji ?? ''}
 - 세운: ${yearData.sewoonPillar ? pillarToHangul(yearData.sewoonPillar) : '?'} (오행: ${yearData.sewoonStemElement ?? '?'}/${yearData.sewoonBranchElement ?? '?'}), 십성: 천간${yearData.sewoonTgStem ?? '?'}/지지${yearData.sewoonTgBranch ?? '?'}, 12운성: ${yearData.sewoon12unseong ?? '?'}
 - 대운: ${yearData.daewoonPillar ? pillarToHangul(yearData.daewoonPillar) : '?'} ${yearData.grade ?? ''}
-- 영역별: ${domainStr || '정보 없음'}
+- 영역별(0~100): ${domainStr || '정보 없음'}
 - 에너지: ${yearData.energyTotal?.toFixed(1) ?? '?'}(${(yearData.energyDirection ?? 0) >= 0 ? '긍정' : '도전'}) / 용신력 ${yearData.yongshinPower?.toFixed(2) ?? '?'}
 - 관계: 원국↔세운 ${yearData.sewoonRelsOrig ?? '?'} / 일주↔세운 ${yearData.sewoonIljuRel ?? '?'} / 대운↔세운 ${yearData.sewoonRelsDw ?? '?'}
 - 신살: 길${yearData.gilshin ?? '없음'} / 흉${yearData.hyungshal ?? '없음'}${evtParts ? `\n- 이벤트: ${evtParts}` : ''}
@@ -989,13 +1005,13 @@ export function buildMonthlySummaryPrompt(
 
   const monthLines = monthlyData.map(md => {
     const bdStr = formatBreakdownTop3(md.breakdown)
-    const domParts = [
-      md.domainJob != null ? `직업${md.domainJob}` : '',
-      md.domainWealth != null ? `재물${md.domainWealth}` : '',
-      md.domainHealth != null ? `건강${md.domainHealth}` : '',
-      md.domainLove != null ? `연애${md.domainLove}` : '',
-      md.domainMarriage != null ? `결혼${md.domainMarriage}` : '',
-    ].filter(Boolean).join('/')
+    const domParts = formatDomainParts([
+      ['직업', md.domainJob],
+      ['재물', md.domainWealth],
+      ['건강', md.domainHealth],
+      ['연애', md.domainLove],
+      ['결혼', md.domainMarriage],
+    ]).replace(/, /g, '/')
     const trStr = formatTrineHits(md.trineHits as TrineHit[] | undefined)
     const gmStr = formatGongmang(md.gongmangFactors as GongmangFactors | undefined)
     const hgStr = formatHaegong((md as unknown as Record<string, unknown>).haegong as Parameters<typeof formatHaegong>[0])
@@ -1184,10 +1200,10 @@ export function buildRangeSummaryPrompt(
 
   const yearLines = yearDataArr.map(yd => {
     const age = manAgeInCalendarYear(yd.year, d.birthYear)
-    const domParts = [
-      yd.domainJob != null ? `직업${yd.domainJob}` : '',
-      yd.domainWealth != null ? `재물${yd.domainWealth}` : '',
-    ].filter(Boolean).join('/')
+    const domParts = formatDomainParts([
+      ['직업', yd.domainJob],
+      ['재물', yd.domainWealth],
+    ]).replace(/, /g, '/')
     const evtParts = [
       (yd.eventCareer ?? 0) > 50 ? `이직${yd.eventCareer}%` : '',
       (yd.eventLove ?? 0) > 50 ? `연애${yd.eventLove}%` : '',

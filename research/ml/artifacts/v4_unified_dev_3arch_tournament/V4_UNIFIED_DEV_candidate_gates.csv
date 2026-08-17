@@ -1,0 +1,4 @@
+model,overall,p10,delta_vs_nuisance,p_vs_nuisance,delta_vs_control,p_vs_control,axis_min_diagnostic,overall_ge_055,delta_nuisance_ge_001,boot_nuisance_ge_080,delta_control_ge_001,boot_control_ge_080,p10_ge_048,all_numeric_gates
+ALL_ELASTICNET_AUTO,0.5168316831683168,0.26732673267326734,-0.1455445544554455,0.00215,-0.03762376237623762,0.21915,0.4903225806451613,False,False,False,False,False,False,False
+ALL_L2,0.4861386138613861,0.4415841584158416,-0.1762376237623762,0.0012,-0.06831683168316832,0.09965,0.4290322580645161,False,False,False,False,False,False,False
+TG10_STEM_BRANCH_L2,0.4772277227722771,0.4534653465346535,-0.1851485148514852,0.00085,-0.07722772277227724,0.0924,0.40967741935483876,False,False,False,False,False,False,False

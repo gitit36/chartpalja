@@ -1,0 +1,10 @@
+code,severity,evidence,implication
+COLLECTION_ORIGIN_CONFOUNDING_HIGH,HIGH,forbidden origin diagnostic=0.891; origin chronology gap=0.837,"Current 100-pair target is consumed diagnostic development, not a clean external-like corpus."
+ASTRO_SIGNAL_WEAK_OVERALL,HIGH,ALL_ELASTICNET_AUTO overall=0.505,No current astrology architecture is strong enough to freeze.
+BEST_MODEL_LOWER_TAIL_UNSTABLE,HIGH,ALL_ELASTICNET_AUTO p10=0.289,Repeated subject-CV performance is highly unstable.
+BEST_MODEL_ORIGIN_REPLICATION_FAIL,HIGH,ALL_ELASTICNET_AUTO origin_min=0.487,Best model does not independently clear chance in both collection origins.
+INCREMENTAL_VALUE_NOT_SECURE,HIGH,P(delta>0) nuisance=0.719; Control=0.682,Observed positive deltas are not statistically secure enough for promotion.
+EXACT_TENGOD_REPRESENTATION_RECOVERY_ONLY,MEDIUM,TG10 stem+branch improves over TG5 by 0.056 but remains <0.50,"Richer Ten-God encoding is worth retaining as a next-dev candidate, not a winner."
+AXIS_SPARSE_RECOGNITION,MEDIUM,RECOGNITION has 3 subjects / 4 pairs,Do not make axis-specific claims from this cell.
+AXIS_SPARSE_STATUS,MEDIUM,STATUS has 9 subjects / 13 pairs,Do not make axis-specific claims from this cell.
+ELASTICNET_FEATURE_SELECTION_UNSTABLE,MEDIUM,No feature meets >=60% selection and >=70% selected-sign consistency.,Do not freeze individual features or coefficients from this discovery run.

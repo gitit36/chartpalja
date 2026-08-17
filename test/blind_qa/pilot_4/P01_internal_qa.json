@@ -1,0 +1,206 @@
+{
+  "participant_id": "P01",
+  "pilot_kind": "BLIND_USER_QA_PILOT",
+  "not_validation": true,
+  "engine_output_ref": "P01_engine.json",
+  "A_engine_headlines": {
+    "natal_match": "MATCH",
+    "daewoon_match": "MATCH",
+    "n_lived_years": 60,
+    "n_future_years_internal": 41
+  },
+  "B_top_bottom_score_years": {
+    "top_10pct_Y_years": [
+      1969,
+      1977,
+      1978,
+      1989,
+      2018,
+      2026
+    ],
+    "bottom_10pct_Y_years": [
+      1973,
+      2001,
+      2012,
+      2015,
+      2017,
+      2023
+    ],
+    "top_10pct_threshold": 65.3636,
+    "bottom_10pct_threshold": 59.5643,
+    "largest_positive_yoy": [
+      {
+        "from_year": 2017,
+        "to_year": 2018,
+        "delta_Y": 7.5277
+      },
+      {
+        "from_year": 1988,
+        "to_year": 1989,
+        "delta_Y": 5.113
+      },
+      {
+        "from_year": 2015,
+        "to_year": 2016,
+        "delta_Y": 5.0439
+      },
+      {
+        "from_year": 1985,
+        "to_year": 1986,
+        "delta_Y": 4.5748
+      },
+      {
+        "from_year": 2012,
+        "to_year": 2013,
+        "delta_Y": 4.3919
+      }
+    ],
+    "largest_negative_yoy": [
+      {
+        "from_year": 1989,
+        "to_year": 1990,
+        "delta_Y": -4.9985
+      },
+      {
+        "from_year": 1969,
+        "to_year": 1970,
+        "delta_Y": -4.0668
+      },
+      {
+        "from_year": 2016,
+        "to_year": 2017,
+        "delta_Y": -4.0298
+      },
+      {
+        "from_year": 1982,
+        "to_year": 1983,
+        "delta_Y": -3.853
+      },
+      {
+        "from_year": 2019,
+        "to_year": 2020,
+        "delta_Y": -3.6895
+      }
+    ],
+    "daewoon_boundary_years": [
+      1968,
+      1978,
+      1988,
+      1998,
+      2008,
+      2018
+    ]
+  },
+  "C_largest_transitions": {
+    "top_10pct_Y_years": [
+      1969,
+      1977,
+      1978,
+      1989,
+      2018,
+      2026
+    ],
+    "bottom_10pct_Y_years": [
+      1973,
+      2001,
+      2012,
+      2015,
+      2017,
+      2023
+    ],
+    "top_10pct_threshold": 65.3636,
+    "bottom_10pct_threshold": 59.5643,
+    "largest_positive_yoy": [
+      {
+        "from_year": 2017,
+        "to_year": 2018,
+        "delta_Y": 7.5277
+      },
+      {
+        "from_year": 1988,
+        "to_year": 1989,
+        "delta_Y": 5.113
+      },
+      {
+        "from_year": 2015,
+        "to_year": 2016,
+        "delta_Y": 5.0439
+      },
+      {
+        "from_year": 1985,
+        "to_year": 1986,
+        "delta_Y": 4.5748
+      },
+      {
+        "from_year": 2012,
+        "to_year": 2013,
+        "delta_Y": 4.3919
+      }
+    ],
+    "largest_negative_yoy": [
+      {
+        "from_year": 1989,
+        "to_year": 1990,
+        "delta_Y": -4.9985
+      },
+      {
+        "from_year": 1969,
+        "to_year": 1970,
+        "delta_Y": -4.0668
+      },
+      {
+        "from_year": 2016,
+        "to_year": 2017,
+        "delta_Y": -4.0298
+      },
+      {
+        "from_year": 1982,
+        "to_year": 1983,
+        "delta_Y": -3.853
+      },
+      {
+        "from_year": 2019,
+        "to_year": 2020,
+        "delta_Y": -3.6895
+      }
+    ],
+    "daewoon_boundary_years": [
+      1968,
+      1978,
+      1988,
+      1998,
+      2008,
+      2018
+    ]
+  },
+  "D_daewoon_boundaries": [
+    1968,
+    1978,
+    1988,
+    1998,
+    2008,
+    2018,
+    2028,
+    2038,
+    2048,
+    2058
+  ],
+  "E_participant_response_placeholders": {
+    "participant_good_periods": [],
+    "participant_bad_periods": [],
+    "participant_turning_points": [],
+    "participant_chart_fit_rating": null,
+    "participant_comments": null
+  },
+  "do_not_show_before_responses": true,
+  "F_ab_placeholders": {
+    "which_overall_flow": null,
+    "which_good_periods": null,
+    "which_difficult_periods": null,
+    "which_turning_points": null,
+    "fit_rating_A": null,
+    "fit_rating_B": null,
+    "brief_reason": null
+  },
+  "ab_model_names_hidden_from_participant": true
+}

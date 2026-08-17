@@ -1,0 +1,15 @@
+{
+  "spec": "G_FRESH_VALIDATION_SPEC.md",
+  "status": "collecting",
+  "labels_frozen": false,
+  "notes": [
+    "Do not score B9/G until labels_frozen=true.",
+    "Every subject name must be absent from yongshin_subjects.json.",
+    "Assign validation_a / validation_b before any scoring."
+  ],
+  "split": {
+    "validation_a": [],
+    "validation_b": []
+  },
+  "subjects": []
+}

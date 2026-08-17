@@ -23,6 +23,7 @@ import { Toast } from '@/components/Toast'
 import { InfoTip } from '@/components/InfoTip'
 import { READING_COST } from '@/lib/payment/products'
 import { fetchBalance, clearBalanceCache } from '@/lib/hooks/useBalance'
+import { fetchWithOneRetry } from '@/lib/ai/client-reading-recovery'
 import { classifyCompat } from '@/lib/compat/classify'
 import { listCompatEntries, getGeneratedRelationships, compatShareStorageKey } from '@/lib/compat/storage'
 import { compatCardKey, RELATIONSHIP_LABELS } from '@/lib/compat/relationship'
@@ -35,6 +36,7 @@ import {
   getRelationshipPointForYear,
   YEAR_LEVEL_LABELS,
 } from '@/lib/compat/relationship-score'
+import { domain10To100 } from '@/lib/saju/score-scale'
 
 const THIS_YEAR = new Date().getFullYear()
 const THIS_MONTH = new Date().getMonth() + 1
@@ -69,15 +71,22 @@ const AUX_PANELS = [
 
 // 메인 차트 위에 겹쳐 그릴 수 있는 5대 생활 도메인 운세 점수 선 (0~100, 높을수록 좋음).
 // 세운 종합점수와 동일한 "운세 점수" 축이다. (이벤트 발생 확률이 아님)
-// 엔진의 domainScore는 0~10 스케일이라 ×10 하여 세운 점수(0~100)와 같은 축에 맞춘다.
-const DOMAIN_SCORE_SCALE = 10
+// 엔진 domainScore는 0~10 → ×10 + SCORE_BIAS 로 종합과 축을 맞춘다.
 const DOMAIN_OVERLAYS = [
   { key: 'job',      label: '직업운', color: '#e67e22', field: 'domainJob' },
   { key: 'wealth',   label: '재물운', color: '#4caf50', field: 'domainWealth' },
   { key: 'love',     label: '연애운', color: '#e91e63', field: 'domainLove' },
   { key: 'health',   label: '건강운', color: '#16a085', field: 'domainHealth' },
-  { key: 'marriage', label: '결혼운', color: '#9c27b0', field: 'domainMarriage' },
+  // 주간(일운)에는 결혼 축이 없고 대인으로 매핑됨 (week-chart-data)
+  { key: 'marriage', label: '결혼운', weekLabel: '대인운', color: '#9c27b0', field: 'domainMarriage' },
 ] as const
+
+function domainOverlayLabel(
+  o: (typeof DOMAIN_OVERLAYS)[number],
+  isWeekly: boolean,
+): string {
+  return isWeekly && 'weekLabel' in o && o.weekLabel ? o.weekLabel : o.label
+}
 
 /** 궁합(비교) 시 인물 색 — 기본 세운 비교와 동일 */
 const COMPAT_ME_COLOR = '#F04452'
@@ -92,11 +101,11 @@ type MainOverlayKey = (typeof MAIN_OVERLAYS)[number]['key']
 type AuxKey = (typeof AUX_PANELS)[number]['key']
 type DomainOverlayKey = (typeof DOMAIN_OVERLAYS)[number]['key']
 
-/** 데이터 포인트에서 도메인 운세 점수(0~100)를 뽑는다. (엔진 0~10 → ×10) */
+/** 데이터 포인트에서 도메인 운세 점수(0~100)를 뽑는다. (엔진 0~10 → ×10 + bias) */
 function domainValue(d: Record<string, unknown>, field: string): number | null {
   const v = d?.[field]
   if (typeof v !== 'number') return null
-  return Math.max(0, Math.min(100, Math.round(v * DOMAIN_SCORE_SCALE)))
+  return domain10To100(v)
 }
 
 function domainOvField(field: string): string {
@@ -572,7 +581,7 @@ function MainTooltip({ active, payload, overlays, domainOverlays, monthly, overl
   const activeDomains = dom
     ? DOMAIN_OVERLAYS.filter(o => dom[o.key])
         .map(o => ({
-          label: o.label,
+          label: domainOverlayLabel(o, !!d.dayLabel),
           color: o.color,
           val: domainValue(d as unknown as Record<string, unknown>, o.field),
           valOv: domainValue(d as unknown as Record<string, unknown>, domainOvField(o.field)),
@@ -1630,7 +1639,7 @@ export function ChartTab({
       }
 
       try {
-        const r = await fetch(url, { headers })
+        const r = await fetchWithOneRetry(url, { headers })
         const d = await r.json().catch(() => null)
         if (r.status === 401) {
           setYearSummary({
@@ -1659,7 +1668,12 @@ export function ChartTab({
           return
         }
         if (!r.ok) {
-          setYearSummary({ startYear, endYear, text: d?.error ?? '해설을 불러오지 못했습니다.' })
+          setYearSummary({
+            startYear,
+            endYear,
+            text: d?.error
+              ?? '해설을 불러오지 못했습니다. 잠시 후 다시 누르면 이미 생성됐을 수 있어요(추가 차감 없음).',
+          })
           return
         }
         const text = d?.summary ?? '해석을 불러오지 못했습니다.'
@@ -1670,7 +1684,11 @@ export function ChartTab({
         clearBalanceCache()
         void fetchBalance()
       } catch {
-        setYearSummary({ startYear, endYear, text: '해설을 불러오지 못했습니다.' })
+        setYearSummary({
+          startYear,
+          endYear,
+          text: '해설을 불러오지 못했습니다. 잠시 후 다시 누르면 이미 생성됐을 수 있어요.',
+        })
       } finally {
         setYearSummaryLoading(false)
       }
@@ -1918,7 +1936,7 @@ export function ChartTab({
 
   /** 해당 도메인만 켜고 기본 세운 선은 끈다 */
   const showDomainSolo = (k: DomainOverlayKey) => {
-    if (blockIfLocked(DOMAIN_OVERLAYS.find(o => o.key === k)?.label ?? '도메인')) return
+    if (blockIfLocked(domainOverlayLabel(DOMAIN_OVERLAYS.find(o => o.key === k) ?? DOMAIN_OVERLAYS[0], isWeekly))) return
     setDomainOverlays({
       job: k === 'job',
       wealth: k === 'wealth',
@@ -2041,7 +2059,7 @@ export function ChartTab({
                 <span className="text-[10px] text-cp-muted">대운</span>
               )}
               {DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
-                <span key={o.key} className="text-[10px] text-cp-muted">{o.label}</span>
+                <span key={o.key} className="text-[10px] text-cp-muted">{domainOverlayLabel(o, isWeekly)}</span>
               ))}
               {baseLineVisible && !mainOverlays.daewoon && !anyDomainOn && (
                 <span className="text-[10px] text-cp-muted">{isWeekly ? '일운' : isMonthly ? '월운' : '세운'}</span>
@@ -2059,7 +2077,7 @@ export function ChartTab({
           )}
           {!overlayActive && DOMAIN_OVERLAYS.filter(o => domainOverlays[o.key]).map(o => (
             <span key={o.key} className="flex items-center gap-1 text-[10px] text-cp-muted">
-              <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: o.color }} /> {o.label}
+              <span className="w-4 h-0.5 rounded inline-block" style={{ backgroundColor: o.color }} /> {domainOverlayLabel(o, isWeekly)}
             </span>
           ))}
         </div>
@@ -2198,13 +2216,13 @@ export function ChartTab({
               {DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
                 <Line key={o.key} type="monotone"
                   dataKey={(d: Record<string, unknown>) => domainValue(d, o.field)}
-                  stroke={overlayActive ? COMPAT_ME_COLOR : o.color} strokeWidth={overlayActive ? 2 : 1.5} dot={false} activeDot={false} name={o.label}
+                  stroke={overlayActive ? COMPAT_ME_COLOR : o.color} strokeWidth={overlayActive ? 2 : 1.5} dot={false} activeDot={false} name={domainOverlayLabel(o, isWeekly)}
                   strokeDasharray={overlayActive || !baseLineVisible ? undefined : '3 2'} isAnimationActive={false} connectNulls={false}/>
               ) : null)}
               {overlayActive && DOMAIN_OVERLAYS.map(o => domainOverlays[o.key] ? (
                 <Line key={`${o.key}-ov`} type="monotone"
                   dataKey={(d: Record<string, unknown>) => domainValue(d, domainOvField(o.field))}
-                  stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} activeDot={false} name={`${o.label}(비교)`}
+                  stroke={COMPAT_PARTNER_COLOR} strokeWidth={1.5} dot={false} activeDot={false} name={`${domainOverlayLabel(o, isWeekly)}(비교)`}
                   isAnimationActive={false} connectNulls={false}/>
               ) : null)}
               {overlayActive && mainOverlays.daewoon && !isWeekly && (
@@ -2838,7 +2856,9 @@ export function ChartTab({
                 )}
                 {overlayActive && <div className="mb-2" />}
                 <div className={isLocked ? '' : 'stagger-fade-in'}>
-                  {DOMAIN_OVERLAYS.map(o => (
+                  {DOMAIN_OVERLAYS.map(o => {
+                    const dLabel = domainOverlayLabel(o, isWeekly)
+                    return (
                     <div
                       key={o.key}
                       className="w-full flex items-center justify-between gap-2 py-2 px-1 -mx-1 rounded-lg min-h-[44px]"
@@ -2846,7 +2866,7 @@ export function ChartTab({
                       <button
                         type="button"
                         onClick={() => {
-                          if (blockIfLocked(o.label)) return
+                          if (blockIfLocked(dLabel)) return
                           toggleDomain(o.key)
                         }}
                         className="flex-1 flex items-center gap-3 text-left hover:bg-cp-bg rounded-lg py-1 -my-1 px-1 -mx-1 transition-colors"
@@ -2863,7 +2883,7 @@ export function ChartTab({
                             className="w-3 h-0.5 rounded"
                             style={{ backgroundColor: overlayActive ? COMPAT_ME_COLOR : o.color, opacity: isLocked ? 0.4 : 1 }}
                           />
-                          {o.label}
+                          {dLabel}
                         </span>
                       </button>
                       {isLocked ? (
@@ -2882,7 +2902,8 @@ export function ChartTab({
                         </button>
                       ) : null}
                     </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
               <div className="mb-5">
@@ -3406,7 +3427,7 @@ function FortuneSection({
     setShowJuToast(false)
     setJuShortage(null)
     setAiLoading(true)
-    fetch(url, { headers })
+    fetchWithOneRetry(url, { headers })
       .then(async r => {
         const d = await r.json().catch(() => null)
         if (r.status === 401) { throw new Error('login_required') }
@@ -3414,7 +3435,15 @@ function FortuneSection({
           apply402((d as { ju?: number } | null)?.ju ?? 0)
           throw new Error('이용권 부족')
         }
-        if (!r.ok) throw new Error(d?.error ?? '운세 해설을 불러오지 못했습니다')
+        if (!r.ok) {
+          // 생성은 됐는데 응답만 실패했을 수 있음 → 캐시 GET 으로 복구
+          if (!regen) {
+            const cachedRes = await fetch(`/api/saju/${entryId}/fortune`, { headers })
+            const cached = await cachedRes.json().catch(() => null)
+            if (cachedRes.ok && cached?.items?.length) return cached
+          }
+          throw new Error(d?.error ?? '운세 해설을 불러오지 못했습니다. 잠시 후 다시 열어보면 이미 생성됐을 수 있어요.')
+        }
         return d
       })
       .then(d => {

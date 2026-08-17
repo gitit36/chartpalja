@@ -121,6 +121,17 @@ const CHART_ITEMS: GuideItem[] = [
       </div>
     ),
   },
+  {
+    title: '도메인 운세 선',
+    icon: '🧵',
+    body: (
+      <ul className="space-y-1">
+        <Bullet>직업·재물·연애·건강·결혼(주간은 대인) 운세를 총운과 <b>같은 0~100축</b>에 겹쳐 봐요.</Bullet>
+        <Bullet>총운과 <b>별트랙</b>이에요. 총운이 높아도 특정 영역만 낮을 수 있어요.</Bullet>
+        <Bullet>이벤트 확률과는 달라요. 도메인은 “그 영역의 운 좋음”, 이벤트는 “일이 터질 가능성”이에요.</Bullet>
+      </ul>
+    ),
+  },
 ]
 
 const AUX_ITEMS: GuideItem[] = [

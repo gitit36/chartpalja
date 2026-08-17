@@ -1,0 +1,427 @@
+{
+  "version": "SAJU_ML_V4_TOURNAMENT_DECISION_V1",
+  "notebook_version": "SAJU_ML_V4_FEATURE_MODEL_TOURNAMENT_R2_20260816",
+  "created_at": "2026-08-16T19:34:21",
+  "status": "V4_NO_ARCHITECTURE_SURVIVES_DISCOVERY_GATE",
+  "winner": null,
+  "reason": "No astrology architecture passed all predeclared V4 discovery gates.",
+  "target": {
+    "n_pairs": 100,
+    "n_subjects": 69,
+    "target_decision_sha256": "3a5282f484c43c7b8eaf35b8cdbbbbcbcf05e0fb81889d28cf7aae75a2679b92",
+    "pairs_sha256": "129510f50bf64ee431a50ea72d458790d2f3e8cc1e5e2b89fd4966ac1eef9c74",
+    "origin_guard_required": true
+  },
+  "gates": [
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "overall": 0.5050724637681159,
+      "p10": 0.2893719806763285,
+      "delta_vs_nuisance": 0.029710144927536243,
+      "p_vs_nuisance": 0.7194,
+      "delta_vs_control": 0.028260869565217395,
+      "p_vs_control": 0.68185,
+      "origin_min": 0.4873873873873875,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": true,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": true,
+      "boot_control_ge_080": false,
+      "origin_min_ge_050": false,
+      "p10_ge_048": false,
+      "all_gates": false
+    },
+    {
+      "model": "ALL_L2",
+      "overall": 0.48057971014492756,
+      "p10": 0.4572463768115942,
+      "delta_vs_nuisance": 0.005217391304347833,
+      "p_vs_nuisance": 0.53045,
+      "delta_vs_control": 0.0037681159420289985,
+      "p_vs_control": 0.52675,
+      "origin_min": 0.46198198198198187,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "origin_min_ge_050": false,
+      "p10_ge_048": false,
+      "all_gates": false
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "overall": 0.47908212560386476,
+      "p10": 0.44420289855072465,
+      "delta_vs_nuisance": 0.0037198067632850038,
+      "p_vs_nuisance": 0.51835,
+      "delta_vs_control": 0.002270531400966183,
+      "p_vs_control": 0.51415,
+      "origin_min": 0.4673913043478261,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "origin_min_ge_050": false,
+      "p10_ge_048": false,
+      "all_gates": false
+    },
+    {
+      "model": "TG10_STEM_L2",
+      "overall": 0.45371980676328505,
+      "p10": 0.3869565217391304,
+      "delta_vs_nuisance": -0.021642512077294673,
+      "p_vs_nuisance": 0.36585,
+      "delta_vs_control": -0.02309178743961354,
+      "p_vs_control": 0.37335,
+      "origin_min": 0.43260869565217386,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "origin_min_ge_050": false,
+      "p10_ge_048": false,
+      "all_gates": false
+    },
+    {
+      "model": "TG10_SB_RELATIONS_L2",
+      "overall": 0.4444444444444445,
+      "p10": 0.3922705314009662,
+      "delta_vs_nuisance": -0.030917874396135272,
+      "p_vs_nuisance": 0.3045,
+      "delta_vs_control": -0.03236714975845411,
+      "p_vs_control": 0.29145,
+      "origin_min": 0.41441441441441446,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "origin_min_ge_050": false,
+      "p10_ge_048": false,
+      "all_gates": false
+    },
+    {
+      "model": "TG10_SB_STRENGTH_L2",
+      "overall": 0.42613526570048305,
+      "p10": 0.3843478260869565,
+      "delta_vs_nuisance": -0.049227053140096615,
+      "p_vs_nuisance": 0.2181,
+      "delta_vs_control": -0.05067632850241546,
+      "p_vs_control": 0.187,
+      "origin_min": 0.41521739130434776,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "origin_min_ge_050": false,
+      "p10_ge_048": false,
+      "all_gates": false
+    },
+    {
+      "model": "TG5_GROUP_L2",
+      "overall": 0.4225845410628019,
+      "p10": 0.39108695652173914,
+      "delta_vs_nuisance": -0.05277777777777779,
+      "p_vs_nuisance": 0.1985,
+      "delta_vs_control": -0.0542270531400966,
+      "p_vs_control": 0.207,
+      "origin_min": 0.41195652173913044,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "origin_min_ge_050": false,
+      "p10_ge_048": false,
+      "all_gates": false
+    }
+  ],
+  "leaderboard": [
+    {
+      "model": "NUISANCE_WITH_ORIGIN_DIAGNOSTIC",
+      "pairwise_mean": 0.8913043478260869,
+      "pairwise_std": 0.0,
+      "pairwise_p10": 0.8913043478260869,
+      "pairwise_min": 0.8913043478260869
+    },
+    {
+      "model": "AGE_LATER_FIXED",
+      "pairwise_mean": 0.5471014492753623,
+      "pairwise_std": 0.0,
+      "pairwise_p10": 0.5471014492753623,
+      "pairwise_min": 0.5471014492753623
+    },
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "pairwise_mean": 0.5050724637681159,
+      "pairwise_std": 0.2252431972067792,
+      "pairwise_p10": 0.2893719806763285,
+      "pairwise_min": 0.2536231884057971
+    },
+    {
+      "model": "ALL_L2",
+      "pairwise_mean": 0.48057971014492756,
+      "pairwise_std": 0.030889366385995282,
+      "pairwise_p10": 0.4572463768115942,
+      "pairwise_min": 0.456280193236715
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "pairwise_mean": 0.47908212560386476,
+      "pairwise_std": 0.04220754451431613,
+      "pairwise_p10": 0.44420289855072465,
+      "pairwise_min": 0.43985507246376815
+    },
+    {
+      "model": "CONTROL_FIXED",
+      "pairwise_mean": 0.47681159420289854,
+      "pairwise_std": 0.0,
+      "pairwise_p10": 0.47681159420289854,
+      "pairwise_min": 0.47681159420289854
+    },
+    {
+      "model": "NUISANCE_AGE_AXIS",
+      "pairwise_mean": 0.47536231884057967,
+      "pairwise_std": 0.023161971647871777,
+      "pairwise_p10": 0.4528985507246377,
+      "pairwise_min": 0.44565217391304346
+    },
+    {
+      "model": "TG10_STEM_L2",
+      "pairwise_mean": 0.45371980676328505,
+      "pairwise_std": 0.06798618023490921,
+      "pairwise_p10": 0.3869565217391304,
+      "pairwise_min": 0.34444444444444444
+    },
+    {
+      "model": "AGE_YOUNGER_FIXED",
+      "pairwise_mean": 0.4528985507246377,
+      "pairwise_std": 0.0,
+      "pairwise_p10": 0.4528985507246377,
+      "pairwise_min": 0.4528985507246377
+    },
+    {
+      "model": "TG10_SB_RELATIONS_L2",
+      "pairwise_mean": 0.4444444444444445,
+      "pairwise_std": 0.048807813088659446,
+      "pairwise_p10": 0.3922705314009662,
+      "pairwise_min": 0.36618357487922704
+    },
+    {
+      "model": "HGB_ALL_EXPLORATORY",
+      "pairwise_mean": 0.43826086956521737,
+      "pairwise_std": 0.01937990007628496,
+      "pairwise_p10": 0.418695652173913,
+      "pairwise_min": 0.413768115942029
+    },
+    {
+      "model": "TG10_SB_STRENGTH_L2",
+      "pairwise_mean": 0.42613526570048305,
+      "pairwise_std": 0.0414483181763965,
+      "pairwise_p10": 0.3843478260869565,
+      "pairwise_min": 0.3536231884057971
+    },
+    {
+      "model": "TG5_GROUP_L2",
+      "pairwise_mean": 0.4225845410628019,
+      "pairwise_std": 0.030463524500650777,
+      "pairwise_p10": 0.39108695652173914,
+      "pairwise_min": 0.3704106280193237
+    }
+  ],
+  "origin_robustness": [
+    {
+      "model": "AGE_LATER_FIXED",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.16304347826086957
+    },
+    {
+      "model": "AGE_LATER_FIXED",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 1.0
+    },
+    {
+      "model": "AGE_YOUNGER_FIXED",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.8369565217391305
+    },
+    {
+      "model": "AGE_YOUNGER_FIXED",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.0
+    },
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.508695652173913
+    },
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.4873873873873875
+    },
+    {
+      "model": "ALL_L2",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.47826086956521746
+    },
+    {
+      "model": "ALL_L2",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.46198198198198187
+    },
+    {
+      "model": "CONTROL_FIXED",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.5217391304347826
+    },
+    {
+      "model": "CONTROL_FIXED",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.4072072072072072
+    },
+    {
+      "model": "HGB_ALL_EXPLORATORY",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.4369565217391304
+    },
+    {
+      "model": "HGB_ALL_EXPLORATORY",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.4218018018018019
+    },
+    {
+      "model": "NUISANCE_AGE_AXIS",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.6869565217391306
+    },
+    {
+      "model": "NUISANCE_AGE_AXIS",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.24234234234234234
+    },
+    {
+      "model": "NUISANCE_WITH_ORIGIN_DIAGNOSTIC",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.8369565217391305
+    },
+    {
+      "model": "NUISANCE_WITH_ORIGIN_DIAGNOSTIC",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 1.0
+    },
+    {
+      "model": "TG10_SB_RELATIONS_L2",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.4608695652173914
+    },
+    {
+      "model": "TG10_SB_RELATIONS_L2",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.41441441441441446
+    },
+    {
+      "model": "TG10_SB_STRENGTH_L2",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.41521739130434776
+    },
+    {
+      "model": "TG10_SB_STRENGTH_L2",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.4284684684684685
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.4673913043478261
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.4704504504504504
+    },
+    {
+      "model": "TG10_STEM_L2",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.43260869565217386
+    },
+    {
+      "model": "TG10_STEM_L2",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.4839639639639641
+    },
+    {
+      "model": "TG5_GROUP_L2",
+      "pair_origin": "PREEXISTING_414_SOURCE_REVIEW",
+      "n_pairs": 49,
+      "n_subjects": 46,
+      "subject_macro_pairwise": 0.41195652173913044
+    },
+    {
+      "model": "TG5_GROUP_L2",
+      "pair_origin": "V4_TARGET_EXPANSION_2026-08-16",
+      "n_pairs": 51,
+      "n_subjects": 37,
+      "subject_macro_pairwise": 0.4495495495495495
+    }
+  ],
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "next_rule": "If winner is frozen: do not tune on this target again; construct a completely new V4 holdout under one preregistered balanced collection protocol and score once. If no winner survives: do not open a holdout; diagnose target/feature representation or collect more development subjects."
+}

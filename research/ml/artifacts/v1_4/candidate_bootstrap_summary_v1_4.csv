@@ -1,0 +1,3 @@
+feature_set,n_subjects,mean_delta,ci_low,ci_high,p_delta_gt_0,subjects_better,subjects_equal,subjects_worse
+TENGOD,23,0.15933402346445827,-0.09626423395445134,0.3996437198067627,0.89285,14,3,6
+SHINSAL_ALL,23,0.1633712905452036,-0.007044513457556935,0.34009963768115914,0.9702,13,5,5

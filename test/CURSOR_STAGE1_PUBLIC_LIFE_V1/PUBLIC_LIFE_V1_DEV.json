@@ -1,0 +1,2007 @@
+{
+  "dataset_version": "PUBLIC_LIFE_V1",
+  "dataset_sha256_owner_full": "fa975419d8299cb38a8d9cac2c04e418dd6f5819cad4fbbb7550b524614ccd2f",
+  "split": "DEV",
+  "n": 24,
+  "scoring_unit": "calendar_year",
+  "subjects": [
+    {
+      "subject_id": "PLV1_001",
+      "name": "Aaron Spelling",
+      "gender": "male",
+      "birth": {
+        "date": "1923-04-22",
+        "time": "12:30",
+        "utc_offset": "-06:00",
+        "city": "Dallas, TX",
+        "country": "USA",
+        "latitude": 32.778,
+        "longitude": -96.796,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1976,
+          "valence": "positive",
+          "category": "career",
+          "description": "Charlie's Angels premiered and became one of Spelling's most prominent hit series",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_001_E01",
+          "source_refs": [
+            "PLV1_001_S1"
+          ]
+        },
+        {
+          "year": 1981,
+          "valence": "positive",
+          "category": "career",
+          "description": "Dynasty premiered and became one of Spelling's most prominent hit series",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_001_E02",
+          "source_refs": [
+            "PLV1_001_S1"
+          ]
+        },
+        {
+          "year": 2001,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with oral cancer",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_001_E03",
+          "source_refs": [
+            "PLV1_001_S1"
+          ]
+        },
+        {
+          "year": 2006,
+          "valence": "negative",
+          "category": "health",
+          "description": "Suffered a stroke and died from complications days later",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_001_E04",
+          "source_refs": [
+            "PLV1_001_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_001_S1",
+          "url": "https://www.tshaonline.org/handbook/entries/spelling-aaron",
+          "tier": "B_major_media_or_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_003",
+      "name": "Amanda Knox",
+      "gender": "female",
+      "birth": {
+        "date": "1987-07-09",
+        "time": "02:47",
+        "utc_offset": "-07:00",
+        "city": "Seattle, WA",
+        "country": "USA",
+        "latitude": 47.603,
+        "longitude": -122.33,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2011,
+          "valence": "positive",
+          "category": "legal",
+          "description": "Murder conviction was overturned on appeal and she was released from prison",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_003_E01",
+          "source_refs": [
+            "PLV1_003_S1"
+          ]
+        },
+        {
+          "year": 2015,
+          "valence": "positive",
+          "category": "legal",
+          "description": "Italy's highest court definitively acquitted her of murder",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_003_E02",
+          "source_refs": [
+            "PLV1_003_S1"
+          ]
+        },
+        {
+          "year": 2007,
+          "valence": "negative",
+          "category": "legal",
+          "description": "Arrested and detained in the Meredith Kercher murder investigation",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_003_E03",
+          "source_refs": [
+            "PLV1_003_S1"
+          ]
+        },
+        {
+          "year": 2009,
+          "valence": "negative",
+          "category": "legal",
+          "description": "Convicted of murder and sentenced to prison",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_003_E04",
+          "source_refs": [
+            "PLV1_003_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_003_S1",
+          "url": "https://www.biography.com/crime/amanda-knox",
+          "tier": "B_major_media_or_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_005",
+      "name": "Ann Wilson",
+      "gender": "female",
+      "birth": {
+        "date": "1950-06-19",
+        "time": "17:20",
+        "utc_offset": "-07:00",
+        "city": "San Diego, CA",
+        "country": "USA",
+        "latitude": 32.716,
+        "longitude": -117.164,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1976,
+          "valence": "positive",
+          "category": "career",
+          "description": "Heart's Dreamboat Annie era delivered the band's commercial breakthrough",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_005_E01",
+          "source_refs": [
+            "PLV1_005_S1",
+            "PLV1_005_S2"
+          ]
+        },
+        {
+          "year": 2013,
+          "valence": "positive",
+          "category": "career",
+          "description": "Heart was inducted into the Rock and Roll Hall of Fame",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_005_E02",
+          "source_refs": [
+            "PLV1_005_S1",
+            "PLV1_005_S2"
+          ]
+        },
+        {
+          "year": 2016,
+          "valence": "negative",
+          "category": "family",
+          "description": "Her husband was arrested after an assault involving her sister Nancy Wilson's teenage sons",
+          "confidence": "medium",
+          "evidence_grade": "B",
+          "event_id": "PLV1_005_E03",
+          "source_refs": [
+            "PLV1_005_S1",
+            "PLV1_005_S2"
+          ]
+        },
+        {
+          "year": 2024,
+          "valence": "negative",
+          "category": "health",
+          "description": "Announced cancer treatment and postponed Heart's tour",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_005_E04",
+          "source_refs": [
+            "PLV1_005_S1",
+            "PLV1_005_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_005_S1",
+          "url": "https://en.wikipedia.org/wiki/Ann_Wilson",
+          "tier": "C_public_reference"
+        },
+        {
+          "source_id": "PLV1_005_S2",
+          "url": "https://ew.com/ann-wilson-heart-cancer-diagnosis-cancels-tour-8673078",
+          "tier": "B_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_006",
+      "name": "Ashley Judd",
+      "gender": "female",
+      "birth": {
+        "date": "1968-04-19",
+        "time": "13:12",
+        "utc_offset": "-08:00",
+        "city": "Los Angeles, CA",
+        "country": "USA",
+        "latitude": 34.052,
+        "longitude": -118.243,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1997,
+          "valence": "positive",
+          "category": "career",
+          "description": "Kiss the Girls became a major leading-role box-office success",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_006_E01",
+          "source_refs": [
+            "PLV1_006_S1",
+            "PLV1_006_S2"
+          ]
+        },
+        {
+          "year": 1999,
+          "valence": "positive",
+          "category": "career",
+          "description": "Double Jeopardy became another major box-office success",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_006_E02",
+          "source_refs": [
+            "PLV1_006_S1",
+            "PLV1_006_S2"
+          ]
+        },
+        {
+          "year": 2006,
+          "valence": "negative",
+          "category": "health",
+          "description": "Entered a 47-day treatment program for depression and related emotional-health problems",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_006_E03",
+          "source_refs": [
+            "PLV1_006_S1",
+            "PLV1_006_S2"
+          ]
+        },
+        {
+          "year": 2021,
+          "valence": "negative",
+          "category": "accident",
+          "description": "Shattered her leg in a severe accident in the Democratic Republic of the Congo",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_006_E04",
+          "source_refs": [
+            "PLV1_006_S1",
+            "PLV1_006_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_006_S1",
+          "url": "https://www.ashleyjudd.com/about/",
+          "tier": "A_official_or_institutional"
+        },
+        {
+          "source_id": "PLV1_006_S2",
+          "url": "https://en.wikipedia.org/wiki/Ashley_Judd",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_007",
+      "name": "Billy Connolly",
+      "gender": "male",
+      "birth": {
+        "date": "1942-11-24",
+        "time": "04:30",
+        "utc_offset": "+01:00",
+        "city": "Glasgow",
+        "country": "UK",
+        "latitude": 55.866,
+        "longitude": -4.257,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1975,
+          "valence": "positive",
+          "category": "career",
+          "description": "A landmark appearance on Parkinson accelerated his national comedy breakthrough",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_007_E01",
+          "source_refs": [
+            "PLV1_007_S1",
+            "PLV1_007_S2",
+            "PLV1_007_S3"
+          ]
+        },
+        {
+          "year": 1997,
+          "valence": "positive",
+          "category": "career",
+          "description": "Received major acclaim and awards recognition for Mrs Brown",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_007_E02",
+          "source_refs": [
+            "PLV1_007_S1",
+            "PLV1_007_S2",
+            "PLV1_007_S3"
+          ]
+        },
+        {
+          "year": 2013,
+          "valence": "negative",
+          "category": "health",
+          "description": "Was treated for prostate cancer and diagnosed with Parkinson's disease",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_007_E03",
+          "source_refs": [
+            "PLV1_007_S1",
+            "PLV1_007_S2",
+            "PLV1_007_S3"
+          ]
+        },
+        {
+          "year": 2018,
+          "valence": "negative",
+          "category": "career_health",
+          "description": "Retired from live performance as Parkinson's disease progressed",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_007_E04",
+          "source_refs": [
+            "PLV1_007_S1",
+            "PLV1_007_S2",
+            "PLV1_007_S3"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_007_S1",
+          "url": "https://www.bafta.org/stories/billy-connolly-a-life-in-pictures/",
+          "tier": "A_official_or_institutional"
+        },
+        {
+          "source_id": "PLV1_007_S2",
+          "url": "https://www.theguardian.com/culture/2013/sep/16/billy-connolly-cancer-parkinsons-disease",
+          "tier": "B_major_media_or_reference"
+        },
+        {
+          "source_id": "PLV1_007_S3",
+          "url": "https://en.wikipedia.org/wiki/Billy_Connolly",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_010",
+      "name": "Burt Reynolds",
+      "gender": "male",
+      "birth": {
+        "date": "1936-02-11",
+        "time": "12:10",
+        "utc_offset": "-05:00",
+        "city": "Lansing, MI",
+        "country": "USA",
+        "latitude": 42.734,
+        "longitude": -84.554,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1972,
+          "valence": "positive",
+          "category": "career",
+          "description": "Deliverance became a major critical and commercial success",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_010_E01",
+          "source_refs": [
+            "PLV1_010_S1"
+          ]
+        },
+        {
+          "year": 1977,
+          "valence": "positive",
+          "category": "career",
+          "description": "Smokey and the Bandit became one of the year's biggest box-office hits",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_010_E02",
+          "source_refs": [
+            "PLV1_010_S1"
+          ]
+        },
+        {
+          "year": 1996,
+          "valence": "negative",
+          "category": "finance",
+          "description": "Filed for Chapter 11 bankruptcy protection",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_010_E03",
+          "source_refs": [
+            "PLV1_010_S1"
+          ]
+        },
+        {
+          "year": 2010,
+          "valence": "negative",
+          "category": "health",
+          "description": "Underwent major heart bypass surgery",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_010_E04",
+          "source_refs": [
+            "PLV1_010_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_010_S1",
+          "url": "https://en.wikipedia.org/wiki/Burt_Reynolds",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_011",
+      "name": "Buzz Aldrin",
+      "gender": "male",
+      "birth": {
+        "date": "1930-01-20",
+        "time": "14:17",
+        "utc_offset": "-05:00",
+        "city": "Glen Ridge, NJ",
+        "country": "USA",
+        "latitude": 40.803,
+        "longitude": -74.202,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1966,
+          "valence": "positive",
+          "category": "career",
+          "description": "Successfully completed the Gemini 12 mission and major EVA objectives",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_011_E01",
+          "source_refs": [
+            "PLV1_011_S1",
+            "PLV1_011_S2"
+          ]
+        },
+        {
+          "year": 1969,
+          "valence": "positive",
+          "category": "career",
+          "description": "Walked on the Moon during Apollo 11",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_011_E02",
+          "source_refs": [
+            "PLV1_011_S1",
+            "PLV1_011_S2"
+          ]
+        },
+        {
+          "year": 1972,
+          "valence": "negative",
+          "category": "health",
+          "description": "Experienced severe depression and alcohol problems after his post-NASA transition",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_011_E03",
+          "source_refs": [
+            "PLV1_011_S1",
+            "PLV1_011_S2"
+          ]
+        },
+        {
+          "year": 1975,
+          "valence": "negative",
+          "category": "health",
+          "description": "Entered alcohol rehabilitation",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_011_E04",
+          "source_refs": [
+            "PLV1_011_S1",
+            "PLV1_011_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_011_S1",
+          "url": "https://www.biography.com/scientists/a31004955/buzz-aldrin-alcoholism-depression-moon-landing",
+          "tier": "B_major_media_or_reference"
+        },
+        {
+          "source_id": "PLV1_011_S2",
+          "url": "https://en.wikipedia.org/wiki/Buzz_Aldrin",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_013",
+      "name": "Diahann Carroll",
+      "gender": "female",
+      "birth": {
+        "date": "1935-07-17",
+        "time": "21:35",
+        "utc_offset": "-04:00",
+        "city": "New York, NY",
+        "country": "USA",
+        "latitude": 40.713,
+        "longitude": -74.007,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1962,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won a Tony Award for No Strings",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_013_E01",
+          "source_refs": [
+            "PLV1_013_S1"
+          ]
+        },
+        {
+          "year": 1968,
+          "valence": "positive",
+          "category": "career",
+          "description": "Julia made her the first Black woman to star in a non-stereotypical network television role",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_013_E02",
+          "source_refs": [
+            "PLV1_013_S1"
+          ]
+        },
+        {
+          "year": 1997,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with breast cancer and underwent treatment",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_013_E03",
+          "source_refs": [
+            "PLV1_013_S1"
+          ]
+        },
+        {
+          "year": 2019,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died following cancer-related illness",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_013_E04",
+          "source_refs": [
+            "PLV1_013_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_013_S1",
+          "url": "https://en.wikipedia.org/wiki/Diahann_Carroll",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_015",
+      "name": "Farrah Fawcett",
+      "gender": "female",
+      "birth": {
+        "date": "1947-02-02",
+        "time": "15:10",
+        "utc_offset": "-06:00",
+        "city": "Corpus Christi, TX",
+        "country": "USA",
+        "latitude": 27.796,
+        "longitude": -97.404,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1976,
+          "valence": "positive",
+          "category": "career",
+          "description": "Charlie's Angels made her an international television star",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_015_E01",
+          "source_refs": [
+            "PLV1_015_S1",
+            "PLV1_015_S2"
+          ]
+        },
+        {
+          "year": 1984,
+          "valence": "positive",
+          "category": "career",
+          "description": "The Burning Bed brought major Emmy and Golden Globe recognition",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_015_E02",
+          "source_refs": [
+            "PLV1_015_S1",
+            "PLV1_015_S2"
+          ]
+        },
+        {
+          "year": 2006,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with anal cancer",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_015_E03",
+          "source_refs": [
+            "PLV1_015_S1",
+            "PLV1_015_S2"
+          ]
+        },
+        {
+          "year": 2009,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died after her cancer illness",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_015_E04",
+          "source_refs": [
+            "PLV1_015_S1",
+            "PLV1_015_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_015_S1",
+          "url": "https://www.latimes.com/local/obituaries/la-me-farrah-fawcett26-2009jun26-story.html",
+          "tier": "B_major_media_or_reference"
+        },
+        {
+          "source_id": "PLV1_015_S2",
+          "url": "https://en.wikipedia.org/wiki/Farrah_Fawcett",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_018",
+      "name": "Harrison Dillard",
+      "gender": "male",
+      "birth": {
+        "date": "1923-07-08",
+        "time": "07:32",
+        "utc_offset": "-04:00",
+        "city": "Cleveland, OH",
+        "country": "USA",
+        "latitude": 41.505,
+        "longitude": -81.691,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1948,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won Olympic gold in the 100 metres",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_018_E01",
+          "source_refs": [
+            "PLV1_018_S1",
+            "PLV1_018_S2"
+          ]
+        },
+        {
+          "year": 1952,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won Olympic gold in the 110 metre hurdles",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_018_E02",
+          "source_refs": [
+            "PLV1_018_S1",
+            "PLV1_018_S2"
+          ]
+        },
+        {
+          "year": 1956,
+          "valence": "negative",
+          "category": "career",
+          "description": "Failed to qualify for a third Olympic team",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_018_E03",
+          "source_refs": [
+            "PLV1_018_S1",
+            "PLV1_018_S2"
+          ]
+        },
+        {
+          "year": 2019,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died after a battle with stomach cancer",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_018_E04",
+          "source_refs": [
+            "PLV1_018_S1",
+            "PLV1_018_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_018_S1",
+          "url": "https://usopm.org/harrison-dillard/",
+          "tier": "A_official_or_institutional"
+        },
+        {
+          "source_id": "PLV1_018_S2",
+          "url": "https://case.edu/ech/articles/d/dillard-william-harrison",
+          "tier": "B_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_019",
+      "name": "Harrison Ford",
+      "gender": "male",
+      "birth": {
+        "date": "1942-07-13",
+        "time": "11:41",
+        "utc_offset": "-05:00",
+        "city": "Chicago, IL",
+        "country": "USA",
+        "latitude": 41.883,
+        "longitude": -87.632,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1977,
+          "valence": "positive",
+          "category": "career",
+          "description": "Star Wars made him an international film star",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_019_E01",
+          "source_refs": [
+            "PLV1_019_S1"
+          ]
+        },
+        {
+          "year": 1981,
+          "valence": "positive",
+          "category": "career",
+          "description": "Raiders of the Lost Ark launched the Indiana Jones franchise",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_019_E02",
+          "source_refs": [
+            "PLV1_019_S1"
+          ]
+        },
+        {
+          "year": 2015,
+          "valence": "negative",
+          "category": "accident",
+          "description": "Suffered serious injuries in a plane crash",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_019_E03",
+          "source_refs": [
+            "PLV1_019_S1"
+          ]
+        },
+        {
+          "year": 2021,
+          "valence": "negative",
+          "category": "accident",
+          "description": "Sustained a shoulder injury while filming Indiana Jones",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_019_E04",
+          "source_refs": [
+            "PLV1_019_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_019_S1",
+          "url": "https://en.wikipedia.org/wiki/Harrison_Ford",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_021",
+      "name": "Jeff Bridges",
+      "gender": "male",
+      "birth": {
+        "date": "1949-12-04",
+        "time": "23:58",
+        "utc_offset": "-08:00",
+        "city": "Los Angeles, CA",
+        "country": "USA",
+        "latitude": 34.052,
+        "longitude": -118.243,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2010,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won the Academy Award for Best Actor for Crazy Heart",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_021_E01",
+          "source_refs": [
+            "PLV1_021_S1",
+            "PLV1_021_S2"
+          ]
+        },
+        {
+          "year": 2011,
+          "valence": "positive",
+          "category": "career",
+          "description": "Received another Academy Award nomination for True Grit",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_021_E02",
+          "source_refs": [
+            "PLV1_021_S1",
+            "PLV1_021_S2"
+          ]
+        },
+        {
+          "year": 2020,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with lymphoma",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_021_E03",
+          "source_refs": [
+            "PLV1_021_S1",
+            "PLV1_021_S2"
+          ]
+        },
+        {
+          "year": 2021,
+          "valence": "negative",
+          "category": "health",
+          "description": "Developed severe COVID-19 while undergoing cancer treatment",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_021_E04",
+          "source_refs": [
+            "PLV1_021_S1",
+            "PLV1_021_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_021_S1",
+          "url": "https://people.com/jeff-bridges-feeling-very-good-following-cancer-battle-exclusive-11730214",
+          "tier": "B_major_media_or_reference"
+        },
+        {
+          "source_id": "PLV1_021_S2",
+          "url": "https://en.wikipedia.org/wiki/Jeff_Bridges",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_022",
+      "name": "Jennifer Lawrence",
+      "gender": "female",
+      "birth": {
+        "date": "1990-08-15",
+        "time": "15:20",
+        "utc_offset": "-04:00",
+        "city": "Louisville, KY",
+        "country": "USA",
+        "latitude": 38.199,
+        "longitude": -85.654,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2012,
+          "valence": "positive",
+          "category": "career",
+          "description": "The Hunger Games became her global breakout leading-role success",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_022_E01",
+          "source_refs": [
+            "PLV1_022_S1",
+            "PLV1_022_S2"
+          ]
+        },
+        {
+          "year": 2013,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won the Academy Award for Best Actress for Silver Linings Playbook",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_022_E02",
+          "source_refs": [
+            "PLV1_022_S1",
+            "PLV1_022_S2"
+          ]
+        },
+        {
+          "year": 2014,
+          "valence": "negative",
+          "category": "public_reputation",
+          "description": "Private photos were stolen and distributed in a major celebrity photo hack",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_022_E03",
+          "source_refs": [
+            "PLV1_022_S1",
+            "PLV1_022_S2"
+          ]
+        },
+        {
+          "year": 2017,
+          "valence": "negative",
+          "category": "accident",
+          "description": "Private plane suffered a double-engine failure and made an emergency landing; she later described trauma/PTSD symptoms",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_022_E04",
+          "source_refs": [
+            "PLV1_022_S1",
+            "PLV1_022_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_022_S1",
+          "url": "https://en.wikipedia.org/wiki/Jennifer_Lawrence",
+          "tier": "C_public_reference"
+        },
+        {
+          "source_id": "PLV1_022_S2",
+          "url": "https://www.vanityfair.com/hollywood/2018/02/jennifer-lawrence-cover-story",
+          "tier": "B_major_media_or_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_027",
+      "name": "Laura Flessel",
+      "gender": "female",
+      "birth": {
+        "date": "1971-11-06",
+        "time": "16:15",
+        "utc_offset": "-04:00",
+        "city": "Pointe-a-Pitre",
+        "country": "Guadeloupe",
+        "latitude": 16.238,
+        "longitude": -61.534,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1996,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won two Olympic gold medals in fencing at the Atlanta Games",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_027_E01",
+          "source_refs": [
+            "PLV1_027_S1",
+            "PLV1_027_S2",
+            "PLV1_027_S3"
+          ]
+        },
+        {
+          "year": 2017,
+          "valence": "positive",
+          "category": "career",
+          "description": "Was appointed France's Minister of Sports",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_027_E02",
+          "source_refs": [
+            "PLV1_027_S1",
+            "PLV1_027_S2",
+            "PLV1_027_S3"
+          ]
+        },
+        {
+          "year": 2002,
+          "valence": "negative",
+          "category": "career_legal",
+          "description": "Tested positive for a prohibited stimulant and was suspended from competition",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_027_E03",
+          "source_refs": [
+            "PLV1_027_S1",
+            "PLV1_027_S2",
+            "PLV1_027_S3"
+          ]
+        },
+        {
+          "year": 2018,
+          "valence": "negative",
+          "category": "career_legal",
+          "description": "Resigned as Sports Minister while tax-compliance scrutiny involving her image-rights company became public",
+          "confidence": "medium",
+          "evidence_grade": "A",
+          "event_id": "PLV1_027_E04",
+          "source_refs": [
+            "PLV1_027_S1",
+            "PLV1_027_S2",
+            "PLV1_027_S3"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_027_S1",
+          "url": "https://fie.org/athletes/7953",
+          "tier": "A_official_or_institutional"
+        },
+        {
+          "source_id": "PLV1_027_S2",
+          "url": "https://www.lemonde.fr/archives/article/2002/08/16/la-federation-se-dit-responsable-du-controle-positif-de-laura-flessel_287495_1819218.html",
+          "tier": "B_major_media_or_reference"
+        },
+        {
+          "source_id": "PLV1_027_S3",
+          "url": "https://www.lemonde.fr/gouvernement-philippe/article/2018/09/04/le-depart-du-gouvernement-de-laura-flessel-lie-a-sa-situation-fiscale_5350218_5129180.html",
+          "tier": "B_major_media_or_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_028",
+      "name": "Mark Ruffalo",
+      "gender": "male",
+      "birth": {
+        "date": "1967-11-22",
+        "time": "07:33",
+        "utc_offset": "-06:00",
+        "city": "Kenosha, WI",
+        "country": "USA",
+        "latitude": 42.588,
+        "longitude": -87.823,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2012,
+          "valence": "positive",
+          "category": "career",
+          "description": "The Avengers established him globally as the Marvel Cinematic Universe's Hulk",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_028_E01",
+          "source_refs": [
+            "PLV1_028_S1"
+          ]
+        },
+        {
+          "year": 2016,
+          "valence": "positive",
+          "category": "career",
+          "description": "Received an Academy Award nomination for Spotlight",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_028_E02",
+          "source_refs": [
+            "PLV1_028_S1"
+          ]
+        },
+        {
+          "year": 2001,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with an acoustic neuroma and underwent brain surgery",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_028_E03",
+          "source_refs": [
+            "PLV1_028_S1"
+          ]
+        },
+        {
+          "year": 2008,
+          "valence": "negative",
+          "category": "family",
+          "description": "His brother Scott died after a shooting",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_028_E04",
+          "source_refs": [
+            "PLV1_028_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_028_S1",
+          "url": "https://en.wikipedia.org/wiki/Mark_Ruffalo",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_029",
+      "name": "Matthew Perry",
+      "gender": "male",
+      "birth": {
+        "date": "1969-08-19",
+        "time": "04:47",
+        "utc_offset": "-04:00",
+        "city": "Williamstown, MA",
+        "country": "USA",
+        "latitude": 42.713,
+        "longitude": -73.203,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1994,
+          "valence": "positive",
+          "category": "career",
+          "description": "Friends premiered and made him an international television star",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_029_E01",
+          "source_refs": [
+            "PLV1_029_S1"
+          ]
+        },
+        {
+          "year": 2002,
+          "valence": "positive",
+          "category": "career",
+          "description": "Received a Primetime Emmy nomination for Friends",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_029_E02",
+          "source_refs": [
+            "PLV1_029_S1"
+          ]
+        },
+        {
+          "year": 1997,
+          "valence": "negative",
+          "category": "health",
+          "description": "Entered rehabilitation for Vicodin addiction",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_029_E03",
+          "source_refs": [
+            "PLV1_029_S1"
+          ]
+        },
+        {
+          "year": 2018,
+          "valence": "negative",
+          "category": "health",
+          "description": "Suffered a gastrointestinal perforation and spent months hospitalized",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_029_E04",
+          "source_refs": [
+            "PLV1_029_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_029_S1",
+          "url": "https://en.wikipedia.org/wiki/Matthew_Perry",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_030",
+      "name": "Mick Fanning",
+      "gender": "male",
+      "birth": {
+        "date": "1981-06-13",
+        "time": "04:21",
+        "utc_offset": "+10:00",
+        "city": "Penrith, NSW",
+        "country": "Australia",
+        "latitude": -33.773,
+        "longitude": 150.694,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2007,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won his first world surfing championship",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_030_E01",
+          "source_refs": [
+            "PLV1_030_S1"
+          ]
+        },
+        {
+          "year": 2013,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won his third world surfing championship",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_030_E02",
+          "source_refs": [
+            "PLV1_030_S1"
+          ]
+        },
+        {
+          "year": 2004,
+          "valence": "negative",
+          "category": "health",
+          "description": "Suffered a severe hamstring injury that threatened his career",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_030_E03",
+          "source_refs": [
+            "PLV1_030_S1"
+          ]
+        },
+        {
+          "year": 2015,
+          "valence": "negative",
+          "category": "accident",
+          "description": "Survived a shark encounter during a live competition",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_030_E04",
+          "source_refs": [
+            "PLV1_030_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_030_S1",
+          "url": "https://en.wikipedia.org/wiki/Mick_Fanning",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_032",
+      "name": "Miley Cyrus",
+      "gender": "female",
+      "birth": {
+        "date": "1992-11-23",
+        "time": "16:19",
+        "utc_offset": "-06:00",
+        "city": "Nashville, TN",
+        "country": "USA",
+        "latitude": 36.166,
+        "longitude": -86.779,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 2006,
+          "valence": "positive",
+          "category": "career",
+          "description": "Hannah Montana premiered and made her a global teen star",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_032_E01",
+          "source_refs": [
+            "PLV1_032_S1"
+          ]
+        },
+        {
+          "year": 2024,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won her first Grammy Awards for Flowers",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_032_E02",
+          "source_refs": [
+            "PLV1_032_S1"
+          ]
+        },
+        {
+          "year": 2018,
+          "valence": "negative",
+          "category": "accident",
+          "description": "Lost her Malibu home in the Woolsey Fire",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_032_E03",
+          "source_refs": [
+            "PLV1_032_S1"
+          ]
+        },
+        {
+          "year": 2019,
+          "valence": "negative",
+          "category": "health",
+          "description": "Underwent vocal-cord surgery after health problems",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_032_E04",
+          "source_refs": [
+            "PLV1_032_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_032_S1",
+          "url": "https://en.wikipedia.org/wiki/Miley_Cyrus",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_035",
+      "name": "Rock Hudson",
+      "gender": "male",
+      "birth": {
+        "date": "1925-11-17",
+        "time": "02:15",
+        "utc_offset": "-06:00",
+        "city": "Winnetka, IL",
+        "country": "USA",
+        "latitude": 42.107,
+        "longitude": -87.735,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1957,
+          "valence": "positive",
+          "category": "career",
+          "description": "Received an Academy Award nomination for Giant",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_035_E01",
+          "source_refs": [
+            "PLV1_035_S1"
+          ]
+        },
+        {
+          "year": 1959,
+          "valence": "positive",
+          "category": "career",
+          "description": "Pillow Talk became one of his defining major film successes",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_035_E02",
+          "source_refs": [
+            "PLV1_035_S1"
+          ]
+        },
+        {
+          "year": 1984,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with AIDS",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_035_E03",
+          "source_refs": [
+            "PLV1_035_S1"
+          ]
+        },
+        {
+          "year": 1985,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died from AIDS-related complications",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_035_E04",
+          "source_refs": [
+            "PLV1_035_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_035_S1",
+          "url": "https://en.wikipedia.org/wiki/Rock_Hudson",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_036",
+      "name": "Rocky Bleier",
+      "gender": "male",
+      "birth": {
+        "date": "1946-03-05",
+        "time": "08:15",
+        "utc_offset": "-06:00",
+        "city": "Appleton, WI",
+        "country": "USA",
+        "latitude": 44.262,
+        "longitude": -88.407,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1974,
+          "valence": "positive",
+          "category": "career",
+          "description": "Established himself in the Steelers backfield during the franchise's first Super Bowl championship season",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_036_E01",
+          "source_refs": [
+            "PLV1_036_S1",
+            "PLV1_036_S2"
+          ]
+        },
+        {
+          "year": 1976,
+          "valence": "positive",
+          "category": "career",
+          "description": "Rushed for 1,036 yards as both he and Franco Harris surpassed 1,000 yards",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_036_E02",
+          "source_refs": [
+            "PLV1_036_S1",
+            "PLV1_036_S2"
+          ]
+        },
+        {
+          "year": 1969,
+          "valence": "negative",
+          "category": "accident",
+          "description": "Was wounded in combat in Vietnam, suffering gunshot and grenade injuries",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_036_E03",
+          "source_refs": [
+            "PLV1_036_S1",
+            "PLV1_036_S2"
+          ]
+        },
+        {
+          "year": 1971,
+          "valence": "negative",
+          "category": "career",
+          "description": "Was waived and relegated to a taxi-squad role while struggling to return from war injuries",
+          "confidence": "medium",
+          "evidence_grade": "A",
+          "event_id": "PLV1_036_E04",
+          "source_refs": [
+            "PLV1_036_S1",
+            "PLV1_036_S2"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_036_S1",
+          "url": "https://www.steelers.com/history/bios/bleier_rocky",
+          "tier": "A_official_or_institutional"
+        },
+        {
+          "source_id": "PLV1_036_S2",
+          "url": "https://www.steelers.com/news/asked-and-answered-july-11-x5924",
+          "tier": "A_official_or_institutional"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_037",
+      "name": "Sally Ride",
+      "gender": "female",
+      "birth": {
+        "date": "1951-05-26",
+        "time": "08:11",
+        "utc_offset": "-07:00",
+        "city": "Los Angeles, CA",
+        "country": "USA",
+        "latitude": 34.052,
+        "longitude": -118.243,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1983,
+          "valence": "positive",
+          "category": "career",
+          "description": "Became the first American woman in space",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_037_E01",
+          "source_refs": [
+            "PLV1_037_S1"
+          ]
+        },
+        {
+          "year": 1984,
+          "valence": "positive",
+          "category": "career",
+          "description": "Completed a second Space Shuttle mission",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_037_E02",
+          "source_refs": [
+            "PLV1_037_S1"
+          ]
+        },
+        {
+          "year": 2011,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with pancreatic cancer",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_037_E03",
+          "source_refs": [
+            "PLV1_037_S1"
+          ]
+        },
+        {
+          "year": 2012,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died from pancreatic cancer",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_037_E04",
+          "source_refs": [
+            "PLV1_037_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_037_S1",
+          "url": "https://en.wikipedia.org/wiki/Sally_Ride",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_038",
+      "name": "Salvador Allende",
+      "gender": "male",
+      "birth": {
+        "date": "1908-06-26",
+        "time": "01:30",
+        "utc_offset": "-04:43",
+        "city": "Valparaiso",
+        "country": "Chile",
+        "latitude": -33.046,
+        "longitude": -71.619,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1966,
+          "valence": "positive",
+          "category": "career",
+          "description": "Became president of the Chilean Senate",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_038_E01",
+          "source_refs": [
+            "PLV1_038_S1"
+          ]
+        },
+        {
+          "year": 1970,
+          "valence": "positive",
+          "category": "career",
+          "description": "Was elected President of Chile",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_038_E02",
+          "source_refs": [
+            "PLV1_038_S1"
+          ]
+        },
+        {
+          "year": 1972,
+          "valence": "negative",
+          "category": "politics_economy",
+          "description": "His government faced severe economic disruption and nationwide strikes",
+          "confidence": "medium",
+          "evidence_grade": "B",
+          "event_id": "PLV1_038_E03",
+          "source_refs": [
+            "PLV1_038_S1"
+          ]
+        },
+        {
+          "year": 1973,
+          "valence": "negative",
+          "category": "politics",
+          "description": "His government was overthrown in a military coup and he died that day",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_038_E04",
+          "source_refs": [
+            "PLV1_038_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_038_S1",
+          "url": "https://en.wikipedia.org/wiki/Salvador_Allende",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_039",
+      "name": "Steve McQueen",
+      "gender": "male",
+      "birth": {
+        "date": "1930-03-24",
+        "time": "12:15",
+        "utc_offset": "-06:00",
+        "city": "Indianapolis, IN",
+        "country": "USA",
+        "latitude": 39.768,
+        "longitude": -86.156,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1963,
+          "valence": "positive",
+          "category": "career",
+          "description": "The Great Escape cemented his international stardom",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_039_E01",
+          "source_refs": [
+            "PLV1_039_S1"
+          ]
+        },
+        {
+          "year": 1968,
+          "valence": "positive",
+          "category": "career",
+          "description": "Bullitt became one of his defining films",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_039_E02",
+          "source_refs": [
+            "PLV1_039_S1"
+          ]
+        },
+        {
+          "year": 1979,
+          "valence": "negative",
+          "category": "health",
+          "description": "Diagnosed with mesothelioma",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_039_E03",
+          "source_refs": [
+            "PLV1_039_S1"
+          ]
+        },
+        {
+          "year": 1980,
+          "valence": "negative",
+          "category": "health",
+          "description": "Died following cancer treatment",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_039_E04",
+          "source_refs": [
+            "PLV1_039_S1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_039_S1",
+          "url": "https://en.wikipedia.org/wiki/Steve_McQueen",
+          "tier": "C_public_reference"
+        }
+      ],
+      "split": "DEV"
+    },
+    {
+      "subject_id": "PLV1_040",
+      "name": "Whoopi Goldberg",
+      "gender": "female",
+      "birth": {
+        "date": "1955-11-13",
+        "time": "12:48",
+        "utc_offset": "-05:00",
+        "city": "New York, NY",
+        "country": "USA",
+        "latitude": 40.713,
+        "longitude": -74.007,
+        "time_precision": "exact",
+        "source_quality": "Rodden_AA_via_VedAstro",
+        "source_urls": [
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location",
+          "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+        ]
+      },
+      "events": [
+        {
+          "year": 1991,
+          "valence": "positive",
+          "category": "career",
+          "description": "Won the Academy Award for Best Supporting Actress for Ghost",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_040_E01",
+          "source_refs": [
+            "PLV1_040_S1",
+            "PLV1_040_S2",
+            "PLV1_040_S3"
+          ]
+        },
+        {
+          "year": 2002,
+          "valence": "positive",
+          "category": "career",
+          "description": "Completed EGOT status with major Emmy/Tony recognition",
+          "confidence": "high",
+          "evidence_grade": "B",
+          "event_id": "PLV1_040_E02",
+          "source_refs": [
+            "PLV1_040_S1",
+            "PLV1_040_S2",
+            "PLV1_040_S3"
+          ]
+        },
+        {
+          "year": 2004,
+          "valence": "negative",
+          "category": "career_reputation",
+          "description": "Slim-Fast dropped her from its advertising campaign after controversial political remarks",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_040_E03",
+          "source_refs": [
+            "PLV1_040_S1",
+            "PLV1_040_S2",
+            "PLV1_040_S3"
+          ]
+        },
+        {
+          "year": 2019,
+          "valence": "negative",
+          "category": "health",
+          "description": "Suffered pneumonia, sepsis and septic shock and described a near-death illness",
+          "confidence": "high",
+          "evidence_grade": "A",
+          "event_id": "PLV1_040_E04",
+          "source_refs": [
+            "PLV1_040_S1",
+            "PLV1_040_S2",
+            "PLV1_040_S3"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "source_id": "PLV1_040_S1",
+          "url": "https://en.wikipedia.org/wiki/Whoopi_Goldberg",
+          "tier": "C_public_reference"
+        },
+        {
+          "source_id": "PLV1_040_S2",
+          "url": "https://www.cbsnews.com/news/slim-fast-trims-whoopi-from-ads/",
+          "tier": "B_major_media_or_reference"
+        },
+        {
+          "source_id": "PLV1_040_S3",
+          "url": "https://abcnews.go.com/Health/whoopi-goldberg-announces-death-battle-pneumonia-sepsis/story?id=61563014",
+          "tier": "B_major_media_or_reference"
+        }
+      ],
+      "split": "DEV"
+    }
+  ]
+}

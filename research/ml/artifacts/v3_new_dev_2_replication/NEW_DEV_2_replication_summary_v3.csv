@@ -1,0 +1,2 @@
+status,n_subjects,macro_pairwise,strict_hit_rate,permutation_p,bootstrap_p_pairwise_gt_0_5,control_pairwise,n_control_evaluable,delta_vs_control,bootstrap_p_delta_gt_0,replication_pass,control_superiority_support
+REPLICATION_FAIL_DO_NOT_TUNE_ON_NEW_DEV_2,100,0.56,0.53,0.1191761647670466,0.88495,0.55,100,0.01,0.54545,False,False

@@ -1,0 +1,7 @@
+helper,signature,forbidden_hits,pass
+_natal_context,"(pack: 'dict') -> 'Dict[str, Any]'",,True
+_regime_evidence,"(nc: 'dict', feat: 'dict', stem: 'str', branch: 'str', rels: 'list') -> 'Dict[str, Any]'",,True
+_contextual_year,"(nc: 'dict', meta: 'dict', d_stem: 'str', d_br: 'str', d_dir: 'float') -> 'Dict[str, float]'",,True
+_ten_god_role,"(tg: 'str', nc: 'dict') -> 'Tuple[float, str, str]'",,True
+_classify_relation_valence,"(pairs: 'Sequence[str]', target_idx, nc: 'dict') -> 'Tuple[float, float, List[str]]'",,True
+_elem_sign,"(elem: 'str', nc: 'dict') -> 'float'",,True

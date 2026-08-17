@@ -1,0 +1,963 @@
+{
+  "measured_at": "2026-08-12T22:14:36",
+  "phase": "G_CLEAN",
+  "contamination_rule": "All yongshin_subjects.json names are DEVELOPMENT only; not fresh validation.",
+  "frozen_hierarchy": {
+    "alpha": 1.0,
+    "kappa": 0.0,
+    "beta": 0.25,
+    "D": "engine_pillar",
+    "centering": "median"
+  },
+  "g_ref_matches_arm_b_max_abs_delta": 0.05,
+  "clean_final_coeff_choice": {
+    "discord": 0.45,
+    "risk": 0.4,
+    "pattern": 0.55,
+    "note": "existing final-G coeffs only; axes stripped of pattern paths"
+  },
+  "family_activation": {
+    "discord": {
+      "activation_rate": 0.0307,
+      "mean_when_active": -12.5,
+      "n_active": 43
+    },
+    "risk": {
+      "activation_rate": 0.0257,
+      "mean_when_active": -2.4963,
+      "n_active": 36
+    },
+    "hollow": {
+      "activation_rate": 0.0293,
+      "mean_when_active": -9.9,
+      "n_active": 41
+    },
+    "friction": {
+      "activation_rate": 0.0114,
+      "mean_when_active": -4.5,
+      "n_active": 16
+    },
+    "health_guan": {
+      "activation_rate": 0.0064,
+      "mean_when_active": -13.5,
+      "n_active": 9
+    },
+    "career_conflict_pen": {
+      "activation_rate": 0.3586,
+      "mean_when_active": -6.0,
+      "n_active": 502
+    },
+    "health_shock": {
+      "activation_rate": 0.2886,
+      "mean_when_active": -4.5396,
+      "n_active": 404
+    },
+    "rel_bond": {
+      "activation_rate": 0.1657,
+      "mean_when_active": 3.2974,
+      "n_active": 232
+    },
+    "career_tg": {
+      "activation_rate": 0.9807,
+      "mean_when_active": 2.0015,
+      "n_active": 1373
+    }
+  },
+  "variants": {
+    "G_REF": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.2041,
+        "raw_sep_median": 3.5545,
+        "pooled_sd": 13.3318,
+        "std_sep": 0.2403,
+        "pairwise_good_gt_bad": 0.6461,
+        "auc_macro": 0.6461,
+        "auc_micro": 0.5791,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3478,
+        "raw_sep_median": 1.0156,
+        "pooled_sd": 13.6052,
+        "std_sep": 0.1726,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5032,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "G_dist": {
+        "n": 1400,
+        "mean": 50.472,
+        "sd": 4.6579,
+        "p05": 42.7156,
+        "p50": 51.1997,
+        "p95": 56.2923
+      },
+      "sat_rate": 0.0,
+      "flips_vs_ref": {
+        "n": 0,
+        "rows": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.2745
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7973
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.2444
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 1.0156
+        }
+      ]
+    },
+    "G_CLEAN_AXIS": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 1.6719,
+        "raw_sep_median": 2.902,
+        "pooled_sd": 13.0799,
+        "std_sep": 0.1278,
+        "pairwise_good_gt_bad": 0.5981,
+        "auc_macro": 0.5981,
+        "auc_micro": 0.5333,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.0421,
+        "raw_sep_median": 0.9671,
+        "pooled_sd": 13.4511,
+        "std_sep": 0.1518,
+        "pairwise_good_gt_bad": 0.5831,
+        "auc_macro": 0.5831,
+        "auc_micro": 0.4989,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "G_dist": {
+        "n": 1400,
+        "mean": 50.9059,
+        "sd": 3.686,
+        "p05": 44.2324,
+        "p50": 51.2037,
+        "p95": 56.2923
+      },
+      "sat_rate": 0.0,
+      "flips_vs_ref": {
+        "n": 0,
+        "rows": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -8.0917
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7973
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -2.173
+        },
+        {
+          "name": "Justin Bieber",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.9671
+        }
+      ]
+    },
+    "G_CLEAN_FINAL": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 1.4285,
+        "raw_sep_median": 2.6552,
+        "pooled_sd": 13.0486,
+        "std_sep": 0.1095,
+        "pairwise_good_gt_bad": 0.5902,
+        "auc_macro": 0.5902,
+        "auc_micro": 0.527,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.024,
+        "raw_sep_median": 0.8767,
+        "pooled_sd": 13.4373,
+        "std_sep": 0.1506,
+        "pairwise_good_gt_bad": 0.5831,
+        "auc_macro": 0.5831,
+        "auc_micro": 0.4989,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "G_dist": {
+        "n": 1400,
+        "mean": 50.9613,
+        "sd": 3.5819,
+        "p05": 44.4038,
+        "p50": 51.2572,
+        "p95": 56.2923
+      },
+      "sat_rate": 0.0,
+      "flips_vs_ref": {
+        "n": 0,
+        "rows": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -8.258
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7973
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -2.5707
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114
+        },
+        {
+          "name": "Justin Bieber",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.8767
+        }
+      ]
+    },
+    "DIRECT_EQUAL_FAMILY": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 0.0198,
+        "raw_sep_median": 0.9322,
+        "pooled_sd": 12.6103,
+        "std_sep": 0.0016,
+        "pairwise_good_gt_bad": 0.5053,
+        "auc_macro": 0.5053,
+        "auc_micro": 0.4828,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.0045,
+        "raw_sep_median": 0.1398,
+        "pooled_sd": 13.1882,
+        "std_sep": 0.0762,
+        "pairwise_good_gt_bad": 0.5563,
+        "auc_macro": 0.5563,
+        "auc_micro": 0.4736,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "G_dist": {
+        "n": 1400,
+        "mean": 50.0,
+        "sd": 1.6883,
+        "p05": 47.1085,
+        "p50": 50.0678,
+        "p95": 52.6945
+      },
+      "sat_rate": 0.0,
+      "flips_vs_ref": {
+        "n": 0,
+        "rows": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -9.6638
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -7.3604
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -3.4891
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.9893
+        },
+        {
+          "name": "Justin Bieber",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.1398
+        }
+      ]
+    },
+    "DIRECT_EQUAL_PLUS_PATTERN_ONCE": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 1.5606,
+        "raw_sep_median": 2.8507,
+        "pooled_sd": 12.6893,
+        "std_sep": 0.123,
+        "pairwise_good_gt_bad": 0.5589,
+        "auc_macro": 0.5589,
+        "auc_micro": 0.5318,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.3302,
+        "raw_sep_median": 0.3157,
+        "pooled_sd": 13.2152,
+        "std_sep": 0.1007,
+        "pairwise_good_gt_bad": 0.5941,
+        "auc_macro": 0.5941,
+        "auc_micro": 0.4884,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "G_dist": {
+        "n": 1400,
+        "mean": 49.5661,
+        "sd": 2.2781,
+        "p05": 45.8599,
+        "p50": 49.8709,
+        "p95": 52.6004
+      },
+      "sat_rate": 0.0,
+      "flips_vs_ref": {
+        "n": 0,
+        "rows": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -8.6874
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -7.2477
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -3.0537
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -1.5797
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.3157
+        }
+      ]
+    }
+  },
+  "ablations": {
+    "G_CLEAN_AXIS": {
+      "discord": {
+        "train_hit": 62.5,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.152,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 1,
+          "rows": [
+            {
+              "name": "Chris Brown",
+              "bucket": "train",
+              "ref_hit": 1,
+              "alt_hit": 0,
+              "ref_sep": 4.0737,
+              "alt_sep": -0.5945
+            }
+          ]
+        },
+        "delta_hold_std_vs_parent": 0.0002,
+        "delta_train_hit_vs_parent": -12.5
+      },
+      "risk": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1519,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": 0.0001,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "hollow": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1452,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.0066,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "friction": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1518,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": 0.0,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "health_guan": {
+        "train_hit": 75.0,
+        "hold_hit": 40.0,
+        "hold_std_sep": 0.1272,
+        "hold_pairwise": 0.5617,
+        "hold_auc_macro": 0.5617,
+        "hold_auc_micro": 0.4884,
+        "flips_vs_ref": {
+          "n": 1,
+          "rows": [
+            {
+              "name": "Justin Bieber",
+              "bucket": "holdout",
+              "ref_hit": 1,
+              "alt_hit": 0,
+              "ref_sep": 2.4957,
+              "alt_sep": -0.6487
+            }
+          ]
+        },
+        "delta_hold_std_vs_parent": -0.0246,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "career_conflict_pen": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1058,
+        "hold_pairwise": 0.5856,
+        "hold_auc_macro": 0.5856,
+        "hold_auc_micro": 0.4926,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.046,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "health_shock": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.0976,
+        "hold_pairwise": 0.5668,
+        "hold_auc_macro": 0.5668,
+        "hold_auc_micro": 0.4915,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.0542,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "rel_bond": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1423,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.5021,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.0095,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "career_tg": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.163,
+        "hold_pairwise": 0.5817,
+        "hold_auc_macro": 0.5817,
+        "hold_auc_micro": 0.5011,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": 0.0112,
+        "delta_train_hit_vs_parent": 0.0
+      }
+    },
+    "G_CLEAN_FINAL": {
+      "discord": {
+        "train_hit": 62.5,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1502,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 1,
+          "rows": [
+            {
+              "name": "Chris Brown",
+              "bucket": "train",
+              "ref_hit": 1,
+              "alt_hit": 0,
+              "ref_sep": 4.0737,
+              "alt_sep": -0.7272
+            }
+          ]
+        },
+        "delta_hold_std_vs_parent": -0.0004,
+        "delta_train_hit_vs_parent": -12.5
+      },
+      "risk": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1507,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": 0.0001,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "hollow": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.144,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.0066,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "friction": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1506,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": 0.0,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "health_guan": {
+        "train_hit": 75.0,
+        "hold_hit": 40.0,
+        "hold_std_sep": 0.1273,
+        "hold_pairwise": 0.5617,
+        "hold_auc_macro": 0.5617,
+        "hold_auc_micro": 0.4884,
+        "flips_vs_ref": {
+          "n": 1,
+          "rows": [
+            {
+              "name": "Justin Bieber",
+              "bucket": "holdout",
+              "ref_hit": 1,
+              "alt_hit": 0,
+              "ref_sep": 2.4957,
+              "alt_sep": -0.6487
+            }
+          ]
+        },
+        "delta_hold_std_vs_parent": -0.0233,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "career_conflict_pen": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.104,
+        "hold_pairwise": 0.5835,
+        "hold_auc_macro": 0.5835,
+        "hold_auc_micro": 0.4905,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.0466,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "health_shock": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.0963,
+        "hold_pairwise": 0.5668,
+        "hold_auc_macro": 0.5668,
+        "hold_auc_micro": 0.4915,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.0543,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "rel_bond": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1411,
+        "hold_pairwise": 0.5831,
+        "hold_auc_macro": 0.5831,
+        "hold_auc_micro": 0.5021,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": -0.0095,
+        "delta_train_hit_vs_parent": 0.0
+      },
+      "career_tg": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1618,
+        "hold_pairwise": 0.5746,
+        "hold_auc_macro": 0.5746,
+        "hold_auc_micro": 0.5,
+        "flips_vs_ref": {
+          "n": 0,
+          "rows": []
+        },
+        "delta_hold_std_vs_parent": 0.0112,
+        "delta_train_hit_vs_parent": 0.0
+      }
+    }
+  },
+  "career_dominance": {
+    "yfit_c": {
+      "pop_sd": 1.649,
+      "within_block_sd_p50": 1.543,
+      "var_share_approx": 0.1054,
+      "corr_A_y": 0.2752,
+      "corr_label_dir": -0.03,
+      "activation_rate": 0.9864,
+      "mean_when_active": -0.4376
+    },
+    "rel": {
+      "pop_sd": 2.002,
+      "within_block_sd_p50": 1.7619,
+      "var_share_approx": 0.1553,
+      "corr_A_y": 0.4424,
+      "corr_label_dir": 0.1275,
+      "activation_rate": 1.0,
+      "mean_when_active": 0.8421
+    },
+    "struct": {
+      "pop_sd": 0.8287,
+      "within_block_sd_p50": 0.7647,
+      "var_share_approx": 0.0266,
+      "corr_A_y": 0.2731,
+      "corr_label_dir": 0.0065,
+      "activation_rate": 0.7479,
+      "mean_when_active": -0.1292
+    },
+    "unseong": {
+      "pop_sd": 0.6762,
+      "within_block_sd_p50": 0.5452,
+      "var_share_approx": 0.0177,
+      "corr_A_y": 0.102,
+      "corr_label_dir": 0.0374,
+      "activation_rate": 0.9143,
+      "mean_when_active": 0.0246
+    },
+    "career_tg": {
+      "pop_sd": 1.8992,
+      "within_block_sd_p50": 1.9989,
+      "var_share_approx": 0.1398,
+      "corr_A_y": 0.1057,
+      "corr_label_dir": -0.0166,
+      "activation_rate": 0.9807,
+      "mean_when_active": 2.0015
+    },
+    "career_conflict_pen": {
+      "pop_sd": 2.8785,
+      "within_block_sd_p50": 3.0619,
+      "var_share_approx": 0.3211,
+      "corr_A_y": 0.2749,
+      "corr_label_dir": -0.0359,
+      "activation_rate": 0.3586,
+      "mean_when_active": -6.0
+    },
+    "discord": {
+      "pop_sd": 1.8339,
+      "within_block_sd_p50": 0.0,
+      "var_share_approx": 0.1303,
+      "corr_A_y": 0.604,
+      "corr_label_dir": 0.263,
+      "activation_rate": 0.0307,
+      "mean_when_active": -10.625
+    },
+    "risk": {
+      "pop_sd": 0.2424,
+      "within_block_sd_p50": 0.0,
+      "var_share_approx": 0.0023,
+      "corr_A_y": 0.4929,
+      "corr_label_dir": 0.2013,
+      "activation_rate": 0.0257,
+      "mean_when_active": -1.373
+    },
+    "pattern": {
+      "pop_sd": 1.6185,
+      "within_block_sd_p50": 0.0,
+      "var_share_approx": 0.1015,
+      "corr_A_y": 0.4339,
+      "corr_label_dir": 0.2131,
+      "activation_rate": 0.0471,
+      "mean_when_active": -7.2655
+    }
+  },
+  "orthogonality": {
+    "correlations": {
+      "career_health": 0.649,
+      "career_relationship": 0.6411,
+      "health_relationship": 0.5375
+    },
+    "health_resid_vs_career": {
+      "resid_sd": 2.89,
+      "corr_label_dir": 0.0402,
+      "note": "OLS residual health ~ career; diagnostic only"
+    },
+    "relationship_resid_vs_career_health": {
+      "resid_sd": 2.4421,
+      "corr_label_dir": 0.0533,
+      "note": "OLS residual relationship ~ career+health; diagnostic only"
+    }
+  },
+  "direct_family_z_stats": {
+    "yfit": {
+      "mean": -1.2585,
+      "sd": 5.6783
+    },
+    "relations": {
+      "mean": 2.0051,
+      "sd": 4.7667
+    },
+    "structural_adj": {
+      "mean": -0.2148,
+      "sd": 1.8416
+    },
+    "unseong": {
+      "mean": 0.1501,
+      "sd": 4.5081
+    },
+    "balance": {
+      "mean": 1.0216,
+      "sd": 2.3191
+    },
+    "career_tg": {
+      "mean": 1.9629,
+      "sd": 1.8992
+    },
+    "health_shock": {
+      "mean": -1.31,
+      "sd": 2.359
+    },
+    "rel_bond": {
+      "mean": 0.5464,
+      "sd": 1.2797
+    }
+  },
+  "decision": {
+    "candidate_for_fresh_validation": "G_CLEAN_AXIS",
+    "reasons": [
+      "G_CLEAN_AXIS ranks at/above G_CLEAN_FINAL; prefer axis-local patterns + no final restack",
+      "clean architecture not materially worse than G_REF on hold ranking"
+    ],
+    "direct_note": "DIRECT_EQUAL_FAMILY is diagnostic; promote only if it clearly matches clean domain G without depending on axis taxonomy — see report.",
+    "comparison_snapshot": {
+      "G_REF": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1726,
+        "hold_pairwise": 0.5974,
+        "hold_auc_micro": 0.5032,
+        "flips_vs_ref": 0
+      },
+      "G_CLEAN_AXIS": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1518,
+        "hold_pairwise": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": 0
+      },
+      "G_CLEAN_FINAL": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1506,
+        "hold_pairwise": 0.5831,
+        "hold_auc_micro": 0.4989,
+        "flips_vs_ref": 0
+      },
+      "DIRECT_EQUAL_FAMILY": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.0762,
+        "hold_pairwise": 0.5563,
+        "hold_auc_micro": 0.4736,
+        "flips_vs_ref": 0
+      },
+      "DIRECT_EQUAL_PLUS_PATTERN_ONCE": {
+        "train_hit": 75.0,
+        "hold_hit": 60.0,
+        "hold_std_sep": 0.1007,
+        "hold_pairwise": 0.5941,
+        "hold_auc_micro": 0.4884,
+        "flips_vs_ref": 0
+      }
+    }
+  },
+  "final_answers": {
+    "1_destack_hurt_or_improve": "G_CLEAN_AXIS hold std 0.1518 vs G_REF 0.1726 (Δ=-0.0208); G_CLEAN_FINAL 0.1506 (Δ=-0.0220); flips axis=0 final=0. De-stacking does not clearly destroy hold ranking; prefer structural win.",
+    "2_axis_only_vs_final_only": "Candidate=G_CLEAN_AXIS. G_CLEAN_AXIS ranks at/above G_CLEAN_FINAL; prefer axis-local patterns + no final restack clean architecture not materially worse than G_REF on hold ranking",
+    "3_patterns_incremental": [
+      {
+        "family": "discord",
+        "delta_hold_std": 0.0002,
+        "delta_train_hit": -12.5,
+        "flips": 1
+      },
+      {
+        "family": "health_guan",
+        "delta_hold_std": -0.0246,
+        "delta_train_hit": 0.0,
+        "flips": 1
+      },
+      {
+        "family": "career_conflict_pen",
+        "delta_hold_std": -0.046,
+        "delta_train_hit": 0.0,
+        "flips": 0
+      },
+      {
+        "family": "health_shock",
+        "delta_hold_std": -0.0542,
+        "delta_train_hit": 0.0,
+        "flips": 0
+      }
+    ],
+    "4_named_patches": [
+      "health_guan (Bieber)",
+      "hollow (Hillary narrative)",
+      "friction (Brown narrative)"
+    ],
+    "5_career_unique": "career_tg var_share≈0.1398, conflict_pen share≈0.3211, yfit_c share≈0.1054; see career_dominance section — high variance often from heuristics not label corr.",
+    "6_health_unique": "health residual corr_label=0.0402; resid_sd=2.89",
+    "7_relationship_unique": "relationship residual corr_label=0.0533; resid_sd=2.4421",
+    "8_axes_justify_model_generator": "If residuals lack label association and DIRECT_EQUAL is competitive, axes are better as explanation projections than as mandatory model generators. See decision + direct KPIs.",
+    "9_primitive_direct_defensible": "DIRECT_EQUAL hold std=0.0762 vs clean candidate 0.1518; structurally more transparent; only promote if ranking not far worse on development AND later confirmed on fresh set.",
+    "10_candidate_for_fresh": "G_CLEAN_AXIS",
+    "11_permanently_reject": [
+      "final-G restack of discord/risk/pattern on top of in-axis injection (G_REF extras)",
+      "treating yongshin_subjects.json holdout as clean final validation"
+    ],
+    "12_must_not_change_before_fresh": [
+      "B9 hierarchy (α,κ,β,D,median,S_raw,M_raw)",
+      "no new coefficients invented for patterns",
+      "no patches aimed at contaminated celebs",
+      "fresh labels frozen before scoring"
+    ],
+    "13_fresh_subjects_absent_from_json": "No fresh subjects scored in this phase. G_FRESH_VALIDATION_SPEC.md requires programmatic exclusion of all yongshin_subjects.json names before any addition."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "n_failures": 2,
+  "failures": [
+    {
+      "axis": "COMPETITIVE",
+      "role_family": "association_football_player",
+      "role_qid": "Q937857",
+      "error": "JSONDecodeError('Expecting property name enclosed in double quotes: line 43314 column 1 (char 1047023)')"
+    },
+    {
+      "axis": "COMPETITIVE",
+      "role_family": "basketball_player",
+      "role_qid": "Q3665646",
+      "error": "JSONDecodeError('Unterminated string starting at: line 10861 column 7 (char 261935)')"
+    }
+  ],
+  "policy": "Individual external role-query failure does not alter membership rules. Final combined-pool sufficiency gate decides continuation."
+}

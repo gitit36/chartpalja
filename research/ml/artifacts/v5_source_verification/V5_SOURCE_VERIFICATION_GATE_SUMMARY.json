@@ -1,0 +1,26 @@
+{
+  "version": "V5_SOURCE_VERIFICATION_GATE_SUMMARY_V1",
+  "created_at": "2026-08-17T04:36:44",
+  "status": "V5_SOURCE_VERIFICATION_MANUAL_BACKFILL_REQUIRED",
+  "subjects_n": 160,
+  "event_rows_n": 481,
+  "eligible_rows_n": 405,
+  "excluded_rows_n": 76,
+  "unique_source_urls_n": 313,
+  "auto_pass_rows_n": 348,
+  "manual_review_rows_n": 133,
+  "invalid_source_field_rows_n": 0,
+  "eligible_manual_review_rows_n": 118,
+  "eligible_manual_review_unique_urls_n": 77,
+  "rules": {
+    "membership_changed": false,
+    "event_rows_deleted": false,
+    "event_labels_changed": false,
+    "pairability_used": false,
+    "chronology_used": false,
+    "astrology_used": false,
+    "control_used": false,
+    "confirm_researched": false
+  },
+  "next_rule": "If eligible_manual_review_rows_n > 0, send V5_SOURCE_VERIFICATION_ELIGIBLE_MANUAL_REVIEW.csv for independent web verification. Do not freeze events yet. If zero, proceed to final event QA/freeze notebook."
+}

@@ -1,0 +1,44 @@
+{
+  "status": "V4_FAIL_DIAGNOSED_COLLECT_UNIFIED_DEV",
+  "winner": null,
+  "key_evidence": {
+    "best_winner_eligible_model": "ALL_ELASTICNET_AUTO",
+    "best_overall": 0.5050724637681159,
+    "best_p10": 0.2893719806763285,
+    "best_origin_min": 0.4873873873873875,
+    "origin_chronology_gap": 0.8367346938775511,
+    "forbidden_origin_diagnostic": 0.8913043478260869,
+    "core_axis_counts": {
+      "COMPETITIVE": {
+        "pairs": 43,
+        "subjects": 26
+      },
+      "PROJECT": {
+        "pairs": 40,
+        "subjects": 33
+      },
+      "RECOGNITION": {
+        "pairs": 4,
+        "subjects": 3
+      },
+      "STATUS": {
+        "pairs": 13,
+        "subjects": 9
+      }
+    }
+  },
+  "next_development": {
+    "protocol": "SINGLE_UNIFIED_COLLECTION_PROTOCOL",
+    "recommended_fresh_pairs": 100,
+    "axis_allocation": {
+      "COMPETITIVE": 30,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "minimum_core_axis_subjects_for_diagnostic_interpretation": 50,
+    "recognition_core_deferred_until_subjects": 30,
+    "chronology_rule": "Do not directional-backfill. Freeze a complete wave first; if chronology remains imbalanced, collect another complete wave under the same protocol.",
+    "pair_selection_rule": "Within the preassigned axis, enumerate verified opposite-polarity events and choose the minimum-absolute-year-gap pair using a deterministic tie-break."
+  },
+  "next_rule": "Collect the fresh unified development wave BEFORE generating astrology scores. Then run a preregistered small-family development comparison. Do not construct or open a new external holdout until a candidate passes discovery gates."
+}

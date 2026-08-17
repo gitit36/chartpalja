@@ -1,0 +1,25 @@
+{
+  "dataset_version": "PUBLIC_LIFE_V1",
+  "status": "DEV_CHECK_AVAILABLE_FINAL_SEALED",
+  "seed": 20260815,
+  "owner_full_dataset_sha256": "fa975419d8299cb38a8d9cac2c04e418dd6f5819cad4fbbb7550b524614ccd2f",
+  "DEV": {
+    "n": 24,
+    "sha256": "bc007042904612a2032a427f7ac3f4ac6fa661c253a7bc102c8de6eb3ada92ed"
+  },
+  "CHECK": {
+    "n": 8,
+    "sha256": "926552f014ed83a526f9e482ce2343f35023b49cd350f695549fdabf094aafca"
+  },
+  "FINAL": {
+    "n": 8,
+    "sha256": "d11a1937cbf6017b8156712bfb6a59e05602a4006e704dd4c51c3b44701177f1",
+    "identities": "WITHHELD_FROM_STAGE1"
+  },
+  "rules": {
+    "final_must_remain_unopened": true,
+    "validation_b_forbidden": true,
+    "production_control_definition": "production yearly candle.close",
+    "v2_expected_hash16": "d2c0199c5194dd63"
+  }
+}

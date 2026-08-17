@@ -1,0 +1,55 @@
+{
+  "version": "V5_COMBINED_PREPAIR_FEASIBILITY_DECISION_V1",
+  "notebook_version": "SAJU_ML_V5_COMBINED_PREPAIR_FEASIBILITY_GATE_20260817",
+  "status": "V5_COMBINED_PREPAIR_FEASIBILITY_FAIL_EXPANSION_E2_REQUIRED",
+  "original_DEV_both_polarity_upper_bound_total": 71,
+  "original_DEV_both_polarity_upper_bound_by_axis": {
+    "COMPETITIVE": 31,
+    "PROJECT": 12,
+    "STATUS": 28
+  },
+  "E1_both_polarity_upper_bound_total": 34,
+  "E1_both_polarity_upper_bound_by_axis": {
+    "COMPETITIVE": 19,
+    "PROJECT": 3,
+    "STATUS": 12
+  },
+  "combined_both_polarity_upper_bound_total": 105,
+  "combined_both_polarity_upper_bound_by_axis": {
+    "COMPETITIVE": 50,
+    "PROJECT": 15,
+    "STATUS": 40
+  },
+  "frozen_min_pairable_total": 80,
+  "frozen_min_pairable_by_axis": {
+    "COMPETITIVE": 20,
+    "PROJECT": 20,
+    "STATUS": 25
+  },
+  "remaining_deficit_by_axis": {
+    "COMPETITIVE": 0,
+    "PROJECT": 5,
+    "STATUS": 0
+  },
+  "pair_gap_inspected": false,
+  "pairs_generated": false,
+  "chronology_balanced": false,
+  "astrology_generated": false,
+  "control_scored": false,
+  "confirm_researched": false,
+  "thresholds_changed_after_observation": false,
+  "project_oversampling_allowed_for_E2": false,
+  "E2_whole_wave_required_if_fail": true,
+  "E2_axis_quotas_if_fail": {
+    "COMPETITIVE": 40,
+    "PROJECT": 50,
+    "STATUS": 70
+  },
+  "summary_sha256": "55fd6a7a042a409df265e3cdba6247a0158fe538393e2137779254b86bab4dd4",
+  "protocol_sha256": "704d5b2a1faac461d7109c1702ea9a9ce94d05e0ab0e0bb2b8b960642b212b0f",
+  "original_prepair_decision_sha256": "ef01bccc078eb66aa2c852a9f53b92119f2970869f06b03ae423a5b844902ac4",
+  "E1_freeze_decision_sha256": "67d57fd14b18d80072b6900f6db9c7062d56963c913f7beb5223d7ca363fa23a",
+  "E1_freeze_manifest_sha256": "8d9b4829148262ce304e1d34f4ec1e0ba8e0aac731a904a2e70dda6e661a0831",
+  "E1_subject_coverage_sha256": "22b68de75b2e2a3caf4c98d0723ee46530fc05f1db2e0ff6656bfd71ddbf7b6b",
+  "next_rule": "Freeze one whole new outcome-blind DEV expansion wave E2 before pairing."
+}

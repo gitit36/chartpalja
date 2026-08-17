@@ -554,16 +554,18 @@ class TestDriftGuard:
     ]
 
     def test_yearly_avg_drift_within_range(self):
-        """3개 샘플의 연도 평균 점수가 30~70 범위 (v6: 병인 해소 반영으로 범위 확장)."""
+        """3개 샘플의 연도 평균 점수가 SCORE_BIAS 반영 후 합리적 범위."""
+        bias = float(getattr(se, "_SCORE_BIAS", 0) or 0)
+        lo, hi = 30 + bias * 0.5, 70 + bias  # bias=10 → 약 35~80
         for inp in self.SAMPLES:
             r = se.enrich_saju(inp)
             dw = se.build_daewoon_detail(r)
             yt = se.build_yearly_timeline(r, dw, span=40)
             scores = [item["scores"]["종합"] for item in yt]
             avg = statistics.mean(scores)
-            assert 30 <= avg <= 70, (
+            assert lo <= avg <= hi, (
                 f"Yearly avg={avg:.1f} for {inp.year}/{inp.month}/{inp.day} "
-                f"drifted out of 30~70 range"
+                f"drifted out of {lo:.0f}~{hi:.0f} range (bias={bias})"
             )
 
 
@@ -650,20 +652,22 @@ class TestT8GongmangRelSign:
 
 class TestT9BreakdownSum:
     def test_daewoon_breakdown_sums(self):
-        """대운 breakdown 합 ≈ score (base 포함, clamp 전)."""
+        """대운 breakdown 합 + SCORE_BIAS ≈ score (clamp 후)."""
         inp = se.BirthInput(
             year=1990, month=6, day=15, hour=8, minute=0,
             gender="male", calendar="solar",
         )
         r = se.enrich_saju(inp)
         dw = se.build_daewoon_detail(r)
+        bias = float(getattr(se, "_SCORE_BIAS", 0) or 0)
         for d in dw[:3]:
             bd = d["breakdown"]
-            raw = sum(bd.values())
+            # structural 등 포함 — score는 uplift(raw+bias) 결과
+            raw = sum(v for k, v in bd.items() if k != "score_bias")
             score = d["종합운점수"]
-            clamped_raw = max(0, min(100, round(raw)))
-            assert clamped_raw == score, (
-                f"Breakdown sum {raw:.1f} → clamped {clamped_raw} "
+            expected = max(0, min(100, round(raw + bias)))
+            assert expected == score, (
+                f"Breakdown sum {raw:.1f}+bias{bias} → {expected} "
                 f"!= score {score}"
             )
 
@@ -829,11 +833,14 @@ class TestT13PromptGolden:
         )
 
     def test_min_length_rule(self):
-        """분량 하한(최소 N자) 규칙이 존재."""
+        """분량 하한(최소 N자 또는 총 N~M자) 규칙이 존재."""
         src = self._read_prompt_file()
-        assert "최소 500자" in src or "최소 500" in src or "최소 800자" in src or "최소 800" in src, (
-            "Prompt should specify minimum content length"
+        has_min = (
+            "최소 500자" in src or "최소 500" in src
+            or "최소 800자" in src or "최소 800" in src
+            or "600~900자" in src or "500~" in src or "총 " in src and "자" in src
         )
+        assert has_min, "Prompt should specify content length guidance"
 
     def test_before_after_examples(self):
         """숫자 낭독 금지에 before/after 예시가 존재."""

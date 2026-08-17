@@ -1,0 +1,48 @@
+{
+  "version": "NEW_DEV_2_REPLICATION_DECISION_V3",
+  "notebook_version": "SAJU_ML_NEW_DEV_2_FROZEN_TENGOD_REPLICATION_V3_20260815",
+  "created_at": "2026-08-15T22:00:38",
+  "status": "REPLICATION_FAIL_DO_NOT_TUNE_ON_NEW_DEV_2",
+  "frozen_architecture": {
+    "winner": "TENGOD_FIXED",
+    "features": [
+      "tengod__dw_group_peer",
+      "tengod__dw_group_output",
+      "tengod__dw_group_wealth",
+      "tengod__dw_group_officer",
+      "tengod__dw_group_resource",
+      "tengod__sw_group_peer",
+      "tengod__sw_group_output",
+      "tengod__sw_group_wealth",
+      "tengod__sw_group_officer",
+      "tengod__sw_group_resource"
+    ],
+    "model": {
+      "model": "Pairwise Logistic Regression",
+      "penalty": "l2",
+      "C": 0.3
+    }
+  },
+  "n_subjects": 100,
+  "metrics": {
+    "status": "REPLICATION_FAIL_DO_NOT_TUNE_ON_NEW_DEV_2",
+    "n_subjects": 100,
+    "macro_pairwise": 0.56,
+    "strict_hit_rate": 0.53,
+    "permutation_p": 0.1191761647670466,
+    "bootstrap_p_pairwise_gt_0_5": 0.88495,
+    "control_pairwise": 0.55,
+    "n_control_evaluable": 100,
+    "delta_vs_control": 0.01,
+    "bootstrap_p_delta_gt_0": 0.54545,
+    "replication_pass": false,
+    "control_superiority_support": false
+  },
+  "integrity": {
+    "NEW_DEV_2_corpus_sha256": "75c6c9d0dae2217f9a7ad7202c44328992d8658aab2cf42f3af987ab6c703bf9",
+    "NEW_DEV_2_engine_inputs_sha256": "ce97d82480cc30fa63fbda13d776409a863e827ba3b0d7f56199d2e26403b585",
+    "architecture_freeze_sha256": "5be7fd5029c85a5c6b4d7d8a8e2ba8acafd386c8e90ad0b791250a43a2622fa4",
+    "NEW_CONFIRM_loaded": false
+  },
+  "next_rule": "If replication passes, review event-source QA before deciding whether to open sealed V2 NEW_CONFIRM one-shot. If replication fails, do not tune on NEW_DEV_2."
+}

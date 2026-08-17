@@ -1,0 +1,26 @@
+{
+  "version": "V5_E1_SOURCE_SEMANTIC_QA_SUMMARY_V1",
+  "created_at": "2026-08-17T05:41:16",
+  "status": "V5_E1_SOURCE_SEMANTIC_MANUAL_BACKFILL_REQUIRED",
+  "E1_subjects_n": 160,
+  "event_rows_n": 333,
+  "eligible_rows_n": 287,
+  "excluded_rows_n": 46,
+  "unique_source_urls_n": 216,
+  "eligible_source_manual_review_rows_n": 99,
+  "eligible_source_manual_review_unique_urls_n": 72,
+  "eligible_semantic_manual_review_rows_n": 98,
+  "eligible_semantic_manual_review_subjects_n": 66,
+  "same_year_opposite_polarity_subject_years_n": 9,
+  "rules": {
+    "event_rows_mutated": false,
+    "membership_changed": false,
+    "pair_gap_inspected": false,
+    "pairs_generated": false,
+    "chronology_balanced": false,
+    "astrology_generated": false,
+    "control_scored": false,
+    "confirm_researched": false
+  },
+  "next_rule": "Send the eligible source and semantic manual-review CSVs for independent verification. Do not freeze E1 events until all review items are resolved by immutable override."
+}

@@ -1,0 +1,8 @@
+{
+  "url": "https://www.usopen.org/en_US/news/articles/2018-03-06/2018-03-06_50_for_50_stan_smith_1971_mens_singles_champion.html",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "title": "",
+  "error": "ReadTimeout(ReadTimeoutError(\"HTTPSConnectionPool(host='www.usopen.org', port=443): Read timed out. (read timeout=25)\"))"
+}

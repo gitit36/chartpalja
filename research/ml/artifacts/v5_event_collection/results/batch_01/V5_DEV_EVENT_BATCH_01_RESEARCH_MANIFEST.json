@@ -1,0 +1,17 @@
+{
+  "version": "V5_DEV_EVENT_BATCH_01_RESEARCH_V1",
+  "status": "BATCH_01_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "n_subjects": 21,
+  "n_event_rows": 58,
+  "eligible_rows": 49,
+  "excluded_rows": 9,
+  "subjects_with_positive": 19,
+  "subjects_with_negative": 11,
+  "rules": {
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "no_pairability_used_for_selection": true,
+    "preassigned_axis_immutable": true,
+    "not_final_event_freeze": true
+  }
+}

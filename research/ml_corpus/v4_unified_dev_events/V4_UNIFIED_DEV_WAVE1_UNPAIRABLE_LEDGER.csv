@@ -1,0 +1,28 @@
+subject_id,name,preassigned_axis,status,reason,subject_membership_changed,astrology_scored
+V4UD_011,Nolan Ryan,COMPETITIVE,UNPAIRABLE_THIS_WAVE,"No sufficiently close, clearly comparable same-axis explicit positive/negative major outcome pair retained in this bounded sweep.",False,False
+V4UD_028,Ted Williams,COMPETITIVE,UNPAIRABLE_THIS_WAVE,No sufficiently clean distinct-year same-axis opposite-polarity major competitive pair retained in this bounded sweep.,False,False
+V4UD_037,Michael Douglas,PROJECT,UNPAIRABLE_THIS_WAVE,No project success/failure pair met the conservative source/taxonomy standard in this bounded sweep.,False,False
+V4UD_041,Kirk Douglas,PROJECT,UNPAIRABLE_THIS_WAVE,No project success/failure pair met the conservative source/taxonomy standard in this bounded sweep.,False,False
+V4UD_045,Sean Connery,PROJECT,UNPAIRABLE_THIS_WAVE,No project success/failure pair met the conservative source/taxonomy standard in this bounded sweep.,False,False
+V4UD_047,Gene Hackman,PROJECT,UNPAIRABLE_THIS_WAVE,Potential project contrasts were too interpretation-dependent for the conservative binary target.,False,False
+V4UD_034,Dolly Parton,PROJECT,UNPAIRABLE_THIS_WAVE,Potential project failure candidates were not supported strongly enough for a conservative binary pair.,False,False
+V4UD_035,Aretha Franklin,PROJECT,UNPAIRABLE_THIS_WAVE,No project success/failure pair met the conservative source/taxonomy standard in this bounded sweep.,False,False
+V4UD_056,Simone Veil,STATUS,UNPAIRABLE_THIS_WAVE,Role transitions found were not treated as negative status outcomes by default.,False,False
+V4UD_062,Aldo Moro,STATUS,UNPAIRABLE_THIS_WAVE,No clean source-verified same-axis status gain/loss pair retained under the binary protocol.,False,False
+V4UD_064,Giuliano Amato,STATUS,UNPAIRABLE_THIS_WAVE,Appointments and normal government transitions were not treated as automatic positive/negative opposites.,False,False
+V4UD_067,Pierre Mauroy,STATUS,UNPAIRABLE_THIS_WAVE,Appointment and later resignation were treated as transition rather than an automatic negative status outcome.,False,False
+V4UD_068,Alan Cranston,STATUS,UNPAIRABLE_THIS_WAVE,Potential nomination-loss pairing did not meet the secondary-source standard used for this wave.,False,False
+V4UD_070,Dick Cheney,STATUS,UNPAIRABLE_THIS_WAVE,Appointments and office transitions did not yield a clean explicit personal status-loss counterpart.,False,False
+V4UD_071,Gavin Newsom,STATUS,UNPAIRABLE_THIS_WAVE,No explicit source-verified status loss counterpart retained in this bounded sweep.,False,False
+V4UD_058,Edith Cresson,STATUS,UNPAIRABLE_THIS_WAVE,Premiership exit was treated conservatively as a transition rather than an automatic negative.,False,False
+V4UD_072,Raul Alfonsin,STATUS,UNPAIRABLE_THIS_WAVE,Early departure from office was not converted into an automatic negative status label.,False,False
+V4UD_073,Ross Perot,STATUS,UNPAIRABLE_THIS_WAVE,"Clear presidential losses existed, but no comparable explicit positive office/status gain was retained.",False,False
+V4UD_075,François Hollande,STATUS,UNPAIRABLE_THIS_WAVE,No distinct-year explicit status loss counterpart met the conservative pairing rule.,False,False
+V4UD_079,Matteo Renzi,STATUS,UNPAIRABLE_THIS_WAVE,Referendum-triggered resignation was not automatically coded as a personal status-loss pair for this wave.,False,False
+V4UD_087,Dominique de Villepin,STATUS,UNPAIRABLE_THIS_WAVE,Appointment/term transitions did not yield a clean explicit opposite-polarity status pair.,False,False
+V4UD_090,Dries van Agt,STATUS,UNPAIRABLE_THIS_WAVE,Coalition and office transitions were not converted into automatic binary losses.,False,False
+V4UD_095,Donald Rumsfeld,STATUS,UNPAIRABLE_THIS_WAVE,"Appointments existed, but no comparable explicit personal status loss met the protocol.",False,False
+V4UD_096,Giovanni Spadolini,STATUS,UNPAIRABLE_THIS_WAVE,Government transitions/resignations were not coded as automatic binary status losses.,False,False
+V4UD_097,David Steel,STATUS,UNPAIRABLE_THIS_WAVE,Leadership tenure and transition did not yield a clean explicit opposite-polarity status pair.,False,False
+V4UD_099,Pierre Mendès France,STATUS,UNPAIRABLE_THIS_WAVE,Potential confidence-loss pairing lacked the two-source standard used for the selected wave pair set.,False,False
+V4UD_059,Sonia Gandhi,STATUS,UNPAIRABLE_THIS_WAVE,Leadership tenure did not yield a clean source-verified distinct-year status gain/loss pair under this protocol.,False,False

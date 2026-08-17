@@ -28,6 +28,7 @@ import { Toast } from '@/components/Toast'
 import { getGuestId } from '@/lib/auth/guest'
 import { clearBalanceCache, fetchBalance } from '@/lib/hooks/useBalance'
 import { READING_COST } from '@/lib/payment/products'
+import { fetchWithOneRetry } from '@/lib/ai/client-reading-recovery'
 
 const ChartTab = dynamic(
   () => import('@/components/ChartTab').then((m) => ({ default: m.ChartTab })),
@@ -465,7 +466,7 @@ function PersonalSajuPageInner() {
     })
     setTab('chart')
     try {
-      const res = await fetch(
+      const res = await fetchWithOneRetry(
         `/api/saju/${id}/compat?overlayId=${encodeURIComponent(overlayId)}&relationship=${relationship}`,
         { method: 'POST', headers: getHeaders() },
       )
@@ -478,8 +479,35 @@ function PersonalSajuPageInner() {
         return
       }
       if (!res.ok) {
+        // 서버는 성공했는데 응답만 유실됐을 수 있음 → 엔트리 재조회로 복구 시도
+        try {
+          const entryRes = await fetch(`/api/saju/${id}`, { headers: getHeaders(), cache: 'no-store' })
+          if (entryRes.ok) {
+            const entryData = await entryRes.json()
+            const fj = entryData?.fortuneJson
+            const compatKey = `compat_${overlayId}_${relationship}`
+            const recovered = fj && typeof fj === 'object'
+              ? ((fj as Record<string, unknown>)[compatKey]
+                ?? (relationship === 'romance' ? (fj as Record<string, unknown>)[`compat_${overlayId}`] : undefined))
+              : null
+            if (recovered && typeof recovered === 'object' && (recovered as { text?: string }).text) {
+              setEntry(prev => prev ? { ...prev, fortuneJson: fj } : prev)
+              setCompatGeneration(null)
+              setExpandCompatCardKey(compatCardKey(overlayId, relationship))
+              clearBalanceCache()
+              void fetchBalance()
+              setInfoToast('궁합 해설이 이미 생성되어 있어요')
+              return
+            }
+          }
+        } catch { /* ignore recovery failure */ }
         setCompatGeneration(null)
-        setAlertState({ open: true, title: '궁합 해설 생성 실패', description: data.error ?? '잠시 후 다시 시도해 주세요.' })
+        setAlertState({
+          open: true,
+          title: '궁합 해설 생성 실패',
+          description: (data.error as string)
+            ?? '잠시 후 같은 궁합을 다시 열어보면 이미 생성됐을 수 있어요. 추가 차감 없이 열립니다.',
+        })
         return
       }
       if (data.compat) {
@@ -505,7 +533,11 @@ function PersonalSajuPageInner() {
       }
     } catch {
       setCompatGeneration(null)
-      setAlertState({ open: true, title: '궁합 해설 생성 실패', description: '네트워크 오류가 발생했어요.' })
+      setAlertState({
+        open: true,
+        title: '궁합 해설 생성 실패',
+        description: '네트워크 오류가 발생했어요. 잠시 후 다시 열어보면 이미 생성됐을 수 있어요.',
+      })
     }
   }, [activeOverlay, id, entry?.fortuneJson, compatGeneration])
 

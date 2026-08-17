@@ -1,0 +1,40 @@
+{
+  "version": "V5_DEV_EXPANSION_E1_FREEZE_DECISION_V1",
+  "notebook_version": "SAJU_ML_V5_PREPAIR_FEASIBILITY_EXPANSION_E1_V2_20260817",
+  "created_at": "2026-08-17T05:05:53",
+  "status": "V5_DEV_EXPANSION_E1_ROSTER_FROZEN_READY_FOR_EVENT_COLLECTION",
+  "trigger_gate_status": "V5_PREPAIR_FEASIBILITY_FAIL_EXPANSION_REQUIRED",
+  "n_subjects": 160,
+  "axis_counts": {
+    "COMPETITIVE": 40,
+    "PROJECT": 50,
+    "STATUS": 70
+  },
+  "roster_sha256": "76d262c64cc7a83cf6845e96627b8d3cab9be4278fec2c6f07572cc3d1b8e39e",
+  "worklist_sha256": "31c2f8c3f9b5a9fb9f72f5da3e08fcffc01c25e6c707bf15ddaa29bd421ce65c",
+  "prepair_feasibility_decision_sha256": "ef01bccc078eb66aa2c852a9f53b92119f2970869f06b03ae423a5b844902ac4",
+  "prepair_gate_protocol_sha256": "490bc395083be5045560b028622bdbb69af891f30bfa4feeb49045dec4c9446b",
+  "expansion_protocol_sha256": "95f32001ac51cc3ea036d2bcfc62801e73442b171ff4451b168405d9c71144aa",
+  "status_supplement_protocol_sha256": "3f17a4aa1c6377ea947fca9b1ea27f8f27779ec7be1122b48adaffb9dda86e82",
+  "status_supplement_used": true,
+  "status_supplement_pool_sha256": "b190f42f4bf32860c5a4446c4e27089ba3b52aa89c433f89eb4f11ad16cd8056",
+  "status_supplement_query_manifest_sha256": "16679eafa04c012442be6545f4ea1931319b71b5981aa2b4f6835ce3f7a67a08",
+  "candidate_supply_after_supplement_sha256": "b20c3eda4a10c975478786ed11ec68d55fcdd5124ec12fc2676ec65ad9c819f8",
+  "selection_seed": 2026081703,
+  "rules": {
+    "exact_DOB_candidates_only": true,
+    "supplement_linkage_requires_name_plus_exact_Wikidata_P569_DOB_match_to_unique_Rodden_AA": true,
+    "current_DEV_or_CONFIRM_identity_reused": false,
+    "event_outcomes_used_for_membership": false,
+    "pairability_used_for_membership": false,
+    "pair_gap_used_for_membership": false,
+    "chronology_used_for_membership": false,
+    "astrology_used_for_membership": false,
+    "control_used_for_membership": false,
+    "confirm_remains_sealed": true
+  },
+  "event_collection_may_begin": true,
+  "pair_generation_allowed": false,
+  "astrology_generation_allowed": false,
+  "next_rule": "Collect E1 events under the original frozen bounded source-sweep axis contract. Do not inspect 1-5y pair gaps until E1 event collection is frozen."
+}

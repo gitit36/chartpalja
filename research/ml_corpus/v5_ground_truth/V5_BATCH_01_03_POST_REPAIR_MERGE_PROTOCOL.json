@@ -1,0 +1,16 @@
+{
+  "version": "V5_BATCH_01_03_POST_REPAIR_MERGE_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_FIXED_RERESEARCH_BEFORE_MERGE",
+  "purpose": "Merge fixed repaired-slot research with 18C sanitized Batch 1-3 outputs and validate restored batch completeness.",
+  "rules": {
+    "membership_change_allowed": false,
+    "event_relabel_allowed": false,
+    "retained_sanitized_event_edit_allowed": false,
+    "merge_key": "subject_id / batch_id only",
+    "astrology_allowed": false,
+    "control_allowed": false,
+    "pairability_allowed": false,
+    "chronology_balancing_allowed": false
+  },
+  "success_status": "V5_BATCH_01_03_POST_REPAIR_COMPLETE_BATCH_04_MAY_RESUME"
+}

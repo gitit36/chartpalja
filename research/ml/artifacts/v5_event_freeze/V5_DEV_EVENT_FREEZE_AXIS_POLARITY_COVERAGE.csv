@@ -1,0 +1,7 @@
+preassigned_axis,polarity,eligible_event_rows
+COMPETITIVE,negative,60
+COMPETITIVE,positive,85
+PROJECT,negative,13
+PROJECT,positive,85
+STATUS,negative,33
+STATUS,positive,129

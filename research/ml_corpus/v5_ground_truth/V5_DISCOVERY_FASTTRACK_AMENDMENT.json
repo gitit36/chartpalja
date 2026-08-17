@@ -1,0 +1,77 @@
+{
+  "version": "V5_DISCOVERY_FASTTRACK_AMENDMENT_V1",
+  "created_date": "2026-08-17",
+  "status": "POST_E2_POST_OBSERVATION_DISCOVERY_PROTOCOL_AMENDMENT",
+  "purpose": "Stop repeated whole-wave expansion and move efficiently into V5 discovery model development while preserving hard lineage checks, local matched pairs, nuisance baselines, and a sealed CONFIRM holdout.",
+  "why_amended": [
+    "After Original DEV + E1 + E2 collection, PROJECT negative outcomes remain structurally sparse under the frozen discrete-project definition.",
+    "Repeated whole-wave expansion is now low-yield and risks optimizing the research process around a coverage artifact rather than the production objective.",
+    "Chronology, age, and collection-wave structure can be measured explicitly as nuisance baselines rather than requiring the discovery corpus to be perfectly nuisance-neutral before modeling."
+  ],
+  "methodological_consequence": {
+    "original_predeclared_axis_minima_remain_reported": true,
+    "original_predeclared_axis_minima_are_no_longer_hard_blockers_for_DISCOVERY": true,
+    "DEV_after_this_amendment_is_exploratory_discovery_not_strict_confirmatory": true,
+    "CONFIRM_remains_sealed_and_becomes_the_final_confirmatory_test": true,
+    "E3_whole_wave_not_required_for_discovery": true
+  },
+  "data_rules": {
+    "never_relabel_events_for_pairability": true,
+    "never_select_events_using_astrology_or_Control": true,
+    "E2_full_research_corpus_is_frozen_as_collected": true,
+    "E2_primary_model_subset": "research-eligible rows with source_quality=high and without explicitly fuzzy semantic event types",
+    "E2_broad_sensitivity_subset": "research-eligible rows with source_quality in {high, medium}",
+    "original_DEV_and_E1_use_their_already_frozen_eligible_corpora": true,
+    "collapse_same_subject_axis_year_polarity_before_pairing": true,
+    "collapse_reason": "Multiple events in the same subject-year share the same annual astrology state; collapsing prevents pseudo-replication."
+  },
+  "pairing": {
+    "same_subject": true,
+    "same_axis": true,
+    "opposite_polarity": true,
+    "same_year_forbidden": true,
+    "min_abs_year_gap": 1,
+    "max_abs_year_gap": 5,
+    "pair_row_unit": "unique subject-axis earlier_year-later_year polarity contrast after subject-year-polarity collapse",
+    "subject_weight": "1 / number_of_pairs_for_subject"
+  },
+  "nuisance_strategy": {
+    "hard_stop_on_nuisance_accuracy_above_0_60": false,
+    "instead": "Record grouped-CV nuisance performance and require astrology candidates to show incremental out-of-sample lift over nuisance baselines.",
+    "nuisance_features": [
+      "birth_year",
+      "earlier_event_age",
+      "calendar_midpoint",
+      "year_gap",
+      "axis",
+      "collection_wave"
+    ],
+    "collection_wave_never_used_as_astrology_feature": true
+  },
+  "discovery_model_constraints": {
+    "primary_architecture": "shared astrology coefficients across axes",
+    "axis_specific_astrology_interactions": "forbidden initially because PROJECT is underpowered",
+    "subject_grouped_cross_validation": true,
+    "nested_cv_for_model_selection": true,
+    "primary_dataset": "PRIMARY_TRUSTED",
+    "required_sensitivity": "BROAD_SENSITIVITY and wave-stratified reporting",
+    "Control_scoring_before_candidate_architecture_freeze": false
+  },
+  "old_gate_thresholds_for_reporting_only": {
+    "pairable_subjects_total": 80,
+    "COMPETITIVE": 20,
+    "PROJECT": 20,
+    "STATUS": 25,
+    "age_axis_nuisance_accuracy_max": 0.6
+  },
+  "hard_blockers_that_remain": [
+    "lineage/hash/schema mismatch",
+    "event subject outside frozen roster",
+    "axis mismatch between event and frozen roster",
+    "invalid polarity/year in a retained model event",
+    "fewer than 30 pairable subjects overall in PRIMARY_TRUSTED",
+    "only one target class after pairing",
+    "CONFIRM leakage"
+  ],
+  "next_if_pass": "Generate astrology primitives only for frozen paired subject-years; run shared-coefficient V5 discovery tournament against nuisance-only baselines; freeze candidate architecture before opening/researching CONFIRM."
+}

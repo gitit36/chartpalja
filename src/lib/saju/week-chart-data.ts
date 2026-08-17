@@ -5,6 +5,7 @@ import type { ChartDatum } from '@/lib/saju/life-chart-data'
 import { kstCenteredWeekDates, kstRecentDates } from '@/lib/saju/daily-util'
 import type { DomainScores, DailyChartIndicators } from '@/lib/saju/daily-fortune'
 import type { WeekSeriesDay, WeekSeriesPayload } from '@/lib/saju/hydrate-week-series'
+import { domain100ToEngine10 } from '@/lib/saju/score-scale'
 
 /** X축 틱 — 1..7 (오늘 = 4) */
 export const WEEK_TICKS = [1, 2, 3, 4, 5, 6, 7] as const
@@ -27,11 +28,11 @@ export function weekdayShortFromDate(dateStr: string): string {
   return full.replace('요일', '') || full
 }
 
-/** 도메인 0~100 → ChartDatum 0~10 (domainValue ×10 = 0~100) */
+/** 일운 도메인 0~100(bias 포함) → ChartDatum 0~10 (domainValue가 다시 ×10+bias) */
 function dom10(domains: DomainScores | null | undefined, key: keyof DomainScores): number {
   const v = domains?.[key]
   if (typeof v !== 'number') return 0
-  return Math.max(0, Math.min(10, v / 10))
+  return domain100ToEngine10(v)
 }
 
 function dayToDatum(x: number, day: WeekSeriesDay): ChartDatum {
@@ -73,7 +74,7 @@ function dayToDatum(x: number, day: WeekSeriesDay): ChartDatum {
     domainWealth: dom10(domains, '재물'),
     domainHealth: dom10(domains, '건강'),
     domainLove: dom10(domains, '연애'),
-    // 일운에 결혼 도메인 없음 → 대인으로 대체
+    // 일운에 결혼 도메인 없음 → 대인으로 대체 (ChartTab 주간 라벨: 대인운)
     domainMarriage: dom10(domains, '대인'),
     daewoonPillar: '',
     sewoonPillar: day.date,

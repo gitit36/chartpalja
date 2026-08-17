@@ -1,0 +1,1507 @@
+{
+  "version": "SAJU_ML_ENGINE_INPUTS_NEW_DEV_2_V1_R2",
+  "created_at": "2026-08-15",
+  "engine_policy": "Use civil birth record plus longitude/UTC-offset solar correction at runtime, then call BirthInput with use_solar_time=False to avoid double correction.",
+  "subjects": [
+    {
+      "subject_id": "NEWDEV2_001",
+      "name": "Bob Dylan",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1941-05-24",
+        "time": "21:05",
+        "utc_offset": "-05:00",
+        "longitude": -92.106,
+        "latitude": 46.783,
+        "place": "Duluth, MN, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_002",
+      "name": "Bob Fosse",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1927-06-23",
+        "time": "22:29",
+        "utc_offset": "-05:00",
+        "longitude": -87.642,
+        "latitude": 41.501,
+        "place": "Chicago Heights, IL, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_003",
+      "name": "Bob Gibson",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1935-11-09",
+        "time": "13:45",
+        "utc_offset": "-06:00",
+        "longitude": -95.937,
+        "latitude": 41.259,
+        "place": "Omaha, NE, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_004",
+      "name": "Bob Hayes",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1942-12-20",
+        "time": "15:29",
+        "utc_offset": "-04:00",
+        "longitude": -81.657,
+        "latitude": 30.326,
+        "place": "Jacksonville, FL, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_005",
+      "name": "Bob Knight",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-10-25",
+        "time": "08:42",
+        "utc_offset": "-05:00",
+        "longitude": -81.522,
+        "latitude": 40.797,
+        "place": "Massillon, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_006",
+      "name": "Bob Lilly",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1939-07-26",
+        "time": "10:00",
+        "utc_offset": "-05:00",
+        "longitude": -98.75,
+        "latitude": 33.371,
+        "place": "Olney, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_007",
+      "name": "Bob Mathias",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1930-11-17",
+        "time": "07:47",
+        "utc_offset": "-08:00",
+        "longitude": -119.345,
+        "latitude": 36.202,
+        "place": "Tulare, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_008",
+      "name": "Bob McAdoo",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1951-09-25",
+        "time": "19:38",
+        "utc_offset": "-04:00",
+        "longitude": -79.794,
+        "latitude": 36.073,
+        "place": "Greensboro, NC, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_009",
+      "name": "Bob Newhart",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1929-09-05",
+        "time": "09:10",
+        "utc_offset": "-05:00",
+        "longitude": -87.794,
+        "latitude": 41.889,
+        "place": "Oak Park, IL, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_010",
+      "name": "Bob Pettit",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1932-12-12",
+        "time": "05:04",
+        "utc_offset": "-06:00",
+        "longitude": -91.187,
+        "latitude": 30.443,
+        "place": "Baton Rouge, LA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_011",
+      "name": "Bob Richards",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1926-02-20",
+        "time": "20:00",
+        "utc_offset": "-06:00",
+        "longitude": -88.244,
+        "latitude": 40.116,
+        "place": "Champaign, IL, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_012",
+      "name": "Bob Schul",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1937-09-28",
+        "time": "05:30",
+        "utc_offset": "-05:00",
+        "longitude": -84.208,
+        "latitude": 40.042,
+        "place": "Troy, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_013",
+      "name": "Bob Seagren",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-10-17",
+        "time": "16:04",
+        "utc_offset": "-08:00",
+        "longitude": -117.75,
+        "latitude": 34.055,
+        "place": "Pomona, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_014",
+      "name": "Bob Uecker",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1934-01-26",
+        "time": "02:10",
+        "utc_offset": "-06:00",
+        "longitude": -87.909,
+        "latitude": 43.041,
+        "place": "Milwaukee, WI, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_015",
+      "name": "Bob Brenly",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1954-02-25",
+        "time": "18:57",
+        "utc_offset": "-05:00",
+        "longitude": -81.851,
+        "latitude": 40.27,
+        "place": "Coshocton, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_016",
+      "name": "Bobby Bell",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-06-17",
+        "time": "22:50",
+        "utc_offset": "-04:00",
+        "longitude": -81.54,
+        "latitude": 35.292,
+        "place": "Shelby, NC, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_017",
+      "name": "Bobby Bonds",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-03-15",
+        "time": "17:38",
+        "utc_offset": "-08:00",
+        "longitude": -117.377,
+        "latitude": 33.981,
+        "place": "Riverside, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_018",
+      "name": "Bo Burnham",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1990-08-21",
+        "time": "14:10",
+        "utc_offset": "-04:00",
+        "longitude": -70.883,
+        "latitude": 42.552,
+        "place": "Beverly, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_019",
+      "name": "Bo Derek",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1956-11-20",
+        "time": "14:13",
+        "utc_offset": "-08:00",
+        "longitude": -118.181,
+        "latitude": 33.772,
+        "place": "Long Beach, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_020",
+      "name": "Bob Woolmer",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1948-05-14",
+        "time": "02:15",
+        "utc_offset": "+05:30",
+        "longitude": 80.323,
+        "latitude": 26.463,
+        "place": "Kanpur, India"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_021",
+      "name": "Bill Bradley",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1943-07-28",
+        "time": "11:37",
+        "utc_offset": "-05:00",
+        "longitude": -90.201,
+        "latitude": 38.635,
+        "place": "St Louis, MO, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_022",
+      "name": "Bill Blass",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1922-06-22",
+        "time": "06:20",
+        "utc_offset": "-06:00",
+        "longitude": -85.137,
+        "latitude": 41.077,
+        "place": "Fort Wayne, IN, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_023",
+      "name": "Bill Engvall",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1957-07-27",
+        "time": "20:35",
+        "utc_offset": "-05:00",
+        "longitude": -94.796,
+        "latitude": 29.3,
+        "place": "Galveston, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_024",
+      "name": "Bill Forsyth",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-07-29",
+        "time": "11:00",
+        "utc_offset": "+01:00",
+        "longitude": -4.257,
+        "latitude": 55.866,
+        "place": "Glasgow, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_025",
+      "name": "Bill Guerin",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1970-11-09",
+        "time": "16:47",
+        "utc_offset": "-05:00",
+        "longitude": -71.802,
+        "latitude": 42.262,
+        "place": "Worcester, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_026",
+      "name": "Bill Walton",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1952-11-05",
+        "time": "21:20",
+        "utc_offset": "-08:00",
+        "longitude": -117.022,
+        "latitude": 32.766,
+        "place": "La Mesa, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_027",
+      "name": "Billie Jean King",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1943-11-22",
+        "time": "11:45",
+        "utc_offset": "-07:00",
+        "longitude": -118.181,
+        "latitude": 33.772,
+        "place": "Long Beach, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_028",
+      "name": "Billy Backus",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1943-03-05",
+        "time": "22:43",
+        "utc_offset": "-04:00",
+        "longitude": -75.751,
+        "latitude": 43.079,
+        "place": "Canastota, NY, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_029",
+      "name": "Billy Casper",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1931-06-24",
+        "time": "10:24",
+        "utc_offset": "-08:00",
+        "longitude": -117.164,
+        "latitude": 32.716,
+        "place": "San Diego, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_030",
+      "name": "Billy Kidd",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1943-04-13",
+        "time": "11:55",
+        "utc_offset": "-04:00",
+        "longitude": -73.211,
+        "latitude": 44.476,
+        "place": "Burlington, VT, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_031",
+      "name": "Billy Martin",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1928-05-16",
+        "time": "15:43",
+        "utc_offset": "-08:00",
+        "longitude": -122.27,
+        "latitude": 37.869,
+        "place": "Berkeley, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_032",
+      "name": "Billy Joe Shaver",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1939-08-16",
+        "time": "21:10",
+        "utc_offset": "-05:00",
+        "longitude": -96.465,
+        "latitude": 32.085,
+        "place": "Corsicana, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_033",
+      "name": "Billy Mackenzie",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1957-03-27",
+        "time": "19:20",
+        "utc_offset": "+00:00",
+        "longitude": -2.968,
+        "latitude": 56.461,
+        "place": "Dundee, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_034",
+      "name": "Bill Shoemaker",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1931-08-19",
+        "time": "01:30",
+        "utc_offset": "-07:00",
+        "longitude": -106.172,
+        "latitude": 31.494,
+        "place": "Fabens, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_035",
+      "name": "Bill Steinkraus",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1925-10-12",
+        "time": "14:30",
+        "utc_offset": "-05:00",
+        "longitude": -81.691,
+        "latitude": 41.505,
+        "place": "Cleveland, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_036",
+      "name": "Tom Brady",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1977-08-03",
+        "time": "11:48",
+        "utc_offset": "-07:00",
+        "longitude": -122.314,
+        "latitude": 37.547,
+        "place": "San Mateo, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_037",
+      "name": "Tom Coughlin",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-08-31",
+        "time": "03:07",
+        "utc_offset": "-04:00",
+        "longitude": -76.863,
+        "latitude": 42.905,
+        "place": "Waterloo, NY, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_038",
+      "name": "Tom Courtney",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1933-08-17",
+        "time": "01:35",
+        "utc_offset": "-04:00",
+        "longitude": -74.174,
+        "latitude": 40.732,
+        "place": "Newark, NJ, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_039",
+      "name": "Tom Daschle",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-12-09",
+        "time": "13:55",
+        "utc_offset": "-06:00",
+        "longitude": -98.488,
+        "latitude": 45.465,
+        "place": "Aberdeen, SD, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_040",
+      "name": "Tom DeLay",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-04-08",
+        "time": "21:47",
+        "utc_offset": "-06:00",
+        "longitude": -99.508,
+        "latitude": 27.507,
+        "place": "Laredo, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_041",
+      "name": "Tom Foley",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1929-03-06",
+        "time": "13:40",
+        "utc_offset": "-08:00",
+        "longitude": -117.425,
+        "latitude": 47.659,
+        "place": "Spokane, WA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_042",
+      "name": "Tom Glavine",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1966-03-25",
+        "time": "07:28",
+        "utc_offset": "-05:00",
+        "longitude": -71.355,
+        "latitude": 42.459,
+        "place": "Concord, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_043",
+      "name": "Tom Okker",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1944-02-22",
+        "time": "18:20",
+        "utc_offset": "+01:00",
+        "longitude": 4.891,
+        "latitude": 52.373,
+        "place": "Amsterdam, Netherlands"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_044",
+      "name": "Tom Poti",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1977-03-22",
+        "time": "12:54",
+        "utc_offset": "-05:00",
+        "longitude": -71.802,
+        "latitude": 42.262,
+        "place": "Worcester, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_045",
+      "name": "Tom Seaver",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1944-11-17",
+        "time": "06:27",
+        "utc_offset": "-07:00",
+        "longitude": -119.786,
+        "latitude": 36.732,
+        "place": "Fresno, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_046",
+      "name": "Tom Selleck",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1945-01-29",
+        "time": "08:22",
+        "utc_offset": "-04:00",
+        "longitude": -83.599,
+        "latitude": 42.213,
+        "place": "Ypsilanti, MI, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_047",
+      "name": "Tom Brokaw",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-02-06",
+        "time": "03:40",
+        "utc_offset": "-06:00",
+        "longitude": -97.519,
+        "latitude": 45.33,
+        "place": "Webster, SD, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_048",
+      "name": "Tom Bergeron",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1955-05-06",
+        "time": "10:30",
+        "utc_offset": "-04:00",
+        "longitude": -71.077,
+        "latitude": 42.777,
+        "place": "Haverhill, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_049",
+      "name": "Tom Harmon",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1919-09-28",
+        "time": "07:30",
+        "utc_offset": "-05:00",
+        "longitude": -87.151,
+        "latitude": 40.937,
+        "place": "Rensselaer, IN, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_050",
+      "name": "A. J. Foyt",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1935-01-16",
+        "time": "01:25",
+        "utc_offset": "-06:00",
+        "longitude": -95.37,
+        "latitude": 29.761,
+        "place": "Houston, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_051",
+      "name": "Tom Scholz",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1947-03-10",
+        "time": "12:47",
+        "utc_offset": "-05:00",
+        "longitude": -83.536,
+        "latitude": 41.655,
+        "place": "Toledo, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_052",
+      "name": "Tony Blair",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1953-05-06",
+        "time": "06:10",
+        "utc_offset": "+01:00",
+        "longitude": -3.188,
+        "latitude": 55.95,
+        "place": "Edinburgh, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_053",
+      "name": "Toni Kroos",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1990-01-04",
+        "time": "12:56",
+        "utc_offset": "+01:00",
+        "longitude": 13.388,
+        "latitude": 54.097,
+        "place": "Greifswald, Germany"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_054",
+      "name": "Toni Morrison",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1931-02-18",
+        "time": "11:00",
+        "utc_offset": "-05:00",
+        "longitude": -82.178,
+        "latitude": 41.468,
+        "place": "Lorain, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_055",
+      "name": "Tony Curtis",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1925-06-03",
+        "time": "09:00",
+        "utc_offset": "-04:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_056",
+      "name": "Tony Estanguet",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1978-05-06",
+        "time": "12:50",
+        "utc_offset": "+02:00",
+        "longitude": -0.375,
+        "latitude": 43.298,
+        "place": "Pau, France"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_057",
+      "name": "Tony Gwynn",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1960-05-09",
+        "time": "02:41",
+        "utc_offset": "-07:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_058",
+      "name": "Tony Hawk",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1968-05-12",
+        "time": "03:12",
+        "utc_offset": "-07:00",
+        "longitude": -117.164,
+        "latitude": 32.716,
+        "place": "San Diego, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_059",
+      "name": "Tony Kubek",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1935-10-12",
+        "time": "06:23",
+        "utc_offset": "-06:00",
+        "longitude": -87.909,
+        "latitude": 43.041,
+        "place": "Milwaukee, WI, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_060",
+      "name": "Tony Parker",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1982-05-17",
+        "time": "16:40",
+        "utc_offset": "+02:00",
+        "longitude": 3.225,
+        "latitude": 51.209,
+        "place": "Bruges, Belgium"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_061",
+      "name": "Tony Levin",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1946-06-06",
+        "time": "17:45",
+        "utc_offset": "-04:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_062",
+      "name": "Tony Mendez",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1940-11-15",
+        "time": "14:00",
+        "utc_offset": "-08:00",
+        "longitude": -116.212,
+        "latitude": 39.665,
+        "place": "Eureka, NV, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_063",
+      "name": "Tony Conigliaro",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1945-01-07",
+        "time": "20:52",
+        "utc_offset": "-04:00",
+        "longitude": -71.012,
+        "latitude": 42.41,
+        "place": "Revere, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_064",
+      "name": "Tony Bettenhausen",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1951-10-30",
+        "time": "23:15",
+        "utc_offset": "-06:00",
+        "longitude": -88.083,
+        "latitude": 41.525,
+        "place": "Joliet, IL, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_065",
+      "name": "George Foreman",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1949-01-10",
+        "time": "21:15",
+        "utc_offset": "-06:00",
+        "longitude": -94.363,
+        "latitude": 32.545,
+        "place": "Marshall, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_066",
+      "name": "George Galloway",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1954-08-16",
+        "time": "06:00",
+        "utc_offset": "+01:00",
+        "longitude": -2.968,
+        "latitude": 56.461,
+        "place": "Dundee, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_067",
+      "name": "Gerald Ford",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1913-07-14",
+        "time": "00:43",
+        "utc_offset": "-06:00",
+        "longitude": -95.937,
+        "latitude": 41.259,
+        "place": "Omaha, NE, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_068",
+      "name": "Gerard Butler",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1969-11-13",
+        "time": "05:21",
+        "utc_offset": "+01:00",
+        "longitude": -4.257,
+        "latitude": 55.866,
+        "place": "Glasgow, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_069",
+      "name": "Geraldine Chaplin",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1944-07-31",
+        "time": "23:14",
+        "utc_offset": "-07:00",
+        "longitude": -118.492,
+        "latitude": 34.011,
+        "place": "Santa Monica, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_070",
+      "name": "Carol Burnett",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1933-04-26",
+        "time": "04:00",
+        "utc_offset": "-06:00",
+        "longitude": -98.495,
+        "latitude": 29.425,
+        "place": "San Antonio, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_071",
+      "name": "Carol Channing",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1921-01-31",
+        "time": "21:00",
+        "utc_offset": "-08:00",
+        "longitude": -122.33,
+        "latitude": 47.603,
+        "place": "Seattle, WA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_072",
+      "name": "Carol Kane",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1952-06-18",
+        "time": "09:29",
+        "utc_offset": "-04:00",
+        "longitude": -81.583,
+        "latitude": 41.53,
+        "place": "East Cleveland, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_073",
+      "name": "Carmen Miranda",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1909-02-09",
+        "time": "15:37",
+        "utc_offset": "-00:37",
+        "longitude": -8.149,
+        "latitude": 41.181,
+        "place": "Marco de Canaveses, Portugal"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_074",
+      "name": "Carmen Electra",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1972-04-20",
+        "time": "00:27",
+        "utc_offset": "-05:00",
+        "longitude": -84.514,
+        "latitude": 39.104,
+        "place": "Cincinnati, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_075",
+      "name": "Carmen Basilio",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1927-04-02",
+        "time": "23:00",
+        "utc_offset": "-05:00",
+        "longitude": -75.751,
+        "latitude": 43.079,
+        "place": "Canastota, NY, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_076",
+      "name": "Dennis Weaver",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1924-06-04",
+        "time": "08:00",
+        "utc_offset": "-05:00",
+        "longitude": -94.512,
+        "latitude": 37.088,
+        "place": "Joplin, MO, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_077",
+      "name": "Dennis Wilson",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1944-12-04",
+        "time": "22:56",
+        "utc_offset": "-07:00",
+        "longitude": -118.353,
+        "latitude": 33.962,
+        "place": "Inglewood, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_078",
+      "name": "Dennis Ralston",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1942-07-27",
+        "time": "08:37",
+        "utc_offset": "-07:00",
+        "longitude": -119.019,
+        "latitude": 35.373,
+        "place": "Bakersfield, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_079",
+      "name": "Jimmy Johnson",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1943-07-16",
+        "time": "14:12",
+        "utc_offset": "-05:00",
+        "longitude": -93.934,
+        "latitude": 29.872,
+        "place": "Port Arthur, TX, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_080",
+      "name": "Eliza Dushku",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1980-12-30",
+        "time": "13:31",
+        "utc_offset": "-05:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_081",
+      "name": "Elizabeth Banks",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1974-02-10",
+        "time": "20:11",
+        "utc_offset": "-04:00",
+        "longitude": -73.253,
+        "latitude": 42.445,
+        "place": "Pittsfield, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_082",
+      "name": "Elizabeth Dole",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1936-07-29",
+        "time": "01:55",
+        "utc_offset": "-04:00",
+        "longitude": -80.474,
+        "latitude": 35.671,
+        "place": "Salisbury, NC, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_083",
+      "name": "Elizabeth Montgomery",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1933-04-15",
+        "time": "16:38",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_084",
+      "name": "Elizabeth Olsen",
+      "gender": "female",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1989-02-16",
+        "time": "18:49",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_085",
+      "name": "Judd Hirsch",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1935-03-15",
+        "time": "07:20",
+        "utc_offset": "-05:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_086",
+      "name": "Jack Bruce",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1943-05-14",
+        "time": "02:10",
+        "utc_offset": "+02:00",
+        "longitude": -4.257,
+        "latitude": 55.866,
+        "place": "Glasgow, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_087",
+      "name": "Robert Carlyle",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1961-04-14",
+        "time": "05:15",
+        "utc_offset": "+01:00",
+        "longitude": -4.257,
+        "latitude": 55.866,
+        "place": "Glasgow, United Kingdom"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_088",
+      "name": "Robert Carradine",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1954-03-24",
+        "time": "19:27",
+        "utc_offset": "-08:00",
+        "longitude": -118.243,
+        "latitude": 34.052,
+        "place": "Los Angeles, CA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_089",
+      "name": "Robert Byrd",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1917-11-20",
+        "time": "14:00",
+        "utc_offset": "-05:00",
+        "longitude": -81.143,
+        "latitude": 36.163,
+        "place": "North Wilkesboro, NC, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_090",
+      "name": "Tony Trabert",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1930-08-16",
+        "time": "03:50",
+        "utc_offset": "-04:00",
+        "longitude": -84.514,
+        "latitude": 39.104,
+        "place": "Cincinnati, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_091",
+      "name": "Michael Landon",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1936-10-31",
+        "time": "12:12",
+        "utc_offset": "-05:00",
+        "longitude": -74.007,
+        "latitude": 40.713,
+        "place": "New York, NY, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_092",
+      "name": "Michael Llodra",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1980-05-18",
+        "time": "10:10",
+        "utc_offset": "+02:00",
+        "longitude": 2.222,
+        "latitude": 48.87,
+        "place": "Suresnes, France"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_093",
+      "name": "Aaron Pryor",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1955-10-20",
+        "time": "09:41",
+        "utc_offset": "-04:00",
+        "longitude": -84.514,
+        "latitude": 39.104,
+        "place": "Cincinnati, OH, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_094",
+      "name": "John Slattery",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1962-08-13",
+        "time": "19:21",
+        "utc_offset": "-04:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_095",
+      "name": "John Updike",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1932-03-18",
+        "time": "15:45",
+        "utc_offset": "-05:00",
+        "longitude": -75.968,
+        "latitude": 40.303,
+        "place": "Shillington, PA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_096",
+      "name": "John Thomas",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1941-03-03",
+        "time": "21:55",
+        "utc_offset": "-05:00",
+        "longitude": -71.059,
+        "latitude": 42.359,
+        "place": "Boston, MA, United States"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_097",
+      "name": "Patrick Sercu",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1944-06-27",
+        "time": "18:00",
+        "utc_offset": "+02:00",
+        "longitude": 3.123,
+        "latitude": 50.945,
+        "place": "Roeselare, Belgium"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_098",
+      "name": "Grégory Coupet",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1972-12-31",
+        "time": "18:30",
+        "utc_offset": "+01:00",
+        "longitude": 3.885,
+        "latitude": 45.044,
+        "place": "Le Puy-en-Velay, France"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_099",
+      "name": "Grégory Baugé",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1985-01-31",
+        "time": "08:55",
+        "utc_offset": "+01:00",
+        "longitude": 2.147,
+        "latitude": 48.947,
+        "place": "Maisons-Laffitte, France"
+      }
+    },
+    {
+      "subject_id": "NEWDEV2_100",
+      "name": "Tony Shalhoub",
+      "gender": "male",
+      "mode": "public_runtime_longitude_correction",
+      "public_birth": {
+        "calendar": "solar",
+        "date": "1953-10-09",
+        "time": "23:50",
+        "utc_offset": "-06:00",
+        "longitude": -88.013,
+        "latitude": 44.513,
+        "place": "Green Bay, WI, United States"
+      }
+    }
+  ]
+}

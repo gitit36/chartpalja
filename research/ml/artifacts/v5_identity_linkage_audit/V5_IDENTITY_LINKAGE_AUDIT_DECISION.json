@@ -1,0 +1,11 @@
+{
+  "version": "V5_IDENTITY_LINKAGE_AUDIT_DECISION_V1",
+  "status": "V5_IDENTITY_LINKAGE_AUDIT_REPAIR_REQUIRED",
+  "membership_changed": false,
+  "DEV_audit_sha256": "2c38d547f96597bc61b74b86361e0e925f5fd190e3ec4b5cc9e043bc7c322eaa",
+  "CONFIRM_sealed_audit_sha256": "31c3b1b6df29d77b3d7f75c62809929aec4f8233fa4c6823b60e95e97b6803d5",
+  "candidate_pool_audit_sha256": "a452e0881700ca4d502099b563e8fbfd0f05e924659d812faf05f2b3542f9069",
+  "summary_sha256": "0526f2736254130324ab1db717a9a8889ccaec4a3e35efec533cc2be93d905c7",
+  "event_research_may_resume": false,
+  "batch_04_may_resume": false
+}

@@ -1,0 +1,20 @@
+{
+  "version": "V5_BATCH_01_03_POST_REPAIR_DECISION_V1",
+  "created_at": "2026-08-17T03:46:36",
+  "status": "V5_BATCH_01_03_POST_REPAIR_COMPLETE_BATCH_04_MAY_RESUME",
+  "batch_subject_counts": {
+    "1": 21,
+    "2": 21,
+    "3": 20
+  },
+  "repaired_slots_merged": 6,
+  "summary_sha256": "c9720ee2115fb49aa75f5938e8dbc09de098abe43899f7dcfa2c2c326419f87a",
+  "rules": {
+    "pairing_performed": false,
+    "chronology_used": false,
+    "astrology_used": false,
+    "control_used": false
+  },
+  "batch_04_may_resume": true,
+  "next_rule": "Research repaired Batch 04 subject list only; continue event collection through Batch 8 before event freeze."
+}

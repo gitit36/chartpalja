@@ -1,0 +1,17 @@
+subject_id,name,preassigned_axis,status,reason,subject_membership_changed,astrology_scored
+V4UDW2_008,Jessica Lange,PROJECT,UNPAIRABLE_THIS_WAVE,A clean opposite-polarity PROJECT pair was not retained: the available 'disastrous debut' evidence is too actor-reception-specific and does not cleanly establish the project itself as a failure.,False,False
+V4UDW2_011,Joan Didion,PROJECT,UNPAIRABLE_THIS_WAVE,"A clear major project success was found, but no comparably explicit, source-verified failed/cancelled project was retained under the conservative binary PROJECT protocol.",False,False
+V4UDW2_012,Corazon Aquino,STATUS,UNPAIRABLE_THIS_WAVE,"Presidential accession is clear, but completion of the presidential term was not treated as an automatic negative STATUS event.",False,False
+V4UDW2_014,Lamberto Dini,STATUS,UNPAIRABLE_THIS_WAVE,No clean explicit STATUS loss counterpart was retained; the end of the technocratic premiership was not treated as an automatic negative.,False,False
+V4UDW2_017,Henry Kissinger,STATUS,UNPAIRABLE_THIS_WAVE,"Major appointments are clear, but normal administration-linked role endings were not treated as explicit personal STATUS losses.",False,False
+V4UDW2_025,Itamar Franco,STATUS,UNPAIRABLE_THIS_WAVE,"Role gains were found, but no clean explicit opposite-polarity STATUS loss counterpart was retained.",False,False
+V4UDW2_027,Caspar Weinberger,STATUS,UNPAIRABLE_THIS_WAVE,The defense-secretary exit is entangled with health/controversy context and was not forced into a clean STATUS-loss label.,False,False
+V4UDW2_028,Robert McNamara,STATUS,UNPAIRABLE_THIS_WAVE,"Career changes are primarily role transitions (Defense Department to World Bank), not a clean same-axis gain/loss pair.",False,False
+V4UDW2_031,Robert Badinter,STATUS,UNPAIRABLE_THIS_WAVE,"Appointments and leadership roles were found, but no explicit opposite-polarity STATUS loss counterpart was retained.",False,False
+V4UDW2_032,Oscar Luigi Scalfaro,STATUS,UNPAIRABLE_THIS_WAVE,"Presidential election is clear, but normal completion of the presidential term was not treated as a negative STATUS event.",False,False
+V4UDW2_033,Ted Turner,STATUS,UNPAIRABLE_THIS_WAVE,Leadership and ownership transitions were too ambiguous to classify as a clean explicit STATUS loss under the binary protocol.,False,False
+V4UDW2_035,Spiro Agnew,STATUS,UNPAIRABLE_THIS_WAVE,The 1973 vice-presidential resignation is heavily driven by legal/reputation disruption; it was not mixed into core STATUS because legal/reputation disruption is a separate mechanism.,False,False
+V4UDW2_037,Jacques Delors,STATUS,UNPAIRABLE_THIS_WAVE,"Major appointments are clear, but declining or not pursuing later candidacies was not treated as an explicit STATUS loss.",False,False
+V4UDW2_039,Charles Pasqua,STATUS,UNPAIRABLE_THIS_WAVE,Potential negative events are dominated by legal/reputation issues rather than a clean core STATUS loss.,False,False
+V4UDW2_041,John Warner,STATUS,UNPAIRABLE_THIS_WAVE,"Repeated election wins are clear, but retirement/normal office transitions were not treated as explicit negative STATUS outcomes.",False,False
+V4UDW2_042,Bernard Cazeneuve,STATUS,UNPAIRABLE_THIS_WAVE,"Prime-ministerial appointment is clear, but routine government turnover was not treated as an automatic STATUS loss.",False,False

@@ -1,0 +1,21 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+5,1,V5DEVX_083,Ted Schroeder,COMPETITIVE,V5_WIKIDATA_EXPANSION,1921-07-20,"Newark, NJ, United States",male,Q54580,,TedSchroeder1921
+5,2,V5DEVX_084,Enki Bilal,PROJECT,V5_WIKIDATA_EXPANSION,1951-10-07,"Belgrade, Serbia",male,Q333668,,EnkiBilal1951
+5,3,V5DEVX_085,Pier Luigi Celli,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1942-07-08,"Verucchio, Italy",male,Q3902895,AA,PierLuigiCelli1942
+5,4,V5DEVX_086,Hippolyte Annex,COMPETITIVE,V5_WIKIDATA_EXPANSION,1933-07-14,"Pézenas, France",male,Q5768503,,HippolyteAnnex1933
+5,5,V5DEVX_087,Lale Andersen,PROJECT,V5_WIKIDATA_EXPANSION,1905-03-23,"Bremerhaven, Germany",female,Q57374,,LaleAndersen1905
+5,6,V5DEVX_088,John Connally,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1917-02-27,"Floresville, TX, United States",male,Q311293,AA,JohnConnally1917
+5,7,V5DEVX_089,Floyd Patterson,COMPETITIVE,V5_WIKIDATA_EXPANSION,1935-01-04,"Waco, NC, United States",male,Q314051,,FloydPatterson1935
+5,8,V5DEVX_090,Paolo Conte,PROJECT,V5_WIKIDATA_EXPANSION,1937-01-06,"Asti, Italy",male,Q179516,,PaoloConte1937
+5,9,V5DEVX_091,Tyra Banks,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1973-12-04,"Inglewood, CA, United States",female,Q172303,AA,TyraBanks1973
+5,10,V5DEVX_092,Don Bragg,COMPETITIVE,V5_WIKIDATA_EXPANSION,1935-05-15,"Penns Grove, NJ, United States",male,Q735999,,DonBragg1935
+5,11,V5DEVX_093,Thomas Stewart,PROJECT,V5_WIKIDATA_EXPANSION,1928-08-29,"San Saba, TX, United States",male,Q327146,,ThomasStewart1928
+5,12,V5DEVX_094,John Eisenhower,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1922-08-03,"Denver, CO, United States",male,Q538633,AA,JohnEisenhower1922
+5,13,V5DEVX_095,Antonella Bellutti,COMPETITIVE,V5_WIKIDATA_EXPANSION,1968-11-07,"Bolzano, Italy",female,Q436450,,AntonellaBellutti1968
+5,14,V5DEVX_096,Ferruccio Tagliavini,PROJECT,V5_WIKIDATA_EXPANSION,1913-08-14,"Reggio Emilia, Italy",male,Q332335,,FerruccioTagliavini1913
+5,15,V5DEVX_097,Herman Van Rompuy,STATUS,V5_WIKIDATA_EXPANSION,1947-10-31,"Etterbeek, Brussels, Belgium",male,Q12983,,HermanVanRompuy1947
+5,16,V5DEVX_098,Abner Biberman,PROJECT,V5_WIKIDATA_EXPANSION,1909-04-01,"Milwaukee, WI, United States",male,Q129386,,AbnerBiberman1909
+5,17,V5DEVX_099,Robert McNamara,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1916-06-09,"Oakland, CA, United States",male,Q191999,AA,RobertMcNamara1916
+5,18,V5DEVX_100,Franz Rademacher,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1906-02-20,"Neustrelitz, Germany",male,Q214348,AA,FranzRademacher1906
+5,19,V5DEVX_101,Mariano Rumor,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1915-06-16,"Vicenza, Italy",male,Q316288,AA,MarianoRumor1915
+5,20,V5DEVX_102,Mario Sarcinelli,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1934-03-09,"Foggia, Italy",male,Q3849080,AA,MarioSarcinelli1934

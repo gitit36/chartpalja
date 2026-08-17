@@ -1,0 +1,36 @@
+{
+  "version": "V4_UNIFIED_DEV_WAVE2_SUBJECT_ROSTER_FREEZE_V1",
+  "notebook_version": "SAJU_ML_V4_UNIFIED_DEV_WAVE2_SUBJECT_ROSTER_FREEZE_20260816",
+  "created_at": "2026-08-16T21:07:35",
+  "status": "V4_UNIFIED_DEV_WAVE2_SUBJECT_UNIVERSE_FROZEN",
+  "wave": 2,
+  "n_subjects": 44,
+  "axis_counts": {
+    "STATUS": 33,
+    "PROJECT": 8,
+    "COMPETITIVE": 3
+  },
+  "roster_sha256": "afd9cf204f26ccf00b384e41d8de06d708f641892211f5226462b178caaf1e27",
+  "seed_universe_sha256": "ee3eaf2c907462a4152140350219787630dec7c82c00dd0a0a32f378c4666f29",
+  "collection_contract_sha256": "1b25f8ab9321c18b72a28e0fd30439c343475ba87345a199e83f0497bb0a638e",
+  "wave1_roster_sha256": "8fc11f61c5102f3c2caa9890ec82819e164178ac0a96f4d721f4e13767fdc9a7",
+  "wave1_freeze_decision_sha256": "599e16a250c2c301901334afa0112ab7af084b576e725a81344ab863ce8920e7",
+  "selection_seed": 2026081602,
+  "birth_dataset_sha256": "ca28a3fea1250b2ea01eb06a54b4921ec0bf790fdc14c5c561006f1c592c634b",
+  "birth_source_url": "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv",
+  "prior_development_unique_names_excluded": 232,
+  "wave1_subjects_excluded": 100,
+  "event_collection_started": false,
+  "astrology_scored": false,
+  "membership_conditioned_on_chronology": false,
+  "membership_conditioned_on_event_pairability": false,
+  "membership_conditioned_on_astrology": false,
+  "sealed_holdouts_loaded": false,
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "next_rule": "Do not change Wave 2 membership. Perform a bounded major-event source sweep on these 44 frozen subjects only, within each preassigned axis. Keep both pairable and unpairable subjects. Do not generate astrology features. After Wave 2 event freeze/QA, combine Wave 1 and Wave 2 usable pairs; only if all target axis counts are met may the project proceed to a separate combined-corpus feature-generation gate."
+}

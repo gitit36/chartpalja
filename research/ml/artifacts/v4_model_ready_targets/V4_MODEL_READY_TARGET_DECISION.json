@@ -1,0 +1,34 @@
+{
+  "version": "V4_MODEL_READY_TARGET_DECISION_V1",
+  "notebook_version": "SAJU_ML_BUILD_V4_MODEL_READY_TARGETS_20260816",
+  "status": "V4_TARGET_MODEL_READY",
+  "metrics": {
+    "n_pairs": 100,
+    "n_unique_subjects": 69,
+    "pair_positive_earlier_share": 0.41,
+    "subject_macro_positive_earlier_share": 0.45289855072463764,
+    "pair_age_only_pairwise": 0.41,
+    "subject_macro_age_only_pairwise": 0.45289855072463764,
+    "axis_counts": {
+      "COMPETITIVE": 43,
+      "PROJECT": 40,
+      "STATUS": 13,
+      "RECOGNITION": 4
+    },
+    "max_axis_share": 0.43
+  },
+  "gates": {
+    "n_pairs_at_least_100": true,
+    "unique_subjects_at_least_60": true,
+    "pair_chronology_40_60": true,
+    "subject_macro_chronology_40_60": true,
+    "pair_age_only_40_60": true,
+    "subject_macro_age_only_40_60": true,
+    "max_axis_share_le_45pct": true,
+    "at_least_3_axes": true,
+    "all_source_eligible": true,
+    "no_same_year_pairs": true,
+    "subject_equal_weights": true
+  },
+  "next_rule": "Freeze target and proceed to V4 feature/model tournament with subject-level CV, subject-equal training weights, and Age-only/Calendar-year/Control baselines."
+}

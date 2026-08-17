@@ -1,0 +1,29 @@
+{
+  "version": "V5_DEV_EVENT_BATCH_08_RESEARCH_V1",
+  "status": "BATCH_08_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "roster_kind": "REPAIRED_EXACT_DOB",
+  "n_subjects": 19,
+  "n_event_rows": 67,
+  "eligible_rows": 59,
+  "excluded_rows": 8,
+  "subjects_with_positive": 17,
+  "subjects_with_negative": 11,
+  "subjects_with_both_polarities": 11,
+  "subjects_with_no_eligible_core_axis_event": 2,
+  "batch_subjects_sha256": "7e8b39e23a9ac87d995e9d97be17cf7c17dd29d1532e432a253d0f9e33035f40",
+  "events_sha256": "584b19c93bebf07367a2adaff8d9d56e4ce1ead6e9b64e98a824dc4f4d625e2b",
+  "audit_sha256": "a93a9e5271c05584d3abadfca12677a4dac7e44c732052576405325951da9f01",
+  "rules": {
+    "repaired_identity_roster_used": true,
+    "web_source_verification_performed": true,
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "no_pairability_used_for_selection": true,
+    "no_chronology_balancing_used_for_selection": true,
+    "preassigned_axis_immutable": true,
+    "ineligible_or_ambiguous_candidates_logged_not_relabelled": true,
+    "status_positive_is_direction_of_formal_authority_not_moral_approval": true,
+    "not_final_event_freeze": true
+  },
+  "next_rule": "Place Batch 08 outputs under v5_event_collection_repaired/results/batch_08. Before final event freeze, run the source-verification backfill gate for retained Batch 1-7 rows. Do not pair events, inspect astrology, or research CONFIRM."
+}

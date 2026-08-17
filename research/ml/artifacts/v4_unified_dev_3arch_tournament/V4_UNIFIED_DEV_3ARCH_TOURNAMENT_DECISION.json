@@ -1,0 +1,266 @@
+{
+  "version": "V4_UNIFIED_DEV_3ARCH_TOURNAMENT_DECISION_V1",
+  "notebook_version": "SAJU_ML_V4_UNIFIED_DEV_3ARCH_TOURNAMENT_20260816",
+  "created_at": "2026-08-16T21:58:23",
+  "status": "V4_UNIFIED_DEV_NO_ARCHITECTURE_SURVIVES_DISCOVERY_GATE",
+  "winner": null,
+  "reason": "No preregistered astrology architecture passed all frozen discovery gates.",
+  "corpus": {
+    "n_pairs": 101,
+    "n_subjects": 101,
+    "axis_counts": {
+      "COMPETITIVE": 31,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "pair_sha256": "5c4cecc76e2059fc6276564b4be13638ffc4b5b11b5773dd5954ed98e7dad31b",
+    "positive_earlier_share": 0.5643564356435643
+  },
+  "engine": {
+    "saju_engine_sha256": "d39e0c4d777ae3a19394c9175319a4f8a6a709c2b4d34400965b618ffbfdad1e"
+  },
+  "winner_eligible_architectures": [
+    "TG10_STEM_BRANCH_L2",
+    "ALL_L2",
+    "ALL_ELASTICNET_AUTO"
+  ],
+  "leaderboard": [
+    {
+      "model": "NUISANCE_AGE_AXIS",
+      "pairwise_mean": 0.6623762376237623,
+      "pairwise_std": 0.003130967980364735,
+      "pairwise_p10": 0.6623762376237624,
+      "pairwise_min": 0.6534653465346535
+    },
+    {
+      "model": "AGE_YOUNGER_FIXED",
+      "pairwise_mean": 0.5643564356435642,
+      "pairwise_std": 1.1702778228589004e-16,
+      "pairwise_p10": 0.5643564356435643,
+      "pairwise_min": 0.5643564356435643
+    },
+    {
+      "model": "CONTROL_FIXED",
+      "pairwise_mean": 0.5544554455445546,
+      "pairwise_std": 1.1702778228589004e-16,
+      "pairwise_p10": 0.5544554455445545,
+      "pairwise_min": 0.5544554455445545
+    },
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "pairwise_mean": 0.5168316831683168,
+      "pairwise_std": 0.16187101094023695,
+      "pairwise_p10": 0.26732673267326734,
+      "pairwise_min": 0.26732673267326734
+    },
+    {
+      "model": "ALL_L2",
+      "pairwise_mean": 0.4861386138613861,
+      "pairwise_std": 0.03598721999612932,
+      "pairwise_p10": 0.4415841584158416,
+      "pairwise_min": 0.40594059405940597
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "pairwise_mean": 0.4772277227722771,
+      "pairwise_std": 0.029072891809300654,
+      "pairwise_p10": 0.4534653465346535,
+      "pairwise_min": 0.43564356435643564
+    },
+    {
+      "model": "AGE_LATER_FIXED",
+      "pairwise_mean": 0.4356435643564357,
+      "pairwise_std": 5.851389114294502e-17,
+      "pairwise_p10": 0.43564356435643564,
+      "pairwise_min": 0.43564356435643564
+    }
+  ],
+  "gates": [
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "overall": 0.5168316831683168,
+      "p10": 0.26732673267326734,
+      "delta_vs_nuisance": -0.1455445544554455,
+      "p_vs_nuisance": 0.00215,
+      "delta_vs_control": -0.03762376237623762,
+      "p_vs_control": 0.21915,
+      "axis_min_diagnostic": 0.4903225806451613,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "p10_ge_048": false,
+      "all_numeric_gates": false
+    },
+    {
+      "model": "ALL_L2",
+      "overall": 0.4861386138613861,
+      "p10": 0.4415841584158416,
+      "delta_vs_nuisance": -0.1762376237623762,
+      "p_vs_nuisance": 0.0012,
+      "delta_vs_control": -0.06831683168316832,
+      "p_vs_control": 0.09965,
+      "axis_min_diagnostic": 0.4290322580645161,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "p10_ge_048": false,
+      "all_numeric_gates": false
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "overall": 0.4772277227722771,
+      "p10": 0.4534653465346535,
+      "delta_vs_nuisance": -0.1851485148514852,
+      "p_vs_nuisance": 0.00085,
+      "delta_vs_control": -0.07722772277227724,
+      "p_vs_control": 0.0924,
+      "axis_min_diagnostic": 0.40967741935483876,
+      "overall_ge_055": false,
+      "delta_nuisance_ge_001": false,
+      "boot_nuisance_ge_080": false,
+      "delta_control_ge_001": false,
+      "boot_control_ge_080": false,
+      "p10_ge_048": false,
+      "all_numeric_gates": false
+    }
+  ],
+  "axis_diagnostics": [
+    {
+      "model": "AGE_LATER_FIXED",
+      "axis": "COMPETITIVE",
+      "n_pairs": 31,
+      "subject_macro_pairwise": 0.41935483870967744
+    },
+    {
+      "model": "AGE_LATER_FIXED",
+      "axis": "PROJECT",
+      "n_pairs": 25,
+      "subject_macro_pairwise": 0.8
+    },
+    {
+      "model": "AGE_LATER_FIXED",
+      "axis": "STATUS",
+      "n_pairs": 45,
+      "subject_macro_pairwise": 0.24444444444444444
+    },
+    {
+      "model": "AGE_YOUNGER_FIXED",
+      "axis": "COMPETITIVE",
+      "n_pairs": 31,
+      "subject_macro_pairwise": 0.5806451612903226
+    },
+    {
+      "model": "AGE_YOUNGER_FIXED",
+      "axis": "PROJECT",
+      "n_pairs": 25,
+      "subject_macro_pairwise": 0.2
+    },
+    {
+      "model": "AGE_YOUNGER_FIXED",
+      "axis": "STATUS",
+      "n_pairs": 45,
+      "subject_macro_pairwise": 0.7555555555555555
+    },
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "axis": "COMPETITIVE",
+      "n_pairs": 31,
+      "subject_macro_pairwise": 0.4903225806451613
+    },
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "axis": "PROJECT",
+      "n_pairs": 25,
+      "subject_macro_pairwise": 0.5920000000000001
+    },
+    {
+      "model": "ALL_ELASTICNET_AUTO",
+      "axis": "STATUS",
+      "n_pairs": 45,
+      "subject_macro_pairwise": 0.4933333333333334
+    },
+    {
+      "model": "ALL_L2",
+      "axis": "COMPETITIVE",
+      "n_pairs": 31,
+      "subject_macro_pairwise": 0.4290322580645161
+    },
+    {
+      "model": "ALL_L2",
+      "axis": "PROJECT",
+      "n_pairs": 25,
+      "subject_macro_pairwise": 0.648
+    },
+    {
+      "model": "ALL_L2",
+      "axis": "STATUS",
+      "n_pairs": 45,
+      "subject_macro_pairwise": 0.4355555555555556
+    },
+    {
+      "model": "CONTROL_FIXED",
+      "axis": "COMPETITIVE",
+      "n_pairs": 31,
+      "subject_macro_pairwise": 0.5483870967741935
+    },
+    {
+      "model": "CONTROL_FIXED",
+      "axis": "PROJECT",
+      "n_pairs": 25,
+      "subject_macro_pairwise": 0.62
+    },
+    {
+      "model": "CONTROL_FIXED",
+      "axis": "STATUS",
+      "n_pairs": 45,
+      "subject_macro_pairwise": 0.5222222222222223
+    },
+    {
+      "model": "NUISANCE_AGE_AXIS",
+      "axis": "COMPETITIVE",
+      "n_pairs": 31,
+      "subject_macro_pairwise": 0.4161290322580645
+    },
+    {
+      "model": "NUISANCE_AGE_AXIS",
+      "axis": "PROJECT",
+      "n_pairs": 25,
+      "subject_macro_pairwise": 0.8
+    },
+    {
+      "model": "NUISANCE_AGE_AXIS",
+      "axis": "STATUS",
+      "n_pairs": 45,
+      "subject_macro_pairwise": 0.7555555555555555
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "axis": "COMPETITIVE",
+      "n_pairs": 31,
+      "subject_macro_pairwise": 0.40967741935483876
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "axis": "PROJECT",
+      "n_pairs": 25,
+      "subject_macro_pairwise": 0.556
+    },
+    {
+      "model": "TG10_STEM_BRANCH_L2",
+      "axis": "STATUS",
+      "n_pairs": 45,
+      "subject_macro_pairwise": 0.4799999999999999
+    }
+  ],
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "next_rule": "If a winner is frozen, do not tune it again on this 101-pair corpus. Construct a completely new GOLD holdout under one frozen prospective collection protocol and score the frozen winner and Production Control once. If no winner survives, do not open a holdout and do not create a post-hoc fourth candidate."
+}

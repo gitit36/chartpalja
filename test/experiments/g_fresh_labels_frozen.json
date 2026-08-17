@@ -1,0 +1,1341 @@
+{
+  "dataset_path": "test/experiments/g_fresh_subjects_completed.json",
+  "dataset_sha256": "b1b593610a04f1adc2a6b1349a011e452cbfebfe15d0df287597b45aea52f0ba",
+  "labels_frozen": true,
+  "frozen_at": "2026-08-12T23:01:07",
+  "candidate_model": "G_CLEAN_AXIS",
+  "validation_a": [
+    "Bill Gates",
+    "Britney Spears",
+    "Johnny Depp",
+    "Michael Jordan",
+    "Tiger Woods",
+    "Roger Federer",
+    "Diana, Princess of Wales",
+    "Winston Churchill",
+    "Arnold Schwarzenegger",
+    "Martha Stewart",
+    "Robert Downey Jr.",
+    "Marilyn Monroe",
+    "Whitney Houston",
+    "George Clooney",
+    "Meryl Streep"
+  ],
+  "validation_b": [
+    "Steve Jobs",
+    "Elon Musk",
+    "Angelina Jolie",
+    "Tom Hanks",
+    "Serena Williams",
+    "LeBron James",
+    "Charles III",
+    "Elizabeth II",
+    "Albert Einstein",
+    "Sylvester Stallone",
+    "Adele",
+    "Kurt Cobain",
+    "Muhammad Ali",
+    "Nicolas Cage",
+    "Judy Garland"
+  ],
+  "eligible_for_primary_validation": [
+    "Bill Gates",
+    "Steve Jobs",
+    "Elon Musk",
+    "Britney Spears",
+    "Angelina Jolie",
+    "Johnny Depp",
+    "Tom Hanks",
+    "Michael Jordan",
+    "Serena Williams",
+    "Tiger Woods",
+    "LeBron James",
+    "Roger Federer",
+    "Diana, Princess of Wales",
+    "Charles III",
+    "Elizabeth II",
+    "Arnold Schwarzenegger",
+    "Martha Stewart",
+    "Sylvester Stallone",
+    "Robert Downey Jr.",
+    "Adele",
+    "Marilyn Monroe",
+    "Kurt Cobain",
+    "Whitney Houston",
+    "Muhammad Ali",
+    "George Clooney",
+    "Nicolas Cage",
+    "Meryl Streep",
+    "Judy Garland"
+  ],
+  "ineligible_for_primary_validation": [
+    {
+      "name": "Winston Churchill",
+      "split": "validation_a",
+      "source_quality": "Rodden_A",
+      "grade": "A",
+      "eligible_for_primary_validation": false,
+      "exclusion_reasons": [
+        "engine_year_out_of_range(1874)"
+      ]
+    },
+    {
+      "name": "Albert Einstein",
+      "split": "validation_b",
+      "source_quality": "Rodden_AA",
+      "grade": "AA",
+      "eligible_for_primary_validation": false,
+      "exclusion_reasons": [
+        "engine_year_out_of_range(1879)"
+      ]
+    }
+  ],
+  "eligible_events": {
+    "Bill Gates": {
+      "good": [
+        {
+          "year": 1986,
+          "label": "Microsoft IPO로 기업 가치와 개인 자산이 크게 상승",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Bill_Gates",
+          "exclude": false
+        },
+        {
+          "year": 1995,
+          "label": "Windows 95 출시와 Microsoft의 대중시장 지배력 확대",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Windows_95",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2000,
+          "label": "미국 연방법원의 Microsoft 반독점 소송에서 중대한 법적 패소와 회사 분할 명령",
+          "axis": "career/legal",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/United_States_v._Microsoft_Corp.",
+          "exclude": false
+        },
+        {
+          "year": 2021,
+          "label": "Melinda French Gates와 이혼",
+          "axis": "relationship",
+          "weight": 0.7,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Bill_Gates",
+          "exclude": false
+        }
+      ]
+    },
+    "Steve Jobs": {
+      "good": [
+        {
+          "year": 1976,
+          "label": "Apple 공동 창업과 Apple I 사업 시작",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Jobs,_Steve",
+          "exclude": false
+        },
+        {
+          "year": 2007,
+          "label": "iPhone 공개로 Apple의 핵심 성장 국면 개시",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Steve_Jobs",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1985,
+          "label": "Apple 경영권 갈등 끝에 회사에서 퇴진",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Jobs,_Steve",
+          "exclude": false
+        },
+        {
+          "year": 2004,
+          "label": "췌장 종양 진단 및 수술",
+          "axis": "health",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Jobs,_Steve",
+          "exclude": false
+        }
+      ]
+    },
+    "Elon Musk": {
+      "good": [
+        {
+          "year": 2010,
+          "label": "Tesla IPO로 전기차 사업의 자본시장 기반 확대",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Tesla,_Inc.",
+          "exclude": false
+        },
+        {
+          "year": 2020,
+          "label": "SpaceX Crew Dragon 첫 유인 궤도 비행 성공",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Musk,_Elon",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2000,
+          "label": "X.com/PayPal 경영진 갈등 속 CEO 자리에서 축출",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "medium",
+          "source": "https://en.wikipedia.org/wiki/Elon_Musk",
+          "exclude": false
+        },
+        {
+          "year": 2016,
+          "label": "Falcon 9 발사대 폭발로 로켓과 위성 손실, 발사 일정 중단",
+          "axis": "career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/SpaceX",
+          "exclude": false
+        }
+      ]
+    },
+    "Britney Spears": {
+      "good": [
+        {
+          "year": 1999,
+          "label": "...Baby One More Time으로 세계적 스타로 급부상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Britney_Spears",
+          "exclude": false
+        },
+        {
+          "year": 2000,
+          "label": "Oops!... I Did It Again의 대규모 상업적 성공",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Britney_Spears",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2007,
+          "label": "공개적 정신건강 위기, 양육권 문제와 활동 혼란이 집중된 해",
+          "axis": "general",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Britney_Spears",
+          "exclude": false
+        },
+        {
+          "year": 2019,
+          "label": "정신건강 치료 및 후견제도 갈등이 공개적으로 확대",
+          "axis": "health/legal",
+          "weight": 0.9,
+          "confidence": "medium",
+          "source": "https://en.wikipedia.org/wiki/Britney_Spears",
+          "exclude": false
+        }
+      ]
+    },
+    "Angelina Jolie": {
+      "good": [
+        {
+          "year": 2000,
+          "label": "Girl, Interrupted로 아카데미 여우조연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Jolie,_Angelina",
+          "exclude": false
+        },
+        {
+          "year": 2014,
+          "label": "Maleficent 흥행 성공과 Brad Pitt와의 결혼",
+          "axis": "career/relationship",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Jolie,_Angelina",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2007,
+          "label": "어머니 Marcheline Bertrand 사망",
+          "axis": "family",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Jolie,_Angelina",
+          "exclude": false
+        },
+        {
+          "year": 2016,
+          "label": "Brad Pitt와의 이혼 소송 제기",
+          "axis": "relationship",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Jolie,_Angelina",
+          "exclude": false
+        }
+      ]
+    },
+    "Johnny Depp": {
+      "good": [
+        {
+          "year": 2003,
+          "label": "Pirates of the Caribbean로 커리어 정점급 대중 성공과 오스카 후보",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Johnny_Depp",
+          "exclude": false
+        },
+        {
+          "year": 2008,
+          "label": "Sweeney Todd로 골든글로브 남우주연상 수상",
+          "axis": "career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Johnny_Depp",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2016,
+          "label": "Amber Heard의 이혼 제기와 가정폭력 의혹, 같은 시기 모친상",
+          "axis": "relationship/reputation",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Depp,_Johnny",
+          "exclude": false
+        },
+        {
+          "year": 2020,
+          "label": "영국 명예훼손 소송 패소로 평판과 커리어에 큰 타격",
+          "axis": "career/legal",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Depp_v_News_Group_Newspapers_Ltd",
+          "exclude": false
+        }
+      ]
+    },
+    "Tom Hanks": {
+      "good": [
+        {
+          "year": 1994,
+          "label": "Philadelphia로 아카데미 남우주연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Hanks,_Tom",
+          "exclude": false
+        },
+        {
+          "year": 1995,
+          "label": "Forrest Gump로 2년 연속 아카데미 남우주연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Hanks,_Tom",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1987,
+          "label": "첫 배우자 Samantha Lewes와 이혼",
+          "axis": "relationship",
+          "weight": 0.6,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Tom_Hanks",
+          "exclude": false
+        },
+        {
+          "year": 2020,
+          "label": "COVID-19 확진 및 격리",
+          "axis": "health",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Hanks,_Tom",
+          "exclude": false
+        }
+      ]
+    },
+    "Michael Jordan": {
+      "good": [
+        {
+          "year": 1991,
+          "label": "Chicago Bulls 첫 NBA 우승과 Finals MVP",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Michael_Jordan",
+          "exclude": false
+        },
+        {
+          "year": 1996,
+          "label": "복귀 후 Bulls 우승과 Finals MVP",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Michael_Jordan",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1985,
+          "label": "발 골절로 정규시즌 대부분 결장",
+          "axis": "health/career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Michael_Jordan",
+          "exclude": false
+        },
+        {
+          "year": 2002,
+          "label": "무릎 부상과 수술로 시즌 조기 종료",
+          "axis": "health/career",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Michael_Jordan",
+          "exclude": false
+        }
+      ]
+    },
+    "Serena Williams": {
+      "good": [
+        {
+          "year": 1999,
+          "label": "US Open 단식 우승으로 첫 그랜드슬램 단식 타이틀",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Williams,_Serena",
+          "exclude": false
+        },
+        {
+          "year": 2017,
+          "label": "Australian Open 우승으로 오픈 시대 23번째 메이저 단식 우승",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Williams,_Serena",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2010,
+          "label": "발 부상과 반복 수술로 장기 이탈",
+          "axis": "health",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Williams,_Serena",
+          "exclude": false
+        },
+        {
+          "year": 2011,
+          "label": "폐색전증과 혈종 진단으로 심각한 건강 위기",
+          "axis": "health",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Williams,_Serena",
+          "exclude": false
+        }
+      ]
+    },
+    "Tiger Woods": {
+      "good": [
+        {
+          "year": 2000,
+          "label": "US Open, British Open 등 압도적 성과와 커리어 그랜드슬램 완성",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Woods,_Tiger",
+          "exclude": false
+        },
+        {
+          "year": 2019,
+          "label": "Masters 우승으로 장기 부진과 부상 이후 극적인 메이저 복귀",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Tiger_Woods",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2009,
+          "label": "차량 사고 이후 불륜 스캔들이 폭발하며 평판과 후원에 큰 타격",
+          "axis": "relationship/reputation",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Tiger_Woods",
+          "exclude": false
+        },
+        {
+          "year": 2021,
+          "label": "고속 차량 사고로 다리에 중상을 입고 수술",
+          "axis": "health",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Tiger_Woods",
+          "exclude": false
+        }
+      ]
+    },
+    "LeBron James": {
+      "good": [
+        {
+          "year": 2012,
+          "label": "첫 NBA 우승, Finals MVP, 정규시즌 MVP",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/LeBron_James",
+          "exclude": false
+        },
+        {
+          "year": 2016,
+          "label": "Cleveland Cavaliers를 창단 첫 NBA 우승으로 이끌고 Finals MVP",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/LeBron_James",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2011,
+          "label": "NBA Finals에서 Dallas Mavericks에 패배하며 큰 비판",
+          "axis": "career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/LeBron_James",
+          "exclude": false
+        },
+        {
+          "year": 2019,
+          "label": "사타구니 부상과 함께 개인 커리어 최초 장기 플레이오프 공백",
+          "axis": "health/career",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/LeBron_James",
+          "exclude": false
+        }
+      ]
+    },
+    "Roger Federer": {
+      "good": [
+        {
+          "year": 2003,
+          "label": "Wimbledon 우승으로 첫 그랜드슬램 단식 타이틀",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Federer,_Roger",
+          "exclude": false
+        },
+        {
+          "year": 2009,
+          "label": "French Open 우승으로 커리어 그랜드슬램 완성",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Roger_Federer",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2016,
+          "label": "무릎 수술과 부상으로 시즌을 조기 종료",
+          "axis": "health/career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Roger_Federer",
+          "exclude": false
+        },
+        {
+          "year": 2020,
+          "label": "두 차례 무릎 수술로 투어 대부분을 결장",
+          "axis": "health/career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Roger_Federer",
+          "exclude": false
+        }
+      ]
+    },
+    "Diana, Princess of Wales": {
+      "good": [
+        {
+          "year": 1982,
+          "label": "첫아들 Prince William 출생",
+          "axis": "family",
+          "weight": 0.7,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Diana,_Princess_of_Wales",
+          "exclude": false
+        },
+        {
+          "year": 1984,
+          "label": "둘째 아들 Prince Harry 출생",
+          "axis": "family",
+          "weight": 0.7,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Diana,_Princess_of_Wales",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1992,
+          "label": "Charles 왕세자와의 공식 별거 발표",
+          "axis": "relationship",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Diana,_Princess_of_Wales",
+          "exclude": false
+        },
+        {
+          "year": 1997,
+          "label": "파리 교통사고로 사망",
+          "axis": "general",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Death_of_Diana,_Princess_of_Wales",
+          "exclude": false
+        }
+      ]
+    },
+    "Charles III": {
+      "good": [
+        {
+          "year": 2022,
+          "label": "Elizabeth II 사망 후 영국 국왕 즉위",
+          "axis": "career/status",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Charles_III,_King_of_the_United_Kingdom",
+          "exclude": false
+        },
+        {
+          "year": 2023,
+          "label": "Westminster Abbey에서 대관식 거행",
+          "axis": "career/status",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Charles_III,_King_of_the_United_Kingdom",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1992,
+          "label": "Diana 왕세자비와의 공식 별거 발표",
+          "axis": "relationship",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Charles_III",
+          "exclude": false
+        },
+        {
+          "year": 2024,
+          "label": "암 진단 공개와 공적 업무 축소",
+          "axis": "health",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Charles_III",
+          "exclude": false
+        }
+      ]
+    },
+    "Elizabeth II": {
+      "good": [
+        {
+          "year": 1953,
+          "label": "영국 여왕 대관식",
+          "axis": "career/status",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Coronation_of_Elizabeth_II",
+          "exclude": false
+        },
+        {
+          "year": 2012,
+          "label": "즉위 60주년 Diamond Jubilee를 성공적으로 치름",
+          "axis": "career/status",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Diamond_Jubilee_of_Elizabeth_II",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1992,
+          "label": "왕실의 연쇄적 가족 위기를 직접 annus horribilis라 표현한 해",
+          "axis": "family/reputation",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Annus_horribilis",
+          "exclude": false
+        },
+        {
+          "year": 2021,
+          "label": "배우자 Prince Philip 사망",
+          "axis": "family",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Prince_Philip,_Duke_of_Edinburgh",
+          "exclude": false
+        }
+      ]
+    },
+    "Winston Churchill": {
+      "good": [
+        {
+          "year": 1940,
+          "label": "제2차 세계대전 중 영국 총리 취임",
+          "axis": "career/status",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Churchill,_Winston",
+          "exclude": false
+        },
+        {
+          "year": 1953,
+          "label": "기사작위와 노벨문학상 수상",
+          "axis": "career/status",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Churchill,_Winston",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1921,
+          "label": "막내딸 Marigold가 세 살에 사망",
+          "axis": "family",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Churchill,_Winston",
+          "exclude": false
+        },
+        {
+          "year": 1922,
+          "label": "총선에서 Dundee 의석을 잃어 하원의원직 상실",
+          "axis": "career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Winston_Churchill",
+          "exclude": false
+        }
+      ]
+    },
+    "Albert Einstein": {
+      "good": [
+        {
+          "year": 1905,
+          "label": "Annus mirabilis 논문들로 상대성이론과 광전효과 연구의 돌파구",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Einstein,_Albert",
+          "exclude": false
+        },
+        {
+          "year": 1922,
+          "label": "노벨물리학상 수상 발표 및 국제적 위상 확립",
+          "axis": "career/status",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Albert_Einstein",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1917,
+          "label": "심각한 소화기/간 질환과 쇠약으로 장기간 건강 악화",
+          "axis": "health",
+          "weight": 0.9,
+          "confidence": "medium",
+          "source": "https://en.wikipedia.org/wiki/Albert_Einstein",
+          "exclude": false
+        },
+        {
+          "year": 1955,
+          "label": "대동맥류 파열로 사망",
+          "axis": "general",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Albert_Einstein",
+          "exclude": false
+        }
+      ]
+    },
+    "Arnold Schwarzenegger": {
+      "good": [
+        {
+          "year": 2003,
+          "label": "California 주지사 선거 당선",
+          "axis": "career/status",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold",
+          "exclude": false
+        },
+        {
+          "year": 2006,
+          "label": "California 주지사 재선",
+          "axis": "career/status",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1972,
+          "label": "부친 Gustav Schwarzenegger 사망",
+          "axis": "family",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold",
+          "exclude": false
+        },
+        {
+          "year": 2011,
+          "label": "가정부와의 혼외자 존재 공개와 Maria Shriver와의 별거",
+          "axis": "relationship/reputation",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Schwarzenegger,_Arnold",
+          "exclude": false
+        }
+      ]
+    },
+    "Martha Stewart": {
+      "good": [
+        {
+          "year": 1997,
+          "label": "Martha Stewart Living Omnimedia 설립으로 미디어 사업 통합",
+          "axis": "career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Martha_Stewart",
+          "exclude": false
+        },
+        {
+          "year": 1999,
+          "label": "Martha Stewart Living Omnimedia IPO로 큰 기업가치 형성",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Martha_Stewart",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2003,
+          "label": "증권거래 관련 혐의로 기소되고 회사 경영직에서 물러남",
+          "axis": "career/legal",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/ImClone_stock_trading_case",
+          "exclude": false
+        },
+        {
+          "year": 2004,
+          "label": "허위진술 등 혐의 유죄평결과 징역형 선고",
+          "axis": "legal/reputation",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Martha_Stewart",
+          "exclude": false
+        }
+      ]
+    },
+    "Sylvester Stallone": {
+      "good": [
+        {
+          "year": 1976,
+          "label": "Rocky 개봉으로 세계적 스타와 작가로 급부상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone",
+          "exclude": false
+        },
+        {
+          "year": 2006,
+          "label": "Rocky Balboa로 장기 프랜차이즈와 커리어 평가 회복",
+          "axis": "career",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1987,
+          "label": "Brigitte Nielsen과 이혼 및 커리어 흥행 부진 국면",
+          "axis": "relationship/career",
+          "weight": 0.8,
+          "confidence": "medium",
+          "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone",
+          "exclude": false
+        },
+        {
+          "year": 2012,
+          "label": "아들 Sage Stallone 사망",
+          "axis": "family",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Sylvester_Stallone",
+          "exclude": false
+        }
+      ]
+    },
+    "Robert Downey Jr.": {
+      "good": [
+        {
+          "year": 2008,
+          "label": "Iron Man 성공으로 메이저 스타로 완전한 커리어 복귀",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Robert_Downey_Jr.",
+          "exclude": false
+        },
+        {
+          "year": 2024,
+          "label": "Oppenheimer로 아카데미 남우조연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Robert_Downey_Jr.",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1996,
+          "label": "약물 및 무기 관련 체포와 재활/구금 시작",
+          "axis": "legal/health",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Downey,_Robert_Jr.",
+          "exclude": false
+        },
+        {
+          "year": 1999,
+          "label": "보호관찰 위반으로 실형 선고 및 수감",
+          "axis": "legal/career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Downey,_Robert_Jr.",
+          "exclude": false
+        }
+      ]
+    },
+    "Adele": {
+      "good": [
+        {
+          "year": 2008,
+          "label": "데뷔 앨범 19 발매와 국제적 성공 시작",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Adele",
+          "exclude": false
+        },
+        {
+          "year": 2015,
+          "label": "앨범 25 발매와 기록적 판매 성공",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Adele",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2019,
+          "label": "Simon Konecki와의 결별/이혼 진행이 공개",
+          "axis": "relationship",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Adele",
+          "exclude": false
+        }
+      ]
+    },
+    "Marilyn Monroe": {
+      "good": [
+        {
+          "year": 1953,
+          "label": "Niagara, Gentlemen Prefer Blondes 등으로 정상급 할리우드 스타로 부상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Marilyn_Monroe",
+          "exclude": false
+        },
+        {
+          "year": 1960,
+          "label": "Some Like It Hot로 골든글로브 여우주연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Marilyn_Monroe",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1961,
+          "label": "Arthur Miller와 이혼 및 정신건강 위기로 병원 치료",
+          "axis": "relationship/health",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Marilyn_Monroe",
+          "exclude": false
+        },
+        {
+          "year": 1962,
+          "label": "약물 과다복용으로 사망",
+          "axis": "general",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Death_of_Marilyn_Monroe",
+          "exclude": false
+        }
+      ]
+    },
+    "Kurt Cobain": {
+      "good": [
+        {
+          "year": 1991,
+          "label": "Nirvana Nevermind 발매로 세계적 성공",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Cobain,_Kurt",
+          "exclude": false
+        },
+        {
+          "year": 1992,
+          "label": "Courtney Love와 결혼하고 딸 Frances Bean 출생",
+          "axis": "relationship/family",
+          "weight": 0.7,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Cobain,_Kurt",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1994,
+          "label": "자살로 사망",
+          "axis": "general",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Cobain,_Kurt",
+          "exclude": false
+        }
+      ]
+    },
+    "Whitney Houston": {
+      "good": [
+        {
+          "year": 1985,
+          "label": "데뷔 앨범 Whitney Houston의 대규모 상업적 성공",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Whitney_Houston",
+          "exclude": false
+        },
+        {
+          "year": 1992,
+          "label": "The Bodyguard 및 사운드트랙의 세계적 성공",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Whitney_Houston",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2006,
+          "label": "Bobby Brown과의 결혼관계 파탄 및 이혼 절차",
+          "axis": "relationship",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Whitney_Houston",
+          "exclude": false
+        },
+        {
+          "year": 2012,
+          "label": "약물 관련 익사 사고로 사망",
+          "axis": "general",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Whitney_Houston",
+          "exclude": false
+        }
+      ]
+    },
+    "Muhammad Ali": {
+      "good": [
+        {
+          "year": 1964,
+          "label": "Sonny Liston을 꺾고 세계 헤비급 챔피언 등극",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Muhammad_Ali",
+          "exclude": false
+        },
+        {
+          "year": 1974,
+          "label": "Rumble in the Jungle에서 George Foreman을 꺾고 세계 챔피언 탈환",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Rumble_in_the_Jungle",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1967,
+          "label": "병역 거부로 유죄판결, 복싱 라이선스와 타이틀 박탈",
+          "axis": "legal/career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Muhammad_Ali",
+          "exclude": false
+        },
+        {
+          "year": 1984,
+          "label": "파킨슨 증후군 진단",
+          "axis": "health",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Muhammad_Ali",
+          "exclude": false
+        }
+      ]
+    },
+    "George Clooney": {
+      "good": [
+        {
+          "year": 1994,
+          "label": "ER 출연으로 대중적 스타덤 진입",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Clooney,_George",
+          "exclude": false
+        },
+        {
+          "year": 2006,
+          "label": "Syriana로 아카데미 남우조연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/George_Clooney",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1992,
+          "label": "Talia Balsam과 이혼",
+          "axis": "relationship",
+          "weight": 0.7,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Clooney,_George",
+          "exclude": false
+        },
+        {
+          "year": 2018,
+          "label": "이탈리아에서 오토바이 충돌 사고로 부상",
+          "axis": "health",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/George_Clooney",
+          "exclude": false
+        }
+      ]
+    },
+    "Nicolas Cage": {
+      "good": [
+        {
+          "year": 1996,
+          "label": "Leaving Las Vegas로 아카데미 남우주연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Nicolas_Cage",
+          "exclude": false
+        },
+        {
+          "year": 2021,
+          "label": "Pig로 비평적 재평가와 커리어 회복",
+          "axis": "career",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Pig_(film)",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2009,
+          "label": "대규모 세금 채무와 부동산 처분 등 재정 위기 공개",
+          "axis": "financial",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Nicolas_Cage",
+          "exclude": false
+        },
+        {
+          "year": 2019,
+          "label": "결혼 4일 만에 혼인 무효 신청",
+          "axis": "relationship",
+          "weight": 0.7,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Nicolas_Cage",
+          "exclude": false
+        }
+      ]
+    },
+    "Meryl Streep": {
+      "good": [
+        {
+          "year": 1980,
+          "label": "Kramer vs. Kramer로 아카데미 여우조연상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Streep,_Meryl",
+          "exclude": false
+        },
+        {
+          "year": 2012,
+          "label": "The Iron Lady로 세 번째 아카데미 연기상 수상",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Streep,_Meryl",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 2001,
+          "label": "모친 Mary Wilkinson Streep 사망",
+          "axis": "family",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Streep,_Meryl",
+          "exclude": false
+        },
+        {
+          "year": 2003,
+          "label": "부친 Harry William Streep Jr. 사망",
+          "axis": "family",
+          "weight": 0.8,
+          "confidence": "high",
+          "source": "https://www.astro.com/astro-databank/Streep,_Meryl",
+          "exclude": false
+        }
+      ]
+    },
+    "Judy Garland": {
+      "good": [
+        {
+          "year": 1939,
+          "label": "The Wizard of Oz의 Dorothy 역으로 세계적 명성 확립",
+          "axis": "career",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Judy_Garland",
+          "exclude": false
+        },
+        {
+          "year": 1955,
+          "label": "A Star Is Born으로 골든글로브 여우주연상 수상",
+          "axis": "career",
+          "weight": 0.9,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Judy_Garland",
+          "exclude": false
+        }
+      ],
+      "bad": [
+        {
+          "year": 1964,
+          "label": "호주 공연 투어에서 건강/약물 문제와 공연 실패가 크게 표면화",
+          "axis": "health/career",
+          "weight": 0.8,
+          "confidence": "medium",
+          "source": "https://en.wikipedia.org/wiki/Judy_Garland",
+          "exclude": false
+        },
+        {
+          "year": 1969,
+          "label": "약물 과다복용으로 사망",
+          "axis": "general",
+          "weight": 1.0,
+          "confidence": "high",
+          "source": "https://en.wikipedia.org/wiki/Judy_Garland",
+          "exclude": false
+        }
+      ]
+    }
+  },
+  "label_issues": [],
+  "birth_qa_path": "test/experiments/exp_g_fresh_birth_qa.json",
+  "scoring_clock": "engine_recomputed LOCAL_TRUE_SOLAR lon-only",
+  "note": "Do not edit labels during Validation A."
+}

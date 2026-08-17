@@ -1,0 +1,452 @@
+{
+  "status": "V3_REJECTED_KEEP_CONTROL",
+  "v2_hash": "d2c0199c5194dd637ddea6c29fc48c003ac1075b383422809175473e006925bf",
+  "v3_id": "V3_ENGINE_D_CLIPPED_G",
+  "v3_changes": [
+    "parent D = production engine 종합운점수 (replace flat V2 D_B)",
+    "drop B_trigger and 0.65/0.35 mix",
+    "annual_dev = clip(A_G, ±4.0)"
+  ],
+  "dev": {
+    "CONTROL": {
+      "headline": {
+        "n": 24,
+        "macro_pairwise": 0.5208333333333334,
+        "subject_hit": "13/24",
+        "subject_hit_n": 13,
+        "std_sep": 0.050316740949355836,
+        "median_sep": 0.75,
+        "positive": 13,
+        "neutral": 0,
+        "negative": 11,
+        "same_D_pairwise": 0.3611111111111111,
+        "cross_D_pairwise": 0.5576923076923077,
+        "B_PARENT_HELP": 0.2604166666666667,
+        "B_PARENT_HARM": 0.17708333333333334,
+        "B_PARENT_NET": 0.08333333333333334
+      },
+      "structure": {
+        "D_min": 24.0,
+        "D_max": 94.0,
+        "D_p50": 64.0,
+        "adj_D_jump_p50": 9.0,
+        "adj_D_jump_p90": 20.0,
+        "abs_annual_dev_p50": 4.0,
+        "abs_annual_dev_p90": 11.0,
+        "Y_sat_frac": 0.0,
+        "Y_min": 29.0,
+        "Y_max": 93.0,
+        "yoy_abs_p90": 9.0,
+        "yoy_abs_p99": 17.0,
+        "annual_dominates_D_frac": 0.2033
+      },
+      "clusters": {
+        "n_subjects_miss": 11,
+        "miss_subject_ids": [
+          "PLV1_001",
+          "PLV1_006",
+          "PLV1_011",
+          "PLV1_018",
+          "PLV1_019"
+        ],
+        "same_D_error_rate": 0.6111,
+        "cross_D_error_rate": 0.4231,
+        "n_same_pairs": 18,
+        "n_cross_pairs": 78
+      }
+    },
+    "V2_DY_B": {
+      "headline": {
+        "n": 24,
+        "macro_pairwise": 0.5104166666666666,
+        "subject_hit": "10/24",
+        "subject_hit_n": 10,
+        "std_sep": -0.05357104027958092,
+        "median_sep": -0.0840737269324201,
+        "positive": 10,
+        "neutral": 0,
+        "negative": 14,
+        "same_D_pairwise": 0.5,
+        "cross_D_pairwise": 0.5128205128205128,
+        "B_PARENT_HELP": 0.09375,
+        "B_PARENT_HARM": 0.020833333333333332,
+        "B_PARENT_NET": 0.07291666666666667
+      },
+      "structure": {
+        "D_min": 59.0894,
+        "D_max": 65.5071,
+        "D_p50": 61.7144,
+        "adj_D_jump_p50": 0.8039,
+        "adj_D_jump_p90": 2.8821,
+        "abs_annual_dev_p50": 1.4945,
+        "abs_annual_dev_p90": 3.9861,
+        "Y_sat_frac": 0.0,
+        "Y_min": 48.809,
+        "Y_max": 70.6389,
+        "yoy_abs_p90": 5.4996,
+        "yoy_abs_p99": 9.2886,
+        "annual_dominates_D_frac": 0.4792
+      },
+      "clusters": {
+        "n_subjects_miss": 14,
+        "miss_subject_ids": [
+          "PLV1_001",
+          "PLV1_005",
+          "PLV1_007",
+          "PLV1_010",
+          "PLV1_011"
+        ],
+        "same_D_error_rate": 0.5,
+        "cross_D_error_rate": 0.4872,
+        "n_same_pairs": 18,
+        "n_cross_pairs": 78
+      }
+    },
+    "V3": {
+      "headline": {
+        "n": 24,
+        "macro_pairwise": 0.53125,
+        "subject_hit": "13/24",
+        "subject_hit_n": 13,
+        "std_sep": 0.03917303396222594,
+        "median_sep": 2.3171728124999973,
+        "positive": 13,
+        "neutral": 0,
+        "negative": 11,
+        "same_D_pairwise": 0.3611111111111111,
+        "cross_D_pairwise": 0.5705128205128205,
+        "B_PARENT_HELP": 0.2916666666666667,
+        "B_PARENT_HARM": 0.13541666666666666,
+        "B_PARENT_NET": 0.15625000000000003
+      },
+      "structure": {
+        "D_min": 24.0,
+        "D_max": 94.0,
+        "D_p50": 64.0,
+        "adj_D_jump_p50": 9.0,
+        "adj_D_jump_p90": 20.0,
+        "abs_annual_dev_p50": 2.0777,
+        "abs_annual_dev_p90": 4.0,
+        "Y_sat_frac": 0.0,
+        "Y_min": 20.0,
+        "Y_max": 96.0601,
+        "yoy_abs_p90": 6.9164,
+        "yoy_abs_p99": 20.9183,
+        "annual_dominates_D_frac": 0.1075
+      },
+      "clusters": {
+        "n_subjects_miss": 11,
+        "miss_subject_ids": [
+          "PLV1_001",
+          "PLV1_006",
+          "PLV1_011",
+          "PLV1_018",
+          "PLV1_019"
+        ],
+        "same_D_error_rate": 0.6111,
+        "cross_D_error_rate": 0.4231,
+        "n_same_pairs": 18,
+        "n_cross_pairs": 78
+      }
+    }
+  },
+  "regression_guards": {
+    "OLD_DEV": {
+      "CONTROL": {
+        "headline": {
+          "n": 56,
+          "macro_pairwise": 0.5005579338216768,
+          "subject_hit": "25/56",
+          "subject_hit_n": 25,
+          "std_sep": -0.023726574083386322,
+          "median_sep": -0.9309056956115747,
+          "positive": 25,
+          "neutral": 0,
+          "negative": 31,
+          "same_D_pairwise": 0.5210772833723654,
+          "cross_D_pairwise": 0.4644595910418695,
+          "B_PARENT_HELP": 0.15268225584594222,
+          "B_PARENT_HARM": 0.20220082530949107,
+          "B_PARENT_NET": -0.04951856946354885
+        },
+        "structure": {
+          "D_min": 27.0,
+          "D_max": 92.0,
+          "D_p50": 64.0,
+          "adj_D_jump_p50": 9.0,
+          "adj_D_jump_p90": 21.0,
+          "abs_annual_dev_p50": 4.0,
+          "abs_annual_dev_p90": 11.0,
+          "Y_sat_frac": 0.0,
+          "Y_min": 24.0,
+          "Y_max": 92.0,
+          "yoy_abs_p90": 9.0,
+          "yoy_abs_p99": 16.0,
+          "annual_dominates_D_frac": 0.2214
+        },
+        "clusters": {
+          "n_subjects_miss": 33,
+          "miss_subject_ids": [
+            "Donald Trump",
+            "Michael Jackson",
+            "Chris Brown",
+            "Hillary Clinton",
+            "Al Gore"
+          ],
+          "same_D_error_rate": 0.4054,
+          "cross_D_error_rate": 0.5165,
+          "n_same_pairs": 518,
+          "n_cross_pairs": 1185
+        }
+      },
+      "V3": {
+        "headline": {
+          "n": 56,
+          "macro_pairwise": 0.5326960008540453,
+          "subject_hit": "32/56",
+          "subject_hit_n": 32,
+          "std_sep": 0.0024589432859135176,
+          "median_sep": 0.6063826250000055,
+          "positive": 32,
+          "neutral": 0,
+          "negative": 24,
+          "same_D_pairwise": 0.572599531615925,
+          "cross_D_pairwise": 0.4664070107108082,
+          "B_PARENT_HELP": 0.10591471801925723,
+          "B_PARENT_HARM": 0.16918844566712518,
+          "B_PARENT_NET": -0.06327372764786796
+        },
+        "structure": {
+          "D_min": 27.0,
+          "D_max": 92.0,
+          "D_p50": 64.0,
+          "adj_D_jump_p50": 9.0,
+          "adj_D_jump_p90": 21.0,
+          "abs_annual_dev_p50": 2.0011,
+          "abs_annual_dev_p90": 4.0,
+          "Y_sat_frac": 0.0,
+          "Y_min": 23.0,
+          "Y_max": 95.7563,
+          "yoy_abs_p90": 6.6671,
+          "yoy_abs_p99": 20.1962,
+          "annual_dominates_D_frac": 0.1207
+        },
+        "clusters": {
+          "n_subjects_miss": 25,
+          "miss_subject_ids": [
+            "Michael Jackson",
+            "Al Gore",
+            "Elizabeth Taylor",
+            "Diana Ross",
+            "John Ritter"
+          ],
+          "same_D_error_rate": 0.3649,
+          "cross_D_error_rate": 0.53,
+          "n_same_pairs": 518,
+          "n_cross_pairs": 1185
+        }
+      }
+    },
+    "FRESH_A": {
+      "CONTROL": {
+        "headline": {
+          "n": 14,
+          "macro_pairwise": 0.5178571428571429,
+          "subject_hit": "8/14",
+          "subject_hit_n": 8,
+          "std_sep": -0.13888462689327477,
+          "median_sep": 1.25,
+          "positive": 8,
+          "neutral": 0,
+          "negative": 6,
+          "same_D_pairwise": 0.5714285714285714,
+          "cross_D_pairwise": 0.5102040816326531,
+          "B_PARENT_HELP": 0.16071428571428573,
+          "B_PARENT_HARM": 0.2857142857142857,
+          "B_PARENT_NET": -0.12499999999999997
+        },
+        "structure": {
+          "D_min": 34.0,
+          "D_max": 92.0,
+          "D_p50": 65.0,
+          "adj_D_jump_p50": 8.0,
+          "adj_D_jump_p90": 22.0,
+          "abs_annual_dev_p50": 4.0,
+          "abs_annual_dev_p90": 10.0,
+          "Y_sat_frac": 0.0,
+          "Y_min": 34.0,
+          "Y_max": 90.0,
+          "yoy_abs_p90": 9.0,
+          "yoy_abs_p99": 16.0,
+          "annual_dominates_D_frac": 0.2029
+        },
+        "clusters": {
+          "n_subjects_miss": 6,
+          "miss_subject_ids": [
+            "Tiger Woods",
+            "Arnold Schwarzenegger",
+            "Robert Downey Jr.",
+            "Marilyn Monroe",
+            "Whitney Houston"
+          ],
+          "same_D_error_rate": 0.4286,
+          "cross_D_error_rate": 0.4694,
+          "n_same_pairs": 7,
+          "n_cross_pairs": 49
+        }
+      },
+      "V3": {
+        "headline": {
+          "n": 14,
+          "macro_pairwise": 0.4107142857142857,
+          "subject_hit": "7/14",
+          "subject_hit_n": 7,
+          "std_sep": -0.2526045583997341,
+          "median_sep": 0.06691718749999964,
+          "positive": 7,
+          "neutral": 0,
+          "negative": 7,
+          "same_D_pairwise": 0.42857142857142855,
+          "cross_D_pairwise": 0.40816326530612246,
+          "B_PARENT_HELP": 0.125,
+          "B_PARENT_HARM": 0.25,
+          "B_PARENT_NET": -0.125
+        },
+        "structure": {
+          "D_min": 34.0,
+          "D_max": 92.0,
+          "D_p50": 65.0,
+          "adj_D_jump_p50": 8.0,
+          "adj_D_jump_p90": 22.0,
+          "abs_annual_dev_p50": 1.8503,
+          "abs_annual_dev_p90": 4.0,
+          "Y_sat_frac": 0.0,
+          "Y_min": 30.0,
+          "Y_max": 96.0,
+          "yoy_abs_p90": 6.6296,
+          "yoy_abs_p99": 21.6385,
+          "annual_dominates_D_frac": 0.1007
+        },
+        "clusters": {
+          "n_subjects_miss": 7,
+          "miss_subject_ids": [
+            "Arnold Schwarzenegger",
+            "Martha Stewart",
+            "Robert Downey Jr.",
+            "Marilyn Monroe",
+            "Whitney Houston"
+          ],
+          "same_D_error_rate": 0.5714,
+          "cross_D_error_rate": 0.5918,
+          "n_same_pairs": 7,
+          "n_cross_pairs": 49
+        }
+      }
+    }
+  },
+  "synthetic": {
+    "n_births": 5000,
+    "n_full_annual": 400,
+    "CONTROL": {
+      "Y_sat_frac": 0.0,
+      "daewoon": {
+        "n": 5000,
+        "cliff_frac": 0.6318,
+        "flat_frac": 0.0
+      },
+      "mean_by_day_stem_Y": {
+        "丁": 62.8792,
+        "丙": 63.0121,
+        "乙": 64.2122,
+        "壬": 62.4672,
+        "己": 61.2822,
+        "庚": 63.0174,
+        "戊": 61.4419,
+        "甲": 62.0767,
+        "癸": 64.9854,
+        "辛": 61.8157
+      },
+      "mean_by_strength_Y": {
+        "극약": 60.8424,
+        "극왕": 60.578,
+        "신강": 63.9547,
+        "신약": 63.845,
+        "중화신강": 63.8532,
+        "중화신약": 64.0648,
+        "태강": 60.7833,
+        "태약": 60.6111
+      },
+      "mean_by_day_stem_D": {
+        "丁": 62.5131,
+        "丙": 62.7691,
+        "乙": 63.6545,
+        "壬": 63.2907,
+        "己": 62.7946,
+        "庚": 63.0046,
+        "戊": 61.996,
+        "甲": 63.1671,
+        "癸": 63.3781,
+        "辛": 63.7328
+      },
+      "mean_by_strength_D": {
+        "극약": 60.9548,
+        "극왕": 62.9487,
+        "신강": 63.2252,
+        "신약": 64.5622,
+        "중화신강": 63.207,
+        "중화신약": 63.8187,
+        "태강": 62.8897,
+        "태약": 61.4148
+      }
+    },
+    "V2_DY_B": {
+      "D_min": 59.0894,
+      "D_max": 65.91,
+      "D_p50": 61.7144,
+      "adj_D_jump_p50": 0.8039,
+      "adj_D_jump_p90": 2.745,
+      "abs_annual_dev_p50": 1.4121,
+      "abs_annual_dev_p90": 3.8413,
+      "Y_sat_frac": 0.0,
+      "Y_min": 46.4726,
+      "Y_max": 71.519,
+      "yoy_abs_p90": 5.3654,
+      "yoy_abs_p99": 9.686,
+      "annual_dominates_D_frac": 0.4428,
+      "daewoon": {
+        "n": 400,
+        "cliff_frac": 0.0,
+        "flat_frac": 0.1825
+      }
+    },
+    "V3": {
+      "D_min": 22.0,
+      "D_max": 100.0,
+      "D_p50": 63.0,
+      "adj_D_jump_p50": 9.0,
+      "adj_D_jump_p90": 21.0,
+      "abs_annual_dev_p50": 1.978,
+      "abs_annual_dev_p90": 4.0,
+      "Y_sat_frac": 0.0008,
+      "Y_min": 18.0,
+      "Y_max": 100.0,
+      "yoy_abs_p90": 6.6489,
+      "yoy_abs_p99": 20.0009,
+      "annual_dominates_D_frac": 0.1207,
+      "daewoon": {
+        "n": 400,
+        "cliff_frac": 0.335,
+        "flat_frac": 0.0
+      }
+    }
+  },
+  "gate_ok": false,
+  "gate_reasons": [
+    "DEV_std_sep_not_gt_CONTROL",
+    "FRESH_A_material_regression"
+  ],
+  "check": null,
+  "validation_b_used": false,
+  "final_opened": false,
+  "production_wired": false
+}

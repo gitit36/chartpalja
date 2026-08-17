@@ -1,0 +1,65 @@
+{
+  "version": "V4_UNIFIED_DEV_COLLECTION_CONTRACT_V1_R2",
+  "created_for": "SAJU_ML_V4",
+  "status": "SUBJECT_UNIVERSE_PREDECLARED_BEFORE_EVENT_COLLECTION",
+  "source_birth_dataset": {
+    "name": "vedastro-org/15000-Famous-People-Birth-Date-Location",
+    "url": "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv",
+    "required_rodden": "AA"
+  },
+  "target": {
+    "COMPETITIVE": 30,
+    "PROJECT": 25,
+    "STATUS": 45,
+    "total": 100
+  },
+  "selection": {
+    "no_astrology_scores_before_roster_freeze": true,
+    "exclude_prior_v1_v2_newdev2_subjects": true,
+    "birth_year_min": 1900,
+    "birth_year_max": 1995,
+    "deterministic_order": "sha256(normalized_name + axis + seed)",
+    "seed": 20260816,
+    "gender_guardrail": "Aim >=20% female overall where eligible seed coverage permits; report, do not directional-backfill after freeze.",
+    "event_collection_begins_only_after_roster_freeze": true
+  },
+  "event_protocol_after_roster_freeze": {
+    "enumerate_positive_and_negative_events_on_preassigned_axis": true,
+    "min_secondary_sources_per_event": 1,
+    "pair_rule": "minimum absolute year gap among verified opposite-polarity events; deterministic source/date tie-break",
+    "transition_not_negative_by_default": true,
+    "no_directional_backfill_for_chronology": true,
+    "freeze_events_before_astrology_feature_generation": true
+  },
+  "recognition": "deferred from core next wave",
+  "holdouts": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  },
+  "seed_universe_amendment": {
+    "reason": "R1 preflight resolved only 30 eligible STATUS subjects against the preregistered target of 45. Seed universe expanded before event collection and before astrology scoring.",
+    "trigger_observed": {
+      "COMPETITIVE_eligible": 30,
+      "PROJECT_eligible": 29,
+      "STATUS_eligible": 30,
+      "STATUS_required": 45
+    },
+    "allowed_information_used_for_amendment": [
+      "Rodden-AA birth-record availability",
+      "prior-development subject exclusion",
+      "birth-year eligibility",
+      "preassigned STATUS role/category"
+    ],
+    "prohibited_information_not_used": [
+      "career event polarity/order",
+      "chronology direction",
+      "astrology features",
+      "astrology scores",
+      "model outputs"
+    ],
+    "status_seed_names_added": 231,
+    "rule": "This amendment occurs before event collection. After the R2 roster freezes, subject membership must not be changed based on event chronology or astrology results."
+  }
+}

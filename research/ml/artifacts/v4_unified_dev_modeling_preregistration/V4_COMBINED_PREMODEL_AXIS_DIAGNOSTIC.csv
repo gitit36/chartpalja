@@ -1,0 +1,4 @@
+axis,n_pairs,positive_earlier_share,median_abs_year_gap,min_abs_year_gap,max_abs_year_gap
+COMPETITIVE,31,0.5806451612903226,1.0,1,10
+PROJECT,25,0.2,3.0,1,10
+STATUS,45,0.7555555555555555,7.0,1,25

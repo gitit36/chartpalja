@@ -1,0 +1,28 @@
+{
+  "version": "SAJU_ML_DATA_INTEGRITY_AUDIT_DECISION_V4",
+  "notebook_version": "SAJU_ML_DATA_INTEGRITY_AUDIT_V4_R2_20260815",
+  "created_at": "2026-08-15T22:29:33",
+  "status": "FAIL_CRITICAL_DATA_DEFECTS_PRESENT",
+  "allowed_pools_only": [
+    "V1",
+    "V2_NEW_DEV",
+    "NEW_DEV_2_CONSUMED"
+  ],
+  "sealed_data_loaded": false,
+  "issue_counts": {
+    "critical": 7,
+    "high": 229,
+    "medium": 835,
+    "low": 0
+  },
+  "chronology_risk_pools": [
+    "NEW_DEV_2_CONSUMED",
+    "V2_NEW_DEV"
+  ],
+  "rules": {
+    "do_not_auto_repair": true,
+    "do_not_open_new_confirm": true,
+    "new_dev_2_remains_consumed": true,
+    "next_step": "Resolve critical/high identity and event defects, then version a cleaned DEV_V4. Do not run a new feature/model tournament until feature parity audit also passes."
+  }
+}

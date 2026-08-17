@@ -1,0 +1,1593 @@
+{
+  "measured_at": "2026-08-12T21:59:13",
+  "phase": "G_material_audit",
+  "frozen_hierarchy": {
+    "alpha": 1.0,
+    "kappa": 0.0,
+    "note": "unchanged"
+  },
+  "cfg_snapshot": {
+    "w_career": 0.4,
+    "w_health": 0.35,
+    "w_relationship": 0.25,
+    "base": 51.7,
+    "yfit_career_normal": 0.3,
+    "yfit_career_conflict": 0.2,
+    "career_conflict_pen": -6.0,
+    "yfit_health": 0.25,
+    "yfit_rel": 0.3,
+    "rel_weight": 0.42,
+    "struct_career": 0.45,
+    "struct_health": 0.55,
+    "yfit_pos_scale": 0.77,
+    "discord_yfit_min": 2.5,
+    "discord_rel_max": -2.5,
+    "discord_pen": -12.5,
+    "hollow_pen": -9.9,
+    "yangin_geopsal_pen": -4.5,
+    "health_guan_pen": -13.5,
+    "yangin_risk_pen": -4.0,
+    "hyungsal_pen": -1.6,
+    "hyungsal_cap": -4.8
+  },
+  "contribution": {
+    "axis_distributions": {
+      "career": {
+        "n": 1400,
+        "mean": 51.1436,
+        "sd": 5.1674,
+        "p05": 42.3545,
+        "p50": 51.5766,
+        "p95": 58.7257
+      },
+      "health": {
+        "n": 1400,
+        "mean": 49.2748,
+        "sd": 3.7988,
+        "p05": 41.7191,
+        "p50": 49.9133,
+        "p95": 54.3864
+      },
+      "relationship": {
+        "n": 1400,
+        "mean": 52.8091,
+        "sd": 3.253,
+        "p05": 47.3396,
+        "p50": 52.7881,
+        "p95": 58.3663
+      },
+      "general_G": {
+        "n": 1400,
+        "mean": 50.472,
+        "sd": 4.6579,
+        "p05": 42.7156,
+        "p50": 51.1997,
+        "p95": 56.2923
+      },
+      "A_y": {
+        "n": 1399,
+        "mean": -0.6379,
+        "sd": 4.5913,
+        "p05": -8.3362,
+        "p50": 0.0,
+        "p95": 5.4203
+      }
+    },
+    "within_block_sd": {
+      "career": {
+        "n": 138,
+        "mean": 5.046,
+        "sd": 1.4181,
+        "p05": 3.0985,
+        "p50": 4.8899,
+        "p95": 7.4622
+      },
+      "health": {
+        "n": 138,
+        "mean": 3.7143,
+        "sd": 1.0746,
+        "p05": 2.1336,
+        "p50": 3.6045,
+        "p95": 5.6104
+      },
+      "relationship": {
+        "n": 138,
+        "mean": 3.113,
+        "sd": 0.6488,
+        "p05": 1.876,
+        "p50": 3.1275,
+        "p95": 4.2183
+      },
+      "general": {
+        "n": 138,
+        "mean": 4.3536,
+        "sd": 1.7479,
+        "p05": 2.4325,
+        "p50": 3.6758,
+        "p95": 7.9396
+      }
+    },
+    "correlations": {
+      "career_health": 0.649,
+      "career_relationship": 0.6411,
+      "health_relationship": 0.5375,
+      "career_G": 0.9177,
+      "health_G": 0.7669,
+      "relationship_G": 0.6835,
+      "G_vs_Control_close": 0.237
+    },
+    "effective_influence": {
+      "career": {
+        "nominal_weight": 0.4,
+        "within_block_sd_p50": 4.8899,
+        "effective_w_x_sd": 1.956,
+        "pop_sd": 5.1674
+      },
+      "health": {
+        "nominal_weight": 0.35,
+        "within_block_sd_p50": 3.6045,
+        "effective_w_x_sd": 1.2616,
+        "pop_sd": 3.7988
+      },
+      "relationship": {
+        "nominal_weight": 0.25,
+        "within_block_sd_p50": 3.1275,
+        "effective_w_x_sd": 0.7819,
+        "pop_sd": 3.253
+      }
+    },
+    "pattern_activation": {
+      "career_conflict_pen": {
+        "n_nonzero": 502,
+        "rate": 0.3586,
+        "dist": {
+          "n": 502,
+          "mean": -6.0,
+          "sd": 0.0,
+          "p05": -6.0,
+          "p50": -6.0,
+          "p95": -6.0
+        }
+      },
+      "discord": {
+        "n_nonzero": 43,
+        "rate": 0.0307,
+        "dist": {
+          "n": 43,
+          "mean": -12.5,
+          "sd": 0.0,
+          "p05": -12.5,
+          "p50": -12.5,
+          "p95": -12.5
+        }
+      },
+      "hollow": {
+        "n_nonzero": 41,
+        "rate": 0.0293,
+        "dist": {
+          "n": 41,
+          "mean": -9.9,
+          "sd": 0.0,
+          "p05": -9.9,
+          "p50": -9.9,
+          "p95": -9.9
+        }
+      },
+      "pattern": {
+        "n_nonzero": 66,
+        "rate": 0.0471,
+        "dist": {
+          "n": 66,
+          "mean": -9.0818,
+          "sd": 2.8797,
+          "p05": -13.5,
+          "p50": -9.9,
+          "p95": -4.5
+        }
+      },
+      "hyungsal_pen": {
+        "n_nonzero": 35,
+        "rate": 0.025,
+        "dist": {
+          "n": 35,
+          "mean": -2.3771,
+          "sd": 1.188,
+          "p05": -4.8,
+          "p50": -1.6,
+          "p95": -1.6
+        }
+      },
+      "risk": {
+        "n_nonzero": 36,
+        "rate": 0.0257,
+        "dist": {
+          "n": 36,
+          "mean": -2.4963,
+          "sd": 1.2314,
+          "p05": -4.8,
+          "p50": -1.6,
+          "p95": -1.6
+        }
+      },
+      "health_guan": {
+        "n_nonzero": 9,
+        "rate": 0.0064,
+        "dist": {
+          "n": 9,
+          "mean": -13.5,
+          "sd": 0.0,
+          "p05": -13.5,
+          "p50": -13.5,
+          "p95": -13.5
+        }
+      },
+      "friction": {
+        "n_nonzero": 16,
+        "rate": 0.0114,
+        "dist": {
+          "n": 16,
+          "mean": -4.5,
+          "sd": 0.0,
+          "p05": -4.5,
+          "p50": -4.5,
+          "p95": -4.5
+        }
+      },
+      "yangin_pen": {
+        "n_nonzero": 2,
+        "rate": 0.0014,
+        "dist": {
+          "n": 2,
+          "mean": -3.3333,
+          "sd": 0.9428,
+          "p05": -3.9333,
+          "p50": -3.3333,
+          "p95": -2.7333
+        }
+      }
+    },
+    "decompose_match_arm_b": true,
+    "n_year_obs": 1400
+  },
+  "permutation_proxy": {
+    "no_career": {
+      "delta_holdout_std_sep": 0.0265,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 0
+    },
+    "no_health": {
+      "delta_holdout_std_sep": -0.0444,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 0
+    },
+    "no_relationship": {
+      "delta_holdout_std_sep": 0.0178,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 1
+    },
+    "no_pattern_penalties": {
+      "delta_holdout_std_sep": -0.094,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 2
+    },
+    "no_discord": {
+      "delta_holdout_std_sep": -0.0021,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 1
+    },
+    "no_hollow": {
+      "delta_holdout_std_sep": -0.0063,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 0
+    },
+    "no_friction": {
+      "delta_holdout_std_sep": 0.0,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 0
+    },
+    "no_health_guan": {
+      "delta_holdout_std_sep": -0.0464,
+      "delta_holdout_hit": -20.0,
+      "n_flips": 1
+    },
+    "no_risk": {
+      "delta_holdout_std_sep": 0.0003,
+      "delta_holdout_hit": 0.0,
+      "n_flips": 0
+    }
+  },
+  "ablations_and_baselines": {
+    "current": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.2041,
+        "raw_sep_median": 3.5545,
+        "pooled_sd": 13.3318,
+        "std_sep": 0.2403,
+        "pairwise_good_gt_bad": 0.6461,
+        "auc_macro": 0.6461,
+        "auc_micro": 0.5791,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3478,
+        "raw_sep_median": 1.0156,
+        "pooled_sd": 13.6052,
+        "std_sep": 0.1726,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5032,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.2745,
+          "good_avg": 59.08,
+          "bad_avg": 66.35
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7973,
+          "good_avg": 74.0,
+          "bad_avg": 79.8
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114,
+          "good_avg": 69.1,
+          "bad_avg": 71.61
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.2444,
+          "good_avg": 61.87,
+          "bad_avg": 62.11
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 1.0156,
+          "good_avg": 71.12,
+          "bad_avg": 70.11
+        }
+      ]
+    },
+    "equal_weights": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.1072,
+        "raw_sep_median": 3.5062,
+        "pooled_sd": 13.2678,
+        "std_sep": 0.2342,
+        "pairwise_good_gt_bad": 0.648,
+        "auc_macro": 0.648,
+        "auc_micro": 0.5775,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.2845,
+        "raw_sep_median": 0.8918,
+        "pooled_sd": 13.5634,
+        "std_sep": 0.1684,
+        "pairwise_good_gt_bad": 0.5919,
+        "auc_macro": 0.5919,
+        "auc_micro": 0.5021,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.4609,
+          "good_avg": 58.95,
+          "bad_avg": 66.41
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.8339,
+          "good_avg": 74.0,
+          "bad_avg": 79.84
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5057,
+          "good_avg": 69.27,
+          "bad_avg": 71.77
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.3538,
+          "good_avg": 62.07,
+          "bad_avg": 62.42
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.8918,
+          "good_avg": 71.18,
+          "bad_avg": 70.29
+        }
+      ]
+    },
+    "career_only": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.3499,
+        "raw_sep_median": 3.914,
+        "pooled_sd": 13.6691,
+        "std_sep": 0.1719,
+        "pairwise_good_gt_bad": 0.6168,
+        "auc_macro": 0.6168,
+        "auc_micro": 0.5546,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.4215,
+        "raw_sep_median": 0.2673,
+        "pooled_sd": 13.7729,
+        "std_sep": 0.1032,
+        "pairwise_good_gt_bad": 0.5687,
+        "auc_macro": 0.5687,
+        "auc_micro": 0.4841,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.853,
+          "good_avg": 59.28,
+          "bad_avg": 67.13
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -6.5204,
+          "good_avg": 73.38,
+          "bad_avg": 79.9
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -3.9484,
+          "good_avg": 69.76,
+          "bad_avg": 73.71
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -1.6443,
+          "good_avg": 60.76,
+          "bad_avg": 62.41
+        },
+        {
+          "name": "Justin Bieber",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.2673,
+          "good_avg": 62.12,
+          "bad_avg": 61.85
+        }
+      ]
+    },
+    "health_only": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 1.3014,
+        "raw_sep_median": 1.8258,
+        "pooled_sd": 13.0784,
+        "std_sep": 0.0995,
+        "pairwise_good_gt_bad": 0.5231,
+        "auc_macro": 0.5231,
+        "auc_micro": 0.5116,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 3.142,
+        "raw_sep_median": 0.5831,
+        "pooled_sd": 13.4913,
+        "std_sep": 0.2329,
+        "pairwise_good_gt_bad": 0.6185,
+        "auc_macro": 0.6185,
+        "auc_micro": 0.5317,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -8.1982,
+          "good_avg": 59.4,
+          "bad_avg": 67.6
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.652,
+          "good_avg": 73.59,
+          "bad_avg": 79.24
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -1.4087,
+          "good_avg": 61.69,
+          "bad_avg": 63.1
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -0.4632,
+          "good_avg": 69.87,
+          "bad_avg": 70.33
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.5831,
+          "good_avg": 70.84,
+          "bad_avg": 70.26
+        }
+      ]
+    },
+    "relationship_only": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 0.7451,
+        "raw_sep_median": 1.3753,
+        "pooled_sd": 13.0236,
+        "std_sep": 0.0572,
+        "pairwise_good_gt_bad": 0.5291,
+        "auc_macro": 0.5291,
+        "auc_micro": 0.5041,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.46,
+        "raw_sep_median": 0.9957,
+        "pooled_sd": 13.448,
+        "std_sep": 0.1086,
+        "pairwise_good_gt_bad": 0.5664,
+        "auc_macro": 0.5664,
+        "auc_micro": 0.5011,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -9.453,
+          "good_avg": 58.4,
+          "bad_avg": 67.86
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -6.3113,
+          "good_avg": 73.75,
+          "bad_avg": 80.06
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -3.3311,
+          "good_avg": 62.72,
+          "bad_avg": 66.05
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -3.0585,
+          "good_avg": 69.17,
+          "bad_avg": 72.23
+        },
+        {
+          "name": "Chris Brown",
+          "bucket": "train",
+          "hit": 1,
+          "sep": 0.0384,
+          "good_avg": 57.46,
+          "bad_avg": 57.42
+        }
+      ]
+    },
+    "axes_no_pattern_extras": {
+      "train": {
+        "hit_rate": 50.0,
+        "hit": "4/8",
+        "raw_sep_mean": -0.1404,
+        "raw_sep_median": 0.6978,
+        "pooled_sd": 12.8673,
+        "std_sep": -0.0109,
+        "pairwise_good_gt_bad": 0.5157,
+        "auc_macro": 0.5157,
+        "auc_micro": 0.4817,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.0524,
+        "raw_sep_median": 0.0384,
+        "pooled_sd": 13.3958,
+        "std_sep": 0.0786,
+        "pairwise_good_gt_bad": 0.555,
+        "auc_macro": 0.555,
+        "auc_micro": 0.4789,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 53.85,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 2,
+        "flips": [
+          {
+            "name": "Chris Brown",
+            "bucket": "train",
+            "base_hit": 1,
+            "alt_hit": 0,
+            "base_sep": 4.0737,
+            "alt_sep": -0.5672
+          },
+          {
+            "name": "Hillary Clinton",
+            "bucket": "train",
+            "base_hit": 1,
+            "alt_hit": 0,
+            "base_sep": 7.8329,
+            "alt_sep": -2.0916
+          }
+        ]
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -9.6318,
+          "good_avg": 57.97,
+          "bad_avg": 67.6
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -6.9532,
+          "good_avg": 73.31,
+          "bad_avg": 80.26
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -4.345,
+          "good_avg": 60.85,
+          "bad_avg": 65.2
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.1814,
+          "good_avg": 69.07,
+          "bad_avg": 71.26
+        },
+        {
+          "name": "Hillary Clinton",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -2.0916,
+          "good_avg": 69.23,
+          "bad_avg": 71.33
+        }
+      ]
+    },
+    "pattern_only": {
+      "train": {
+        "hit_rate": 87.5,
+        "hit": "7/8",
+        "raw_sep_mean": 2.9752,
+        "raw_sep_median": 3.7586,
+        "pooled_sd": 13.3976,
+        "std_sep": 0.2221,
+        "pairwise_good_gt_bad": 0.5922,
+        "auc_macro": 0.5922,
+        "auc_micro": 0.5552,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.8908,
+        "raw_sep_median": 0.2333,
+        "pooled_sd": 13.9059,
+        "std_sep": 0.136,
+        "pairwise_good_gt_bad": 0.548,
+        "auc_macro": 0.548,
+        "auc_micro": 0.4968,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 76.92,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 1,
+        "flips": [
+          {
+            "name": "Al Gore",
+            "bucket": "train",
+            "base_hit": 0,
+            "alt_hit": 1,
+            "base_sep": -0.2444,
+            "alt_sep": 3.5263
+          }
+        ]
+      },
+      "worst_subjects": [
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -7.4914,
+          "good_avg": 72.41,
+          "bad_avg": 79.91
+        },
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -6.5319,
+          "good_avg": 58.93,
+          "bad_avg": 65.47
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -3.7067,
+          "good_avg": 65.56,
+          "bad_avg": 69.26
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.2333,
+          "good_avg": 69.4,
+          "bad_avg": 69.17
+        },
+        {
+          "name": "Björk",
+          "bucket": "train",
+          "hit": 1,
+          "sep": 1.0402,
+          "good_avg": 45.71,
+          "bad_avg": 44.67
+        }
+      ]
+    },
+    "no_career": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.6753,
+        "raw_sep_median": 3.1257,
+        "pooled_sd": 13.1337,
+        "std_sep": 0.2037,
+        "pairwise_good_gt_bad": 0.5696,
+        "auc_macro": 0.5696,
+        "auc_micro": 0.5625,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.6932,
+        "raw_sep_median": 0.521,
+        "pooled_sd": 13.5301,
+        "std_sep": 0.1991,
+        "pairwise_good_gt_bad": 0.6103,
+        "auc_macro": 0.6103,
+        "auc_micro": 0.5053,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.9554,
+          "good_avg": 59.06,
+          "bad_avg": 67.02
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7246,
+          "good_avg": 73.93,
+          "bad_avg": 79.66
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -1.7079,
+          "good_avg": 70.62,
+          "bad_avg": 72.33
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.3394,
+          "good_avg": 62.44,
+          "bad_avg": 62.78
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 0.521,
+          "good_avg": 70.9,
+          "bad_avg": 70.38
+        }
+      ]
+    },
+    "no_health": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.2819,
+        "raw_sep_median": 3.6471,
+        "pooled_sd": 13.5228,
+        "std_sep": 0.2427,
+        "pairwise_good_gt_bad": 0.648,
+        "auc_macro": 0.648,
+        "auc_micro": 0.5838,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.7547,
+        "raw_sep_median": 1.7002,
+        "pooled_sd": 13.683,
+        "std_sep": 0.1282,
+        "pairwise_good_gt_bad": 0.5965,
+        "auc_macro": 0.5965,
+        "auc_micro": 0.4979,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.7342,
+          "good_avg": 58.84,
+          "bad_avg": 66.58
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -6.1169,
+          "good_avg": 73.62,
+          "bad_avg": 79.73
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -3.6766,
+          "good_avg": 69.05,
+          "bad_avg": 72.72
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.4629,
+          "good_avg": 61.95,
+          "bad_avg": 62.41
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 1.7002,
+          "good_avg": 71.86,
+          "bad_avg": 70.16
+        }
+      ]
+    },
+    "no_relationship": {
+      "train": {
+        "hit_rate": 87.5,
+        "hit": "7/8",
+        "raw_sep_mean": 3.4707,
+        "raw_sep_median": 3.6288,
+        "pooled_sd": 13.4562,
+        "std_sep": 0.2579,
+        "pairwise_good_gt_bad": 0.6494,
+        "auc_macro": 0.6494,
+        "auc_micro": 0.5862,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.6095,
+        "raw_sep_median": 1.369,
+        "pooled_sd": 13.7051,
+        "std_sep": 0.1904,
+        "pairwise_good_gt_bad": 0.5748,
+        "auc_macro": 0.5748,
+        "auc_micro": 0.5085,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 76.92,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 1,
+        "flips": [
+          {
+            "name": "Al Gore",
+            "bucket": "train",
+            "base_hit": 0,
+            "alt_hit": 1,
+            "base_sep": -0.2444,
+            "alt_sep": 0.2166
+          }
+        ]
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -6.6736,
+          "good_avg": 59.43,
+          "bad_avg": 66.11
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7875,
+          "good_avg": 74.04,
+          "bad_avg": 79.83
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.3216,
+          "good_avg": 68.9,
+          "bad_avg": 71.22
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 1,
+          "sep": 0.2166,
+          "good_avg": 61.36,
+          "bad_avg": 61.15
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 1.369,
+          "good_avg": 71.12,
+          "bad_avg": 69.75
+        }
+      ]
+    },
+    "no_pattern_penalties": {
+      "train": {
+        "hit_rate": 50.0,
+        "hit": "4/8",
+        "raw_sep_mean": -0.1404,
+        "raw_sep_median": 0.6978,
+        "pooled_sd": 12.8673,
+        "std_sep": -0.0109,
+        "pairwise_good_gt_bad": 0.5157,
+        "auc_macro": 0.5157,
+        "auc_micro": 0.4817,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 1.0524,
+        "raw_sep_median": 0.0384,
+        "pooled_sd": 13.3958,
+        "std_sep": 0.0786,
+        "pairwise_good_gt_bad": 0.555,
+        "auc_macro": 0.555,
+        "auc_micro": 0.4789,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 53.85,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 2,
+        "flips": [
+          {
+            "name": "Chris Brown",
+            "bucket": "train",
+            "base_hit": 1,
+            "alt_hit": 0,
+            "base_sep": 4.0737,
+            "alt_sep": -0.5672
+          },
+          {
+            "name": "Hillary Clinton",
+            "bucket": "train",
+            "base_hit": 1,
+            "alt_hit": 0,
+            "base_sep": 7.8329,
+            "alt_sep": -2.0916
+          }
+        ]
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -9.6318,
+          "good_avg": 57.97,
+          "bad_avg": 67.6
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -6.9532,
+          "good_avg": 73.31,
+          "bad_avg": 80.26
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -4.345,
+          "good_avg": 60.85,
+          "bad_avg": 65.2
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.1814,
+          "good_avg": 69.07,
+          "bad_avg": 71.26
+        },
+        {
+          "name": "Hillary Clinton",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -2.0916,
+          "good_avg": 69.23,
+          "bad_avg": 71.33
+        }
+      ]
+    },
+    "no_discord": {
+      "train": {
+        "hit_rate": 62.5,
+        "hit": "5/8",
+        "raw_sep_mean": 0.9788,
+        "raw_sep_median": 2.5548,
+        "pooled_sd": 13.0209,
+        "std_sep": 0.0752,
+        "pairwise_good_gt_bad": 0.5862,
+        "auc_macro": 0.5862,
+        "auc_micro": 0.5183,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3017,
+        "raw_sep_median": 1.0156,
+        "pooled_sd": 13.4982,
+        "std_sep": 0.1705,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.4979,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 61.54,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 1,
+        "flips": [
+          {
+            "name": "Chris Brown",
+            "bucket": "train",
+            "base_hit": 1,
+            "alt_hit": 0,
+            "base_sep": 4.0737,
+            "alt_sep": -0.5481
+          }
+        ]
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -8.9271,
+          "good_avg": 58.67,
+          "bad_avg": 67.6
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -6.028,
+          "good_avg": 73.66,
+          "bad_avg": 79.69
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -4.2331,
+          "good_avg": 61.2,
+          "bad_avg": 65.44
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114,
+          "good_avg": 69.1,
+          "bad_avg": 71.61
+        },
+        {
+          "name": "Chris Brown",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.5481,
+          "good_avg": 57.39,
+          "bad_avg": 57.94
+        }
+      ]
+    },
+    "no_hollow": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.0655,
+        "raw_sep_median": 3.004,
+        "pooled_sd": 13.237,
+        "std_sep": 0.156,
+        "pairwise_good_gt_bad": 0.6242,
+        "auc_macro": 0.6242,
+        "auc_micro": 0.559,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.2574,
+        "raw_sep_median": 1.0156,
+        "pooled_sd": 13.5768,
+        "std_sep": 0.1663,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5032,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.673,
+          "good_avg": 58.68,
+          "bad_avg": 66.35
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7973,
+          "good_avg": 74.0,
+          "bad_avg": 79.8
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114,
+          "good_avg": 69.1,
+          "bad_avg": 71.61
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.3823,
+          "good_avg": 61.21,
+          "bad_avg": 61.59
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 1.0156,
+          "good_avg": 71.12,
+          "bad_avg": 70.11
+        }
+      ]
+    },
+    "no_friction": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.1792,
+        "raw_sep_median": 2.9756,
+        "pooled_sd": 13.2995,
+        "std_sep": 0.239,
+        "pairwise_good_gt_bad": 0.6448,
+        "auc_macro": 0.6448,
+        "auc_micro": 0.5771,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3478,
+        "raw_sep_median": 1.0156,
+        "pooled_sd": 13.6052,
+        "std_sep": 0.1726,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5032,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.2745,
+          "good_avg": 59.08,
+          "bad_avg": 66.35
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7973,
+          "good_avg": 74.0,
+          "bad_avg": 79.8
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114,
+          "good_avg": 69.1,
+          "bad_avg": 71.61
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.2444,
+          "good_avg": 61.87,
+          "bad_avg": 62.11
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 1.0156,
+          "good_avg": 71.12,
+          "bad_avg": 70.11
+        }
+      ]
+    },
+    "no_health_guan": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 3.2041,
+        "raw_sep_median": 3.5545,
+        "pooled_sd": 13.3318,
+        "std_sep": 0.2403,
+        "pairwise_good_gt_bad": 0.6461,
+        "auc_macro": 0.6461,
+        "auc_micro": 0.5791,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 40.0,
+        "hit": "2/5",
+        "raw_sep_mean": 1.7155,
+        "raw_sep_median": -0.6487,
+        "pooled_sd": 13.5935,
+        "std_sep": 0.1262,
+        "pairwise_good_gt_bad": 0.5617,
+        "auc_macro": 0.5617,
+        "auc_micro": 0.4884,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 61.54,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 1,
+        "flips": [
+          {
+            "name": "Justin Bieber",
+            "bucket": "holdout",
+            "base_hit": 1,
+            "alt_hit": 0,
+            "base_sep": 2.4957,
+            "alt_sep": -0.6487
+          }
+        ]
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.2745,
+          "good_avg": 59.08,
+          "bad_avg": 66.35
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.8145,
+          "good_avg": 73.98,
+          "bad_avg": 79.8
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114,
+          "good_avg": 69.1,
+          "bad_avg": 71.61
+        },
+        {
+          "name": "Justin Bieber",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -0.6487,
+          "good_avg": 62.16,
+          "bad_avg": 62.81
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.2444,
+          "good_avg": 61.87,
+          "bad_avg": 62.11
+        }
+      ]
+    },
+    "no_risk": {
+      "train": {
+        "hit_rate": 75.0,
+        "hit": "6/8",
+        "raw_sep_mean": 2.8488,
+        "raw_sep_median": 3.2203,
+        "pooled_sd": 13.2614,
+        "std_sep": 0.2148,
+        "pairwise_good_gt_bad": 0.643,
+        "auc_macro": 0.643,
+        "auc_micro": 0.5673,
+        "n_eval": 8,
+        "n_persons": 9
+      },
+      "holdout": {
+        "hit_rate": 60.0,
+        "hit": "3/5",
+        "raw_sep_mean": 2.3478,
+        "raw_sep_median": 1.0156,
+        "pooled_sd": 13.5772,
+        "std_sep": 0.1729,
+        "pairwise_good_gt_bad": 0.5974,
+        "auc_macro": 0.5974,
+        "auc_micro": 0.5032,
+        "n_eval": 5,
+        "n_persons": 5
+      },
+      "subject_hit_rate": 69.23,
+      "n_subjects": 13,
+      "flips_vs_current": {
+        "n_flips": 0,
+        "flips": []
+      },
+      "worst_subjects": [
+        {
+          "name": "Michael Jackson",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -7.4733,
+          "good_avg": 59.08,
+          "bad_avg": 66.55
+        },
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -5.7973,
+          "good_avg": 74.0,
+          "bad_avg": 79.8
+        },
+        {
+          "name": "윤석열",
+          "bucket": "holdout",
+          "hit": 0,
+          "sep": -2.5114,
+          "good_avg": 69.1,
+          "bad_avg": 71.61
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "sep": -0.9833,
+          "good_avg": 61.87,
+          "bad_avg": 62.85
+        },
+        {
+          "name": "Barack Obama",
+          "bucket": "holdout",
+          "hit": 1,
+          "sep": 1.0156,
+          "good_avg": 71.12,
+          "bad_avg": 70.11
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Ablations change G material only; D and α fixed.",
+    "no_* axis ablations re-normalize remaining axis weights to sum 1.",
+    "pattern_only is diagnostic, not a valid life-quality score.",
+    "w_career/w_health/w_relationship were NOT in Phase A/D HP search space."
+  ]
+}

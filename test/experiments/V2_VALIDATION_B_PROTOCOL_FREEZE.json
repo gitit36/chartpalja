@@ -1,0 +1,206 @@
+{
+  "protocol_version": "V2_VAL_B_PROTOCOL_1.1",
+  "timestamp": "2026-08-15T11:57:03",
+  "status": "V2_VALIDATION_B_PROTOCOL_V11_FROZEN",
+  "validation_b_executed": false,
+  "validation_b_scored": false,
+  "consumption_lock_created": false,
+  "model": "V2_DY_B",
+  "formula": {
+    "D_B": "clamp(60 + 3 * h_B)",
+    "h_B": "0.45 z(fav_minus_unfav)+0.35 z(struct_activ)-0.35 z(struct_disrupt)-0.15 z(struct_excess)",
+    "z": "robust z, clip ±2.5, scale_floor 0.35; fit OLD_DEV+Fresh A only",
+    "annual_dev_B": "0.65*A_G + 0.35*B_trigger",
+    "Y": "clamp(D_B + annual_dev_B)"
+  },
+  "metrics": {
+    "internal": "full float precision (pairwise_raw, sep_raw, good_avg_raw, bad_avg_raw)",
+    "round_only": "serialization / human-readable report",
+    "pair": "good>bad=1, tie=0.5, good<bad=0",
+    "macro": "unweighted mean of per-subject pairwise_raw",
+    "same_cross_diagnostic": "same 1/0.5/0 convention; cannot change status",
+    "same_cross_frozen_headline_note": "Phase 2.6/2.7 headlines 0.5714/0.6531 used tie=0; self-test reproduces them via legacy convention only"
+  },
+  "decision_rule_order": [
+    "DATA_INTEGRITY_BLOCK if integrity_ok is false or missing metrics",
+    "ANNUAL_PASS if macro>=0.60 and hit>=ceil(0.57*n) and std_sep>0 and median_sep>0",
+    "ANNUAL_SUPPORTED_WITH_UNCERTAINTY if macro>=0.57 and hit>=ceil(0.57*n) and std_sep>0 and median_sep>=0",
+    "ANNUAL_FAIL if macro<0.50",
+    "ANNUAL_FAIL if hit_rate<0.50 AND std_sep<0 AND median_sep<0",
+    "else ANNUAL_MIXED"
+  ],
+  "decision_thresholds": {
+    "ANNUAL_PASS": {
+      "macro_pairwise_ge": 0.6,
+      "subject_hit_ge": "ceil(0.57 * n)",
+      "std_sep_gt": 0,
+      "median_sep_gt": 0
+    },
+    "ANNUAL_SUPPORTED_WITH_UNCERTAINTY": {
+      "macro_pairwise_ge": 0.57,
+      "subject_hit_ge": "ceil(0.57 * n)",
+      "std_sep_gt": 0,
+      "median_sep_ge": 0
+    },
+    "ANNUAL_FAIL": {
+      "macro_lt": 0.5,
+      "or_all_three": [
+        "subject_hit_rate < 0.50",
+        "std_sep < 0",
+        "median_sep < 0"
+      ]
+    },
+    "ANNUAL_MIXED": "else"
+  },
+  "one_shot_lock": {
+    "path": "test/experiments/V2_VALIDATION_B_CONSUMPTION_LOCK.json",
+    "create": "exclusive O_CREAT|O_EXCL immediately BEFORE loading validation_b names/events",
+    "if_exists": "REFUSE execution",
+    "crash_after_create": "B is CONSUMED; no automatic retry",
+    "this_run_created": false
+  },
+  "immutable_outputs": {
+    "exclusive_create": [
+      "test/snapshots/exp_v2_validation_b_raw.json",
+      "test/snapshots/exp_v2_validation_b.json",
+      "test/experiments/V2_VALIDATION_B_REPORT.md"
+    ],
+    "if_exists": "REFUSE execution",
+    "raw_before_status_narrative": true
+  },
+  "eligibility_expectation": {
+    "validation_b_total": 15,
+    "eligible_primary": 14,
+    "preexisting_exclusion_set": [
+      {
+        "name": "Albert Einstein",
+        "reason": "engine_year_out_of_range(1879)",
+        "encoded_in": "g_fresh_labels_frozen.json eligible_for_primary_validation"
+      }
+    ],
+    "unexpected_exclusion": "DATA_INTEGRITY_BLOCK",
+    "eligible_must_have_good_and_bad": true
+  },
+  "allowed_exclusions": [
+    {
+      "name": "Albert Einstein",
+      "reason": "engine_year_out_of_range(1879)",
+      "encoded_in": "g_fresh_labels_frozen.json eligible_for_primary_validation"
+    }
+  ],
+  "prohibited_actions": [
+    "score H1/H2/orthodox/G-only/legacy/Month/Day/new candidates",
+    "post-hoc subject exclusion after seeing scores",
+    "label/event/date edits after unseal",
+    "tune weights on Validation B",
+    "use B as development data",
+    "claim full hierarchy validated from annual B",
+    "automatic retry after CONSUMED_STARTED"
+  ],
+  "month_day_remain": {
+    "Month": {
+      "status": "V2_MONTH_TIMING_ONLY",
+      "policy": "MONTH_LOW_CONFIDENCE_TIMING"
+    },
+    "Day": {
+      "status": "V2_DAY_TIMING_ONLY",
+      "policy": "DAY_EXPLANATION_ONLY"
+    }
+  },
+  "dev_headlines_frozen": {
+    "FA_pw": 0.6429,
+    "OLD_pw": 0.5749,
+    "expect_same_D": 0.5714,
+    "expect_cross_D": 0.6531,
+    "validation_b_scored_in_dev_snap": false,
+    "ok": true
+  },
+  "split_public_metadata": {
+    "n_validation_a": 15,
+    "n_validation_b": 15,
+    "n_b_eligible": 14,
+    "excluded_b_preregistered": [
+      "Albert Einstein"
+    ],
+    "split_ok": true,
+    "a_b_overlap_n": 0,
+    "dataset_sha_ok": true,
+    "labels_frozen": true
+  },
+  "dev_self_test": {
+    "ok": true,
+    "FA_macro_pairwise_r4": 0.6429,
+    "OLD_macro_pairwise_r4": 0.5749,
+    "FA_same_D_r4": 0.5714,
+    "FA_cross_D_r4": 0.6531,
+    "FA_same_D_legacy_tie0_r4": 0.5714,
+    "FA_cross_D_legacy_tie0_r4": 0.6531,
+    "same_cross_tie_n_FA": 0,
+    "protocol_same_cross_matches_headline": true,
+    "status_unit_tests_ok": true,
+    "precision_aggregation_ok": true,
+    "full_precision_internal": true,
+    "bootstrap_resamples_subjects": true
+  },
+  "hashes": {
+    "experiment_v2_dy.py": {
+      "sha256": "d2c0199c5194dd637ddea6c29fc48c003ac1075b383422809175473e006925bf",
+      "sha256_16": "d2c0199c5194dd63",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/experiment_v2_dy.py"
+    },
+    "exp_v2_dy.json": {
+      "sha256": "a45cca5a56a13bdb6edc8d2434da52a6547cb52a8bd8b438f5ae3632ac9c9daa",
+      "sha256_16": "a45cca5a56a13bdb",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/snapshots/exp_v2_dy.json"
+    },
+    "g_fresh_labels_frozen.json": {
+      "sha256": "1b9fc0de41e6c6b3a09d58b419d4cfa42bdbe4b6ee88b92addc72876d276ed65",
+      "sha256_16": "1b9fc0de41e6c6b3",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/g_fresh_labels_frozen.json"
+    },
+    "V2_DY_FINAL_FREEZE_MANIFEST.md": {
+      "sha256": "eb86ac8dca943474319ef5eb657c504035dc3a0d4ae1115753428eb4aeb840aa",
+      "sha256_16": "eb86ac8dca943474",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/V2_DY_FINAL_FREEZE_MANIFEST.md"
+    },
+    "V2_FINAL_PRE_VALIDATION_MANIFEST.md": {
+      "sha256": "89434a33009da53ffc354c8abaa8ff155d27352e9bc7b61d379a4a994291ec99",
+      "sha256_16": "89434a33009da53f",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/V2_FINAL_PRE_VALIDATION_MANIFEST.md"
+    },
+    "experiment_g_clean.py": {
+      "sha256": "5537990671fd8bdb9aadb7f3bc1331a119f89162cfff8ec44981763be42b4de7",
+      "sha256_16": "5537990671fd8bdb",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/experiment_g_clean.py"
+    },
+    "g_fresh_subjects_completed.json": {
+      "sha256": "b1b593610a04f1adc2a6b1349a011e452cbfebfe15d0df287597b45aea52f0ba",
+      "sha256_16": "b1b593610a04f1ad",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/g_fresh_subjects_completed.json"
+    },
+    "validate_v2_b_one_shot.py": {
+      "sha256": "a461f1356945a87e540028375b2aaa6090bc36cb0884d6af42371fd40f5022db",
+      "sha256_16": "a461f1356945a87e",
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/validate_v2_b_one_shot.py"
+    }
+  },
+  "execution": {
+    "scorer": "test/experiments/validate_v2_b_one_shot.py",
+    "require_flag": "--execute-validation-b",
+    "require_env": "V2_VALIDATION_B_EXECUTE=YES_IRREVERSIBLE",
+    "preflight_scorer_hash_must_match_freeze": true,
+    "order": [
+      "verify hashes including scorer",
+      "refuse if lock or immutable outputs exist",
+      "exclusive-create consumption lock (BEFORE loading B names)",
+      "verify split / Einstein-only exclusion / good+bad events",
+      "load B",
+      "compute V2_DY_B scores (z from OLD+FA only)",
+      "exclusive-create raw snapshot",
+      "primary metrics from RAW floats",
+      "assign status mechanically",
+      "exclusive-create result snapshot + report",
+      "mark lock CONSUMED_COMPLETE"
+    ]
+  }
+}

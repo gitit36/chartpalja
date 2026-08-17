@@ -1,0 +1,9 @@
+{
+  "url": "https://bostonlocaltv.org/catalog.html?f%5Bcollection_s%5D%5B%5D=Ten+O%27Clock+News&f%5Byear_i%5D%5B%5D=1982&per_page=50&q=political+campaigns&range%5Byear_i%5D%5Bmissing%5D=true&range_end=1991&range_field=year_i&range_start=1960&search_field=all_fields&sort=year_i+asc%2C+date_created_dt+asc%2C+title_sort+asc&utf8=%E2%9C%93",
+  "ok": true,
+  "status_code": 200,
+  "final_url": "https://bostonlocaltv.org/catalog.html?f%5Bcollection_s%5D%5B%5D=Ten+O%27Clock+News&f%5Byear_i%5D%5B%5D=1982&per_page=50&q=political+campaigns&range%5Byear_i%5D%5Bmissing%5D=true&range_end=1991&range_field=year_i&range_start=1960&search_field=all_fields&sort=year_i+asc%2C+date_created_dt+asc%2C+title_sort+asc&utf8=%E2%9C%93",
+  "content_type": "text/html; charset=utf-8",
+  "title": "Boston TV News Digital Library Search Results",
+  "error": ""
+}

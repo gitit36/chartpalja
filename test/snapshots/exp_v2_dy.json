@@ -1,0 +1,4185 @@
+{
+  "measured_at": "2026-08-13T00:33:38",
+  "phase": "V2_DY",
+  "validation_b_scored": false,
+  "pools": {
+    "OLD_DEV_n": 56,
+    "FRESH_A_DEV_n": 14
+  },
+  "candidates": [
+    "V2_DY_A",
+    "V2_DY_B",
+    "V2_DY_C"
+  ],
+  "reference": "LEGACY_B9",
+  "results": {
+    "LEGACY_B9": {
+      "architecture": "LEGACY_B9",
+      "OLD_DEV": {
+        "annual": {
+          "n": 56,
+          "hit": "34/56",
+          "hit_rate": 60.71,
+          "pairwise_mean": 0.5318,
+          "raw_sep_mean": 0.1729,
+          "std_sep": 0.0134,
+          "failures": [
+            {
+              "name": "Michael Jackson",
+              "hit": 0,
+              "sep": -6.4059,
+              "pairwise": 0.4071,
+              "good_avg": 58.6111,
+              "bad_avg": 65.017
+            },
+            {
+              "name": "Al Gore",
+              "hit": 0,
+              "sep": -2.173,
+              "pairwise": 0.4444,
+              "good_avg": 61.6131,
+              "bad_avg": 63.7861
+            },
+            {
+              "name": "Elizabeth Taylor",
+              "hit": 0,
+              "sep": -2.4778,
+              "pairwise": 0.3646,
+              "good_avg": 64.3398,
+              "bad_avg": 66.8176
+            },
+            {
+              "name": "Diana Ross",
+              "hit": 0,
+              "sep": -4.6205,
+              "pairwise": 0.1429,
+              "good_avg": 65.132,
+              "bad_avg": 69.7525
+            },
+            {
+              "name": "John Ritter",
+              "hit": 0,
+              "sep": -12.8397,
+              "pairwise": 0.3333,
+              "good_avg": 53.0568,
+              "bad_avg": 65.8965
+            },
+            {
+              "name": "Sean Penn",
+              "hit": 0,
+              "sep": -8.8736,
+              "pairwise": 0.3,
+              "good_avg": 46.4641,
+              "bad_avg": 55.3377
+            },
+            {
+              "name": "윤석열",
+              "hit": 0,
+              "sep": -2.5114,
+              "pairwise": 0.3571,
+              "good_avg": 69.0982,
+              "bad_avg": 71.6095
+            },
+            {
+              "name": "김부겸",
+              "hit": 0,
+              "sep": -4.3102,
+              "pairwise": 0.4167,
+              "good_avg": 65.0215,
+              "bad_avg": 69.3317
+            },
+            {
+              "name": "김어준",
+              "hit": 0,
+              "sep": -2.4068,
+              "pairwise": 0.5,
+              "good_avg": 84.5875,
+              "bad_avg": 86.9943
+            },
+            {
+              "name": "오세훈",
+              "hit": 0,
+              "sep": -14.0213,
+              "pairwise": 0.1111,
+              "good_avg": 72.1902,
+              "bad_avg": 86.2115
+            },
+            {
+              "name": "박근혜",
+              "hit": 0,
+              "sep": -5.1523,
+              "pairwise": 0.3646,
+              "good_avg": 53.0927,
+              "bad_avg": 58.245
+            },
+            {
+              "name": "이재용",
+              "hit": 0,
+              "sep": -4.8762,
+              "pairwise": 0.3429,
+              "good_avg": 48.6882,
+              "bad_avg": 53.5644
+            },
+            {
+              "name": "봉준호",
+              "hit": 0,
+              "sep": -13.0561,
+              "pairwise": 0.1111,
+              "good_avg": 45.732,
+              "bad_avg": 58.7881
+            },
+            {
+              "name": "장미희",
+              "hit": 0,
+              "sep": -2.7464,
+              "pairwise": 0.2,
+              "good_avg": 53.2178,
+              "bad_avg": 55.9642
+            },
+            {
+              "name": "남진",
+              "hit": 0,
+              "sep": -5.9364,
+              "pairwise": 0.2917,
+              "good_avg": 48.3251,
+              "bad_avg": 54.2615
+            },
+            {
+              "name": "김우중",
+              "hit": 0,
+              "sep": -2.6889,
+              "pairwise": 0.2,
+              "good_avg": 74.3784,
+              "bad_avg": 77.0673
+            },
+            {
+              "name": "노태우",
+              "hit": 0,
+              "sep": -12.6613,
+              "pairwise": 0.2222,
+              "good_avg": 66.0387,
+              "bad_avg": 78.6999
+            },
+            {
+              "name": "전두환",
+              "hit": 0,
+              "sep": -6.8271,
+              "pairwise": 0.3281,
+              "good_avg": 59.7679,
+              "bad_avg": 66.595
+            },
+            {
+              "name": "신해철",
+              "hit": 0,
+              "sep": -10.1668,
+              "pairwise": 0.3333,
+              "good_avg": 50.8811,
+              "bad_avg": 61.0479
+            },
+            {
+              "name": "서태지",
+              "hit": 0,
+              "sep": -6.0792,
+              "pairwise": 0.3333,
+              "good_avg": 72.5762,
+              "bad_avg": 78.6554
+            },
+            {
+              "name": "Lionel Messi",
+              "hit": 0,
+              "sep": -5.652,
+              "pairwise": 0.3908,
+              "good_avg": 74.9294,
+              "bad_avg": 80.5814
+            },
+            {
+              "name": "권지용",
+              "hit": 0,
+              "sep": -4.4405,
+              "pairwise": 0.4074,
+              "good_avg": 49.0585,
+              "bad_avg": 53.4989
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "hit": 1,
+            "sep": 1.9793,
+            "pairwise": 0.5309,
+            "good_avg": 62.5081,
+            "bad_avg": 60.5288
+          },
+          {
+            "name": "Barack Obama",
+            "hit": 1,
+            "sep": 1.0156,
+            "pairwise": 0.5556,
+            "good_avg": 71.1245,
+            "bad_avg": 70.1089
+          },
+          {
+            "name": "Michael Jackson",
+            "hit": 0,
+            "sep": -6.4059,
+            "pairwise": 0.4071,
+            "good_avg": 58.6111,
+            "bad_avg": 65.017
+          },
+          {
+            "name": "Justin Bieber",
+            "hit": 1,
+            "sep": 0.9671,
+            "pairwise": 0.6071,
+            "good_avg": 62.3918,
+            "bad_avg": 61.4248
+          },
+          {
+            "name": "Chris Brown",
+            "hit": 1,
+            "sep": 1.3951,
+            "pairwise": 0.5,
+            "good_avg": 58.0391,
+            "bad_avg": 56.644
+          },
+          {
+            "name": "Hillary Clinton",
+            "hit": 1,
+            "sep": 1.2531,
+            "pairwise": 0.5,
+            "good_avg": 73.0302,
+            "bad_avg": 71.777
+          },
+          {
+            "name": "Kamala Harris",
+            "hit": 1,
+            "sep": 0.4248,
+            "pairwise": 0.4643,
+            "good_avg": 53.0411,
+            "bad_avg": 52.6162
+          },
+          {
+            "name": "Al Gore",
+            "hit": 0,
+            "sep": -2.173,
+            "pairwise": 0.4444,
+            "good_avg": 61.6131,
+            "bad_avg": 63.7861
+          },
+          {
+            "name": "Amy Klobuchar",
+            "hit": 1,
+            "sep": 15.8568,
+            "pairwise": 0.9643,
+            "good_avg": 58.2537,
+            "bad_avg": 42.3969
+          },
+          {
+            "name": "Monica Lewinsky",
+            "hit": 1,
+            "sep": 16.5362,
+            "pairwise": 1.0,
+            "good_avg": 78.8921,
+            "bad_avg": 62.3559
+          },
+          {
+            "name": "Madonna",
+            "hit": 1,
+            "sep": 6.1664,
+            "pairwise": 0.725,
+            "good_avg": 65.379,
+            "bad_avg": 59.2126
+          },
+          {
+            "name": "Elizabeth Taylor",
+            "hit": 0,
+            "sep": -2.4778,
+            "pairwise": 0.3646,
+            "good_avg": 64.3398,
+            "bad_avg": 66.8176
+          },
+          {
+            "name": "Drake",
+            "hit": 1,
+            "sep": 3.4156,
+            "pairwise": 0.6719,
+            "good_avg": 62.4743,
+            "bad_avg": 59.0588
+          },
+          {
+            "name": "Diana Ross",
+            "hit": 0,
+            "sep": -4.6205,
+            "pairwise": 0.1429,
+            "good_avg": 65.132,
+            "bad_avg": 69.7525
+          },
+          {
+            "name": "Dennis Rodman",
+            "hit": 1,
+            "sep": 3.0352,
+            "pairwise": 0.6444,
+            "good_avg": 58.0831,
+            "bad_avg": 55.0479
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -12.8397,
+            "pairwise": 0.3333,
+            "good_avg": 53.0568,
+            "bad_avg": 65.8965
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -8.8736,
+            "pairwise": 0.3,
+            "good_avg": 46.4641,
+            "bad_avg": 55.3377
+          },
+          {
+            "name": "Björk",
+            "hit": 1,
+            "sep": 2.7687,
+            "pairwise": 0.6667,
+            "good_avg": 48.2631,
+            "bad_avg": 45.4944
+          },
+          {
+            "name": "Kylie Jenner",
+            "hit": 1,
+            "sep": 1.1869,
+            "pairwise": 0.8,
+            "good_avg": 73.5045,
+            "bad_avg": 72.3176
+          },
+          {
+            "name": "윤석열",
+            "hit": 0,
+            "sep": -2.5114,
+            "pairwise": 0.3571,
+            "good_avg": 69.0982,
+            "bad_avg": 71.6095
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -4.3102,
+            "pairwise": 0.4167,
+            "good_avg": 65.0215,
+            "bad_avg": 69.3317
+          },
+          {
+            "name": "김어준",
+            "hit": 0,
+            "sep": -2.4068,
+            "pairwise": 0.5,
+            "good_avg": 84.5875,
+            "bad_avg": 86.9943
+          },
+          {
+            "name": "박나래",
+            "hit": 1,
+            "sep": 4.5995,
+            "pairwise": 1.0,
+            "good_avg": 48.1999,
+            "bad_avg": 43.6004
+          },
+          {
+            "name": "박정희",
+            "hit": 1,
+            "sep": 0.8829,
+            "pairwise": 0.5,
+            "good_avg": 49.1444,
+            "bad_avg": 48.2615
+          },
+          {
+            "name": "오세훈",
+            "hit": 0,
+            "sep": -14.0213,
+            "pairwise": 0.1111,
+            "good_avg": 72.1902,
+            "bad_avg": 86.2115
+          },
+          {
+            "name": "홍준표",
+            "hit": 1,
+            "sep": 2.2749,
+            "pairwise": 0.5833,
+            "good_avg": 73.7346,
+            "bad_avg": 71.4597
+          },
+          {
+            "name": "문재인",
+            "hit": 1,
+            "sep": 0.3974,
+            "pairwise": 0.5278,
+            "good_avg": 74.4911,
+            "bad_avg": 74.0937
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -5.1523,
+            "pairwise": 0.3646,
+            "good_avg": 53.0927,
+            "bad_avg": 58.245
+          },
+          {
+            "name": "이건희",
+            "hit": 1,
+            "sep": 14.0977,
+            "pairwise": 0.975,
+            "good_avg": 72.9618,
+            "bad_avg": 58.8641
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -4.8762,
+            "pairwise": 0.3429,
+            "good_avg": 48.6882,
+            "bad_avg": 53.5644
+          },
+          {
+            "name": "봉준호",
+            "hit": 0,
+            "sep": -13.0561,
+            "pairwise": 0.1111,
+            "good_avg": 45.732,
+            "bad_avg": 58.7881
+          },
+          {
+            "name": "김연아",
+            "hit": 1,
+            "sep": 3.3258,
+            "pairwise": 0.7292,
+            "good_avg": 63.6768,
+            "bad_avg": 60.351
+          },
+          {
+            "name": "손흥민",
+            "hit": 1,
+            "sep": 3.2125,
+            "pairwise": 0.6111,
+            "good_avg": 38.9389,
+            "bad_avg": 35.7264
+          },
+          {
+            "name": "장미희",
+            "hit": 0,
+            "sep": -2.7464,
+            "pairwise": 0.2,
+            "good_avg": 53.2178,
+            "bad_avg": 55.9642
+          },
+          {
+            "name": "김희민",
+            "hit": 1,
+            "sep": 7.722,
+            "pairwise": 0.7143,
+            "good_avg": 61.8702,
+            "bad_avg": 54.1482
+          },
+          {
+            "name": "박찬호",
+            "hit": 1,
+            "sep": 6.5525,
+            "pairwise": 0.5,
+            "good_avg": 64.9713,
+            "bad_avg": 58.4188
+          },
+          {
+            "name": "박세리",
+            "hit": 1,
+            "sep": 9.9811,
+            "pairwise": 0.8,
+            "good_avg": 66.4143,
+            "bad_avg": 56.4332
+          },
+          {
+            "name": "이명박",
+            "hit": 1,
+            "sep": 1.3097,
+            "pairwise": 0.5469,
+            "good_avg": 67.5638,
+            "bad_avg": 66.2542
+          },
+          {
+            "name": "조용필",
+            "hit": 1,
+            "sep": 3.9178,
+            "pairwise": 0.7857,
+            "good_avg": 73.4079,
+            "bad_avg": 69.4902
+          },
+          {
+            "name": "신성일",
+            "hit": 1,
+            "sep": 5.7891,
+            "pairwise": 0.75,
+            "good_avg": 71.0535,
+            "bad_avg": 65.2644
+          },
+          {
+            "name": "남진",
+            "hit": 0,
+            "sep": -5.9364,
+            "pairwise": 0.2917,
+            "good_avg": 48.3251,
+            "bad_avg": 54.2615
+          },
+          {
+            "name": "정몽헌",
+            "hit": 1,
+            "sep": 0.3585,
+            "pairwise": 0.6667,
+            "good_avg": 40.2483,
+            "bad_avg": 39.8898
+          },
+          {
+            "name": "정몽구",
+            "hit": 1,
+            "sep": 1.9082,
+            "pairwise": 0.6,
+            "good_avg": 52.7781,
+            "bad_avg": 50.8699
+          },
+          {
+            "name": "김우중",
+            "hit": 0,
+            "sep": -2.6889,
+            "pairwise": 0.2,
+            "good_avg": 74.3784,
+            "bad_avg": 77.0673
+          },
+          {
+            "name": "김영삼",
+            "hit": 1,
+            "sep": 5.3594,
+            "pairwise": 0.8,
+            "good_avg": 68.1001,
+            "bad_avg": 62.7407
+          },
+          {
+            "name": "노태우",
+            "hit": 0,
+            "sep": -12.6613,
+            "pairwise": 0.2222,
+            "good_avg": 66.0387,
+            "bad_avg": 78.6999
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -6.8271,
+            "pairwise": 0.3281,
+            "good_avg": 59.7679,
+            "bad_avg": 66.595
+          },
+          {
+            "name": "정주영",
+            "hit": 1,
+            "sep": 7.3928,
+            "pairwise": 0.6429,
+            "good_avg": 66.279,
+            "bad_avg": 58.8861
+          },
+          {
+            "name": "이병철",
+            "hit": 1,
+            "sep": 6.4746,
+            "pairwise": 0.5,
+            "good_avg": 69.2389,
+            "bad_avg": 62.7643
+          },
+          {
+            "name": "신해철",
+            "hit": 0,
+            "sep": -10.1668,
+            "pairwise": 0.3333,
+            "good_avg": 50.8811,
+            "bad_avg": 61.0479
+          },
+          {
+            "name": "서태지",
+            "hit": 0,
+            "sep": -6.0792,
+            "pairwise": 0.3333,
+            "good_avg": 72.5762,
+            "bad_avg": 78.6554
+          },
+          {
+            "name": "노무현",
+            "hit": 1,
+            "sep": 4.3389,
+            "pairwise": 0.6719,
+            "good_avg": 77.1032,
+            "bad_avg": 72.7643
+          },
+          {
+            "name": "전소연",
+            "hit": 1,
+            "sep": 0.4621,
+            "pairwise": 0.6786,
+            "good_avg": 60.4335,
+            "bad_avg": 59.9714
+          },
+          {
+            "name": "강호동",
+            "hit": 1,
+            "sep": 4.2456,
+            "pairwise": 0.6667,
+            "good_avg": 71.4637,
+            "bad_avg": 67.2181
+          },
+          {
+            "name": "Lionel Messi",
+            "hit": 0,
+            "sep": -5.652,
+            "pairwise": 0.3908,
+            "good_avg": 74.9294,
+            "bad_avg": 80.5814
+          },
+          {
+            "name": "권지용",
+            "hit": 0,
+            "sep": -4.4405,
+            "pairwise": 0.4074,
+            "good_avg": 49.0585,
+            "bad_avg": 53.4989
+          }
+        ],
+        "failures": [
+          {
+            "name": "Michael Jackson",
+            "hit": 0,
+            "sep": -6.4059,
+            "pairwise": 0.4071,
+            "good_avg": 58.6111,
+            "bad_avg": 65.017
+          },
+          {
+            "name": "Al Gore",
+            "hit": 0,
+            "sep": -2.173,
+            "pairwise": 0.4444,
+            "good_avg": 61.6131,
+            "bad_avg": 63.7861
+          },
+          {
+            "name": "Elizabeth Taylor",
+            "hit": 0,
+            "sep": -2.4778,
+            "pairwise": 0.3646,
+            "good_avg": 64.3398,
+            "bad_avg": 66.8176
+          },
+          {
+            "name": "Diana Ross",
+            "hit": 0,
+            "sep": -4.6205,
+            "pairwise": 0.1429,
+            "good_avg": 65.132,
+            "bad_avg": 69.7525
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -12.8397,
+            "pairwise": 0.3333,
+            "good_avg": 53.0568,
+            "bad_avg": 65.8965
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -8.8736,
+            "pairwise": 0.3,
+            "good_avg": 46.4641,
+            "bad_avg": 55.3377
+          },
+          {
+            "name": "윤석열",
+            "hit": 0,
+            "sep": -2.5114,
+            "pairwise": 0.3571,
+            "good_avg": 69.0982,
+            "bad_avg": 71.6095
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -4.3102,
+            "pairwise": 0.4167,
+            "good_avg": 65.0215,
+            "bad_avg": 69.3317
+          },
+          {
+            "name": "김어준",
+            "hit": 0,
+            "sep": -2.4068,
+            "pairwise": 0.5,
+            "good_avg": 84.5875,
+            "bad_avg": 86.9943
+          },
+          {
+            "name": "오세훈",
+            "hit": 0,
+            "sep": -14.0213,
+            "pairwise": 0.1111,
+            "good_avg": 72.1902,
+            "bad_avg": 86.2115
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -5.1523,
+            "pairwise": 0.3646,
+            "good_avg": 53.0927,
+            "bad_avg": 58.245
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -4.8762,
+            "pairwise": 0.3429,
+            "good_avg": 48.6882,
+            "bad_avg": 53.5644
+          },
+          {
+            "name": "봉준호",
+            "hit": 0,
+            "sep": -13.0561,
+            "pairwise": 0.1111,
+            "good_avg": 45.732,
+            "bad_avg": 58.7881
+          },
+          {
+            "name": "장미희",
+            "hit": 0,
+            "sep": -2.7464,
+            "pairwise": 0.2,
+            "good_avg": 53.2178,
+            "bad_avg": 55.9642
+          },
+          {
+            "name": "남진",
+            "hit": 0,
+            "sep": -5.9364,
+            "pairwise": 0.2917,
+            "good_avg": 48.3251,
+            "bad_avg": 54.2615
+          },
+          {
+            "name": "김우중",
+            "hit": 0,
+            "sep": -2.6889,
+            "pairwise": 0.2,
+            "good_avg": 74.3784,
+            "bad_avg": 77.0673
+          },
+          {
+            "name": "노태우",
+            "hit": 0,
+            "sep": -12.6613,
+            "pairwise": 0.2222,
+            "good_avg": 66.0387,
+            "bad_avg": 78.6999
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -6.8271,
+            "pairwise": 0.3281,
+            "good_avg": 59.7679,
+            "bad_avg": 66.595
+          },
+          {
+            "name": "신해철",
+            "hit": 0,
+            "sep": -10.1668,
+            "pairwise": 0.3333,
+            "good_avg": 50.8811,
+            "bad_avg": 61.0479
+          },
+          {
+            "name": "서태지",
+            "hit": 0,
+            "sep": -6.0792,
+            "pairwise": 0.3333,
+            "good_avg": 72.5762,
+            "bad_avg": 78.6554
+          },
+          {
+            "name": "Lionel Messi",
+            "hit": 0,
+            "sep": -5.652,
+            "pairwise": 0.3908,
+            "good_avg": 74.9294,
+            "bad_avg": 80.5814
+          },
+          {
+            "name": "권지용",
+            "hit": 0,
+            "sep": -4.4405,
+            "pairwise": 0.4074,
+            "good_avg": 49.0585,
+            "bad_avg": 53.4989
+          }
+        ],
+        "override": {
+          "n_pairs": 1454,
+          "D_OVERRIDE_rate": 0.1657,
+          "D_RESCUE_rate": 0.1032,
+          "both_ok_rate": 0.3845,
+          "cross_abs_D_p50": 11.0,
+          "cross_abs_A_p50": 3.098,
+          "cross_absD_over_absA_p50": 3.4502
+        },
+        "amplitude": {
+          "D_p50": 64.0,
+          "D_sd": 12.2898,
+          "adj_D_jump_p50": 9.0,
+          "adj_D_jump_p90": 21.0,
+          "abs_annual_dev_p50": 2.0011,
+          "abs_annual_dev_p90": 5.5872
+        }
+      },
+      "FRESH_A_DEV": {
+        "annual": {
+          "n": 14,
+          "hit": "7/14",
+          "hit_rate": 50.0,
+          "pairwise_mean": 0.4286,
+          "raw_sep_mean": -2.5559,
+          "std_sep": -0.2186,
+          "failures": [
+            {
+              "name": "Arnold Schwarzenegger",
+              "hit": 0,
+              "sep": -9.5243,
+              "pairwise": 0.0,
+              "good_avg": 61.3716,
+              "bad_avg": 70.8959
+            },
+            {
+              "name": "Martha Stewart",
+              "hit": 0,
+              "sep": -5.497,
+              "pairwise": 0.0,
+              "good_avg": 59.1977,
+              "bad_avg": 64.6946
+            },
+            {
+              "name": "Robert Downey Jr.",
+              "hit": 0,
+              "sep": -10.6519,
+              "pairwise": 0.0,
+              "good_avg": 38.8247,
+              "bad_avg": 49.4766
+            },
+            {
+              "name": "Marilyn Monroe",
+              "hit": 0,
+              "sep": -10.4615,
+              "pairwise": 0.25,
+              "good_avg": 49.6479,
+              "bad_avg": 60.1094
+            },
+            {
+              "name": "Whitney Houston",
+              "hit": 0,
+              "sep": -25.7669,
+              "pairwise": 0.0,
+              "good_avg": 62.0,
+              "bad_avg": 87.7669
+            },
+            {
+              "name": "George Clooney",
+              "hit": 0,
+              "sep": -1.8,
+              "pairwise": 0.25,
+              "good_avg": 55.5832,
+              "bad_avg": 57.3832
+            },
+            {
+              "name": "Meryl Streep",
+              "hit": 0,
+              "sep": -18.3039,
+              "pairwise": 0.0,
+              "good_avg": 51.4128,
+              "bad_avg": 69.7168
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Bill Gates",
+            "hit": 1,
+            "sep": 2.3642,
+            "pairwise": 0.75,
+            "good_avg": 60.9355,
+            "bad_avg": 58.5713
+          },
+          {
+            "name": "Britney Spears",
+            "hit": 1,
+            "sep": 12.0936,
+            "pairwise": 1.0,
+            "good_avg": 66.0874,
+            "bad_avg": 53.9939
+          },
+          {
+            "name": "Johnny Depp",
+            "hit": 1,
+            "sep": 10.3593,
+            "pairwise": 1.0,
+            "good_avg": 62.1523,
+            "bad_avg": 51.793
+          },
+          {
+            "name": "Michael Jordan",
+            "hit": 1,
+            "sep": 1.2049,
+            "pairwise": 0.5,
+            "good_avg": 70.7144,
+            "bad_avg": 69.5095
+          },
+          {
+            "name": "Tiger Woods",
+            "hit": 1,
+            "sep": 7.1615,
+            "pairwise": 0.75,
+            "good_avg": 62.8146,
+            "bad_avg": 55.6531
+          },
+          {
+            "name": "Roger Federer",
+            "hit": 1,
+            "sep": 3.1273,
+            "pairwise": 0.75,
+            "good_avg": 83.2161,
+            "bad_avg": 80.0888
+          },
+          {
+            "name": "Diana, Princess of Wales",
+            "hit": 1,
+            "sep": 9.9125,
+            "pairwise": 0.75,
+            "good_avg": 57.5405,
+            "bad_avg": 47.6281
+          },
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -9.5243,
+            "pairwise": 0.0,
+            "good_avg": 61.3716,
+            "bad_avg": 70.8959
+          },
+          {
+            "name": "Martha Stewart",
+            "hit": 0,
+            "sep": -5.497,
+            "pairwise": 0.0,
+            "good_avg": 59.1977,
+            "bad_avg": 64.6946
+          },
+          {
+            "name": "Robert Downey Jr.",
+            "hit": 0,
+            "sep": -10.6519,
+            "pairwise": 0.0,
+            "good_avg": 38.8247,
+            "bad_avg": 49.4766
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -10.4615,
+            "pairwise": 0.25,
+            "good_avg": 49.6479,
+            "bad_avg": 60.1094
+          },
+          {
+            "name": "Whitney Houston",
+            "hit": 0,
+            "sep": -25.7669,
+            "pairwise": 0.0,
+            "good_avg": 62.0,
+            "bad_avg": 87.7669
+          },
+          {
+            "name": "George Clooney",
+            "hit": 0,
+            "sep": -1.8,
+            "pairwise": 0.25,
+            "good_avg": 55.5832,
+            "bad_avg": 57.3832
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -18.3039,
+            "pairwise": 0.0,
+            "good_avg": 51.4128,
+            "bad_avg": 69.7168
+          }
+        ],
+        "failures": [
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -9.5243,
+            "pairwise": 0.0,
+            "good_avg": 61.3716,
+            "bad_avg": 70.8959
+          },
+          {
+            "name": "Martha Stewart",
+            "hit": 0,
+            "sep": -5.497,
+            "pairwise": 0.0,
+            "good_avg": 59.1977,
+            "bad_avg": 64.6946
+          },
+          {
+            "name": "Robert Downey Jr.",
+            "hit": 0,
+            "sep": -10.6519,
+            "pairwise": 0.0,
+            "good_avg": 38.8247,
+            "bad_avg": 49.4766
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -10.4615,
+            "pairwise": 0.25,
+            "good_avg": 49.6479,
+            "bad_avg": 60.1094
+          },
+          {
+            "name": "Whitney Houston",
+            "hit": 0,
+            "sep": -25.7669,
+            "pairwise": 0.0,
+            "good_avg": 62.0,
+            "bad_avg": 87.7669
+          },
+          {
+            "name": "George Clooney",
+            "hit": 0,
+            "sep": -1.8,
+            "pairwise": 0.25,
+            "good_avg": 55.5832,
+            "bad_avg": 57.3832
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -18.3039,
+            "pairwise": 0.0,
+            "good_avg": 51.4128,
+            "bad_avg": 69.7168
+          }
+        ],
+        "override": {
+          "n_pairs": 56,
+          "D_OVERRIDE_rate": 0.2321,
+          "D_RESCUE_rate": 0.125,
+          "both_ok_rate": 0.3036,
+          "cross_abs_D_p50": 9.0,
+          "cross_abs_A_p50": 2.1922,
+          "cross_absD_over_absA_p50": 4.5476
+        },
+        "amplitude": {
+          "D_p50": 65.0,
+          "D_sd": 11.0947,
+          "adj_D_jump_p50": 7.0,
+          "adj_D_jump_p90": 21.5,
+          "abs_annual_dev_p50": 1.8503,
+          "abs_annual_dev_p90": 5.2941
+        }
+      }
+    },
+    "V2_DY_A": {
+      "architecture": "V2_DY_A",
+      "OLD_DEV": {
+        "annual": {
+          "n": 56,
+          "hit": "35/56",
+          "hit_rate": 62.5,
+          "pairwise_mean": 0.5661,
+          "raw_sep_mean": 0.7749,
+          "std_sep": 0.1929,
+          "failures": [
+            {
+              "name": "Chris Brown",
+              "hit": 0,
+              "sep": -2.344,
+              "pairwise": 0.3333,
+              "good_avg": 57.2055,
+              "bad_avg": 59.5496
+            },
+            {
+              "name": "Al Gore",
+              "hit": 0,
+              "sep": -0.2553,
+              "pairwise": 0.5556,
+              "good_avg": 57.9005,
+              "bad_avg": 58.1558
+            },
+            {
+              "name": "Elizabeth Taylor",
+              "hit": 0,
+              "sep": -0.152,
+              "pairwise": 0.4062,
+              "good_avg": 59.5509,
+              "bad_avg": 59.7029
+            },
+            {
+              "name": "John Ritter",
+              "hit": 0,
+              "sep": -4.7166,
+              "pairwise": 0.2,
+              "good_avg": 52.5611,
+              "bad_avg": 57.2778
+            },
+            {
+              "name": "Sean Penn",
+              "hit": 0,
+              "sep": -6.3161,
+              "pairwise": 0.1333,
+              "good_avg": 53.9841,
+              "bad_avg": 60.3002
+            },
+            {
+              "name": "윤석열",
+              "hit": 0,
+              "sep": -0.0679,
+              "pairwise": 0.3333,
+              "good_avg": 60.1258,
+              "bad_avg": 60.1937
+            },
+            {
+              "name": "김부겸",
+              "hit": 0,
+              "sep": -2.1674,
+              "pairwise": 0.4167,
+              "good_avg": 60.0485,
+              "bad_avg": 62.2159
+            },
+            {
+              "name": "홍준표",
+              "hit": 0,
+              "sep": -0.0481,
+              "pairwise": 0.4583,
+              "good_avg": 58.3853,
+              "bad_avg": 58.4334
+            },
+            {
+              "name": "박근혜",
+              "hit": 0,
+              "sep": -0.2811,
+              "pairwise": 0.5312,
+              "good_avg": 56.3812,
+              "bad_avg": 56.6624
+            },
+            {
+              "name": "이재용",
+              "hit": 0,
+              "sep": -0.7395,
+              "pairwise": 0.4571,
+              "good_avg": 57.1337,
+              "bad_avg": 57.8732
+            },
+            {
+              "name": "장미희",
+              "hit": 0,
+              "sep": -0.6016,
+              "pairwise": 0.6,
+              "good_avg": 57.4066,
+              "bad_avg": 58.0082
+            },
+            {
+              "name": "김희민",
+              "hit": 0,
+              "sep": -0.3126,
+              "pairwise": 0.3571,
+              "good_avg": 60.6965,
+              "bad_avg": 61.0091
+            },
+            {
+              "name": "조용필",
+              "hit": 0,
+              "sep": -0.8245,
+              "pairwise": 0.3571,
+              "good_avg": 60.0076,
+              "bad_avg": 60.8321
+            },
+            {
+              "name": "남진",
+              "hit": 0,
+              "sep": -1.3896,
+              "pairwise": 0.375,
+              "good_avg": 56.8295,
+              "bad_avg": 58.219
+            },
+            {
+              "name": "김우중",
+              "hit": 0,
+              "sep": -0.8061,
+              "pairwise": 0.32,
+              "good_avg": 58.5967,
+              "bad_avg": 59.4028
+            },
+            {
+              "name": "노태우",
+              "hit": 0,
+              "sep": -2.2412,
+              "pairwise": 0.3333,
+              "good_avg": 58.7591,
+              "bad_avg": 61.0003
+            },
+            {
+              "name": "전두환",
+              "hit": 0,
+              "sep": -2.7151,
+              "pairwise": 0.3281,
+              "good_avg": 54.2205,
+              "bad_avg": 56.9356
+            },
+            {
+              "name": "정주영",
+              "hit": 0,
+              "sep": -3.0161,
+              "pairwise": 0.2619,
+              "good_avg": 58.9761,
+              "bad_avg": 61.9923
+            },
+            {
+              "name": "이병철",
+              "hit": 0,
+              "sep": -0.3669,
+              "pairwise": 0.5,
+              "good_avg": 58.4173,
+              "bad_avg": 58.7842
+            },
+            {
+              "name": "서태지",
+              "hit": 0,
+              "sep": -0.1518,
+              "pairwise": 0.4444,
+              "good_avg": 60.9008,
+              "bad_avg": 61.0525
+            },
+            {
+              "name": "권지용",
+              "hit": 0,
+              "sep": -0.6151,
+              "pairwise": 0.4444,
+              "good_avg": 60.0257,
+              "bad_avg": 60.6408
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "hit": 1,
+            "sep": 2.2788,
+            "pairwise": 0.5679,
+            "good_avg": 60.7001,
+            "bad_avg": 58.4213
+          },
+          {
+            "name": "Barack Obama",
+            "hit": 1,
+            "sep": 0.9813,
+            "pairwise": 0.5833,
+            "good_avg": 61.9996,
+            "bad_avg": 61.0184
+          },
+          {
+            "name": "Michael Jackson",
+            "hit": 1,
+            "sep": 0.1471,
+            "pairwise": 0.5786,
+            "good_avg": 60.0477,
+            "bad_avg": 59.9006
+          },
+          {
+            "name": "Justin Bieber",
+            "hit": 1,
+            "sep": 0.5558,
+            "pairwise": 0.6071,
+            "good_avg": 55.4468,
+            "bad_avg": 54.891
+          },
+          {
+            "name": "Chris Brown",
+            "hit": 0,
+            "sep": -2.344,
+            "pairwise": 0.3333,
+            "good_avg": 57.2055,
+            "bad_avg": 59.5496
+          },
+          {
+            "name": "Hillary Clinton",
+            "hit": 1,
+            "sep": 0.2262,
+            "pairwise": 0.5,
+            "good_avg": 59.512,
+            "bad_avg": 59.2858
+          },
+          {
+            "name": "Kamala Harris",
+            "hit": 1,
+            "sep": 1.3645,
+            "pairwise": 0.6071,
+            "good_avg": 54.9133,
+            "bad_avg": 53.5487
+          },
+          {
+            "name": "Al Gore",
+            "hit": 0,
+            "sep": -0.2553,
+            "pairwise": 0.5556,
+            "good_avg": 57.9005,
+            "bad_avg": 58.1558
+          },
+          {
+            "name": "Amy Klobuchar",
+            "hit": 1,
+            "sep": 4.4136,
+            "pairwise": 0.8214,
+            "good_avg": 57.8295,
+            "bad_avg": 53.4159
+          },
+          {
+            "name": "Monica Lewinsky",
+            "hit": 1,
+            "sep": 7.9828,
+            "pairwise": 1.0,
+            "good_avg": 61.7476,
+            "bad_avg": 53.7648
+          },
+          {
+            "name": "Madonna",
+            "hit": 1,
+            "sep": 3.6268,
+            "pairwise": 0.725,
+            "good_avg": 63.06,
+            "bad_avg": 59.4332
+          },
+          {
+            "name": "Elizabeth Taylor",
+            "hit": 0,
+            "sep": -0.152,
+            "pairwise": 0.4062,
+            "good_avg": 59.5509,
+            "bad_avg": 59.7029
+          },
+          {
+            "name": "Drake",
+            "hit": 1,
+            "sep": 1.4246,
+            "pairwise": 0.6719,
+            "good_avg": 57.4142,
+            "bad_avg": 55.9896
+          },
+          {
+            "name": "Diana Ross",
+            "hit": 1,
+            "sep": 2.9419,
+            "pairwise": 0.7143,
+            "good_avg": 62.6022,
+            "bad_avg": 59.6603
+          },
+          {
+            "name": "Dennis Rodman",
+            "hit": 1,
+            "sep": 1.6853,
+            "pairwise": 0.6889,
+            "good_avg": 58.5495,
+            "bad_avg": 56.8642
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -4.7166,
+            "pairwise": 0.2,
+            "good_avg": 52.5611,
+            "bad_avg": 57.2778
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -6.3161,
+            "pairwise": 0.1333,
+            "good_avg": 53.9841,
+            "bad_avg": 60.3002
+          },
+          {
+            "name": "Björk",
+            "hit": 1,
+            "sep": 3.1831,
+            "pairwise": 0.7143,
+            "good_avg": 55.6637,
+            "bad_avg": 52.4806
+          },
+          {
+            "name": "Kylie Jenner",
+            "hit": 1,
+            "sep": 1.7325,
+            "pairwise": 0.8,
+            "good_avg": 63.6902,
+            "bad_avg": 61.9576
+          },
+          {
+            "name": "윤석열",
+            "hit": 0,
+            "sep": -0.0679,
+            "pairwise": 0.3333,
+            "good_avg": 60.1258,
+            "bad_avg": 60.1937
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -2.1674,
+            "pairwise": 0.4167,
+            "good_avg": 60.0485,
+            "bad_avg": 62.2159
+          },
+          {
+            "name": "김어준",
+            "hit": 1,
+            "sep": 1.8206,
+            "pairwise": 0.6667,
+            "good_avg": 63.598,
+            "bad_avg": 61.7774
+          },
+          {
+            "name": "박나래",
+            "hit": 1,
+            "sep": 1.604,
+            "pairwise": 0.8,
+            "good_avg": 59.0018,
+            "bad_avg": 57.3978
+          },
+          {
+            "name": "박정희",
+            "hit": 1,
+            "sep": 2.9798,
+            "pairwise": 0.5625,
+            "good_avg": 57.3665,
+            "bad_avg": 54.3867
+          },
+          {
+            "name": "오세훈",
+            "hit": 1,
+            "sep": 0.3713,
+            "pairwise": 0.4444,
+            "good_avg": 58.2581,
+            "bad_avg": 57.8869
+          },
+          {
+            "name": "홍준표",
+            "hit": 0,
+            "sep": -0.0481,
+            "pairwise": 0.4583,
+            "good_avg": 58.3853,
+            "bad_avg": 58.4334
+          },
+          {
+            "name": "문재인",
+            "hit": 1,
+            "sep": 0.9231,
+            "pairwise": 0.5833,
+            "good_avg": 61.6762,
+            "bad_avg": 60.7531
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -0.2811,
+            "pairwise": 0.5312,
+            "good_avg": 56.3812,
+            "bad_avg": 56.6624
+          },
+          {
+            "name": "이건희",
+            "hit": 1,
+            "sep": 0.234,
+            "pairwise": 0.525,
+            "good_avg": 61.1544,
+            "bad_avg": 60.9204
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -0.7395,
+            "pairwise": 0.4571,
+            "good_avg": 57.1337,
+            "bad_avg": 57.8732
+          },
+          {
+            "name": "봉준호",
+            "hit": 1,
+            "sep": 2.7608,
+            "pairwise": 0.8889,
+            "good_avg": 58.1395,
+            "bad_avg": 55.3787
+          },
+          {
+            "name": "김연아",
+            "hit": 1,
+            "sep": 0.3633,
+            "pairwise": 0.6042,
+            "good_avg": 60.2239,
+            "bad_avg": 59.8606
+          },
+          {
+            "name": "손흥민",
+            "hit": 1,
+            "sep": 1.0836,
+            "pairwise": 0.5556,
+            "good_avg": 57.1737,
+            "bad_avg": 56.0901
+          },
+          {
+            "name": "장미희",
+            "hit": 0,
+            "sep": -0.6016,
+            "pairwise": 0.6,
+            "good_avg": 57.4066,
+            "bad_avg": 58.0082
+          },
+          {
+            "name": "김희민",
+            "hit": 0,
+            "sep": -0.3126,
+            "pairwise": 0.3571,
+            "good_avg": 60.6965,
+            "bad_avg": 61.0091
+          },
+          {
+            "name": "박찬호",
+            "hit": 1,
+            "sep": 3.9942,
+            "pairwise": 0.8571,
+            "good_avg": 57.4402,
+            "bad_avg": 53.446
+          },
+          {
+            "name": "박세리",
+            "hit": 1,
+            "sep": 5.2457,
+            "pairwise": 0.9,
+            "good_avg": 60.4467,
+            "bad_avg": 55.201
+          },
+          {
+            "name": "이명박",
+            "hit": 1,
+            "sep": 1.2455,
+            "pairwise": 0.4219,
+            "good_avg": 60.8552,
+            "bad_avg": 59.6096
+          },
+          {
+            "name": "조용필",
+            "hit": 0,
+            "sep": -0.8245,
+            "pairwise": 0.3571,
+            "good_avg": 60.0076,
+            "bad_avg": 60.8321
+          },
+          {
+            "name": "신성일",
+            "hit": 1,
+            "sep": 4.031,
+            "pairwise": 0.8333,
+            "good_avg": 61.5952,
+            "bad_avg": 57.5642
+          },
+          {
+            "name": "남진",
+            "hit": 0,
+            "sep": -1.3896,
+            "pairwise": 0.375,
+            "good_avg": 56.8295,
+            "bad_avg": 58.219
+          },
+          {
+            "name": "정몽헌",
+            "hit": 1,
+            "sep": 0.4293,
+            "pairwise": 0.6667,
+            "good_avg": 59.4114,
+            "bad_avg": 58.982
+          },
+          {
+            "name": "정몽구",
+            "hit": 1,
+            "sep": 1.6399,
+            "pairwise": 0.6,
+            "good_avg": 57.4918,
+            "bad_avg": 55.8519
+          },
+          {
+            "name": "김우중",
+            "hit": 0,
+            "sep": -0.8061,
+            "pairwise": 0.32,
+            "good_avg": 58.5967,
+            "bad_avg": 59.4028
+          },
+          {
+            "name": "김영삼",
+            "hit": 1,
+            "sep": 2.2045,
+            "pairwise": 0.75,
+            "good_avg": 57.9017,
+            "bad_avg": 55.6972
+          },
+          {
+            "name": "노태우",
+            "hit": 0,
+            "sep": -2.2412,
+            "pairwise": 0.3333,
+            "good_avg": 58.7591,
+            "bad_avg": 61.0003
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -2.7151,
+            "pairwise": 0.3281,
+            "good_avg": 54.2205,
+            "bad_avg": 56.9356
+          },
+          {
+            "name": "정주영",
+            "hit": 0,
+            "sep": -3.0161,
+            "pairwise": 0.2619,
+            "good_avg": 58.9761,
+            "bad_avg": 61.9923
+          },
+          {
+            "name": "이병철",
+            "hit": 0,
+            "sep": -0.3669,
+            "pairwise": 0.5,
+            "good_avg": 58.4173,
+            "bad_avg": 58.7842
+          },
+          {
+            "name": "신해철",
+            "hit": 1,
+            "sep": 3.5682,
+            "pairwise": 0.8333,
+            "good_avg": 60.3855,
+            "bad_avg": 56.8172
+          },
+          {
+            "name": "서태지",
+            "hit": 0,
+            "sep": -0.1518,
+            "pairwise": 0.4444,
+            "good_avg": 60.9008,
+            "bad_avg": 61.0525
+          },
+          {
+            "name": "노무현",
+            "hit": 1,
+            "sep": 1.7791,
+            "pairwise": 0.6094,
+            "good_avg": 62.2295,
+            "bad_avg": 60.4504
+          },
+          {
+            "name": "전소연",
+            "hit": 1,
+            "sep": 1.806,
+            "pairwise": 0.75,
+            "good_avg": 58.5536,
+            "bad_avg": 56.7476
+          },
+          {
+            "name": "강호동",
+            "hit": 1,
+            "sep": 1.4086,
+            "pairwise": 0.5556,
+            "good_avg": 60.2906,
+            "bad_avg": 58.882
+          },
+          {
+            "name": "Lionel Messi",
+            "hit": 1,
+            "sep": 1.4834,
+            "pairwise": 0.5672,
+            "good_avg": 62.0836,
+            "bad_avg": 60.6003
+          },
+          {
+            "name": "권지용",
+            "hit": 0,
+            "sep": -0.6151,
+            "pairwise": 0.4444,
+            "good_avg": 60.0257,
+            "bad_avg": 60.6408
+          }
+        ],
+        "failures": [
+          {
+            "name": "Chris Brown",
+            "hit": 0,
+            "sep": -2.344,
+            "pairwise": 0.3333,
+            "good_avg": 57.2055,
+            "bad_avg": 59.5496
+          },
+          {
+            "name": "Al Gore",
+            "hit": 0,
+            "sep": -0.2553,
+            "pairwise": 0.5556,
+            "good_avg": 57.9005,
+            "bad_avg": 58.1558
+          },
+          {
+            "name": "Elizabeth Taylor",
+            "hit": 0,
+            "sep": -0.152,
+            "pairwise": 0.4062,
+            "good_avg": 59.5509,
+            "bad_avg": 59.7029
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -4.7166,
+            "pairwise": 0.2,
+            "good_avg": 52.5611,
+            "bad_avg": 57.2778
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -6.3161,
+            "pairwise": 0.1333,
+            "good_avg": 53.9841,
+            "bad_avg": 60.3002
+          },
+          {
+            "name": "윤석열",
+            "hit": 0,
+            "sep": -0.0679,
+            "pairwise": 0.3333,
+            "good_avg": 60.1258,
+            "bad_avg": 60.1937
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -2.1674,
+            "pairwise": 0.4167,
+            "good_avg": 60.0485,
+            "bad_avg": 62.2159
+          },
+          {
+            "name": "홍준표",
+            "hit": 0,
+            "sep": -0.0481,
+            "pairwise": 0.4583,
+            "good_avg": 58.3853,
+            "bad_avg": 58.4334
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -0.2811,
+            "pairwise": 0.5312,
+            "good_avg": 56.3812,
+            "bad_avg": 56.6624
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -0.7395,
+            "pairwise": 0.4571,
+            "good_avg": 57.1337,
+            "bad_avg": 57.8732
+          },
+          {
+            "name": "장미희",
+            "hit": 0,
+            "sep": -0.6016,
+            "pairwise": 0.6,
+            "good_avg": 57.4066,
+            "bad_avg": 58.0082
+          },
+          {
+            "name": "김희민",
+            "hit": 0,
+            "sep": -0.3126,
+            "pairwise": 0.3571,
+            "good_avg": 60.6965,
+            "bad_avg": 61.0091
+          },
+          {
+            "name": "조용필",
+            "hit": 0,
+            "sep": -0.8245,
+            "pairwise": 0.3571,
+            "good_avg": 60.0076,
+            "bad_avg": 60.8321
+          },
+          {
+            "name": "남진",
+            "hit": 0,
+            "sep": -1.3896,
+            "pairwise": 0.375,
+            "good_avg": 56.8295,
+            "bad_avg": 58.219
+          },
+          {
+            "name": "김우중",
+            "hit": 0,
+            "sep": -0.8061,
+            "pairwise": 0.32,
+            "good_avg": 58.5967,
+            "bad_avg": 59.4028
+          },
+          {
+            "name": "노태우",
+            "hit": 0,
+            "sep": -2.2412,
+            "pairwise": 0.3333,
+            "good_avg": 58.7591,
+            "bad_avg": 61.0003
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -2.7151,
+            "pairwise": 0.3281,
+            "good_avg": 54.2205,
+            "bad_avg": 56.9356
+          },
+          {
+            "name": "정주영",
+            "hit": 0,
+            "sep": -3.0161,
+            "pairwise": 0.2619,
+            "good_avg": 58.9761,
+            "bad_avg": 61.9923
+          },
+          {
+            "name": "이병철",
+            "hit": 0,
+            "sep": -0.3669,
+            "pairwise": 0.5,
+            "good_avg": 58.4173,
+            "bad_avg": 58.7842
+          },
+          {
+            "name": "서태지",
+            "hit": 0,
+            "sep": -0.1518,
+            "pairwise": 0.4444,
+            "good_avg": 60.9008,
+            "bad_avg": 61.0525
+          },
+          {
+            "name": "권지용",
+            "hit": 0,
+            "sep": -0.6151,
+            "pairwise": 0.4444,
+            "good_avg": 60.0257,
+            "bad_avg": 60.6408
+          }
+        ],
+        "override": {
+          "n_pairs": 1454,
+          "D_OVERRIDE_rate": 0.0853,
+          "D_RESCUE_rate": 0.0598,
+          "both_ok_rate": 0.4649,
+          "cross_abs_D_p50": 2.3874,
+          "cross_abs_A_p50": 3.098,
+          "cross_absD_over_absA_p50": 0.7984
+        },
+        "amplitude": {
+          "D_p50": 59.2888,
+          "D_sd": 2.6688,
+          "adj_D_jump_p50": 2.0348,
+          "adj_D_jump_p90": 5.2211,
+          "abs_annual_dev_p50": 1.7601,
+          "abs_annual_dev_p90": 4.8866
+        }
+      },
+      "FRESH_A_DEV": {
+        "annual": {
+          "n": 14,
+          "hit": "9/14",
+          "hit_rate": 64.29,
+          "pairwise_mean": 0.6071,
+          "raw_sep_mean": 1.0375,
+          "std_sep": 0.2872,
+          "failures": [
+            {
+              "name": "Bill Gates",
+              "hit": 0,
+              "sep": -1.7206,
+              "pairwise": 0.5,
+              "good_avg": 55.7146,
+              "bad_avg": 57.4352
+            },
+            {
+              "name": "Arnold Schwarzenegger",
+              "hit": 0,
+              "sep": -4.9184,
+              "pairwise": 0.0,
+              "good_avg": 57.7745,
+              "bad_avg": 62.6929
+            },
+            {
+              "name": "Marilyn Monroe",
+              "hit": 0,
+              "sep": -0.3336,
+              "pairwise": 0.5,
+              "good_avg": 56.8651,
+              "bad_avg": 57.1987
+            },
+            {
+              "name": "Whitney Houston",
+              "hit": 0,
+              "sep": -5.9558,
+              "pairwise": 0.0,
+              "good_avg": 58.1621,
+              "bad_avg": 64.1179
+            },
+            {
+              "name": "Meryl Streep",
+              "hit": 0,
+              "sep": -1.8747,
+              "pairwise": 0.25,
+              "good_avg": 54.8751,
+              "bad_avg": 56.7498
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Bill Gates",
+            "hit": 0,
+            "sep": -1.7206,
+            "pairwise": 0.5,
+            "good_avg": 55.7146,
+            "bad_avg": 57.4352
+          },
+          {
+            "name": "Britney Spears",
+            "hit": 1,
+            "sep": 1.4722,
+            "pairwise": 0.75,
+            "good_avg": 61.4896,
+            "bad_avg": 60.0174
+          },
+          {
+            "name": "Johnny Depp",
+            "hit": 1,
+            "sep": 3.3425,
+            "pairwise": 1.0,
+            "good_avg": 60.1775,
+            "bad_avg": 56.835
+          },
+          {
+            "name": "Michael Jordan",
+            "hit": 1,
+            "sep": 4.7262,
+            "pairwise": 1.0,
+            "good_avg": 64.8304,
+            "bad_avg": 60.1042
+          },
+          {
+            "name": "Tiger Woods",
+            "hit": 1,
+            "sep": 8.0014,
+            "pairwise": 1.0,
+            "good_avg": 59.6847,
+            "bad_avg": 51.6833
+          },
+          {
+            "name": "Roger Federer",
+            "hit": 1,
+            "sep": 2.587,
+            "pairwise": 0.75,
+            "good_avg": 63.9552,
+            "bad_avg": 61.3682
+          },
+          {
+            "name": "Diana, Princess of Wales",
+            "hit": 1,
+            "sep": 1.292,
+            "pairwise": 0.5,
+            "good_avg": 59.0786,
+            "bad_avg": 57.7866
+          },
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -4.9184,
+            "pairwise": 0.0,
+            "good_avg": 57.7745,
+            "bad_avg": 62.6929
+          },
+          {
+            "name": "Martha Stewart",
+            "hit": 1,
+            "sep": 2.5476,
+            "pairwise": 0.75,
+            "good_avg": 60.2454,
+            "bad_avg": 57.6978
+          },
+          {
+            "name": "Robert Downey Jr.",
+            "hit": 1,
+            "sep": 4.4869,
+            "pairwise": 1.0,
+            "good_avg": 56.4502,
+            "bad_avg": 51.9633
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -0.3336,
+            "pairwise": 0.5,
+            "good_avg": 56.8651,
+            "bad_avg": 57.1987
+          },
+          {
+            "name": "Whitney Houston",
+            "hit": 0,
+            "sep": -5.9558,
+            "pairwise": 0.0,
+            "good_avg": 58.1621,
+            "bad_avg": 64.1179
+          },
+          {
+            "name": "George Clooney",
+            "hit": 1,
+            "sep": 0.8719,
+            "pairwise": 0.5,
+            "good_avg": 56.3551,
+            "bad_avg": 55.4832
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -1.8747,
+            "pairwise": 0.25,
+            "good_avg": 54.8751,
+            "bad_avg": 56.7498
+          }
+        ],
+        "failures": [
+          {
+            "name": "Bill Gates",
+            "hit": 0,
+            "sep": -1.7206,
+            "pairwise": 0.5,
+            "good_avg": 55.7146,
+            "bad_avg": 57.4352
+          },
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -4.9184,
+            "pairwise": 0.0,
+            "good_avg": 57.7745,
+            "bad_avg": 62.6929
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -0.3336,
+            "pairwise": 0.5,
+            "good_avg": 56.8651,
+            "bad_avg": 57.1987
+          },
+          {
+            "name": "Whitney Houston",
+            "hit": 0,
+            "sep": -5.9558,
+            "pairwise": 0.0,
+            "good_avg": 58.1621,
+            "bad_avg": 64.1179
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -1.8747,
+            "pairwise": 0.25,
+            "good_avg": 54.8751,
+            "bad_avg": 56.7498
+          }
+        ],
+        "override": {
+          "n_pairs": 56,
+          "D_OVERRIDE_rate": 0.0357,
+          "D_RESCUE_rate": 0.1071,
+          "both_ok_rate": 0.5,
+          "cross_abs_D_p50": 2.0893,
+          "cross_abs_A_p50": 2.1922,
+          "cross_absD_over_absA_p50": 0.6984
+        },
+        "amplitude": {
+          "D_p50": 59.418,
+          "D_sd": 2.3388,
+          "adj_D_jump_p50": 2.1306,
+          "adj_D_jump_p90": 5.4097,
+          "abs_annual_dev_p50": 1.6337,
+          "abs_annual_dev_p90": 4.5684
+        }
+      }
+    },
+    "V2_DY_B": {
+      "architecture": "V2_DY_B",
+      "OLD_DEV": {
+        "annual": {
+          "n": 56,
+          "hit": "40/56",
+          "hit_rate": 71.43,
+          "pairwise_mean": 0.5749,
+          "raw_sep_mean": 0.6479,
+          "std_sep": 0.2334,
+          "failures": [
+            {
+              "name": "Barack Obama",
+              "hit": 0,
+              "sep": -0.0103,
+              "pairwise": 0.5,
+              "good_avg": 63.1988,
+              "bad_avg": 63.2091
+            },
+            {
+              "name": "Chris Brown",
+              "hit": 0,
+              "sep": -1.0638,
+              "pairwise": 0.3333,
+              "good_avg": 62.3388,
+              "bad_avg": 63.4026
+            },
+            {
+              "name": "Kamala Harris",
+              "hit": 0,
+              "sep": -0.2335,
+              "pairwise": 0.6071,
+              "good_avg": 59.6765,
+              "bad_avg": 59.91
+            },
+            {
+              "name": "John Ritter",
+              "hit": 0,
+              "sep": -2.1499,
+              "pairwise": 0.3333,
+              "good_avg": 59.6188,
+              "bad_avg": 61.7687
+            },
+            {
+              "name": "Sean Penn",
+              "hit": 0,
+              "sep": -3.8857,
+              "pairwise": 0.1333,
+              "good_avg": 58.8588,
+              "bad_avg": 62.7445
+            },
+            {
+              "name": "김부겸",
+              "hit": 0,
+              "sep": -0.5343,
+              "pairwise": 0.3333,
+              "good_avg": 62.605,
+              "bad_avg": 63.1393
+            },
+            {
+              "name": "홍준표",
+              "hit": 0,
+              "sep": -0.9283,
+              "pairwise": 0.2917,
+              "good_avg": 59.9519,
+              "bad_avg": 60.8802
+            },
+            {
+              "name": "박근혜",
+              "hit": 0,
+              "sep": -0.6207,
+              "pairwise": 0.4479,
+              "good_avg": 61.9819,
+              "bad_avg": 62.6026
+            },
+            {
+              "name": "이건희",
+              "hit": 0,
+              "sep": -0.7193,
+              "pairwise": 0.375,
+              "good_avg": 62.6971,
+              "bad_avg": 63.4164
+            },
+            {
+              "name": "이재용",
+              "hit": 0,
+              "sep": -0.9084,
+              "pairwise": 0.3714,
+              "good_avg": 61.8107,
+              "bad_avg": 62.7191
+            },
+            {
+              "name": "조용필",
+              "hit": 0,
+              "sep": -4.0688,
+              "pairwise": 0.0714,
+              "good_avg": 62.2898,
+              "bad_avg": 66.3586
+            },
+            {
+              "name": "노태우",
+              "hit": 0,
+              "sep": -0.2593,
+              "pairwise": 0.5,
+              "good_avg": 60.8745,
+              "bad_avg": 61.1338
+            },
+            {
+              "name": "전두환",
+              "hit": 0,
+              "sep": -2.9703,
+              "pairwise": 0.2031,
+              "good_avg": 59.1541,
+              "bad_avg": 62.1244
+            },
+            {
+              "name": "정주영",
+              "hit": 0,
+              "sep": -3.7208,
+              "pairwise": 0.1667,
+              "good_avg": 62.1659,
+              "bad_avg": 65.8867
+            },
+            {
+              "name": "이병철",
+              "hit": 0,
+              "sep": -1.1577,
+              "pairwise": 0.2778,
+              "good_avg": 61.0055,
+              "bad_avg": 62.1632
+            },
+            {
+              "name": "권지용",
+              "hit": 0,
+              "sep": -0.3062,
+              "pairwise": 0.4074,
+              "good_avg": 63.3315,
+              "bad_avg": 63.6377
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "hit": 1,
+            "sep": 1.8612,
+            "pairwise": 0.6049,
+            "good_avg": 63.6778,
+            "bad_avg": 61.8166
+          },
+          {
+            "name": "Barack Obama",
+            "hit": 0,
+            "sep": -0.0103,
+            "pairwise": 0.5,
+            "good_avg": 63.1988,
+            "bad_avg": 63.2091
+          },
+          {
+            "name": "Michael Jackson",
+            "hit": 1,
+            "sep": 0.7761,
+            "pairwise": 0.5929,
+            "good_avg": 61.2064,
+            "bad_avg": 60.4304
+          },
+          {
+            "name": "Justin Bieber",
+            "hit": 1,
+            "sep": 0.4253,
+            "pairwise": 0.6071,
+            "good_avg": 59.8719,
+            "bad_avg": 59.4465
+          },
+          {
+            "name": "Chris Brown",
+            "hit": 0,
+            "sep": -1.0638,
+            "pairwise": 0.3333,
+            "good_avg": 62.3388,
+            "bad_avg": 63.4026
+          },
+          {
+            "name": "Hillary Clinton",
+            "hit": 1,
+            "sep": 0.2808,
+            "pairwise": 0.5185,
+            "good_avg": 60.699,
+            "bad_avg": 60.4183
+          },
+          {
+            "name": "Kamala Harris",
+            "hit": 0,
+            "sep": -0.2335,
+            "pairwise": 0.6071,
+            "good_avg": 59.6765,
+            "bad_avg": 59.91
+          },
+          {
+            "name": "Al Gore",
+            "hit": 1,
+            "sep": 0.0316,
+            "pairwise": 0.5,
+            "good_avg": 60.5579,
+            "bad_avg": 60.5262
+          },
+          {
+            "name": "Amy Klobuchar",
+            "hit": 1,
+            "sep": 2.4771,
+            "pairwise": 0.9643,
+            "good_avg": 62.2542,
+            "bad_avg": 59.7771
+          },
+          {
+            "name": "Monica Lewinsky",
+            "hit": 1,
+            "sep": 2.0245,
+            "pairwise": 1.0,
+            "good_avg": 61.2637,
+            "bad_avg": 59.2392
+          },
+          {
+            "name": "Madonna",
+            "hit": 1,
+            "sep": 1.3305,
+            "pairwise": 0.675,
+            "good_avg": 63.6643,
+            "bad_avg": 62.3338
+          },
+          {
+            "name": "Elizabeth Taylor",
+            "hit": 1,
+            "sep": 1.849,
+            "pairwise": 0.7396,
+            "good_avg": 64.0357,
+            "bad_avg": 62.1867
+          },
+          {
+            "name": "Drake",
+            "hit": 1,
+            "sep": 0.9495,
+            "pairwise": 0.6719,
+            "good_avg": 60.9165,
+            "bad_avg": 59.9671
+          },
+          {
+            "name": "Diana Ross",
+            "hit": 1,
+            "sep": 1.7099,
+            "pairwise": 0.5357,
+            "good_avg": 62.7083,
+            "bad_avg": 60.9984
+          },
+          {
+            "name": "Dennis Rodman",
+            "hit": 1,
+            "sep": 1.4811,
+            "pairwise": 0.7556,
+            "good_avg": 61.579,
+            "bad_avg": 60.0979
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -2.1499,
+            "pairwise": 0.3333,
+            "good_avg": 59.6188,
+            "bad_avg": 61.7687
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -3.8857,
+            "pairwise": 0.1333,
+            "good_avg": 58.8588,
+            "bad_avg": 62.7445
+          },
+          {
+            "name": "Björk",
+            "hit": 1,
+            "sep": 2.1481,
+            "pairwise": 0.7143,
+            "good_avg": 61.7502,
+            "bad_avg": 59.6022
+          },
+          {
+            "name": "Kylie Jenner",
+            "hit": 1,
+            "sep": 0.1071,
+            "pairwise": 0.4,
+            "good_avg": 63.4641,
+            "bad_avg": 63.357
+          },
+          {
+            "name": "윤석열",
+            "hit": 1,
+            "sep": 0.0984,
+            "pairwise": 0.3571,
+            "good_avg": 63.6781,
+            "bad_avg": 63.5797
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -0.5343,
+            "pairwise": 0.3333,
+            "good_avg": 62.605,
+            "bad_avg": 63.1393
+          },
+          {
+            "name": "김어준",
+            "hit": 1,
+            "sep": 0.4015,
+            "pairwise": 0.5,
+            "good_avg": 63.3384,
+            "bad_avg": 62.9369
+          },
+          {
+            "name": "박나래",
+            "hit": 1,
+            "sep": 1.2587,
+            "pairwise": 0.7,
+            "good_avg": 60.9606,
+            "bad_avg": 59.7019
+          },
+          {
+            "name": "박정희",
+            "hit": 1,
+            "sep": 3.7705,
+            "pairwise": 0.625,
+            "good_avg": 62.5529,
+            "bad_avg": 58.7824
+          },
+          {
+            "name": "오세훈",
+            "hit": 1,
+            "sep": 1.0069,
+            "pairwise": 0.6111,
+            "good_avg": 61.9354,
+            "bad_avg": 60.9285
+          },
+          {
+            "name": "홍준표",
+            "hit": 0,
+            "sep": -0.9283,
+            "pairwise": 0.2917,
+            "good_avg": 59.9519,
+            "bad_avg": 60.8802
+          },
+          {
+            "name": "문재인",
+            "hit": 1,
+            "sep": 1.2868,
+            "pairwise": 0.8056,
+            "good_avg": 62.1777,
+            "bad_avg": 60.8909
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -0.6207,
+            "pairwise": 0.4479,
+            "good_avg": 61.9819,
+            "bad_avg": 62.6026
+          },
+          {
+            "name": "이건희",
+            "hit": 0,
+            "sep": -0.7193,
+            "pairwise": 0.375,
+            "good_avg": 62.6971,
+            "bad_avg": 63.4164
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -0.9084,
+            "pairwise": 0.3714,
+            "good_avg": 61.8107,
+            "bad_avg": 62.7191
+          },
+          {
+            "name": "봉준호",
+            "hit": 1,
+            "sep": 1.9761,
+            "pairwise": 0.7778,
+            "good_avg": 62.9534,
+            "bad_avg": 60.9773
+          },
+          {
+            "name": "김연아",
+            "hit": 1,
+            "sep": 1.4035,
+            "pairwise": 0.7292,
+            "good_avg": 63.0372,
+            "bad_avg": 61.6337
+          },
+          {
+            "name": "손흥민",
+            "hit": 1,
+            "sep": 0.5298,
+            "pairwise": 0.5556,
+            "good_avg": 62.6085,
+            "bad_avg": 62.0786
+          },
+          {
+            "name": "장미희",
+            "hit": 1,
+            "sep": 1.5879,
+            "pairwise": 0.8,
+            "good_avg": 61.7552,
+            "bad_avg": 60.1673
+          },
+          {
+            "name": "김희민",
+            "hit": 1,
+            "sep": 0.206,
+            "pairwise": 0.4286,
+            "good_avg": 62.9952,
+            "bad_avg": 62.7892
+          },
+          {
+            "name": "박찬호",
+            "hit": 1,
+            "sep": 1.4189,
+            "pairwise": 0.7857,
+            "good_avg": 59.6229,
+            "bad_avg": 58.204
+          },
+          {
+            "name": "박세리",
+            "hit": 1,
+            "sep": 3.8411,
+            "pairwise": 0.9,
+            "good_avg": 61.433,
+            "bad_avg": 57.5919
+          },
+          {
+            "name": "이명박",
+            "hit": 1,
+            "sep": 1.7173,
+            "pairwise": 0.5469,
+            "good_avg": 62.9438,
+            "bad_avg": 61.2265
+          },
+          {
+            "name": "조용필",
+            "hit": 0,
+            "sep": -4.0688,
+            "pairwise": 0.0714,
+            "good_avg": 62.2898,
+            "bad_avg": 66.3586
+          },
+          {
+            "name": "신성일",
+            "hit": 1,
+            "sep": 2.9353,
+            "pairwise": 0.8333,
+            "good_avg": 62.8876,
+            "bad_avg": 59.9523
+          },
+          {
+            "name": "남진",
+            "hit": 1,
+            "sep": 0.8886,
+            "pairwise": 0.625,
+            "good_avg": 62.1142,
+            "bad_avg": 61.2255
+          },
+          {
+            "name": "정몽헌",
+            "hit": 1,
+            "sep": 0.5238,
+            "pairwise": 0.6667,
+            "good_avg": 62.9287,
+            "bad_avg": 62.4049
+          },
+          {
+            "name": "정몽구",
+            "hit": 1,
+            "sep": 0.0245,
+            "pairwise": 0.4667,
+            "good_avg": 60.9241,
+            "bad_avg": 60.8996
+          },
+          {
+            "name": "김우중",
+            "hit": 1,
+            "sep": 0.5193,
+            "pairwise": 0.52,
+            "good_avg": 60.8819,
+            "bad_avg": 60.3626
+          },
+          {
+            "name": "김영삼",
+            "hit": 1,
+            "sep": 3.8629,
+            "pairwise": 0.9,
+            "good_avg": 61.8666,
+            "bad_avg": 58.0037
+          },
+          {
+            "name": "노태우",
+            "hit": 0,
+            "sep": -0.2593,
+            "pairwise": 0.5,
+            "good_avg": 60.8745,
+            "bad_avg": 61.1338
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -2.9703,
+            "pairwise": 0.2031,
+            "good_avg": 59.1541,
+            "bad_avg": 62.1244
+          },
+          {
+            "name": "정주영",
+            "hit": 0,
+            "sep": -3.7208,
+            "pairwise": 0.1667,
+            "good_avg": 62.1659,
+            "bad_avg": 65.8867
+          },
+          {
+            "name": "이병철",
+            "hit": 0,
+            "sep": -1.1577,
+            "pairwise": 0.2778,
+            "good_avg": 61.0055,
+            "bad_avg": 62.1632
+          },
+          {
+            "name": "신해철",
+            "hit": 1,
+            "sep": 4.7844,
+            "pairwise": 0.8333,
+            "good_avg": 61.8811,
+            "bad_avg": 57.0967
+          },
+          {
+            "name": "서태지",
+            "hit": 1,
+            "sep": 2.5089,
+            "pairwise": 0.8889,
+            "good_avg": 62.2173,
+            "bad_avg": 59.7084
+          },
+          {
+            "name": "노무현",
+            "hit": 1,
+            "sep": 0.7529,
+            "pairwise": 0.6094,
+            "good_avg": 63.3816,
+            "bad_avg": 62.6287
+          },
+          {
+            "name": "전소연",
+            "hit": 1,
+            "sep": 1.4689,
+            "pairwise": 0.75,
+            "good_avg": 62.0267,
+            "bad_avg": 60.5578
+          },
+          {
+            "name": "강호동",
+            "hit": 1,
+            "sep": 2.192,
+            "pairwise": 0.7222,
+            "good_avg": 61.6621,
+            "bad_avg": 59.4701
+          },
+          {
+            "name": "Lionel Messi",
+            "hit": 1,
+            "sep": 1.4047,
+            "pairwise": 0.6261,
+            "good_avg": 64.0319,
+            "bad_avg": 62.6273
+          },
+          {
+            "name": "권지용",
+            "hit": 0,
+            "sep": -0.3062,
+            "pairwise": 0.4074,
+            "good_avg": 63.3315,
+            "bad_avg": 63.6377
+          }
+        ],
+        "failures": [
+          {
+            "name": "Barack Obama",
+            "hit": 0,
+            "sep": -0.0103,
+            "pairwise": 0.5,
+            "good_avg": 63.1988,
+            "bad_avg": 63.2091
+          },
+          {
+            "name": "Chris Brown",
+            "hit": 0,
+            "sep": -1.0638,
+            "pairwise": 0.3333,
+            "good_avg": 62.3388,
+            "bad_avg": 63.4026
+          },
+          {
+            "name": "Kamala Harris",
+            "hit": 0,
+            "sep": -0.2335,
+            "pairwise": 0.6071,
+            "good_avg": 59.6765,
+            "bad_avg": 59.91
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -2.1499,
+            "pairwise": 0.3333,
+            "good_avg": 59.6188,
+            "bad_avg": 61.7687
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -3.8857,
+            "pairwise": 0.1333,
+            "good_avg": 58.8588,
+            "bad_avg": 62.7445
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -0.5343,
+            "pairwise": 0.3333,
+            "good_avg": 62.605,
+            "bad_avg": 63.1393
+          },
+          {
+            "name": "홍준표",
+            "hit": 0,
+            "sep": -0.9283,
+            "pairwise": 0.2917,
+            "good_avg": 59.9519,
+            "bad_avg": 60.8802
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -0.6207,
+            "pairwise": 0.4479,
+            "good_avg": 61.9819,
+            "bad_avg": 62.6026
+          },
+          {
+            "name": "이건희",
+            "hit": 0,
+            "sep": -0.7193,
+            "pairwise": 0.375,
+            "good_avg": 62.6971,
+            "bad_avg": 63.4164
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -0.9084,
+            "pairwise": 0.3714,
+            "good_avg": 61.8107,
+            "bad_avg": 62.7191
+          },
+          {
+            "name": "조용필",
+            "hit": 0,
+            "sep": -4.0688,
+            "pairwise": 0.0714,
+            "good_avg": 62.2898,
+            "bad_avg": 66.3586
+          },
+          {
+            "name": "노태우",
+            "hit": 0,
+            "sep": -0.2593,
+            "pairwise": 0.5,
+            "good_avg": 60.8745,
+            "bad_avg": 61.1338
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -2.9703,
+            "pairwise": 0.2031,
+            "good_avg": 59.1541,
+            "bad_avg": 62.1244
+          },
+          {
+            "name": "정주영",
+            "hit": 0,
+            "sep": -3.7208,
+            "pairwise": 0.1667,
+            "good_avg": 62.1659,
+            "bad_avg": 65.8867
+          },
+          {
+            "name": "이병철",
+            "hit": 0,
+            "sep": -1.1577,
+            "pairwise": 0.2778,
+            "good_avg": 61.0055,
+            "bad_avg": 62.1632
+          },
+          {
+            "name": "권지용",
+            "hit": 0,
+            "sep": -0.3062,
+            "pairwise": 0.4074,
+            "good_avg": 63.3315,
+            "bad_avg": 63.6377
+          }
+        ],
+        "override": {
+          "n_pairs": 1454,
+          "D_OVERRIDE_rate": 0.0536,
+          "D_RESCUE_rate": 0.044,
+          "both_ok_rate": 0.4966,
+          "cross_abs_D_p50": 0.9106,
+          "cross_abs_A_p50": 3.098,
+          "cross_absD_over_absA_p50": 0.3218
+        },
+        "amplitude": {
+          "D_p50": 61.7144,
+          "D_sd": 1.4065,
+          "adj_D_jump_p50": 0.9106,
+          "adj_D_jump_p90": 2.8179,
+          "abs_annual_dev_p50": 1.4521,
+          "abs_annual_dev_p90": 3.9116
+        }
+      },
+      "FRESH_A_DEV": {
+        "annual": {
+          "n": 14,
+          "hit": "9/14",
+          "hit_rate": 64.29,
+          "pairwise_mean": 0.6429,
+          "raw_sep_mean": 0.9533,
+          "std_sep": 0.38,
+          "failures": [
+            {
+              "name": "Bill Gates",
+              "hit": 0,
+              "sep": -2.6101,
+              "pairwise": 0.5,
+              "good_avg": 59.1631,
+              "bad_avg": 61.7732
+            },
+            {
+              "name": "Britney Spears",
+              "hit": 0,
+              "sep": -0.0401,
+              "pairwise": 0.5,
+              "good_avg": 62.5828,
+              "bad_avg": 62.6229
+            },
+            {
+              "name": "Arnold Schwarzenegger",
+              "hit": 0,
+              "sep": -3.7908,
+              "pairwise": 0.0,
+              "good_avg": 61.119,
+              "bad_avg": 64.9098
+            },
+            {
+              "name": "Marilyn Monroe",
+              "hit": 0,
+              "sep": -0.16,
+              "pairwise": 0.5,
+              "good_avg": 63.2211,
+              "bad_avg": 63.3811
+            },
+            {
+              "name": "Meryl Streep",
+              "hit": 0,
+              "sep": -0.7348,
+              "pairwise": 0.25,
+              "good_avg": 60.9356,
+              "bad_avg": 61.6703
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Bill Gates",
+            "hit": 0,
+            "sep": -2.6101,
+            "pairwise": 0.5,
+            "good_avg": 59.1631,
+            "bad_avg": 61.7732
+          },
+          {
+            "name": "Britney Spears",
+            "hit": 0,
+            "sep": -0.0401,
+            "pairwise": 0.5,
+            "good_avg": 62.5828,
+            "bad_avg": 62.6229
+          },
+          {
+            "name": "Johnny Depp",
+            "hit": 1,
+            "sep": 3.5704,
+            "pairwise": 1.0,
+            "good_avg": 65.0803,
+            "bad_avg": 61.5099
+          },
+          {
+            "name": "Michael Jordan",
+            "hit": 1,
+            "sep": 2.5799,
+            "pairwise": 1.0,
+            "good_avg": 65.2144,
+            "bad_avg": 62.6345
+          },
+          {
+            "name": "Tiger Woods",
+            "hit": 1,
+            "sep": 7.3208,
+            "pairwise": 1.0,
+            "good_avg": 61.6387,
+            "bad_avg": 54.3179
+          },
+          {
+            "name": "Roger Federer",
+            "hit": 1,
+            "sep": 2.9703,
+            "pairwise": 1.0,
+            "good_avg": 63.886,
+            "bad_avg": 60.9158
+          },
+          {
+            "name": "Diana, Princess of Wales",
+            "hit": 1,
+            "sep": 0.3142,
+            "pairwise": 0.5,
+            "good_avg": 59.9864,
+            "bad_avg": 59.6722
+          },
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -3.7908,
+            "pairwise": 0.0,
+            "good_avg": 61.119,
+            "bad_avg": 64.9098
+          },
+          {
+            "name": "Martha Stewart",
+            "hit": 1,
+            "sep": 1.068,
+            "pairwise": 0.75,
+            "good_avg": 62.619,
+            "bad_avg": 61.551
+          },
+          {
+            "name": "Robert Downey Jr.",
+            "hit": 1,
+            "sep": 0.9221,
+            "pairwise": 0.5,
+            "good_avg": 61.1869,
+            "bad_avg": 60.2648
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -0.16,
+            "pairwise": 0.5,
+            "good_avg": 63.2211,
+            "bad_avg": 63.3811
+          },
+          {
+            "name": "Whitney Houston",
+            "hit": 1,
+            "sep": 0.4687,
+            "pairwise": 0.75,
+            "good_avg": 62.73,
+            "bad_avg": 62.2613
+          },
+          {
+            "name": "George Clooney",
+            "hit": 1,
+            "sep": 1.4672,
+            "pairwise": 0.75,
+            "good_avg": 61.067,
+            "bad_avg": 59.5998
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -0.7348,
+            "pairwise": 0.25,
+            "good_avg": 60.9356,
+            "bad_avg": 61.6703
+          }
+        ],
+        "failures": [
+          {
+            "name": "Bill Gates",
+            "hit": 0,
+            "sep": -2.6101,
+            "pairwise": 0.5,
+            "good_avg": 59.1631,
+            "bad_avg": 61.7732
+          },
+          {
+            "name": "Britney Spears",
+            "hit": 0,
+            "sep": -0.0401,
+            "pairwise": 0.5,
+            "good_avg": 62.5828,
+            "bad_avg": 62.6229
+          },
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -3.7908,
+            "pairwise": 0.0,
+            "good_avg": 61.119,
+            "bad_avg": 64.9098
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -0.16,
+            "pairwise": 0.5,
+            "good_avg": 63.2211,
+            "bad_avg": 63.3811
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -0.7348,
+            "pairwise": 0.25,
+            "good_avg": 60.9356,
+            "bad_avg": 61.6703
+          }
+        ],
+        "override": {
+          "n_pairs": 56,
+          "D_OVERRIDE_rate": 0.0179,
+          "D_RESCUE_rate": 0.0714,
+          "both_ok_rate": 0.5179,
+          "cross_abs_D_p50": 0.9106,
+          "cross_abs_A_p50": 2.1922,
+          "cross_absD_over_absA_p50": 0.4418
+        },
+        "amplitude": {
+          "D_p50": 61.7144,
+          "D_sd": 1.117,
+          "adj_D_jump_p50": 0.6664,
+          "adj_D_jump_p90": 2.3978,
+          "abs_annual_dev_p50": 1.35,
+          "abs_annual_dev_p90": 3.6623
+        }
+      }
+    },
+    "V2_DY_C": {
+      "architecture": "V2_DY_C",
+      "OLD_DEV": {
+        "annual": {
+          "n": 56,
+          "hit": "41/56",
+          "hit_rate": 73.21,
+          "pairwise_mean": 0.5802,
+          "raw_sep_mean": 0.9623,
+          "std_sep": 0.2651,
+          "failures": [
+            {
+              "name": "Chris Brown",
+              "hit": 0,
+              "sep": -0.505,
+              "pairwise": 0.4333,
+              "good_avg": 60.0259,
+              "bad_avg": 60.5309
+            },
+            {
+              "name": "Kamala Harris",
+              "hit": 0,
+              "sep": -0.8063,
+              "pairwise": 0.6071,
+              "good_avg": 58.7609,
+              "bad_avg": 59.5672
+            },
+            {
+              "name": "Al Gore",
+              "hit": 0,
+              "sep": -0.0159,
+              "pairwise": 0.5833,
+              "good_avg": 59.5248,
+              "bad_avg": 59.5407
+            },
+            {
+              "name": "John Ritter",
+              "hit": 0,
+              "sep": -3.5641,
+              "pairwise": 0.2667,
+              "good_avg": 55.9631,
+              "bad_avg": 59.5272
+            },
+            {
+              "name": "Sean Penn",
+              "hit": 0,
+              "sep": -6.5129,
+              "pairwise": 0.0667,
+              "good_avg": 56.5066,
+              "bad_avg": 63.0196
+            },
+            {
+              "name": "Kylie Jenner",
+              "hit": 0,
+              "sep": -0.0912,
+              "pairwise": 0.4,
+              "good_avg": 62.2505,
+              "bad_avg": 62.3417
+            },
+            {
+              "name": "김부겸",
+              "hit": 0,
+              "sep": -0.9748,
+              "pairwise": 0.3333,
+              "good_avg": 60.8284,
+              "bad_avg": 61.8032
+            },
+            {
+              "name": "홍준표",
+              "hit": 0,
+              "sep": -1.6344,
+              "pairwise": 0.3333,
+              "good_avg": 59.2042,
+              "bad_avg": 60.8386
+            },
+            {
+              "name": "박근혜",
+              "hit": 0,
+              "sep": -0.1411,
+              "pairwise": 0.4896,
+              "good_avg": 59.4564,
+              "bad_avg": 59.5975
+            },
+            {
+              "name": "이재용",
+              "hit": 0,
+              "sep": -0.6924,
+              "pairwise": 0.4,
+              "good_avg": 60.4285,
+              "bad_avg": 61.1209
+            },
+            {
+              "name": "조용필",
+              "hit": 0,
+              "sep": -2.7511,
+              "pairwise": 0.0714,
+              "good_avg": 59.8126,
+              "bad_avg": 62.5638
+            },
+            {
+              "name": "김우중",
+              "hit": 0,
+              "sep": -1.3028,
+              "pairwise": 0.36,
+              "good_avg": 58.7097,
+              "bad_avg": 60.0125
+            },
+            {
+              "name": "전두환",
+              "hit": 0,
+              "sep": -3.4828,
+              "pairwise": 0.2656,
+              "good_avg": 56.4646,
+              "bad_avg": 59.9474
+            },
+            {
+              "name": "정주영",
+              "hit": 0,
+              "sep": -2.5388,
+              "pairwise": 0.3571,
+              "good_avg": 59.5616,
+              "bad_avg": 62.1004
+            },
+            {
+              "name": "이병철",
+              "hit": 0,
+              "sep": -1.0913,
+              "pairwise": 0.5,
+              "good_avg": 60.0614,
+              "bad_avg": 61.1527
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "hit": 1,
+            "sep": 3.1877,
+            "pairwise": 0.6296,
+            "good_avg": 62.1061,
+            "bad_avg": 58.9184
+          },
+          {
+            "name": "Barack Obama",
+            "hit": 1,
+            "sep": 0.8333,
+            "pairwise": 0.5556,
+            "good_avg": 61.6183,
+            "bad_avg": 60.785
+          },
+          {
+            "name": "Michael Jackson",
+            "hit": 1,
+            "sep": 1.0555,
+            "pairwise": 0.5786,
+            "good_avg": 60.7255,
+            "bad_avg": 59.67
+          },
+          {
+            "name": "Justin Bieber",
+            "hit": 1,
+            "sep": 0.6941,
+            "pairwise": 0.6071,
+            "good_avg": 57.934,
+            "bad_avg": 57.2399
+          },
+          {
+            "name": "Chris Brown",
+            "hit": 0,
+            "sep": -0.505,
+            "pairwise": 0.4333,
+            "good_avg": 60.0259,
+            "bad_avg": 60.5309
+          },
+          {
+            "name": "Hillary Clinton",
+            "hit": 1,
+            "sep": 0.4293,
+            "pairwise": 0.5,
+            "good_avg": 59.2956,
+            "bad_avg": 58.8663
+          },
+          {
+            "name": "Kamala Harris",
+            "hit": 0,
+            "sep": -0.8063,
+            "pairwise": 0.6071,
+            "good_avg": 58.7609,
+            "bad_avg": 59.5672
+          },
+          {
+            "name": "Al Gore",
+            "hit": 0,
+            "sep": -0.0159,
+            "pairwise": 0.5833,
+            "good_avg": 59.5248,
+            "bad_avg": 59.5407
+          },
+          {
+            "name": "Amy Klobuchar",
+            "hit": 1,
+            "sep": 3.5297,
+            "pairwise": 0.9643,
+            "good_avg": 60.8539,
+            "bad_avg": 57.3242
+          },
+          {
+            "name": "Monica Lewinsky",
+            "hit": 1,
+            "sep": 4.3041,
+            "pairwise": 1.0,
+            "good_avg": 61.0236,
+            "bad_avg": 56.7195
+          },
+          {
+            "name": "Madonna",
+            "hit": 1,
+            "sep": 2.5871,
+            "pairwise": 0.725,
+            "good_avg": 63.3503,
+            "bad_avg": 60.7632
+          },
+          {
+            "name": "Elizabeth Taylor",
+            "hit": 1,
+            "sep": 0.4368,
+            "pairwise": 0.4479,
+            "good_avg": 61.262,
+            "bad_avg": 60.8252
+          },
+          {
+            "name": "Drake",
+            "hit": 1,
+            "sep": 1.9077,
+            "pairwise": 0.6719,
+            "good_avg": 59.1454,
+            "bad_avg": 57.2377
+          },
+          {
+            "name": "Diana Ross",
+            "hit": 1,
+            "sep": 1.0161,
+            "pairwise": 0.5714,
+            "good_avg": 61.5682,
+            "bad_avg": 60.5521
+          },
+          {
+            "name": "Dennis Rodman",
+            "hit": 1,
+            "sep": 1.3612,
+            "pairwise": 0.6444,
+            "good_avg": 59.8105,
+            "bad_avg": 58.4494
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -3.5641,
+            "pairwise": 0.2667,
+            "good_avg": 55.9631,
+            "bad_avg": 59.5272
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -6.5129,
+            "pairwise": 0.0667,
+            "good_avg": 56.5066,
+            "bad_avg": 63.0196
+          },
+          {
+            "name": "Björk",
+            "hit": 1,
+            "sep": 3.4269,
+            "pairwise": 0.7619,
+            "good_avg": 59.1608,
+            "bad_avg": 55.7339
+          },
+          {
+            "name": "Kylie Jenner",
+            "hit": 0,
+            "sep": -0.0912,
+            "pairwise": 0.4,
+            "good_avg": 62.2505,
+            "bad_avg": 62.3417
+          },
+          {
+            "name": "윤석열",
+            "hit": 1,
+            "sep": 0.2398,
+            "pairwise": 0.3571,
+            "good_avg": 61.8266,
+            "bad_avg": 61.5868
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -0.9748,
+            "pairwise": 0.3333,
+            "good_avg": 60.8284,
+            "bad_avg": 61.8032
+          },
+          {
+            "name": "김어준",
+            "hit": 1,
+            "sep": 1.2175,
+            "pairwise": 0.5,
+            "good_avg": 62.4525,
+            "bad_avg": 61.235
+          },
+          {
+            "name": "박나래",
+            "hit": 1,
+            "sep": 3.0436,
+            "pairwise": 1.0,
+            "good_avg": 60.6455,
+            "bad_avg": 57.6019
+          },
+          {
+            "name": "박정희",
+            "hit": 1,
+            "sep": 5.3074,
+            "pairwise": 0.625,
+            "good_avg": 60.9832,
+            "bad_avg": 55.6758
+          },
+          {
+            "name": "오세훈",
+            "hit": 1,
+            "sep": 1.0968,
+            "pairwise": 0.6111,
+            "good_avg": 60.0375,
+            "bad_avg": 58.9406
+          },
+          {
+            "name": "홍준표",
+            "hit": 0,
+            "sep": -1.6344,
+            "pairwise": 0.3333,
+            "good_avg": 59.2042,
+            "bad_avg": 60.8386
+          },
+          {
+            "name": "문재인",
+            "hit": 1,
+            "sep": 1.8312,
+            "pairwise": 0.8056,
+            "good_avg": 62.2872,
+            "bad_avg": 60.456
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -0.1411,
+            "pairwise": 0.4896,
+            "good_avg": 59.4564,
+            "bad_avg": 59.5975
+          },
+          {
+            "name": "이건희",
+            "hit": 1,
+            "sep": 1.2705,
+            "pairwise": 0.575,
+            "good_avg": 61.5289,
+            "bad_avg": 60.2584
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -0.6924,
+            "pairwise": 0.4,
+            "good_avg": 60.4285,
+            "bad_avg": 61.1209
+          },
+          {
+            "name": "봉준호",
+            "hit": 1,
+            "sep": 3.4301,
+            "pairwise": 0.8889,
+            "good_avg": 61.3967,
+            "bad_avg": 57.9666
+          },
+          {
+            "name": "김연아",
+            "hit": 1,
+            "sep": 0.6438,
+            "pairwise": 0.5625,
+            "good_avg": 61.1585,
+            "bad_avg": 60.5146
+          },
+          {
+            "name": "손흥민",
+            "hit": 1,
+            "sep": 0.909,
+            "pairwise": 0.5556,
+            "good_avg": 61.6428,
+            "bad_avg": 60.7338
+          },
+          {
+            "name": "장미희",
+            "hit": 1,
+            "sep": 1.1605,
+            "pairwise": 0.8,
+            "good_avg": 60.6143,
+            "bad_avg": 59.4538
+          },
+          {
+            "name": "김희민",
+            "hit": 1,
+            "sep": 0.0391,
+            "pairwise": 0.4286,
+            "good_avg": 61.3258,
+            "bad_avg": 61.2868
+          },
+          {
+            "name": "박찬호",
+            "hit": 1,
+            "sep": 2.5342,
+            "pairwise": 0.7857,
+            "good_avg": 58.586,
+            "bad_avg": 56.0518
+          },
+          {
+            "name": "박세리",
+            "hit": 1,
+            "sep": 5.7381,
+            "pairwise": 0.9,
+            "good_avg": 61.3138,
+            "bad_avg": 55.5757
+          },
+          {
+            "name": "이명박",
+            "hit": 1,
+            "sep": 1.1532,
+            "pairwise": 0.4844,
+            "good_avg": 60.97,
+            "bad_avg": 59.8168
+          },
+          {
+            "name": "조용필",
+            "hit": 0,
+            "sep": -2.7511,
+            "pairwise": 0.0714,
+            "good_avg": 59.8126,
+            "bad_avg": 62.5638
+          },
+          {
+            "name": "신성일",
+            "hit": 1,
+            "sep": 2.4598,
+            "pairwise": 0.75,
+            "good_avg": 61.1621,
+            "bad_avg": 58.7022
+          },
+          {
+            "name": "남진",
+            "hit": 1,
+            "sep": 1.1975,
+            "pairwise": 0.625,
+            "good_avg": 59.8438,
+            "bad_avg": 58.6463
+          },
+          {
+            "name": "정몽헌",
+            "hit": 1,
+            "sep": 0.5662,
+            "pairwise": 0.6667,
+            "good_avg": 61.954,
+            "bad_avg": 61.3878
+          },
+          {
+            "name": "정몽구",
+            "hit": 1,
+            "sep": 0.8353,
+            "pairwise": 0.5333,
+            "good_avg": 59.6895,
+            "bad_avg": 58.8543
+          },
+          {
+            "name": "김우중",
+            "hit": 0,
+            "sep": -1.3028,
+            "pairwise": 0.36,
+            "good_avg": 58.7097,
+            "bad_avg": 60.0125
+          },
+          {
+            "name": "김영삼",
+            "hit": 1,
+            "sep": 4.3293,
+            "pairwise": 0.8,
+            "good_avg": 60.8282,
+            "bad_avg": 56.4989
+          },
+          {
+            "name": "노태우",
+            "hit": 1,
+            "sep": 0.297,
+            "pairwise": 0.5,
+            "good_avg": 60.6796,
+            "bad_avg": 60.3827
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -3.4828,
+            "pairwise": 0.2656,
+            "good_avg": 56.4646,
+            "bad_avg": 59.9474
+          },
+          {
+            "name": "정주영",
+            "hit": 0,
+            "sep": -2.5388,
+            "pairwise": 0.3571,
+            "good_avg": 59.5616,
+            "bad_avg": 62.1004
+          },
+          {
+            "name": "이병철",
+            "hit": 0,
+            "sep": -1.0913,
+            "pairwise": 0.5,
+            "good_avg": 60.0614,
+            "bad_avg": 61.1527
+          },
+          {
+            "name": "신해철",
+            "hit": 1,
+            "sep": 6.2348,
+            "pairwise": 0.8333,
+            "good_avg": 61.3973,
+            "bad_avg": 55.1625
+          },
+          {
+            "name": "서태지",
+            "hit": 1,
+            "sep": 2.1667,
+            "pairwise": 0.6667,
+            "good_avg": 61.1273,
+            "bad_avg": 58.9606
+          },
+          {
+            "name": "노무현",
+            "hit": 1,
+            "sep": 1.0818,
+            "pairwise": 0.5781,
+            "good_avg": 61.9083,
+            "bad_avg": 60.8265
+          },
+          {
+            "name": "전소연",
+            "hit": 1,
+            "sep": 2.4062,
+            "pairwise": 0.8214,
+            "good_avg": 59.6356,
+            "bad_avg": 57.2294
+          },
+          {
+            "name": "강호동",
+            "hit": 1,
+            "sep": 1.8412,
+            "pairwise": 0.6111,
+            "good_avg": 60.1609,
+            "bad_avg": 58.3197
+          },
+          {
+            "name": "Lionel Messi",
+            "hit": 1,
+            "sep": 2.1007,
+            "pairwise": 0.6176,
+            "good_avg": 62.4078,
+            "bad_avg": 60.3071
+          },
+          {
+            "name": "권지용",
+            "hit": 1,
+            "sep": 0.0948,
+            "pairwise": 0.4815,
+            "good_avg": 61.4879,
+            "bad_avg": 61.3931
+          }
+        ],
+        "failures": [
+          {
+            "name": "Chris Brown",
+            "hit": 0,
+            "sep": -0.505,
+            "pairwise": 0.4333,
+            "good_avg": 60.0259,
+            "bad_avg": 60.5309
+          },
+          {
+            "name": "Kamala Harris",
+            "hit": 0,
+            "sep": -0.8063,
+            "pairwise": 0.6071,
+            "good_avg": 58.7609,
+            "bad_avg": 59.5672
+          },
+          {
+            "name": "Al Gore",
+            "hit": 0,
+            "sep": -0.0159,
+            "pairwise": 0.5833,
+            "good_avg": 59.5248,
+            "bad_avg": 59.5407
+          },
+          {
+            "name": "John Ritter",
+            "hit": 0,
+            "sep": -3.5641,
+            "pairwise": 0.2667,
+            "good_avg": 55.9631,
+            "bad_avg": 59.5272
+          },
+          {
+            "name": "Sean Penn",
+            "hit": 0,
+            "sep": -6.5129,
+            "pairwise": 0.0667,
+            "good_avg": 56.5066,
+            "bad_avg": 63.0196
+          },
+          {
+            "name": "Kylie Jenner",
+            "hit": 0,
+            "sep": -0.0912,
+            "pairwise": 0.4,
+            "good_avg": 62.2505,
+            "bad_avg": 62.3417
+          },
+          {
+            "name": "김부겸",
+            "hit": 0,
+            "sep": -0.9748,
+            "pairwise": 0.3333,
+            "good_avg": 60.8284,
+            "bad_avg": 61.8032
+          },
+          {
+            "name": "홍준표",
+            "hit": 0,
+            "sep": -1.6344,
+            "pairwise": 0.3333,
+            "good_avg": 59.2042,
+            "bad_avg": 60.8386
+          },
+          {
+            "name": "박근혜",
+            "hit": 0,
+            "sep": -0.1411,
+            "pairwise": 0.4896,
+            "good_avg": 59.4564,
+            "bad_avg": 59.5975
+          },
+          {
+            "name": "이재용",
+            "hit": 0,
+            "sep": -0.6924,
+            "pairwise": 0.4,
+            "good_avg": 60.4285,
+            "bad_avg": 61.1209
+          },
+          {
+            "name": "조용필",
+            "hit": 0,
+            "sep": -2.7511,
+            "pairwise": 0.0714,
+            "good_avg": 59.8126,
+            "bad_avg": 62.5638
+          },
+          {
+            "name": "김우중",
+            "hit": 0,
+            "sep": -1.3028,
+            "pairwise": 0.36,
+            "good_avg": 58.7097,
+            "bad_avg": 60.0125
+          },
+          {
+            "name": "전두환",
+            "hit": 0,
+            "sep": -3.4828,
+            "pairwise": 0.2656,
+            "good_avg": 56.4646,
+            "bad_avg": 59.9474
+          },
+          {
+            "name": "정주영",
+            "hit": 0,
+            "sep": -2.5388,
+            "pairwise": 0.3571,
+            "good_avg": 59.5616,
+            "bad_avg": 62.1004
+          },
+          {
+            "name": "이병철",
+            "hit": 0,
+            "sep": -1.0913,
+            "pairwise": 0.5,
+            "good_avg": 60.0614,
+            "bad_avg": 61.1527
+          }
+        ],
+        "override": {
+          "n_pairs": 1454,
+          "D_OVERRIDE_rate": 0.033,
+          "D_RESCUE_rate": 0.0248,
+          "both_ok_rate": 0.5172,
+          "cross_abs_D_p50": 0.7317,
+          "cross_abs_A_p50": 3.098,
+          "cross_absD_over_absA_p50": 0.1936
+        },
+        "amplitude": {
+          "D_p50": 60.5396,
+          "D_sd": 0.8769,
+          "adj_D_jump_p50": 0.5689,
+          "adj_D_jump_p90": 1.7595,
+          "abs_annual_dev_p50": 2.1,
+          "abs_annual_dev_p90": 5.8102
+        }
+      },
+      "FRESH_A_DEV": {
+        "annual": {
+          "n": 14,
+          "hit": "9/14",
+          "hit_rate": 64.29,
+          "pairwise_mean": 0.5714,
+          "raw_sep_mean": 1.1741,
+          "std_sep": 0.3463,
+          "failures": [
+            {
+              "name": "Bill Gates",
+              "hit": 0,
+              "sep": -2.6186,
+              "pairwise": 0.5,
+              "good_avg": 56.7849,
+              "bad_avg": 59.4035
+            },
+            {
+              "name": "Arnold Schwarzenegger",
+              "hit": 0,
+              "sep": -5.6605,
+              "pairwise": 0.0,
+              "good_avg": 58.4299,
+              "bad_avg": 64.0904
+            },
+            {
+              "name": "Marilyn Monroe",
+              "hit": 0,
+              "sep": -0.3615,
+              "pairwise": 0.5,
+              "good_avg": 61.1013,
+              "bad_avg": 61.4628
+            },
+            {
+              "name": "Whitney Houston",
+              "hit": 0,
+              "sep": -2.0475,
+              "pairwise": 0.0,
+              "good_avg": 60.4034,
+              "bad_avg": 62.4509
+            },
+            {
+              "name": "Meryl Streep",
+              "hit": 0,
+              "sep": -0.5534,
+              "pairwise": 0.25,
+              "good_avg": 58.5009,
+              "bad_avg": 59.0543
+            }
+          ]
+        },
+        "subjects": [
+          {
+            "name": "Bill Gates",
+            "hit": 0,
+            "sep": -2.6186,
+            "pairwise": 0.5,
+            "good_avg": 56.7849,
+            "bad_avg": 59.4035
+          },
+          {
+            "name": "Britney Spears",
+            "hit": 1,
+            "sep": 2.5164,
+            "pairwise": 0.5,
+            "good_avg": 62.7145,
+            "bad_avg": 60.1981
+          },
+          {
+            "name": "Johnny Depp",
+            "hit": 1,
+            "sep": 3.2326,
+            "pairwise": 1.0,
+            "good_avg": 62.7997,
+            "bad_avg": 59.5671
+          },
+          {
+            "name": "Michael Jordan",
+            "hit": 1,
+            "sep": 1.4097,
+            "pairwise": 0.75,
+            "good_avg": 64.1679,
+            "bad_avg": 62.7582
+          },
+          {
+            "name": "Tiger Woods",
+            "hit": 1,
+            "sep": 10.4735,
+            "pairwise": 1.0,
+            "good_avg": 60.8912,
+            "bad_avg": 50.4177
+          },
+          {
+            "name": "Roger Federer",
+            "hit": 1,
+            "sep": 2.4831,
+            "pairwise": 0.75,
+            "good_avg": 63.074,
+            "bad_avg": 60.5909
+          },
+          {
+            "name": "Diana, Princess of Wales",
+            "hit": 1,
+            "sep": 1.2238,
+            "pairwise": 0.5,
+            "good_avg": 59.4828,
+            "bad_avg": 58.259
+          },
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -5.6605,
+            "pairwise": 0.0,
+            "good_avg": 58.4299,
+            "bad_avg": 64.0904
+          },
+          {
+            "name": "Martha Stewart",
+            "hit": 1,
+            "sep": 2.4993,
+            "pairwise": 0.75,
+            "good_avg": 61.4565,
+            "bad_avg": 58.9572
+          },
+          {
+            "name": "Robert Downey Jr.",
+            "hit": 1,
+            "sep": 2.5062,
+            "pairwise": 1.0,
+            "good_avg": 59.2612,
+            "bad_avg": 56.7551
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -0.3615,
+            "pairwise": 0.5,
+            "good_avg": 61.1013,
+            "bad_avg": 61.4628
+          },
+          {
+            "name": "Whitney Houston",
+            "hit": 0,
+            "sep": -2.0475,
+            "pairwise": 0.0,
+            "good_avg": 60.4034,
+            "bad_avg": 62.4509
+          },
+          {
+            "name": "George Clooney",
+            "hit": 1,
+            "sep": 1.3342,
+            "pairwise": 0.5,
+            "good_avg": 58.6672,
+            "bad_avg": 57.3329
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -0.5534,
+            "pairwise": 0.25,
+            "good_avg": 58.5009,
+            "bad_avg": 59.0543
+          }
+        ],
+        "failures": [
+          {
+            "name": "Bill Gates",
+            "hit": 0,
+            "sep": -2.6186,
+            "pairwise": 0.5,
+            "good_avg": 56.7849,
+            "bad_avg": 59.4035
+          },
+          {
+            "name": "Arnold Schwarzenegger",
+            "hit": 0,
+            "sep": -5.6605,
+            "pairwise": 0.0,
+            "good_avg": 58.4299,
+            "bad_avg": 64.0904
+          },
+          {
+            "name": "Marilyn Monroe",
+            "hit": 0,
+            "sep": -0.3615,
+            "pairwise": 0.5,
+            "good_avg": 61.1013,
+            "bad_avg": 61.4628
+          },
+          {
+            "name": "Whitney Houston",
+            "hit": 0,
+            "sep": -2.0475,
+            "pairwise": 0.0,
+            "good_avg": 60.4034,
+            "bad_avg": 62.4509
+          },
+          {
+            "name": "Meryl Streep",
+            "hit": 0,
+            "sep": -0.5534,
+            "pairwise": 0.25,
+            "good_avg": 58.5009,
+            "bad_avg": 59.0543
+          }
+        ],
+        "override": {
+          "n_pairs": 56,
+          "D_OVERRIDE_rate": 0.0179,
+          "D_RESCUE_rate": 0.0714,
+          "both_ok_rate": 0.5179,
+          "cross_abs_D_p50": 0.3402,
+          "cross_abs_A_p50": 2.1922,
+          "cross_absD_over_absA_p50": 0.1441
+        },
+        "amplitude": {
+          "D_p50": 60.4692,
+          "D_sd": 0.7873,
+          "adj_D_jump_p50": 0.349,
+          "adj_D_jump_p90": 1.8966,
+          "abs_annual_dev_p50": 1.9635,
+          "abs_annual_dev_p90": 5.4346
+        }
+      }
+    }
+  },
+  "ranking": [
+    "V2_DY_B",
+    "V2_DY_A",
+    "V2_DY_C"
+  ],
+  "selected": "V2_DY_B",
+  "status": "V2_DY_READY_TO_FREEZE",
+  "families": {
+    "V2_DY_A": {
+      "D": [
+        "fav_act",
+        "unfav_act",
+        "struct_net",
+        "has_samhap",
+        "has_day_chung",
+        "has_hap"
+      ],
+      "Y": [
+        "G_CLEAN_AXIS centered A",
+        "ilju trigger",
+        "ten-god career nudge",
+        "D×Y context"
+      ],
+      "gamma_D": 5.0,
+      "amp_calibration": "z_clip=±2.5, scale_floor=0.35"
+    },
+    "V2_DY_B": {
+      "D": [
+        "fav_minus_unfav",
+        "struct_activ",
+        "struct_disrupt",
+        "struct_excess"
+      ],
+      "Y": [
+        "G_CLEAN_AXIS A (0.65)",
+        "ilju/ten-god trigger (0.35)"
+      ],
+      "gamma_D": 3.0,
+      "amp_calibration": "z_clip=±2.5, scale_floor=0.35, gamma 4→3"
+    },
+    "V2_DY_C": {
+      "D": [
+        "fav_minus_unfav",
+        "struct_net"
+      ],
+      "Y": [
+        "G_CLEAN_AXIS A",
+        "small trigger"
+      ],
+      "gamma_D": 2.0,
+      "amp_calibration": "z_clip=±2.5, scale_floor=0.35"
+    }
+  },
+  "z_params": {
+    "fav_act": {
+      "center": 0.7,
+      "scale": 0.5189099999999998
+    },
+    "unfav_act": {
+      "center": 0.35,
+      "scale": 0.51891
+    },
+    "fav_minus_unfav": {
+      "center": 0.0,
+      "scale": 1.4826
+    },
+    "struct_activ": {
+      "center": 0.0,
+      "scale": 0.35
+    },
+    "struct_disrupt": {
+      "center": 0.0,
+      "scale": 0.35
+    },
+    "struct_net": {
+      "center": 0.69,
+      "scale": 1.022994
+    },
+    "struct_excess": {
+      "center": 0.0,
+      "scale": 0.35
+    },
+    "has_hap": {
+      "center": 1.0,
+      "scale": 0.35
+    },
+    "has_chung": {
+      "center": 0.0,
+      "scale": 0.35
+    },
+    "has_samhap": {
+      "center": 1.0,
+      "scale": 0.35
+    },
+    "has_day_chung": {
+      "center": 0.0,
+      "scale": 0.35
+    }
+  },
+  "selection_notes": {
+    "priority": [
+      "Fresh A annual pairwise",
+      "amplitude adj_D_p90 soft gate",
+      "OLD_DEV annual pairwise",
+      "override rate",
+      "simplicity tie-break"
+    ],
+    "adj_D_p90_soft_max": 18.0,
+    "z_clip": 2.5
+  },
+  "notes": {
+    "G_material": "G_CLEAN_AXIS (frozen annual reference; not retuned)",
+    "D_not_engine": "V2 D does not use engine 종합운점수 as input feature",
+    "max_architectures": 3,
+    "amp_calibration": "winsorized z + scale floor; B gamma 4→3 (not a new architecture)"
+  }
+}

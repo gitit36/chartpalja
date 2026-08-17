@@ -1,0 +1,47 @@
+{
+  "version": "V5_E1_SOURCE_SEMANTIC_QA_PROTOCOL_V1",
+  "status": "PREDECLARED_BEFORE_E1_EVENT_FREEZE_AND_BEFORE_ANY_PAIR_GAP_INSPECTION",
+  "purpose": "Assemble frozen E1 Batch 01-08 first-pass event rows and run source traceability plus content-only semantic-consistency QA before E1 event freeze. The gate may flag rows, but may not mutate event data or inspect local 1-5y pairability.",
+  "scope": {
+    "E1_subjects": 160,
+    "batches": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "eligible_and_excluded_rows_checked": true
+  },
+  "source_auto_gate": {
+    "url_must_be_http_or_https": true,
+    "page_fetch_attempted": true,
+    "subject_name_signal_required_when_page_text_available": true,
+    "year_or_event_keyword_signal_required": true,
+    "non_auto_pass_eligible_rows_require_manual_verification": true
+  },
+  "semantic_review_triggers": [
+    "source_quality medium or low",
+    "eligibility_note or exclude_reason contains semantic/recheck/verify/ambiguous",
+    "eligible COMPETITIVE negative row contains draw/tie in event text",
+    "eligible STATUS negative row uses resignation/removal/collapse/disqualification mechanism requiring policy-consistency check",
+    "eligible PROJECT positive row appears to be lifetime/honorary/general-career recognition rather than a discrete project outcome",
+    "same subject-year contains both eligible positive and negative polarity; retained but reviewed for same-event double coding"
+  ],
+  "semantic_review_is_content_only": true,
+  "forbidden": [
+    "change roster membership",
+    "delete an event because it hurts pairability",
+    "change event polarity/year/axis",
+    "generate local pairs",
+    "inspect 1-5 year gaps",
+    "chronology balancing",
+    "astrology generation",
+    "Control scoring",
+    "CONFIRM research"
+  ],
+  "pass_rule": "E1 event freeze remains blocked until every eligible source-review row and every eligible semantic-review row has an immutable manual resolution. Review resolution may confirm a row, mark an already-excluded row as audit-only, or identify an objective event-field correction; any correction requires a separately hashed correction file before freeze."
+}

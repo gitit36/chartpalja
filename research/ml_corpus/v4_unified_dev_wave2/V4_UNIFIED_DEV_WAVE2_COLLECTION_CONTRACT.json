@@ -1,0 +1,97 @@
+{
+  "version": "V4_UNIFIED_DEV_WAVE2_COLLECTION_CONTRACT_V1",
+  "created_at": "2026-08-16T20:40:00+09:00",
+  "status": "WAVE2_SUBJECT_UNIVERSE_PREDECLARED_BEFORE_EVENT_COLLECTION",
+  "prerequisite_wave1_status": "V4_UNIFIED_DEV_WAVE1_FROZEN_NEEDS_ADDITIONAL_WAVE",
+  "expected_wave1_roster_sha256": "8fc11f61c5102f3c2caa9890ec82819e164178ac0a96f4d721f4e13767fdc9a7",
+  "wave1_observed": {
+    "n_pairs": 73,
+    "axis_pairs": {
+      "COMPETITIVE": 28,
+      "PROJECT": 19,
+      "STATUS": 26
+    },
+    "pairability": {
+      "COMPETITIVE": 0.9333333333333333,
+      "PROJECT": 0.76,
+      "STATUS": 0.5777777777777777
+    },
+    "positive_earlier_share": 0.4931506849315068,
+    "same_year_pairs": 0
+  },
+  "final_target_pairs": {
+    "COMPETITIVE": 30,
+    "PROJECT": 25,
+    "STATUS": 45
+  },
+  "wave2_pair_deficits": {
+    "COMPETITIVE": 2,
+    "PROJECT": 6,
+    "STATUS": 19
+  },
+  "wave2_roster_target": {
+    "COMPETITIVE": 3,
+    "PROJECT": 8,
+    "STATUS": 33
+  },
+  "wave2_total_subjects": 44,
+  "selection_seed": 2026081602,
+  "birth_year_min": 1900,
+  "birth_year_max": 1995,
+  "axis_definitions": {
+    "COMPETITIVE": "Explicit win/title/record versus explicit loss/qualification failure.",
+    "PROJECT": "Commercial/critical/project success versus explicit project failure/cancellation.",
+    "STATUS": "Explicit role/electoral/leadership gain versus explicit role/electoral/leadership loss."
+  },
+  "seed_universe_amendment": {
+    "reason": "Wave 2 uses a newly predeclared role-only candidate universe rather than reusing the Wave 1 base list. It was expanded before any Wave 2 event collection or astrology scoring to provide enough fresh eligible subjects after prior-development and Wave-1 exclusions. Identity checking (name/birth identity only) is permitted; event outcomes and chronology are forbidden.",
+    "permitted_information_used_for_expansion": [
+      "broad public career/role category needed to preassign one of COMPETITIVE/PROJECT/STATUS",
+      "Rodden-AA birth record availability",
+      "birth year eligibility",
+      "membership in previously consumed development corpora",
+      "membership in frozen Wave 1 roster"
+    ],
+    "forbidden_information_not_used": [
+      "positive event year",
+      "negative event year",
+      "positive-earlier versus negative-earlier chronology",
+      "whether a subject is easy or hard to pair",
+      "astrology features",
+      "astrology scores",
+      "sealed holdout membership or outcomes"
+    ],
+    "wave1_base_reused_for_wave2_selection": false,
+    "identity_disambiguation_allowed": true,
+    "identity_disambiguation_may_use_event_outcomes": false
+  },
+  "selection_rules": {
+    "exclude_all_prior_development_subjects": true,
+    "exclude_all_wave1_subjects": true,
+    "wave1_subject_replacement": false,
+    "wave2_membership_conditioned_on_axis_deficit_only": true,
+    "chronology_direction_may_influence_membership": false,
+    "event_pairability_may_influence_membership": false,
+    "astrology_may_influence_membership": false,
+    "deterministic_hash_selection": true,
+    "female_guardrail_share": 0.2,
+    "female_guardrail_is_predeclared_not_posthoc": true
+  },
+  "post_freeze_rules": {
+    "wave2_subject_replacement_after_event_collection_begins": false,
+    "unpairable_subjects_remain_in_ledger": true,
+    "collection_scope": "BOUNDED_MAJOR_EVENT_SOURCE_SWEEP",
+    "pair_rule": "Within each frozen subject's preassigned axis, select the source-verified opposite-polarity pair with minimum absolute year gap among retained candidates; distinct years required.",
+    "astrology_feature_generation_allowed_before_wave2_freeze_qa": false,
+    "if_combined_targets_not_met_after_wave2": "Freeze Wave 2 and create another fresh wave using only remaining axis deficits and observed pairability; never directional chronology backfill.",
+    "if_combined_targets_met_after_wave2": "Run combined event-corpus freeze/QA first; only then permit astrology feature generation."
+  },
+  "sealed_holdouts": [
+    "NEW_CONFIRM",
+    "Validation_B",
+    "Public_CHECK",
+    "Public_FINAL"
+  ],
+  "expected_birth_dataset_sha256": "ca28a3fea1250b2ea01eb06a54b4921ec0bf790fdc14c5c561006f1c592c634b",
+  "birth_source_url": "https://huggingface.co/datasets/vedastro-org/15000-Famous-People-Birth-Date-Location/raw/main/PersonList-15k.csv"
+}

@@ -1,0 +1,119 @@
+{
+  "version": "SAJU_ML_V1_4_CANDIDATES_FROZEN_FOR_V2",
+  "created_at": "2026-08-15",
+  "training_discovery_corpus": "SAJU_ML_CORPUS_V1",
+  "model": {
+    "family": "PairwiseLogisticRegression",
+    "penalty": "l2",
+    "C": 0.3,
+    "standard_scaler": true,
+    "max_iter": 3000
+  },
+  "candidates": {
+    "TENGOD": {
+      "feature_count": 10,
+      "features": [
+        "tengod__dw_group_peer",
+        "tengod__dw_group_output",
+        "tengod__dw_group_wealth",
+        "tengod__dw_group_officer",
+        "tengod__dw_group_resource",
+        "tengod__sw_group_peer",
+        "tengod__sw_group_output",
+        "tengod__sw_group_wealth",
+        "tengod__sw_group_officer",
+        "tengod__sw_group_resource"
+      ]
+    },
+    "SHINSAL_ALL": {
+      "feature_count": 43,
+      "features": [
+        "shinsal__sw_세운_신살_길신__천을귀인_",
+        "shinsal__dw_신살_길신__천희_",
+        "shinsal__sw_세운_신살_길신__장성_",
+        "shinsal__sw_세운_신살_길신__문창귀인_",
+        "shinsal__sw_세운_신살_흉살__양인_",
+        "shinsal__dw_신살_길신__홍란_",
+        "shinsal__dw_신살_길신__count",
+        "shinsal__dw_breakdown_scalar",
+        "shinsal__dw_gongmang_is_gongmang",
+        "shinsal__sw_세운_신살_흉살__역마_",
+        "shinsal__dw_신살_길신__록신_",
+        "shinsal__sw_세운_신살_길신__천희_",
+        "shinsal__sw_세운_신살_흉살__고진_",
+        "shinsal__dw_신살_흉살__겁살_",
+        "shinsal__sw_세운_신살_흉살__망신_",
+        "shinsal__sw_세운_신살_흉살__겁살_",
+        "shinsal__sw_세운_신살_길신__반안_",
+        "shinsal__sw_세운_신살_길신__화개_",
+        "shinsal__dw_신살_길신__천을귀인_",
+        "shinsal__sw_세운_신살_흉살__count",
+        "shinsal__dw_gongmang_yfit_branch",
+        "shinsal__dw_신살_흉살__count",
+        "shinsal__dw_신살_흉살__도화_",
+        "shinsal__dw_신살_흉살__양인_",
+        "shinsal__sw_세운_신살_흉살__도화_",
+        "shinsal__dw_gongmang_unseong",
+        "shinsal__sw_세운_신살_길신__록신_",
+        "shinsal__sw_indicators_귀인력",
+        "shinsal__dw_신살_길신__문창귀인_",
+        "shinsal__dw_indicators_귀인력",
+        "shinsal__dw_noble_power",
+        "shinsal__dw_gongmang_rel",
+        "shinsal__dw_신살_길신__반안_",
+        "shinsal__dw_신살_길신__화개_",
+        "shinsal__dw_신살_흉살__과숙_",
+        "shinsal__sw_세운_신살_길신__count",
+        "shinsal__dw_신살_흉살__망신_",
+        "shinsal__dw_신살_길신__장성_",
+        "shinsal__sw_세운_신살_흉살__과숙_",
+        "shinsal__dw_신살_흉살__역마_",
+        "shinsal__dw_신살_흉살__고진_",
+        "shinsal__dw_gongmang_trine",
+        "shinsal__sw_세운_신살_길신__홍란_"
+      ]
+    }
+  },
+  "forbidden_for_v2_selection": [
+    "new feature families",
+    "feature combinations",
+    "hyperparameter sweep",
+    "TENGOD+SHINSAL composite"
+  ],
+  "v1_4_results": [
+    {
+      "candidate": "SHINSAL_ALL",
+      "n_features": 43,
+      "repeated_cv_mean": 0.5865031055900621,
+      "repeated_cv_p10": 0.5328778467908905,
+      "loso": 0.647912353347136,
+      "control": 0.4845410628019324,
+      "loso_delta_vs_control": 0.1633712905452036,
+      "permutation_p": 0.0339321357285429,
+      "bootstrap_mean_delta": 0.1633712905452036,
+      "bootstrap_ci_low": -0.0070445134575569,
+      "bootstrap_ci_high": 0.3400996376811591,
+      "bootstrap_p_delta_gt_0": 0.9702,
+      "subjects_better": 13,
+      "subjects_equal": 5,
+      "subjects_worse": 5
+    },
+    {
+      "candidate": "TENGOD",
+      "n_features": 10,
+      "repeated_cv_mean": 0.6057836438923396,
+      "repeated_cv_p10": 0.5621911663216012,
+      "loso": 0.6438750862663907,
+      "control": 0.4845410628019324,
+      "loso_delta_vs_control": 0.1593340234644582,
+      "permutation_p": 0.0558882235528942,
+      "bootstrap_mean_delta": 0.1593340234644582,
+      "bootstrap_ci_low": -0.0962642339544513,
+      "bootstrap_ci_high": 0.3996437198067627,
+      "bootstrap_p_delta_gt_0": 0.89285,
+      "subjects_better": 14,
+      "subjects_equal": 3,
+      "subjects_worse": 6
+    }
+  ]
+}

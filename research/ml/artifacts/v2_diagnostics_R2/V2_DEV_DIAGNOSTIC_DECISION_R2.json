@@ -1,0 +1,8 @@
+{
+  "notebook_version": "V2_DEV_DIAGNOSTICS_R2_20260815",
+  "frozen_v2_status": "V2_DEV_NO_CANDIDATE_SURVIVES",
+  "diagnostic_status": "COLLECT_MORE_FRESH_DEV_AROUND_TENGOD",
+  "confirmation_must_remain_sealed": true,
+  "confirmation_loaded": false,
+  "note": "Diagnostic result does not modify the predeclared V2 gate. No retuning or confirmation scoring."
+}

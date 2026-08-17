@@ -1,0 +1,24 @@
+{
+  "version": "V4_UNIFIED_DEV_WAVE1_SOURCE_COLLECTION_V1",
+  "status": "V4_UNIFIED_DEV_WAVE1_SOURCE_COLLECTION_COMPLETE",
+  "roster_status": "V4_UNIFIED_DEV_SUBJECT_UNIVERSE_FROZEN",
+  "roster_sha256": "8fc11f61c5102f3c2caa9890ec82819e164178ac0a96f4d721f4e13767fdc9a7",
+  "n_frozen_subjects": 100,
+  "n_pairable_subjects": 73,
+  "n_unpairable_subjects": 27,
+  "n_verified_selected_events": 146,
+  "pair_axis_counts": {
+    "COMPETITIVE": 28,
+    "STATUS": 26,
+    "PROJECT": 19
+  },
+  "positive_earlier_share": 0.4931506849315068,
+  "median_abs_year_gap": 3.0,
+  "same_year_pairs": 0,
+  "independent_domain_source_pair_share": 0.7534246575342466,
+  "collection_scope": "BOUNDED_MAJOR_EVENT_SOURCE_SWEEP",
+  "important_caveat": "This is a bounded major-event source sweep, not a claim of exhaustive whole-life event enumeration. Frozen subjects were never replaced. The minimum-gap rule applies within verified collected candidates.",
+  "astrology_scored": false,
+  "sealed_holdouts_loaded": false,
+  "next_rule": "Run 08 freeze/QA. Because Wave 1 yields fewer than 100 usable pairs, do not score astrology yet; freeze this wave and collect a second fresh roster wave using only axis deficits/pairability, never chronology direction."
+}

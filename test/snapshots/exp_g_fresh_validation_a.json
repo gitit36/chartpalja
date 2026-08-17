@@ -1,0 +1,823 @@
+{
+  "measured_at": "2026-08-12T23:01:09",
+  "phase": "G_FRESH_VALIDATION_A",
+  "candidate": "G_CLEAN_AXIS",
+  "phase0": {
+    "sha_expected": "b1b593610a04f1adc2a6b1349a011e452cbfebfe15d0df287597b45aea52f0ba",
+    "sha_actual": "b1b593610a04f1adc2a6b1349a011e452cbfebfe15d0df287597b45aea52f0ba",
+    "sha_ok": true,
+    "schema_failures": [],
+    "schema_ok": true,
+    "n_subjects": 30
+  },
+  "phase1": {
+    "n_fresh": 30,
+    "n_unique": 30,
+    "n_existing_blocked": 58,
+    "overlap": [],
+    "overlap_ok": true,
+    "n_validation_a": 15,
+    "n_validation_b": 15,
+    "split_ok": true,
+    "validation_a": [
+      "Bill Gates",
+      "Britney Spears",
+      "Johnny Depp",
+      "Michael Jordan",
+      "Tiger Woods",
+      "Roger Federer",
+      "Diana, Princess of Wales",
+      "Winston Churchill",
+      "Arnold Schwarzenegger",
+      "Martha Stewart",
+      "Robert Downey Jr.",
+      "Marilyn Monroe",
+      "Whitney Houston",
+      "George Clooney",
+      "Meryl Streep"
+    ],
+    "validation_b": [
+      "Steve Jobs",
+      "Elon Musk",
+      "Angelina Jolie",
+      "Tom Hanks",
+      "Serena Williams",
+      "LeBron James",
+      "Charles III",
+      "Elizabeth II",
+      "Albert Einstein",
+      "Sylvester Stallone",
+      "Adele",
+      "Kurt Cobain",
+      "Muhammad Ali",
+      "Nicolas Cage",
+      "Judy Garland"
+    ]
+  },
+  "phase3": {
+    "grade_counts": {
+      "A": 9,
+      "AA": 19,
+      "B": 2
+    },
+    "flags": [
+      {
+        "name": "Bill Gates",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -17.0,
+        "dataset_eot": 16.269
+      },
+      {
+        "name": "Steve Jobs",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 13.0,
+        "dataset_eot": -13.604
+      },
+      {
+        "name": "Elon Musk",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 2.0,
+        "dataset_eot": -2.804
+      },
+      {
+        "name": "Britney Spears",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -11.0,
+        "dataset_eot": 10.504
+      },
+      {
+        "name": "Britney Spears",
+        "flag": "hour_branch_diff_vs_supplied_EOT"
+      },
+      {
+        "name": "Angelina Jolie",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -3.0,
+        "dataset_eot": 2.115
+      },
+      {
+        "name": "Johnny Depp",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -2.0,
+        "dataset_eot": 1.219
+      },
+      {
+        "name": "Tom Hanks",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 4.0,
+        "dataset_eot": -5.085
+      },
+      {
+        "name": "Michael Jordan",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 14.0,
+        "dataset_eot": -14.197
+      },
+      {
+        "name": "Serena Williams",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -9.0,
+        "dataset_eot": 8.859
+      },
+      {
+        "name": "Tiger Woods",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 2.0,
+        "dataset_eot": -2.205
+      },
+      {
+        "name": "LeBron James",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 2.0,
+        "dataset_eot": -2.53
+      },
+      {
+        "name": "Roger Federer",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 6.0,
+        "dataset_eot": -5.963
+      },
+      {
+        "name": "Diana, Princess of Wales",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 4.0,
+        "dataset_eot": -3.527
+      },
+      {
+        "name": "Charles III",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -15.0,
+        "dataset_eot": 15.071
+      },
+      {
+        "name": "Elizabeth II",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -2.0,
+        "dataset_eot": 1.131
+      },
+      {
+        "name": "Winston Churchill",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -12.0,
+        "dataset_eot": 11.219
+      },
+      {
+        "name": "Winston Churchill",
+        "flag": "hour_branch_diff_vs_supplied_EOT"
+      },
+      {
+        "name": "Albert Einstein",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 10.0,
+        "dataset_eot": -9.921
+      },
+      {
+        "name": "Albert Einstein",
+        "flag": "hour_branch_diff_vs_supplied_EOT"
+      },
+      {
+        "name": "Arnold Schwarzenegger",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 6.0,
+        "dataset_eot": -6.573
+      },
+      {
+        "name": "Martha Stewart",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 6.0,
+        "dataset_eot": -6.393
+      },
+      {
+        "name": "Sylvester Stallone",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 4.0,
+        "dataset_eot": -4.473
+      },
+      {
+        "name": "Robert Downey Jr.",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 3.0,
+        "dataset_eot": -3.422
+      },
+      {
+        "name": "Adele",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -4.0,
+        "dataset_eot": 3.546
+      },
+      {
+        "name": "Marilyn Monroe",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -3.0,
+        "dataset_eot": 2.583
+      },
+      {
+        "name": "Kurt Cobain",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 13.0,
+        "dataset_eot": -14.007
+      },
+      {
+        "name": "Whitney Houston",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 5.0,
+        "dataset_eot": -5.777
+      },
+      {
+        "name": "Muhammad Ali",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 8.0,
+        "dataset_eot": -9.417
+      },
+      {
+        "name": "George Clooney",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -4.0,
+        "dataset_eot": 3.526
+      },
+      {
+        "name": "Nicolas Cage",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": 5.0,
+        "dataset_eot": -5.4
+      },
+      {
+        "name": "Judy Garland",
+        "flag": "supplied_includes_EOT_engine_does_not",
+        "delta_vs_supplied": -2.0,
+        "dataset_eot": 1.048
+      }
+    ],
+    "eligible": [
+      {
+        "name": "Bill Gates",
+        "split": "validation_a",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Steve Jobs",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Elon Musk",
+        "split": "validation_b",
+        "source_quality": "Rodden_B",
+        "grade": "B",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Britney Spears",
+        "split": "validation_a",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Angelina Jolie",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Johnny Depp",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Tom Hanks",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Michael Jordan",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Serena Williams",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Tiger Woods",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "LeBron James",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Roger Federer",
+        "split": "validation_a",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Diana, Princess of Wales",
+        "split": "validation_a",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Charles III",
+        "split": "validation_b",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Elizabeth II",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Arnold Schwarzenegger",
+        "split": "validation_a",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Martha Stewart",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Sylvester Stallone",
+        "split": "validation_b",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Robert Downey Jr.",
+        "split": "validation_a",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Adele",
+        "split": "validation_b",
+        "source_quality": "Rodden_B",
+        "grade": "B",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Marilyn Monroe",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Kurt Cobain",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Whitney Houston",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Muhammad Ali",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "George Clooney",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Nicolas Cage",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Meryl Streep",
+        "split": "validation_a",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      },
+      {
+        "name": "Judy Garland",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": true,
+        "exclusion_reasons": []
+      }
+    ],
+    "ineligible": [
+      {
+        "name": "Winston Churchill",
+        "split": "validation_a",
+        "source_quality": "Rodden_A",
+        "grade": "A",
+        "eligible_for_primary_validation": false,
+        "exclusion_reasons": [
+          "engine_year_out_of_range(1874)"
+        ]
+      },
+      {
+        "name": "Albert Einstein",
+        "split": "validation_b",
+        "source_quality": "Rodden_AA",
+        "grade": "AA",
+        "eligible_for_primary_validation": false,
+        "exclusion_reasons": [
+          "engine_year_out_of_range(1879)"
+        ]
+      }
+    ],
+    "note": "Engine solar correction = longitude×4min only (no equation of time). Dataset precompute includes EOT → large delta_vs_supplied is expected; scoring uses engine_recomputed clock. Lon-only consistency gate: |Δ|≤1.0 min."
+  },
+  "birth_qa_summary": {
+    "max_abs_delta_vs_supplied": 17.0,
+    "max_abs_delta_vs_lon_only": 0.933,
+    "n_hour_branch_mismatch_vs_supplied": 3,
+    "n_out_of_sajupy_year_range": 2
+  },
+  "label_issue_count": 0,
+  "validation_a": {
+    "subjects_attempted": 15,
+    "subjects_eligible": 14,
+    "skipped": [
+      {
+        "name": "Winston Churchill",
+        "reason": "ineligible_pre_score"
+      }
+    ],
+    "n_good_labels": 28,
+    "n_bad_labels": 28,
+    "G_CLEAN_AXIS": {
+      "n_packs": 14,
+      "n_eval_subjects": 14,
+      "hit": "7/14",
+      "hit_rate": 50.0,
+      "pairwise_mean": 0.4286,
+      "standardized_separation": -0.2185,
+      "raw_separation_mean": -2.5546,
+      "raw_separation_median": -0.2975,
+      "auc_micro": 0.4847,
+      "auc_macro": 0.4286,
+      "subject_sep_dist": {
+        "median": -0.2975,
+        "p25": -10.2272,
+        "p75": 6.153,
+        "worst": -25.7669
+      },
+      "subjects": [
+        {
+          "name": "Bill Gates",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 60.9355,
+          "bad_avg": 58.5532,
+          "separation": 2.3823,
+          "hit": 1,
+          "pairwise": 0.75
+        },
+        {
+          "name": "Britney Spears",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 66.0874,
+          "bad_avg": 53.9939,
+          "separation": 12.0936,
+          "hit": 1,
+          "pairwise": 1.0
+        },
+        {
+          "name": "Johnny Depp",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 62.1523,
+          "bad_avg": 51.793,
+          "separation": 10.3593,
+          "hit": 1,
+          "pairwise": 1.0
+        },
+        {
+          "name": "Michael Jordan",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 70.7144,
+          "bad_avg": 69.5095,
+          "separation": 1.2049,
+          "hit": 1,
+          "pairwise": 0.5
+        },
+        {
+          "name": "Tiger Woods",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 62.8146,
+          "bad_avg": 55.6531,
+          "separation": 7.1615,
+          "hit": 1,
+          "pairwise": 0.75
+        },
+        {
+          "name": "Roger Federer",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 83.2161,
+          "bad_avg": 80.0888,
+          "separation": 3.1273,
+          "hit": 1,
+          "pairwise": 0.75
+        },
+        {
+          "name": "Diana, Princess of Wales",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 57.5405,
+          "bad_avg": 47.6281,
+          "separation": 9.9125,
+          "hit": 1,
+          "pairwise": 0.75
+        },
+        {
+          "name": "Arnold Schwarzenegger",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 61.3716,
+          "bad_avg": 70.8959,
+          "separation": -9.5243,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "Martha Stewart",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 59.1977,
+          "bad_avg": 64.6946,
+          "separation": -5.497,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "Robert Downey Jr.",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 38.8247,
+          "bad_avg": 49.4766,
+          "separation": -10.6519,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "Marilyn Monroe",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 49.6479,
+          "bad_avg": 60.1094,
+          "separation": -10.4615,
+          "hit": 0,
+          "pairwise": 0.25
+        },
+        {
+          "name": "Whitney Houston",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 62.0,
+          "bad_avg": 87.7669,
+          "separation": -25.7669,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "George Clooney",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 55.5832,
+          "bad_avg": 57.3832,
+          "separation": -1.8,
+          "hit": 0,
+          "pairwise": 0.25
+        },
+        {
+          "name": "Meryl Streep",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 51.4128,
+          "bad_avg": 69.7168,
+          "separation": -18.3039,
+          "hit": 0,
+          "pairwise": 0.0
+        }
+      ],
+      "failures": [
+        {
+          "name": "Arnold Schwarzenegger",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 61.3716,
+          "bad_avg": 70.8959,
+          "separation": -9.5243,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "Martha Stewart",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 59.1977,
+          "bad_avg": 64.6946,
+          "separation": -5.497,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "Robert Downey Jr.",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 38.8247,
+          "bad_avg": 49.4766,
+          "separation": -10.6519,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "Marilyn Monroe",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 49.6479,
+          "bad_avg": 60.1094,
+          "separation": -10.4615,
+          "hit": 0,
+          "pairwise": 0.25
+        },
+        {
+          "name": "Whitney Houston",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 62.0,
+          "bad_avg": 87.7669,
+          "separation": -25.7669,
+          "hit": 0,
+          "pairwise": 0.0
+        },
+        {
+          "name": "George Clooney",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 55.5832,
+          "bad_avg": 57.3832,
+          "separation": -1.8,
+          "hit": 0,
+          "pairwise": 0.25
+        },
+        {
+          "name": "Meryl Streep",
+          "status": "ok",
+          "n_good": 2,
+          "n_bad": 2,
+          "good_avg": 51.4128,
+          "bad_avg": 69.7168,
+          "separation": -18.3039,
+          "hit": 0,
+          "pairwise": 0.0
+        }
+      ],
+      "structural": {
+        "G_dist": {
+          "mean": 50.8279,
+          "sd": 3.3426,
+          "p05": 44.8938,
+          "p50": 51.2075,
+          "p95": 55.6007
+        },
+        "A_within_block_sd_p50": 3.0662,
+        "sat_rate": 0.0,
+        "n_year_scores": 1400
+      }
+    },
+    "G_REF_readonly": {
+      "hit": "7/14",
+      "hit_rate": 50.0,
+      "pairwise_mean": 0.4464,
+      "standardized_separation": -0.175,
+      "note": "read-only reference; does not change candidate"
+    }
+  },
+  "validation_b": {
+    "scored": false,
+    "subjects": [
+      "Steve Jobs",
+      "Elon Musk",
+      "Angelina Jolie",
+      "Tom Hanks",
+      "Serena Williams",
+      "LeBron James",
+      "Charles III",
+      "Elizabeth II",
+      "Albert Einstein",
+      "Sylvester Stallone",
+      "Adele",
+      "Kurt Cobain",
+      "Muhammad Ali",
+      "Nicolas Cage",
+      "Judy Garland"
+    ]
+  },
+  "decision": {
+    "status": "REQUIRES_MODEL_REVISION",
+    "rationale": "hit=7/14 pairwise=0.4286 std_sep=-0.2185 sat=0.0 eligible_scored=14/15 (ineligible pre-score: [{'name': 'Winston Churchill', 'split': 'validation_a', 'source_quality': 'Rodden_A', 'grade': 'A', 'eligible_for_primary_validation': False, 'exclusion_reasons': ['engine_year_out_of_range(1874)']}, {'name': 'Albert Einstein', 'split': 'validation_b', 'source_quality': 'Rodden_AA', 'grade': 'AA', 'eligible_for_primary_validation': False, 'exclusion_reasons': ['engine_year_out_of_range(1879)']}]) Validation B not scored. Failed predeclared floors or concentration check; do not open B; revise model offline."
+  },
+  "dev_reference_not_pooled": {
+    "G_CLEAN_AXIS_dev_hold": {
+      "std_sep": 0.152,
+      "pairwise": 0.583,
+      "hit": 60.0
+    }
+  }
+}

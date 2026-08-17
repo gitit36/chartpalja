@@ -1,0 +1,1022 @@
+{
+  "measured_at": "2026-08-12T02:48:43",
+  "phase": "B9_robustness_validation",
+  "frozen": {
+    "alpha": 1.0,
+    "kappa": 0.0,
+    "beta": 0.25,
+    "centering": "median",
+    "d_source": "engine_pillar",
+    "interaction": false,
+    "synergy": false,
+    "arm_sewoon": "B9A_alpha_1",
+    "arm_month": "B9C_beta_0.25"
+  },
+  "no_hp_search": true,
+  "engine_untouched": true,
+  "corpus": {
+    "n_month_packs": 14,
+    "n_labeled": 14
+  },
+  "subject_breakdown_b9": {
+    "subjects": [
+      {
+        "name": "Donald Trump",
+        "bucket": "train",
+        "n_good": 9,
+        "n_bad": 9,
+        "hit": 1,
+        "pairwise": 0.5926,
+        "raw_sep": 4.0146,
+        "std_sep": 0.3902,
+        "good_mean": 63.8166,
+        "bad_mean": 59.802
+      },
+      {
+        "name": "Barack Obama",
+        "bucket": "holdout",
+        "n_good": 9,
+        "n_bad": 4,
+        "hit": 1,
+        "pairwise": 0.5556,
+        "raw_sep": 0.4412,
+        "std_sep": 0.0472,
+        "good_mean": 70.3452,
+        "bad_mean": 69.904
+      },
+      {
+        "name": "Michael Jackson",
+        "bucket": "train",
+        "n_good": 9,
+        "n_bad": 7,
+        "hit": 1,
+        "pairwise": 0.5714,
+        "raw_sep": 1.9784,
+        "std_sep": 0.2086,
+        "good_mean": 65.4833,
+        "bad_mean": 63.5049
+      },
+      {
+        "name": "Justin Bieber",
+        "bucket": "holdout",
+        "n_good": 6,
+        "n_bad": 4,
+        "hit": 1,
+        "pairwise": 0.7917,
+        "raw_sep": 6.6615,
+        "std_sep": 1.1547,
+        "good_mean": 65.2615,
+        "bad_mean": 58.6
+      },
+      {
+        "name": "Chris Brown",
+        "bucket": "train",
+        "n_good": 4,
+        "n_bad": 4,
+        "hit": 1,
+        "pairwise": 0.5625,
+        "raw_sep": 1.0392,
+        "std_sep": 0.1603,
+        "good_mean": 58.0124,
+        "bad_mean": 56.9732
+      },
+      {
+        "name": "Hillary Clinton",
+        "bucket": "train",
+        "n_good": 7,
+        "n_bad": 5,
+        "hit": 1,
+        "pairwise": 0.4286,
+        "raw_sep": 0.0005,
+        "std_sep": 0.0,
+        "good_mean": 70.0412,
+        "bad_mean": 70.0406
+      },
+      {
+        "name": "Kamala Harris",
+        "bucket": "train",
+        "n_good": 7,
+        "n_bad": 2,
+        "hit": 1,
+        "pairwise": 0.5,
+        "raw_sep": 1.0415,
+        "std_sep": 0.1324,
+        "good_mean": 53.6915,
+        "bad_mean": 52.65
+      },
+      {
+        "name": "Al Gore",
+        "bucket": "train",
+        "n_good": 8,
+        "n_bad": 4,
+        "hit": 0,
+        "pairwise": 0.5,
+        "raw_sep": -0.3955,
+        "std_sep": -0.0252,
+        "good_mean": 63.3095,
+        "bad_mean": 63.705
+      },
+      {
+        "name": "Monica Lewinsky",
+        "bucket": "holdout",
+        "n_good": 2,
+        "n_bad": 2,
+        "hit": 1,
+        "pairwise": 1.0,
+        "raw_sep": 19.9252,
+        "std_sep": 3.0116,
+        "good_mean": 76.2038,
+        "bad_mean": 56.2786
+      },
+      {
+        "name": "Madonna",
+        "bucket": "train",
+        "n_good": 9,
+        "n_bad": 4,
+        "hit": 1,
+        "pairwise": 0.6944,
+        "raw_sep": 3.7246,
+        "std_sep": 0.4999,
+        "good_mean": 64.023,
+        "bad_mean": 60.2984
+      },
+      {
+        "name": "Dennis Rodman",
+        "bucket": "train",
+        "n_good": 7,
+        "n_bad": 4,
+        "hit": 1,
+        "pairwise": 0.6071,
+        "raw_sep": 0.1358,
+        "std_sep": 0.0183,
+        "good_mean": 58.0786,
+        "bad_mean": 57.9428
+      },
+      {
+        "name": "Björk",
+        "bucket": "train",
+        "n_good": 7,
+        "n_bad": 3,
+        "hit": 1,
+        "pairwise": 0.5238,
+        "raw_sep": 2.1091,
+        "std_sep": 0.3582,
+        "good_mean": 50.5027,
+        "bad_mean": 48.3936
+      },
+      {
+        "name": "윤석열",
+        "bucket": "holdout",
+        "n_good": 5,
+        "n_bad": 4,
+        "hit": 1,
+        "pairwise": 0.8,
+        "raw_sep": 5.3649,
+        "std_sep": 0.8514,
+        "good_mean": 71.7226,
+        "bad_mean": 66.3577
+      },
+      {
+        "name": "Lionel Messi",
+        "bucket": "holdout",
+        "n_good": 12,
+        "n_bad": 6,
+        "hit": 0,
+        "pairwise": 0.3889,
+        "raw_sep": -4.2774,
+        "std_sep": -0.342,
+        "good_mean": 74.6024,
+        "bad_mean": 78.8798
+      }
+    ],
+    "aggregate": {
+      "all": {
+        "n": 14,
+        "hit_rate": 85.71,
+        "pairwise_mean": 0.6083,
+        "std_sep_mean": 0.4618,
+        "raw_sep_mean": 2.9831
+      },
+      "train": {
+        "n": 9,
+        "hit_rate": 88.89,
+        "pairwise_mean": 0.5534,
+        "std_sep_mean": 0.1936,
+        "raw_sep_mean": 1.5165
+      },
+      "holdout": {
+        "n": 5,
+        "hit_rate": 80.0,
+        "pairwise_mean": 0.7072,
+        "std_sep_mean": 0.9446,
+        "raw_sep_mean": 5.6231
+      }
+    },
+    "subject_dist": {
+      "hit": {
+        "n": 14,
+        "median": 1.0,
+        "p25": 1.0,
+        "p75": 1.0,
+        "worst": 0.0
+      },
+      "pairwise": {
+        "n": 14,
+        "median": 0.567,
+        "p25": 0.506,
+        "p75": 0.6726,
+        "worst": 0.3889
+      },
+      "std_sep": {
+        "n": 14,
+        "median": 0.1845,
+        "p25": 0.0255,
+        "p75": 0.4725,
+        "worst": -0.342
+      }
+    },
+    "loo": {
+      "n": 14,
+      "hit_rate_dist": {
+        "n": 14,
+        "median": 84.62,
+        "p25": 84.62,
+        "p75": 84.62,
+        "worst": 84.62
+      },
+      "pairwise_dist": {
+        "n": 14,
+        "median": 0.6116,
+        "p25": 0.6034,
+        "p75": 0.6162,
+        "worst": 0.5782
+      },
+      "std_sep_dist": {
+        "n": 14,
+        "median": 0.4831,
+        "p25": 0.461,
+        "p75": 0.4954,
+        "worst": 0.2657
+      },
+      "rows": [
+        {
+          "left_out": "Donald Trump",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6095,
+            "std_sep_mean": 0.4673,
+            "raw_sep_mean": 2.9038
+          }
+        },
+        {
+          "left_out": "Barack Obama",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6124,
+            "std_sep_mean": 0.4937,
+            "raw_sep_mean": 3.1786
+          }
+        },
+        {
+          "left_out": "Michael Jackson",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6112,
+            "std_sep_mean": 0.4813,
+            "raw_sep_mean": 3.0604
+          }
+        },
+        {
+          "left_out": "Justin Bieber",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.5942,
+            "std_sep_mean": 0.4085,
+            "raw_sep_mean": 2.7002
+          }
+        },
+        {
+          "left_out": "Chris Brown",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6119,
+            "std_sep_mean": 0.485,
+            "raw_sep_mean": 3.1326
+          }
+        },
+        {
+          "left_out": "Hillary Clinton",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6222,
+            "std_sep_mean": 0.4974,
+            "raw_sep_mean": 3.2125
+          }
+        },
+        {
+          "left_out": "Kamala Harris",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6167,
+            "std_sep_mean": 0.4872,
+            "raw_sep_mean": 3.1325
+          }
+        },
+        {
+          "left_out": "Al Gore",
+          "left_out_hit": 0,
+          "rest": {
+            "n": 13,
+            "hit_rate": 92.31,
+            "pairwise_mean": 0.6167,
+            "std_sep_mean": 0.4993,
+            "raw_sep_mean": 3.243
+          }
+        },
+        {
+          "left_out": "Monica Lewinsky",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.5782,
+            "std_sep_mean": 0.2657,
+            "raw_sep_mean": 1.6799
+          }
+        },
+        {
+          "left_out": "Madonna",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6017,
+            "std_sep_mean": 0.4589,
+            "raw_sep_mean": 2.9261
+          }
+        },
+        {
+          "left_out": "Dennis Rodman",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6084,
+            "std_sep_mean": 0.4959,
+            "raw_sep_mean": 3.2021
+          }
+        },
+        {
+          "left_out": "Björk",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.6148,
+            "std_sep_mean": 0.4698,
+            "raw_sep_mean": 3.0503
+          }
+        },
+        {
+          "left_out": "윤석열",
+          "left_out_hit": 1,
+          "rest": {
+            "n": 13,
+            "hit_rate": 84.62,
+            "pairwise_mean": 0.5936,
+            "std_sep_mean": 0.4319,
+            "raw_sep_mean": 2.7999
+          }
+        },
+        {
+          "left_out": "Lionel Messi",
+          "left_out_hit": 0,
+          "rest": {
+            "n": 13,
+            "hit_rate": 92.31,
+            "pairwise_mean": 0.6252,
+            "std_sep_mean": 0.5237,
+            "raw_sep_mean": 3.5416
+          }
+        }
+      ]
+    },
+    "worst_subjects": [
+      {
+        "name": "Lionel Messi",
+        "bucket": "holdout",
+        "hit": 0,
+        "pairwise": 0.3889,
+        "std_sep": -0.342,
+        "raw_sep": -4.2774
+      },
+      {
+        "name": "Al Gore",
+        "bucket": "train",
+        "hit": 0,
+        "pairwise": 0.5,
+        "std_sep": -0.0252,
+        "raw_sep": -0.3955
+      },
+      {
+        "name": "Hillary Clinton",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.4286,
+        "std_sep": 0.0,
+        "raw_sep": 0.0005
+      },
+      {
+        "name": "Kamala Harris",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.5,
+        "std_sep": 0.1324,
+        "raw_sep": 1.0415
+      },
+      {
+        "name": "Björk",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.5238,
+        "std_sep": 0.3582,
+        "raw_sep": 2.1091
+      }
+    ]
+  },
+  "q_abs_thresholds": {
+    "n": 2172,
+    "p95": 25.714285714285715,
+    "p99": 32.85714285714286,
+    "max": 49.99999999999999
+  },
+  "q_outlier_sensitivity": {
+    "baseline": {
+      "q_abs_max": null,
+      "labeled_filter": {
+        "labeled_total": 163,
+        "labeled_kept": 163,
+        "labeled_dropped": 0
+      },
+      "aggregate": {
+        "all": {
+          "n": 14,
+          "hit_rate": 85.71,
+          "pairwise_mean": 0.6083,
+          "std_sep_mean": 0.4618,
+          "raw_sep_mean": 2.9831
+        },
+        "train": {
+          "n": 9,
+          "hit_rate": 88.89,
+          "pairwise_mean": 0.5534,
+          "std_sep_mean": 0.1936,
+          "raw_sep_mean": 1.5165
+        },
+        "holdout": {
+          "n": 5,
+          "hit_rate": 80.0,
+          "pairwise_mean": 0.7072,
+          "std_sep_mean": 0.9446,
+          "raw_sep_mean": 5.6231
+        }
+      },
+      "subject_dist": {
+        "hit": {
+          "n": 14,
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0,
+          "worst": 0.0
+        },
+        "pairwise": {
+          "n": 14,
+          "median": 0.567,
+          "p25": 0.506,
+          "p75": 0.6726,
+          "worst": 0.3889
+        },
+        "std_sep": {
+          "n": 14,
+          "median": 0.1845,
+          "p25": 0.0255,
+          "p75": 0.4725,
+          "worst": -0.342
+        }
+      },
+      "worst_subjects": [
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "pairwise": 0.3889,
+          "std_sep": -0.342,
+          "raw_sep": -4.2774
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "pairwise": 0.5,
+          "std_sep": -0.0252,
+          "raw_sep": -0.3955
+        },
+        {
+          "name": "Hillary Clinton",
+          "bucket": "train",
+          "hit": 1,
+          "pairwise": 0.4286,
+          "std_sep": 0.0,
+          "raw_sep": 0.0005
+        }
+      ]
+    },
+    "exclude_top1pct_absQ": {
+      "q_abs_max": 32.85714285714286,
+      "labeled_filter": {
+        "labeled_total": 163,
+        "labeled_kept": 161,
+        "labeled_dropped": 2
+      },
+      "aggregate": {
+        "all": {
+          "n": 14,
+          "hit_rate": 85.71,
+          "pairwise_mean": 0.6072,
+          "std_sep_mean": 0.3645,
+          "raw_sep_mean": 2.4868
+        },
+        "train": {
+          "n": 9,
+          "hit_rate": 88.89,
+          "pairwise_mean": 0.5516,
+          "std_sep_mean": 0.187,
+          "raw_sep_mean": 1.4587
+        },
+        "holdout": {
+          "n": 5,
+          "hit_rate": 80.0,
+          "pairwise_mean": 0.7072,
+          "std_sep_mean": 0.6839,
+          "raw_sep_mean": 4.3374
+        }
+      },
+      "subject_dist": {
+        "hit": {
+          "n": 14,
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0,
+          "worst": 0.0
+        },
+        "pairwise": {
+          "n": 14,
+          "median": 0.5591,
+          "p25": 0.506,
+          "p75": 0.6726,
+          "worst": 0.3889
+        },
+        "std_sep": {
+          "n": 14,
+          "median": 0.1547,
+          "p25": 0.0255,
+          "p75": 0.4725,
+          "worst": -0.342
+        }
+      },
+      "worst_subjects": [
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "pairwise": 0.3889,
+          "std_sep": -0.342,
+          "raw_sep": -4.2774
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "pairwise": 0.5,
+          "std_sep": -0.0252,
+          "raw_sep": -0.3955
+        },
+        {
+          "name": "Hillary Clinton",
+          "bucket": "train",
+          "hit": 1,
+          "pairwise": 0.4286,
+          "std_sep": 0.0,
+          "raw_sep": 0.0005
+        }
+      ]
+    },
+    "exclude_top5pct_absQ": {
+      "q_abs_max": 25.714285714285715,
+      "labeled_filter": {
+        "labeled_total": 163,
+        "labeled_kept": 156,
+        "labeled_dropped": 7
+      },
+      "aggregate": {
+        "all": {
+          "n": 14,
+          "hit_rate": 85.71,
+          "pairwise_mean": 0.6116,
+          "std_sep_mean": 0.4135,
+          "raw_sep_mean": 2.7378
+        },
+        "train": {
+          "n": 9,
+          "hit_rate": 88.89,
+          "pairwise_mean": 0.5614,
+          "std_sep_mean": 0.217,
+          "raw_sep_mean": 1.7369
+        },
+        "holdout": {
+          "n": 5,
+          "hit_rate": 80.0,
+          "pairwise_mean": 0.702,
+          "std_sep_mean": 0.7672,
+          "raw_sep_mean": 4.5394
+        }
+      },
+      "subject_dist": {
+        "hit": {
+          "n": 14,
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0,
+          "worst": 0.0
+        },
+        "pairwise": {
+          "n": 14,
+          "median": 0.5848,
+          "p25": 0.506,
+          "p75": 0.6771,
+          "worst": 0.35
+        },
+        "std_sep": {
+          "n": 14,
+          "median": 0.2592,
+          "p25": 0.0255,
+          "p75": 0.4857,
+          "worst": -0.449
+        }
+      },
+      "worst_subjects": [
+        {
+          "name": "Lionel Messi",
+          "bucket": "holdout",
+          "hit": 0,
+          "pairwise": 0.35,
+          "std_sep": -0.449,
+          "raw_sep": -5.4948
+        },
+        {
+          "name": "Al Gore",
+          "bucket": "train",
+          "hit": 0,
+          "pairwise": 0.5,
+          "std_sep": -0.0252,
+          "raw_sep": -0.3955
+        },
+        {
+          "name": "Hillary Clinton",
+          "bucket": "train",
+          "hit": 1,
+          "pairwise": 0.4286,
+          "std_sep": 0.0,
+          "raw_sep": 0.0005
+        }
+      ]
+    }
+  },
+  "hierarchy_ratio": {
+    "n": 181,
+    "beta": 0.25,
+    "p25": 0.5842,
+    "p50": 0.7726,
+    "p75": 0.9218,
+    "p90": 1.0696,
+    "max": 1.621,
+    "P_gt_1": 0.1602,
+    "P_gt_1_5": 0.0055,
+    "guard_median_lt_1": true
+  },
+  "reference_b8_month": {
+    "note": "Fair month-label reference (B8 remap on B7 sewoon parent).",
+    "aggregate": {
+      "all": {
+        "n": 14,
+        "hit_rate": 85.71,
+        "pairwise_mean": 0.5818,
+        "std_sep_mean": 0.3605,
+        "raw_sep_mean": 4.4577
+      },
+      "train": {
+        "n": 9,
+        "hit_rate": 77.78,
+        "pairwise_mean": 0.5337,
+        "std_sep_mean": 0.2296,
+        "raw_sep_mean": 2.7275
+      },
+      "holdout": {
+        "n": 5,
+        "hit_rate": 100.0,
+        "pairwise_mean": 0.6683,
+        "std_sep_mean": 0.5962,
+        "raw_sep_mean": 7.572
+      }
+    },
+    "subject_dist": {
+      "hit": {
+        "n": 14,
+        "median": 1.0,
+        "p25": 1.0,
+        "p75": 1.0,
+        "worst": 0.0
+      },
+      "pairwise": {
+        "n": 14,
+        "median": 0.5774,
+        "p25": 0.4732,
+        "p75": 0.6898,
+        "worst": 0.381
+      },
+      "std_sep": {
+        "n": 14,
+        "median": 0.3883,
+        "p25": 0.1074,
+        "p75": 0.6765,
+        "worst": -0.4594
+      }
+    },
+    "worst_subjects": [
+      {
+        "name": "Al Gore",
+        "bucket": "train",
+        "hit": 0,
+        "pairwise": 0.4062,
+        "std_sep": -0.4594,
+        "raw_sep": -6.9593
+      },
+      {
+        "name": "Chris Brown",
+        "bucket": "train",
+        "hit": 0,
+        "pairwise": 0.4375,
+        "std_sep": -0.2173,
+        "raw_sep": -3.2949
+      },
+      {
+        "name": "Björk",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.381,
+        "std_sep": 0.1186,
+        "raw_sep": 1.0275
+      },
+      {
+        "name": "Dennis Rodman",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.4643,
+        "std_sep": 0.1037,
+        "raw_sep": 0.4629
+      },
+      {
+        "name": "Kamala Harris",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.5,
+        "std_sep": 0.1023,
+        "raw_sep": 0.9786
+      }
+    ]
+  },
+  "reference_b7_year": {
+    "note": "B7 year scores on month-event years — NOT directly comparable to B9 month. B7 daewoon climate uses year_resid, so year-level signal leaks into the parent.",
+    "comparable_to_b9_month": false,
+    "aggregate": {
+      "all": {
+        "n": 14,
+        "hit_rate": 85.71,
+        "pairwise_mean": 0.6257,
+        "std_sep_mean": 0.5088,
+        "raw_sep_mean": 4.3323
+      },
+      "train": {
+        "n": 9,
+        "hit_rate": 77.78,
+        "pairwise_mean": 0.5784,
+        "std_sep_mean": 0.3925,
+        "raw_sep_mean": 4.0943
+      },
+      "holdout": {
+        "n": 5,
+        "hit_rate": 100.0,
+        "pairwise_mean": 0.7108,
+        "std_sep_mean": 0.7182,
+        "raw_sep_mean": 4.7607
+      }
+    },
+    "subjects": [
+      {
+        "name": "Donald Trump",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.6852,
+        "std_sep": 0.7774,
+        "raw_sep": 10.2556
+      },
+      {
+        "name": "Barack Obama",
+        "bucket": "holdout",
+        "hit": 1,
+        "pairwise": 0.6389,
+        "std_sep": 0.4334,
+        "raw_sep": 2.225
+      },
+      {
+        "name": "Michael Jackson",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.6429,
+        "std_sep": 0.6269,
+        "raw_sep": 6.0508
+      },
+      {
+        "name": "Justin Bieber",
+        "bucket": "holdout",
+        "hit": 1,
+        "pairwise": 0.5417,
+        "std_sep": 0.4392,
+        "raw_sep": 4.4833
+      },
+      {
+        "name": "Chris Brown",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.4375,
+        "std_sep": 0.2955,
+        "raw_sep": 3.8
+      },
+      {
+        "name": "Hillary Clinton",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.5286,
+        "std_sep": 0.4054,
+        "raw_sep": 5.02
+      },
+      {
+        "name": "Kamala Harris",
+        "bucket": "train",
+        "hit": 0,
+        "pairwise": 0.4643,
+        "std_sep": -0.1711,
+        "raw_sep": -1.6571
+      },
+      {
+        "name": "Al Gore",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.5938,
+        "std_sep": 0.5071,
+        "raw_sep": 6.175
+      },
+      {
+        "name": "Monica Lewinsky",
+        "bucket": "holdout",
+        "hit": 1,
+        "pairwise": 1.0,
+        "std_sep": 1.2392,
+        "raw_sep": 8.4
+      },
+      {
+        "name": "Madonna",
+        "bucket": "train",
+        "hit": 0,
+        "pairwise": 0.4722,
+        "std_sep": -0.0621,
+        "raw_sep": -0.3722
+      },
+      {
+        "name": "Dennis Rodman",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.5714,
+        "std_sep": 0.362,
+        "raw_sep": 2.1286
+      },
+      {
+        "name": "Björk",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.8095,
+        "std_sep": 0.7913,
+        "raw_sep": 5.4476
+      },
+      {
+        "name": "윤석열",
+        "bucket": "holdout",
+        "hit": 1,
+        "pairwise": 0.7,
+        "std_sep": 0.8607,
+        "raw_sep": 5.62
+      },
+      {
+        "name": "Lionel Messi",
+        "bucket": "holdout",
+        "hit": 1,
+        "pairwise": 0.6736,
+        "std_sep": 0.6186,
+        "raw_sep": 3.075
+      }
+    ]
+  },
+  "comparability_warning": "B7 predictive results are NOT directly comparable to B9: year-level information entered B7's parent climate via year_resid. Use B8 month as the primary reference arm for month-label KPIs.",
+  "verdict": {
+    "decision": "shadow_prototype_candidate",
+    "rationale": "Frozen B9 passes core robustness gates for shadow/prototype integration. Not a production promote; engine remains untouched.",
+    "checks": [
+      {
+        "name": "holdout_hit_ge_60",
+        "ok": true,
+        "detail": "holdout hit=80.0"
+      },
+      {
+        "name": "train_holdout_gap_lt_25pp",
+        "ok": true,
+        "detail": "train=88.89 hold=80.0"
+      },
+      {
+        "name": "loo_worst_hit_ge_70",
+        "ok": true,
+        "detail": "LOO worst hit_rate=84.62"
+      },
+      {
+        "name": "ratio_median_lt_1",
+        "ok": true,
+        "detail": "ratio p50=0.7726 P(>1)=0.1602"
+      },
+      {
+        "name": "ratio_P_gt_1_5_lt_0_25",
+        "ok": true,
+        "detail": "P(ratio>1.5)=0.0055"
+      },
+      {
+        "name": "q_outlier_hit_stable",
+        "ok": true,
+        "detail": "all hit baseline=85.71 excl5%=85.71"
+      },
+      {
+        "name": "b8_reference_recorded",
+        "ok": true,
+        "detail": "B8 holdout hit=100.0 (reference; B7 year not comparable)"
+      }
+    ],
+    "n_hard_failures": 0,
+    "worst_subjects_preview": [
+      {
+        "name": "Lionel Messi",
+        "bucket": "holdout",
+        "hit": 0,
+        "pairwise": 0.3889,
+        "std_sep": -0.342,
+        "raw_sep": -4.2774
+      },
+      {
+        "name": "Al Gore",
+        "bucket": "train",
+        "hit": 0,
+        "pairwise": 0.5,
+        "std_sep": -0.0252,
+        "raw_sep": -0.3955
+      },
+      {
+        "name": "Hillary Clinton",
+        "bucket": "train",
+        "hit": 1,
+        "pairwise": 0.4286,
+        "std_sep": 0.0,
+        "raw_sep": 0.0005
+      }
+    ]
+  }
+}

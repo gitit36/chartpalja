@@ -1,0 +1,74 @@
+{
+  "version": "V5_DISCOVERY_FASTTRACK_READINESS_DECISION_V1",
+  "notebook_version": "SAJU_ML_V5_DISCOVERY_FASTTRACK_20260817",
+  "created_at": "2026-08-17T12:46:18",
+  "status": "V5_DISCOVERY_FASTTRACK_READY_FOR_ASTROLOGY_AND_MODEL_DEVELOPMENT",
+  "methodology_mode": "POST_OBSERVATION_EXPLORATORY_DEV_WITH_SEALED_CONFIRM",
+  "E2": {
+    "subjects_n": 160,
+    "full_rows_n": 259,
+    "research_eligible_rows_n": 228,
+    "primary_trusted_rows_n": 185,
+    "broad_sensitivity_rows_n": 227,
+    "full_frozen_sha256": "09fc3f5f81dec95973910703610ae70aef4e14dfe98b2cc438d599a0f733d3af",
+    "research_eligible_frozen_sha256": "c8964eb73cefab51bd66dbedefca85f654740e798f46a1eb3bb7f5185bc0adbf",
+    "primary_trusted_sha256": "6588d878b3f01d926e61c5ecf0f79b6592508bb4f5ae6a65dd7e2c11a06868a0",
+    "broad_sensitivity_sha256": "510ed0f1c003b746d9438667df359b554a51ac2237a77de555011210be9d315a"
+  },
+  "combined_primary": {
+    "pair_rows_n": 193,
+    "pairable_subjects": {
+      "TOTAL": 100,
+      "COMPETITIVE": 57,
+      "PROJECT": 9,
+      "STATUS": 34
+    },
+    "positive_earlier_share": 0.6217616580310881,
+    "pairs_sha256": "c64c20cdee7a6376d9cd3fb83a28e9c103317363812ac0d613f5080712cf596d"
+  },
+  "combined_broad": {
+    "pair_rows_n": 197,
+    "pairable_subjects": {
+      "TOTAL": 104,
+      "COMPETITIVE": 60,
+      "PROJECT": 10,
+      "STATUS": 34
+    },
+    "positive_earlier_share": 0.6294416243654822,
+    "pairs_sha256": "9705c8dfd0fd9d8bb67e9af4e218390eee6bb87eade7a808416829a1240a72ae"
+  },
+  "old_predeclared_thresholds_reported_only": {
+    "TOTAL": 80,
+    "COMPETITIVE": 20,
+    "PROJECT": 20,
+    "STATUS": 25
+  },
+  "old_gate_primary_pass_by_dimension": {
+    "TOTAL": true,
+    "COMPETITIVE": true,
+    "PROJECT": false,
+    "STATUS": true
+  },
+  "warnings": [
+    "Original predeclared coverage diagnostic below threshold: PROJECT 9 < 20. Under the fast-track amendment this is a warning, not a discovery blocker."
+  ],
+  "hard_blockers": [],
+  "nuisance_diagnostics_sha256": "e9195d07649648a4ace030091be134b0b064899aaa7233839b9295d2f2a5380e",
+  "amendment_sha256": "3ccc3d188675f072f5290e2f69c7c6b249da4813ff5a01acb52d80127f2c9ddb",
+  "rules": {
+    "E3_required_for_discovery": false,
+    "per_axis_minima_are_hard_blockers": false,
+    "nuisance_accuracy_is_hard_blocker": false,
+    "nuisance_must_be_outperformed_by_astrology_candidate": true,
+    "same_year_pseudo_replication_collapsed": true,
+    "event_relabeling_for_pairability": false,
+    "astrology_generated": false,
+    "control_scored": false,
+    "confirm_loaded_or_researched": false,
+    "confirm_remains_sealed": true
+  },
+  "astrology_generation_allowed": true,
+  "control_scoring_allowed": false,
+  "confirm_event_research_allowed": false,
+  "next_rule": "If READY: generate astrology primitives only for the frozen paired subject-years, run a shared-coefficient subject-grouped V5 discovery tournament, compare astrology-only and nuisance+astrology against nuisance-only, run PRIMARY/BROAD/wave sensitivity, then freeze one candidate architecture before opening CONFIRM."
+}

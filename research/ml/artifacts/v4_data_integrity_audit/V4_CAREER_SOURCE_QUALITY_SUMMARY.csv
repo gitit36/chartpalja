@@ -1,0 +1,4 @@
+pool,n_career_events,source_missing_share,high_event_conf_share,high_assignment_conf_share,second_source_flag_share
+NEW_DEV_2_CONSUMED,200,0.0,0.815,0.815,0.99
+V1,315,0.7206349206349206,0.8126984126984127,0.3333333333333333,0.0
+V2_NEW_DEV,216,0.0,0.6759259259259259,0.6759259259259259,0.0

@@ -1,0 +1,12 @@
+{
+  "version": "V4_UNIFIED_DEV_FEATURE_GENERATION_MANIFEST_V1",
+  "created_at": "2026-08-16T21:50:21",
+  "notebook_version": "SAJU_ML_V4_UNIFIED_DEV_3ARCH_TOURNAMENT_20260816",
+  "n_subjects": 101,
+  "n_year_rows": 202,
+  "n_columns": 405,
+  "pair_sha256": "5c4cecc76e2059fc6276564b4be13638ffc4b5b11b5773dd5954ed98e7dad31b",
+  "saju_engine_sha256": "d39e0c4d777ae3a19394c9175319a4f8a6a709c2b4d34400965b618ffbfdad1e",
+  "preregistration_spec_sha256": "de20924dcb3a289d51f999e1518164d0337583d1102e74081ff8a4623d3ce869",
+  "feature_cache_sha256": "4ccb204896607f6655990c1d529475eb009d44a89d7933cfc871444cdf0ba2c8"
+}

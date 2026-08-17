@@ -1,0 +1,78 @@
+{
+  "version": "V5_ROLE_ONLY_WIKIDATA_EXPANSION_SPEC_V1",
+  "status": "PREDECLARED_BEFORE_ROLE_EXPANSION_QUERY",
+  "purpose": "Expand the V5 candidate universe using role/category identity only, resolve candidates against the same frozen VedAstro/Rodden-AA birth snapshot, then freeze final DEV 160 and sealed CONFIRM 80 rosters.",
+  "external_role_source": {
+    "provider": "Wikidata Query Service",
+    "endpoint": "https://query.wikidata.org/sparql",
+    "selection_fields_used": [
+      "occupation",
+      "English label",
+      "Wikidata sitelink count"
+    ],
+    "event_or_outcome_fields_used": false,
+    "astrology_fields_used": false,
+    "queries": {
+      "COMPETITIVE": {
+        "athlete": "Q2066131",
+        "association_football_player": "Q937857",
+        "basketball_player": "Q3665646",
+        "tennis_player": "Q10833314",
+        "boxer": "Q11338576"
+      },
+      "PROJECT": {
+        "actor": "Q33999",
+        "film_director": "Q2526255",
+        "musician": "Q639669",
+        "singer": "Q177220"
+      },
+      "STATUS": {
+        "politician": "Q82955",
+        "businessperson": "Q43845"
+      }
+    },
+    "per_role_limit": 5000,
+    "minimum_sitelinks": 5
+  },
+  "birth_resolution": {
+    "source": "same frozen PersonList-15k.csv used in V4/V5 Wave A",
+    "require_rodden_AA": true,
+    "normalized_exact_name_match_only": true,
+    "ambiguous_duplicate_names_excluded": true,
+    "birth_year_min": 1900,
+    "birth_year_max": 1995
+  },
+  "exclusions": {
+    "all_consumed_development_subjects": true,
+    "all_original_V4_role_seed_names_from_expansion": true,
+    "Wave_A_kept_as_candidate_pool": true,
+    "sealed_holdouts_not_loaded": true
+  },
+  "final_targets": {
+    "DEV": {
+      "COMPETITIVE": 40,
+      "PROJECT": 50,
+      "STATUS": 70
+    },
+    "CONFIRM": {
+      "COMPETITIVE": 20,
+      "PROJECT": 25,
+      "STATUS": 35
+    }
+  },
+  "selection": {
+    "seed": 2026081701,
+    "deterministic_hash": true,
+    "female_guardrail_min_share_if_available": 0.2,
+    "event_information_forbidden": true,
+    "chronology_information_forbidden": true,
+    "pairability_information_forbidden": true,
+    "astrology_information_forbidden": true,
+    "Control_information_forbidden": true
+  },
+  "post_freeze": {
+    "DEV_event_collection_allowed": true,
+    "CONFIRM_event_collection_allowed": false,
+    "astrology_generation_allowed": false
+  }
+}

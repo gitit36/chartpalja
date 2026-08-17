@@ -1,0 +1,20 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+7,1,V5DEVX_123,Rudolf Ismayr,COMPETITIVE,V5_WIKIDATA_EXPANSION,1908-10-14,"Landshut, Germany",male,Q568591,,RudolfIsmayr1908
+7,2,V5DEVX_124,Casey Affleck,PROJECT,V5_WIKIDATA_EXPANSION,1975-08-12,"Mashpee, MA, United States",male,Q270730,,CaseyAffleck1975
+7,3,V5DEVX_125,William Rehnquist,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1924-10-01,"Milwaukee, WI, United States",male,Q311562,AA,WilliamRehnquist1924
+7,4,V5DEVX_126,James Murray,COMPETITIVE,V5_WIKIDATA_EXPANSION,1969-12-07,"Lanark, United Kingdom",male,Q6140194,,JamesMurray1969
+7,5,V5DEVX_127,Laurent Malet,PROJECT,V5_WIKIDATA_EXPANSION,1955-09-03,"Saint-Tropez, France",male,Q535794,,LaurentMalet1955
+7,6,V5DEVX_128,Tom Foley,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1929-03-06,"Spokane, WA, United States",male,Q577751,AA,TomFoley1929
+7,7,V5DEVX_129,Nate Brooks,COMPETITIVE,V5_WIKIDATA_EXPANSION,1933-08-04,"Cleveland, OH, United States",male,Q1966509,,NateBrooks1933
+7,8,V5DEVX_130,Dionne Warwick,PROJECT,V5_WIKIDATA_EXPANSION,1940-12-12,"Orange, CA, United States",female,Q234695,,DionneWarwick1940
+7,9,V5DEVX_131,José Mourinho,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1963-01-26,"Setúbal, Portugal",male,Q79983,AA,JoseMourinho1963
+7,10,V5DEVX_132,Bruno Visintin,COMPETITIVE,V5_WIKIDATA_EXPANSION,1932-11-23,"La Spezia, Italy",male,Q330364,,BrunoVisintin1932
+7,11,V5DEVX_133,Jonathan Winters,PROJECT,V5_WIKIDATA_EXPANSION,1925-11-11,"Dayton, OH, United States",male,Q4538,,JonathanWinters1925
+7,12,V5DEVX_134,Enrico Mattei,STATUS,V5_WIKIDATA_EXPANSION,1906-04-29,"Acqualagna, Italy",male,Q557795,,EnricoMattei1906
+7,13,V5DEVX_135,Don Fullmer,COMPETITIVE,V5_WIKIDATA_EXPANSION,1939-02-21,"West Jordan, UT, United States",male,Q5292644,,DonFullmer1939
+7,14,V5DEVX_136,Andy Gibb,PROJECT,V5_WIKIDATA_EXPANSION,1958-03-05,"Manchester, United Kingdom",male,Q176537,,AndyGibb1958
+7,15,V5DEVX_137,Marceau Long,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1926-04-22,"Aix-en-Provence, France",male,Q3288581,AA,MarceauLong1926
+7,16,V5DEVX_138,Shaun Cassidy,PROJECT,V5_WIKIDATA_EXPANSION,1958-09-27,"Santa Monica, CA, United States",male,Q324366,,ShaunCassidy1958
+7,17,V5DEVX_139,Stefano Gabbana,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1962-11-14,"Milan, Italy",male,Q1225616,AA,StefanoGabbana1962
+7,18,V5DEVX_140,Laura Biagiotti,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1943-08-04,"Rome, Italy",female,Q466195,AA,LauraBiagiotti1943
+7,19,V5DEVX_141,Samuel Alito,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1950-04-01,"Trenton, NJ, United States",male,Q11138,AA,SamuelAlito1950

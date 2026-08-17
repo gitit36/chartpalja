@@ -1,0 +1,21 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+6,1,V5DEVX_103,Chuck McKinley,COMPETITIVE,V5_WIKIDATA_EXPANSION,1941-01-05,"Saint Louis, MO, United States",male,Q54540,,ChuckMcKinley1941
+6,2,V5DEVX_104,Deborah Kerr,PROJECT,V5_WIKIDATA_EXPANSION,1921-09-30,"Helensburgh, United Kingdom",female,Q104146,,DeborahKerr1921
+6,3,V5DEVX_105,Pierre Mazeaud,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1929-08-24,"Lyon, France",male,Q492259,AA,PierreMazeaud1929
+6,4,V5DEVX_106,Francesco Damiani,COMPETITIVE,V5_WIKIDATA_EXPANSION,1958-10-04,"Bagnacavallo, Italy",male,Q517835,,FrancescoDamiani1958
+6,5,V5DEVX_107,Michael Crichton,PROJECT,V5_WIKIDATA_EXPANSION,1942-10-23,"Chicago, IL, United States",male,Q172140,,MichaelCrichton1942
+6,6,V5DEVX_108,Pete McCloskey,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1927-09-29,"Loma Linda, CA, United States",male,Q2073295,AA,PeteMcCloskey1927
+6,7,V5DEVX_109,Henry Milligan,COMPETITIVE,V5_WIKIDATA_EXPANSION,1958-09-16,"Camden, NJ, United States",male,Q5725885,,HenryMilligan1958
+6,8,V5DEVX_110,Erica Jong,PROJECT,V5_WIKIDATA_EXPANSION,1942-03-26,"New York, NY, United States",female,Q236950,,EricaJong1942
+6,9,V5DEVX_111,Brendan Byrne,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1924-04-01,"City of Orange, NJ, United States",male,Q888937,AA,BrendanByrne1924
+6,10,V5DEVX_112,Laurent Dauthuille,COMPETITIVE,V5_WIKIDATA_EXPANSION,1924-02-20,"Chauny, France",male,Q3794,,LaurentDauthuille1924
+6,11,V5DEVX_113,Georges Moustaki,PROJECT,V5_WIKIDATA_EXPANSION,1934-05-03,"Alexandria, Alexandria, Egypt",male,Q293985,,GeorgesMoustaki1934
+6,12,V5DEVX_114,José Hermano Saraiva,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1919-10-03,"Leiria, Portugal",male,Q510386,AA,JoséHermanoSaraiva1919
+6,13,V5DEVX_115,Ezzard Charles,COMPETITIVE,V5_WIKIDATA_EXPANSION,1921-07-07,"Lawrenceville, GA, United States",male,Q471727,,EzzardCharles1921
+6,14,V5DEVX_116,Patricia Petibon,PROJECT,V5_WIKIDATA_EXPANSION,1970-02-27,"Montargis, France",female,Q254414,,PatriciaPetibon1970
+6,15,V5DEVX_117,Vittorio Merloni,STATUS,V5_WIKIDATA_EXPANSION,1933-04-30,"Fabriano, Italy",male,Q265754,,VittorioMerloni1933
+6,16,V5DEVX_118,Ry Cooder,PROJECT,V5_WIKIDATA_EXPANSION,1947-03-15,"Los Angeles, CA, United States",male,Q318374,,RyCooder1947
+6,17,V5DEVX_119,Michele Ferrero,STATUS,V5_WIKIDATA_EXPANSION,1925-04-26,"Rogliano, Italy",male,Q251751,,MicheleFerrero1925
+6,18,V5DEVX_120,Louis Joxe,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1901-09-16,"Bourg-la-Reine, France",male,Q822594,AA,LouisJoxe1901
+6,19,V5DEVX_121,Salvatore Ligresti,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1932-03-13,"Paternò, Italy",male,Q3946110,AA,SalvatoreLigresti1932
+6,20,V5DEVX_122,Henry Kissinger,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1923-05-27,"Fürth, Germany",male,Q66107,AA,HenryKissinger1923

@@ -1,0 +1,21 @@
+batch_id,research_order_in_batch,subject_id,name,preassigned_axis,candidate_source,birth_date,birth_place,gender,wikidata_id,rodden_rating,source_row_key
+3,1,V5DEVX_043,Wilfried Dietrich,COMPETITIVE,V5_WIKIDATA_EXPANSION,1933-10-14,"Schifferstadt, Germany",male,Q39301,,WilfriedDietrich1933
+3,2,V5DEVX_044,Valérie Lemercier,PROJECT,V5_WIKIDATA_EXPANSION,1964-03-09,"Dieppe, France",female,Q259940,,ValérieLemercier1964
+3,3,V5DEVX_045,Olivier Poivre d'Arvor,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1958-07-30,"Reims, France",male,Q3351289,AA,OlivierPoivred'Arvor1958
+3,4,V5DEVX_046,Ronda Rousey,COMPETITIVE,V5_WIKIDATA_EXPANSION,1987-02-01,"Riverside, CA, United States",female,Q242201,,RondaRousey1987
+3,5,V5DEVX_047,Alice Pearce,PROJECT,V5_WIKIDATA_EXPANSION,1917-10-16,"New York, NY, United States",female,Q271852,,AlicePearce1917
+3,6,V5DEVX_048,Jean Van Houtte,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1907-03-17,"Ghent, Belgium",male,Q705128,AA,JeanvanHoutte1907
+3,7,V5DEVX_049,Arnaud Clément,COMPETITIVE,V5_WIKIDATA_EXPANSION,1977-12-17,"Aix-en-Provence, France",male,Q299944,,ArnaudClément1977
+3,8,V5DEVX_050,Rob Cohen,PROJECT,V5_WIKIDATA_EXPANSION,1949-03-12,"Cornwall, NY, United States",male,Q503966,,RobCohen1949
+3,9,V5DEVX_051,Roberto Calvi,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1920-04-13,"Milan, Italy",male,Q714310,AA,RobertoCalvi1920
+3,10,V5DEVX_052,Shirley Fry,COMPETITIVE,V5_WIKIDATA_EXPANSION,1927-06-30,"Akron, OH, United States",female,Q53424,,ShirleyFry1927
+3,11,V5DEVX_053,Andy Griffith,PROJECT,V5_WIKIDATA_EXPANSION,1926-06-01,"Mount Airy, NC, United States",male,Q312252,,AndyGriffith1926
+3,12,V5DEVX_054,Robert Eugene Bush,STATUS,V5_WIKIDATA_EXPANSION,1926-10-04,"Tacoma, WA, United States",male,Q127707,,RobertEugeneBush1926
+3,13,V5DEVX_055,Don Budge,COMPETITIVE,V5_WIKIDATA_EXPANSION,1915-06-13,"Oakland, CA, United States",male,Q53343,,DonBudge1915
+3,14,V5DEVX_056,Frank Gorshin,PROJECT,V5_WIKIDATA_EXPANSION,1933-04-05,"Pittsburgh, PA, United States",male,Q42671,,FrankGorshin1933
+3,15,V5DEVX_057,Wolfgang Abendroth,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1906-05-02,"Wuppertal, Germany",male,Q69166,AA,WolfgangAbendroth1906
+3,16,V5DEVX_058,Max Ophüls,PROJECT,V5_WIKIDATA_EXPANSION,1902-05-06,"Saarbrücken, Germany",male,Q55410,,MaxOphüls1902
+3,17,V5DEVX_059,Lee Van Cleef,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1925-01-09,"Somerville, NJ, United States",male,Q193278,AA,LeeVanCleef1925
+3,18,V5DEVX_060,Wyc Grousbeck,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1961-06-13,"Worcester, MA, United States",male,Q2297571,AA,WycGrousbeck1961
+3,19,V5DEVX_061,Emilio Colombo,STATUS,V5_E1_STATUS_ROLE_SUPPLEMENT_EXACT_DOB,1920-04-11,"Potenza, Italy",male,Q312058,AA,EmilioColombo1920
+3,20,V5DEVX_062,Pietro Mennea,STATUS,V5_WIKIDATA_EXPANSION,1952-06-28,"Barletta, Italy",male,Q5444,,PietroMennea1952

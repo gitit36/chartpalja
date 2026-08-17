@@ -1,0 +1,73 @@
+{
+  "package_version": "SAJU_ML_CORPUS_V2_R2",
+  "created_at": "2026-08-15",
+  "revision": "R2_ENGINE_YEAR_RANGE_AND_HOLDOUT_OVERLAP_FIX",
+  "revision_note": "Replaced John Logie Baird (1888) and John Maynard Keynes (1883) because sajupy supports births only from 1900; also replaced Billy Graham because he overlapped the prior Public Life V1 40-subject benchmark. Replacements Ann Jillian, Mark Hamill, and Steve Prefontaine were unused Rodden-AA candidates and were selected before any V2 model score was produced.",
+  "files": {
+    "SAJU_ML_CORPUS_V2.json": {
+      "sha256": "18eff848d553d2af29ad027b2388136f5ac5ae4860b40d8f97daa171f8f68698",
+      "bytes": 561155
+    },
+    "SAJU_ML_CORPUS_V2_NEW_DEV.json": {
+      "sha256": "acc665b0a9525214a8ecc1c7302d399309a1969aabb7e77952f82e889f93b748",
+      "bytes": 374164
+    },
+    "SAJU_ML_CORPUS_V2_NEW_CONFIRM_SEALED.json": {
+      "sha256": "b2be432af8ff8f6bae3fbbe2ca1c8e9e0f7d244c0ba4d23e1ca72f04c8e5c5f5",
+      "bytes": 188206
+    },
+    "SAJU_ML_ENGINE_INPUTS_V2.json": {
+      "sha256": "04a6974df5fdb2e60d48db6f02c3af919a30d27e157e4ae892f8a364d68d1424",
+      "bytes": 44035
+    },
+    "SAJU_ML_V2_CANDIDATE_FREEZE.json": {
+      "sha256": "e435f464b4c9fb22ec872b6a520168f1c0aee3d911781fcb0ffbf238b0cd953e",
+      "bytes": 4241
+    },
+    "SAJU_ML_CORPUS_V2_QA.md": {
+      "sha256": "415f0e2c52ff9e8b60cbf499ab79c2c9ee88b91394b6bc360fc0956de6c9b5ea",
+      "bytes": 4549
+    },
+    "SAJU_ML_CORPUS_V2_SUBJECT_AUDIT.csv": {
+      "sha256": "b4ba9d1471c1c6c86df6c8ec70fc9f016eeab0340433ab18a1246952080e4f8e",
+      "bytes": 12474
+    },
+    "saju_ml_expansion_validation_v2.ipynb": {
+      "sha256": "84b1b2fdec1bcc3ba4038491116143ebdc64e51a507792ffb617925fa0fcfb3b",
+      "bytes": 51852
+    },
+    "README_V2.md": {
+      "sha256": "65a130f02896efd84efaa3f54efb046db92963d7aeb5a40db398f4f198ceb75c",
+      "bytes": 1932
+    }
+  },
+  "integrity": {
+    "subjects_total": 100,
+    "new_dev": 70,
+    "new_confirm": 30,
+    "overlap_with_v1_names": [],
+    "overlap_with_public_v1_eligible_names": [],
+    "career_same_year_conflicts": 0,
+    "subjects_not_pair_evaluable": 0,
+    "engine_birth_year_range": "1900-2100",
+    "subjects_outside_engine_birth_year_range": [],
+    "replaced_subject_ids": {
+      "MLV2_DEV_014": {
+        "old": "Billy Graham",
+        "new": "Steve Prefontaine",
+        "reason": "Public Life V1 benchmark overlap"
+      },
+      "MLV2_DEV_065": {
+        "old": "John Logie Baird",
+        "new": "Ann Jillian",
+        "reason": "birth year 1888 outside sajupy range"
+      },
+      "MLV2_DEV_066": {
+        "old": "John Maynard Keynes",
+        "new": "Mark Hamill",
+        "reason": "birth year 1883 outside sajupy range"
+      }
+    }
+  },
+  "confirmation_rule": "Do not load SAJU_ML_CORPUS_V2_NEW_CONFIRM_SEALED.json until a NEW_DEV winner freeze manifest has been produced."
+}

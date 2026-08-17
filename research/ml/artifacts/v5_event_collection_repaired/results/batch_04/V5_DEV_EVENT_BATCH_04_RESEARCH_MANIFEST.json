@@ -1,0 +1,28 @@
+{
+  "version": "V5_DEV_EVENT_BATCH_04_RESEARCH_V1",
+  "status": "BATCH_04_FIRST_PASS_SOURCE_SWEEP_COMPLETE_NOT_EVENT_FREEZE",
+  "roster_kind": "REPAIRED_EXACT_DOB",
+  "n_subjects": 20,
+  "n_event_rows": 61,
+  "eligible_rows": 48,
+  "excluded_rows": 13,
+  "subjects_with_positive": 19,
+  "subjects_with_negative": 6,
+  "subjects_with_both_polarities": 6,
+  "subjects_with_no_eligible_core_axis_event": 1,
+  "batch_subjects_sha256": "afdad891e7a26dce13d206159de8b0afb8d7842258bede201ee1a4f1d26dbda8",
+  "events_sha256": "ffb8223b31332c913f008b7e684b32300bc2d926594be97427f8546638eb4568",
+  "audit_sha256": "e6c85efb4aec45258b677afc98f4f1a5c33d37cd94dd326174cfcd31531affd6",
+  "rules": {
+    "repaired_identity_roster_used": true,
+    "no_astrology_used": true,
+    "no_control_used": true,
+    "no_pairability_used_for_selection": true,
+    "no_chronology_balancing_used_for_selection": true,
+    "preassigned_axis_immutable": true,
+    "ineligible_or_ambiguous_candidates_logged_not_relabelled": true,
+    "status_positive_is_direction_of_formal_authority_not_moral_approval": true,
+    "not_final_event_freeze": true
+  },
+  "next_rule": "Place Batch 04 outputs under v5_event_collection_repaired/results/batch_04. Do not merge all DEV batches, pair events, inspect astrology, or research CONFIRM. Proceed next with repaired Batch 05 subject list."
+}

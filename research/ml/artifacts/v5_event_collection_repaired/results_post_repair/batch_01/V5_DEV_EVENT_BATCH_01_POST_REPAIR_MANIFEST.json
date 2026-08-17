@@ -1,0 +1,16 @@
+{
+  "version": "V5_DEV_EVENT_BATCH_01_POST_REPAIR_V1",
+  "status": "POST_REPAIR_BATCH_RESEARCH_COMPLETE_NOT_EVENT_FREEZE",
+  "batch_id": 1,
+  "n_subjects": 21,
+  "event_rows": 60,
+  "eligible_rows": 51,
+  "events_sha256": "0c1dc8fbb793be9f2c0aeef83fa0dbf968f02aea96722beafca1988e9c9b5b86",
+  "audit_sha256": "6af017e1dcfec9066573f7a948154a6b86b4b0a5852e2f812f82a60bfde2dd52",
+  "repaired_subject_ids": [
+    "V5DEV_037"
+  ],
+  "membership_changed": false,
+  "pairing_performed": false,
+  "astrology_generated": false
+}

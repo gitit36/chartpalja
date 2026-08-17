@@ -1,0 +1,21 @@
+{
+  "status": "V4_TARGET_MODEL_READY",
+  "base_modern_subjects": 169,
+  "new_subjects_added": 0,
+  "previous_source_verified_pairs": 49,
+  "new_rebound_pairs_added": 51,
+  "final_pairs": 100,
+  "unique_pair_subjects": 69,
+  "axis_counts": {
+    "COMPETITIVE": 43,
+    "PROJECT": 40,
+    "STATUS": 13,
+    "RECOGNITION": 4
+  },
+  "pair_positive_earlier_share": 0.41,
+  "subject_macro_positive_earlier_share": 0.4528985507246377,
+  "age_only_pairwise": 0.41,
+  "subject_macro_age_only_pairwise": 0.4528985507246377,
+  "all_gates_passed": true,
+  "next_step": "Run 04_saju_ml_build_v4_model_ready_targets.ipynb in repo; if hashes/gates reproduce, freeze this target set before any feature/model tournament."
+}

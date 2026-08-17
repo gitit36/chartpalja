@@ -1,0 +1,36 @@
+{
+  "version": "V4_CONTEXTUAL_SEMANTIC_STACK_V1_DECISION",
+  "notebook_version": "SAJU_ML_V4_CONTEXTUAL_SEMANTIC_STACK_V1_20260817",
+  "created_at": "2026-08-17T01:58:08",
+  "status": "V4_CONTEXTUAL_SEMANTIC_STACK_V1_REJECTED_END_101_DEV_MODEL_SEARCH",
+  "architecture": "CONTEXTUAL_SEMANTIC_STACK_V1",
+  "corpus_role": "CONSUMED_FINAL_ARCHITECTURE_DEVELOPMENT",
+  "n_pairs": 101,
+  "candidate_is_control_independent": true,
+  "block_feats_called": false,
+  "metrics": {
+    "candidate_outer_cv_mean": 0.5128712871287128,
+    "control_fixed_mean": 0.5544554455445546,
+    "official_control_once": 0.5544554455445545,
+    "control_ties_scored_half": 6,
+    "delta_vs_control": -0.04158415841584184,
+    "candidate_outer_cv_p10": 0.47326732673267324,
+    "candidate_axis_floor": 0.46399999999999997,
+    "bootstrap_P_delta_gt_0_vs_control": 0.23995
+  },
+  "gate": {
+    "overall_ge_056": false,
+    "delta_vs_control_ge_001": false,
+    "bootstrap_P_gt_0_ge_070": false,
+    "p10_ge_050": false,
+    "axis_floor_ge_048": false
+  },
+  "dev_sanity_pass": false,
+  "stopping_rule": "PASS: freeze and fresh confirmation DEV. FAIL: architecture/model search on these 101 pairs is permanently closed; next work must be larger/better fresh DEV and ground-truth redesign.",
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Validation_B_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false
+  }
+}

@@ -1,0 +1,4 @@
+axis,original_DEV_both_polarity_upper_bound,E1_both_polarity_upper_bound,combined_both_polarity_upper_bound,frozen_minimum,necessary_condition_pass,deficit
+COMPETITIVE,31,19,50,20,True,0
+PROJECT,12,3,15,20,False,5
+STATUS,28,12,40,25,True,0

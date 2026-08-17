@@ -1,0 +1,19 @@
+{
+  "expected_after_notebook_10": {
+    "wave1_pairs": 73,
+    "wave2_pairs": 28,
+    "combined_pairs": 101,
+    "axis_counts": {
+      "COMPETITIVE": 31,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "targets": {
+      "COMPETITIVE": 30,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "all_targets_expected_met": true,
+    "astrology_feature_generation_allowed_before_separate_gate": false
+  }
+}

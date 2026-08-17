@@ -15,6 +15,8 @@ import {
   Pie,
   Cell,
   Legend,
+  LineChart,
+  Line,
 } from 'recharts'
 import type { DashboardData } from '@/lib/admin/dashboard'
 import { SegmentedControl } from '@/components/admin/AdminUi'
@@ -377,6 +379,201 @@ export function DashboardCharts({ data }: { data: DashboardData }) {
           )}
         </ChartCard>
       </div>
+    </div>
+  )
+}
+
+type RetentionMode = 'classic' | 'rolling'
+
+export function GrowthCharts({ data }: { data: DashboardData }) {
+  const [retentionMode, setRetentionMode] = useState<RetentionMode>('classic')
+  const [stickinessMode, setStickinessMode] = useState<'wau' | 'mau'>('wau')
+
+  const dauRows = useMemo(
+    () =>
+      data.growth.dauSeries.map((row) => ({
+        ...row,
+        date: row.date.slice(5),
+      })),
+    [data.growth.dauSeries],
+  )
+  const hasDau = dauRows.some((r) => r.dau > 0)
+  const retentionRows = data.growth.retention
+  const hasRetention = retentionRows.some((r) => r.cohortN > 0)
+  const latest = data.growth.latest
+
+  return (
+    <div className="space-y-4">
+      <div className="grid gap-4 lg:grid-cols-2">
+        <ChartCard
+          title="DAU 구성"
+          hint="NAU 신규 가입 · EAU 전날 연속 · RAU 복귀 · 활성=가입/사주/주사용/결제"
+          stat={
+            latest
+              ? `최근일 DAU ${latest.dau} · NAU ${latest.nau} · EAU ${latest.eau} · RAU ${latest.rau}`
+              : null
+          }
+        >
+          {!hasDau ? (
+            <EmptyChart />
+          ) : (
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={dauRows}>
+                  <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
+                  <XAxis dataKey="date" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <Tooltip contentStyle={TOOLTIP_STYLE} labelStyle={{ color: '#e8e8ed' }} />
+                  <Legend
+                    verticalAlign="top"
+                    height={28}
+                    iconType="circle"
+                    iconSize={8}
+                    wrapperStyle={{ fontSize: 11, color: '#8b8b93' }}
+                  />
+                  <Area
+                    type="monotone"
+                    stackId="dau"
+                    dataKey="nau"
+                    name="NAU"
+                    stroke="#22c55e"
+                    fill="rgba(34,197,94,0.35)"
+                    strokeWidth={1.5}
+                  />
+                  <Area
+                    type="monotone"
+                    stackId="dau"
+                    dataKey="eau"
+                    name="EAU"
+                    stroke="#3182f6"
+                    fill="rgba(49,130,246,0.32)"
+                    strokeWidth={1.5}
+                  />
+                  <Area
+                    type="monotone"
+                    stackId="dau"
+                    dataKey="rau"
+                    name="RAU"
+                    stroke="#f5a524"
+                    fill="rgba(245,165,36,0.32)"
+                    strokeWidth={1.5}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </ChartCard>
+
+        <ChartCard
+          title="Retention"
+          hint={
+            retentionMode === 'classic'
+              ? 'Classic · 가입 코호트가 D+n 당일에 활성인 비율'
+              : 'Rolling · 가입 코호트가 D+n 이후 한 번이라도 활성인 비율'
+          }
+          stat={
+            hasRetention
+              ? `성숙 코호트 ${retentionRows.find((r) => r.offset === 1)?.cohortN ?? 0}명 기준`
+              : null
+          }
+          action={
+            <SegmentedControl<RetentionMode>
+              value={retentionMode}
+              onChange={setRetentionMode}
+              options={[
+                { value: 'classic', label: 'Classic' },
+                { value: 'rolling', label: 'Rolling' },
+              ]}
+            />
+          }
+        >
+          {!hasRetention ? (
+            <EmptyChart />
+          ) : (
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={retentionRows}>
+                  <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
+                  <XAxis dataKey="day" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis
+                    tick={{ fill: '#8b8b93', fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    domain={[0, 100]}
+                    tickFormatter={(v) => `${v}%`}
+                  />
+                  <Tooltip
+                    contentStyle={TOOLTIP_STYLE}
+                    labelStyle={{ color: '#e8e8ed' }}
+                    formatter={(v: number) => [`${v}%`, retentionMode === 'classic' ? 'Classic' : 'Rolling']}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey={retentionMode}
+                    name={retentionMode === 'classic' ? 'Classic' : 'Rolling'}
+                    stroke={retentionMode === 'classic' ? '#3182f6' : '#f04452'}
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </ChartCard>
+      </div>
+
+      <ChartCard
+        title="고착도"
+        hint={stickinessMode === 'wau' ? 'DAU / WAU (최근 7일 활성 대비)' : 'DAU / MAU (최근 30일 활성 대비)'}
+        stat={
+          latest
+            ? `최근일 DAU/WAU ${latest.stickinessWau}% · DAU/MAU ${latest.stickinessMau}%`
+            : null
+        }
+        action={
+          <SegmentedControl<'wau' | 'mau'>
+            value={stickinessMode}
+            onChange={setStickinessMode}
+            options={[
+              { value: 'wau', label: 'DAU/WAU' },
+              { value: 'mau', label: 'DAU/MAU' },
+            ]}
+          />
+        }
+      >
+        {!hasDau ? (
+          <EmptyChart />
+        ) : (
+          <div className="h-56">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={dauRows}>
+                <CartesianGrid stroke="rgba(78,78,90,0.35)" vertical={false} />
+                <XAxis dataKey="date" tick={{ fill: '#8b8b93', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis
+                  tick={{ fill: '#8b8b93', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  domain={[0, 100]}
+                  tickFormatter={(v) => `${v}%`}
+                />
+                <Tooltip
+                  contentStyle={TOOLTIP_STYLE}
+                  labelStyle={{ color: '#e8e8ed' }}
+                  formatter={(v: number) => [`${v}%`, stickinessMode === 'wau' ? 'DAU/WAU' : 'DAU/MAU']}
+                />
+                <Line
+                  type="monotone"
+                  dataKey={stickinessMode === 'wau' ? 'stickinessWau' : 'stickinessMau'}
+                  name={stickinessMode === 'wau' ? 'DAU/WAU' : 'DAU/MAU'}
+                  stroke="#c4b5fd"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
+      </ChartCard>
     </div>
   )
 }

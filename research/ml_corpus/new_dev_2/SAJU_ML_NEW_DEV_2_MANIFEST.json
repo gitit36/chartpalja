@@ -1,0 +1,36 @@
+{
+  "version": "SAJU_ML_NEW_DEV_2_MANIFEST_V1_R2",
+  "created_at": "2026-08-15",
+  "status": "FROZEN_BEFORE_REPLICATION_R2",
+  "files": {
+    "SAJU_ML_NEW_DEV_2_CORPUS.json": {
+      "sha256": "75c6c9d0dae2217f9a7ad7202c44328992d8658aab2cf42f3af987ab6c703bf9",
+      "subjects": 100,
+      "events": 200
+    },
+    "SAJU_ML_NEW_DEV_2_ENGINE_INPUTS.json": {
+      "sha256": "ce97d82480cc30fa63fbda13d776409a863e827ba3b0d7f56199d2e26403b585",
+      "subjects": 100
+    }
+  },
+  "frozen_architecture_required": {
+    "version": "SAJU_ML_PROVISIONAL_ARCHITECTURE_FREEZE_V3",
+    "winner": "TENGOD_FIXED",
+    "model": "Pairwise Logistic Regression",
+    "penalty": "l2",
+    "C": 0.3,
+    "n_features": 10
+  },
+  "holdout_rule": "Do not alter subjects, event years, feature set, model family, C, or replication gate after seeing NEW_DEV_2 scores.",
+  "patch": {
+    "R2": "Fixed the sole same-year Career label collision before any NEW_DEV_2 model score was produced."
+  },
+  "r2_fix": {
+    "removed_subject": "Denton Cooley",
+    "reason": "Career positive and negative were both 1969, causing a subject-year label collision.",
+    "replacement_subject": "Jimmy Johnson",
+    "replacement_positive_year": 1993,
+    "replacement_negative_year": 1994,
+    "post_fix_pairable_subjects": 100
+  }
+}

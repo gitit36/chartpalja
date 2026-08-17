@@ -1,0 +1,43 @@
+{
+  "version": "SAJU_ML_FEATURE_PARITY_AUDIT_DECISION_V4",
+  "notebook_version": "SAJU_ML_FEATURE_PARITY_AUDIT_V4_20260815",
+  "created_at": "2026-08-15T22:23:32",
+  "status": "PASS_MODERN_STRICT_PARITY_V1_LEGACY_UNVERIFIED",
+  "engine": {
+    "saju_engine_sha256": "d39e0c4d777ae3a19394c9175319a4f8a6a709c2b4d34400965b618ffbfdad1e",
+    "sajupy_version": "0.2.0",
+    "engine_year_range": [
+      1900,
+      2100
+    ]
+  },
+  "strict_modern_parity": {
+    "NEW_DEV_2_CONSUMED": {
+      "rows": 200,
+      "subjects": 100,
+      "mismatched_rows": 0,
+      "total_feature_mismatches": 0,
+      "exact_row_match_rate": 1.0
+    },
+    "V2_NEW_DEV": {
+      "rows": 216,
+      "subjects": 70,
+      "mismatched_rows": 0,
+      "total_feature_mismatches": 0,
+      "exact_row_match_rate": 1.0
+    }
+  },
+  "v1_legacy": {
+    "cache_sha256": "d57fdb7d390ae5b11500a06fa479ecbd25bcb5899d9d1d43caaa5cd5865ad09c",
+    "invariants_pass": true,
+    "canonical_parity_claimed": false,
+    "status": "LEGACY_CANONICAL_PARITY_NOT_CLAIMED"
+  },
+  "holdout_integrity": {
+    "NEW_CONFIRM_loaded": false,
+    "Public_CHECK_loaded": false,
+    "Public_FINAL_loaded": false,
+    "Validation_B_loaded": false
+  },
+  "next_rule": "If modern parity fails, stop and repair feature lineage before any V4 modeling. If modern parity passes, combine this result with the V4 data-integrity audit. Do not start a V4 feature tournament until critical/high data defects are resolved."
+}

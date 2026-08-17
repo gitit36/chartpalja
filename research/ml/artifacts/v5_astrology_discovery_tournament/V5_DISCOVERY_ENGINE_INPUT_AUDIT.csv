@@ -1,0 +1,105 @@
+subject_id,name,preassigned_axis,collection_wave,gender,birth_date,birth_time,utc_offset,birth_place,latitude,longitude,source_row_key,rodden_rating
+V5DEV_001,Isabelle Duchesnay,COMPETITIVE,ORIGINAL,female,1963-12-18,10:15,-04:00,"Saint John NB, Canada",45.273,-66.063,IsabelleDuchesnay1963,AA
+V5DEV_003,Valentina Vezzali,COMPETITIVE,ORIGINAL,female,1974-02-14,18:00,+01:00,"Jesi, Italy",43.522,13.243,ValentinaVezzali1974,AA
+V5DEV_005,Dominique Monami,COMPETITIVE,ORIGINAL,female,1973-05-31,22:00,+01:00,"Verviers, Belgium",50.592,5.861,DominiqueMonami1973,AA
+V5DEV_007,Sébastien Chabal,COMPETITIVE,ORIGINAL,male,1977-12-08,04:00,+01:00,"Valence, France",44.93,4.89,SébastienChabal1977,AA
+V5DEV_008,Sabine Appelmans,COMPETITIVE,ORIGINAL,female,1972-04-22,04:30,+01:00,"Aalst, Belgium",50.937,4.041,SabineAppelmans1972,AA
+V5DEV_009,Loris Stecca,COMPETITIVE,ORIGINAL,male,1960-03-30,09:30,+01:00,"Santarcangelo di Romagna, Italia",44.065,12.45,LorisStecca1960,AA
+V5DEV_010,Kenny de Schepper,COMPETITIVE,ORIGINAL,male,1987-05-29,04:05,+02:00,"Bordeaux, France",44.835,-0.575,KennyDeSchepper1987,AA
+V5DEV_011,Guillaume Raoux,COMPETITIVE,ORIGINAL,male,1970-02-14,10:15,+01:00,"Bagnols-sur-Cèze, France",44.154,4.616,GuillaumeRaoux1970,AA
+V5DEV_012,Pierre Langlois,COMPETITIVE,ORIGINAL,male,1925-03-31,01:00,+00:00,"Pont-Audemer, France",49.354,0.512,PierreLanglois1925,AA
+V5DEV_013,David Goffin,COMPETITIVE,ORIGINAL,male,1990-12-07,14:35,+01:00,"Liège, Belgium",50.644,5.572,DavidGoffin1990,AA
+V5DEV_014,Nicolas Mahut,COMPETITIVE,ORIGINAL,male,1982-01-21,09:45,+01:00,"Angers, France",47.469,-0.559,NicolasMahut1982,AA
+V5DEV_015,Nathalie Tauziat,COMPETITIVE,ORIGINAL,female,1967-10-17,11:20,+01:00,"Bangui, Bangui, Central African Republic",4.363,18.582,NathalieTauziat1967,AA
+V5DEV_017,Mario D'Agata,COMPETITIVE,ORIGINAL,male,1926-05-29,17:00,+01:00,"Arezzo, Italy",43.471,11.863,MarioD'Agata1926,AA
+V5DEV_020,Franck Ribéry,COMPETITIVE,ORIGINAL,male,1983-04-07,17:30,+02:00,"Boulogne-sur-Mer, France",50.726,1.615,FranckRibéry1983,AA
+V5DEV_022,Andre Routis,COMPETITIVE,ORIGINAL,male,1900-07-16,12:00,+00:09,"Bordeaux, France",44.835,-0.575,AndréRoutis1900,AA
+V5DEV_023,Nino Benvenuti,COMPETITIVE,ORIGINAL,male,1938-04-26,11:00,+01:00,"Trieste, Italy",45.654,13.779,NinoBenvenuti1938,AA
+V5DEV_024,Domenico Adinolfi,COMPETITIVE,ORIGINAL,male,1946-06-20,15:00,+02:00,"Ceccano, Italy",41.568,13.334,DomenicoAdinolfi1946,AA
+V5DEV_025,Martin Lauer,COMPETITIVE,ORIGINAL,male,1937-01-02,07:30,+01:00,"Cologne, Germany",50.941,6.96,MartinLauer1937,AA
+V5DEV_026,Heinz Neuhaus,COMPETITIVE,ORIGINAL,male,1926-04-14,13:15,+01:00,"Dortmund, Germany",51.511,7.464,HeinzNeuhaus1926,AA
+V5DEV_028,Robert Haillet,COMPETITIVE,ORIGINAL,male,1931-09-26,02:30,+01:00,"Pau, France",43.298,-0.375,RobertHaillet1931,AA
+V5DEV_029,Freddie Miller,COMPETITIVE,ORIGINAL,male,1911-04-03,03:00,-05:00,"Cincinnati, OH, United States",39.104,-84.514,FreddieMiller1911,AA
+V5DEV_030,Francesco Cancellotti,COMPETITIVE,ORIGINAL,male,1963-02-27,20:00,+01:00,"Perugia, Italy",43.112,12.39,FrancescoCancellotti1963,AA
+V5DEV_031,Harold Gomes,COMPETITIVE,ORIGINAL,male,1933-08-22,07:52,-04:00,"Providence, RI, United States",41.824,-71.413,HaroldGomes1933,AA
+V5DEV_034,Fritz Walter,COMPETITIVE,ORIGINAL,male,1920-10-31,21:15,+01:00,"Kaiserslautern, Germany",49.445,7.769,FritzWalter1920,AA
+V5DEV_035,Benoît Paire,COMPETITIVE,ORIGINAL,male,1989-05-08,21:05,+02:00,"Avignon, France",43.949,4.806,BenoîtPaire1989,AA
+V5DEV_036,Albert Yvel,COMPETITIVE,ORIGINAL,male,1927-02-27,20:00,+00:00,"Algiers, Algeria",36.772,3.052,AlbertYvel1927,AA
+V5DEV_037,Sergio Caprari,COMPETITIVE,ORIGINAL,male,1932-07-11,00:30,+01:00,"Civita Castellana, Italia",42.289,12.412,SergioCaprari1932,AA
+V5DEV_038,Guy Forget,COMPETITIVE,ORIGINAL,male,1965-01-04,01:15,+00:00,"Casablanca, Casablanca-Settat, Morocco",33.596,-7.615,GuyForget1965,AA
+V5DEV_039,Andreas Ostler,COMPETITIVE,ORIGINAL,male,1921-01-21,16:45,+01:00,"Grainau, Germany",47.475,11.024,AndreasOstler1921,AA
+V5DEV_040,Cédric Pioline,COMPETITIVE,ORIGINAL,male,1969-06-15,18:00,+01:00,"Neuilly-sur-Seine, France",48.884,2.273,CedricPioline1969,AA
+V5DEV_051,Adam Goldberg,PROJECT,ORIGINAL,male,1970-10-25,13:13,-08:00,"Santa Monica, CA, United States",34.011,-118.492,AdamGoldberg1970,AA
+V5DEV_064,Gus Van Sant,PROJECT,ORIGINAL,male,1952-07-24,03:15,-04:00,"Louisville-Jefferson County, KY, United States",38.199,-85.654,GusVanSant1952,AA
+V5DEV_075,Maurizio Arena,PROJECT,ORIGINAL,male,1933-12-26,12:00,+01:00,"Rome, Italy",41.891,12.494,MaurizioArena1933,AA
+V5DEV_079,Fausto Leali,PROJECT,ORIGINAL,male,1944-10-29,07:00,+01:00,"Brescia, Italy",45.54,10.223,FaustoLeali1944,AA
+V5DEV_080,John Cena,PROJECT,ORIGINAL,male,1977-04-23,08:57,-05:00,"West Newbury, MA, United States",42.801,-70.988,JohnCena1977,AA
+V5DEV_084,Mia Martini,PROJECT,ORIGINAL,female,1947-09-20,13:00,+02:00,"Bagnara Calabra, Italia",38.288,15.808,MiaMartini1947,AA
+V5DEV_090,Bernd Alois Zimmermann,PROJECT,ORIGINAL,male,1918-03-20,13:00,+01:00,"Erftstadt, Germany",50.8,6.765,BerndAloisZimmermann1918,AA
+V5DEV_106,Björn Engholm,STATUS,ORIGINAL,male,1939-11-09,05:20,+01:00,"Lübeck, Germany",53.87,10.688,BjörnEngholm1939,AA
+V5DEV_108,George Steinbrenner,STATUS,ORIGINAL,male,1930-07-04,21:00,-04:00,"Rocky River, OH, United States",41.467,-81.853,GeorgeSteinbrenner1930,AA
+V5DEV_109,Alain Poher,STATUS,ORIGINAL,male,1909-04-17,08:00,+00:09,"Ablon-sur-Seine, France",48.722,2.418,AlainPoher1909,AA
+V5DEV_114,Gaston Eyskens,STATUS,ORIGINAL,male,1905-04-01,14:30,+00:00,"Lier, Belgium",51.13,4.574,GastonEyskens1905,AA
+V5DEV_117,Franz Müntefering,STATUS,ORIGINAL,male,1940-01-16,13:00,+01:00,"Arnsberg, Germany",51.395,8.069,FranzMüntefering1940,AA
+V5DEV_118,Jacques Goddet,STATUS,ORIGINAL,male,1905-06-21,08:00,+00:09,"Paris, France",48.857,2.351,JacquesGoddet1905,AA
+V5DEV_121,Gerhard Schröder,STATUS,ORIGINAL,male,1944-04-07,22:00,+02:00,"Blomberg, Germany",51.943,9.097,GerhardSchröder1944,AA
+V5DEV_125,Neel Kashkari,STATUS,ORIGINAL,male,1973-07-30,23:06,-04:00,"Stow, OH, United States",41.169,-81.44,NeelKashkari1973,AA
+V5DEV_126,Adolf Eichmann,STATUS,ORIGINAL,male,1906-03-19,19:30,+01:00,"Solingen, Germany",51.172,7.084,AdolfEichmann1906,AA
+V5DEV_134,Desi Bouterse,STATUS,ORIGINAL,male,1945-10-13,07:05,+02:00,"Dornburg, Germany",50.503,8.025,DesiBouterse1945,AA
+V5DEV_138,Jean-Marc Ayrault,STATUS,ORIGINAL,male,1950-01-25,11:00,+01:00,"Maulévrier, France",47.007,-0.745,JeanMarcAyrault1950,AA
+V5DEV_150,Jérôme Cahuzac,STATUS,ORIGINAL,male,1952-06-19,19:15,+01:00,"Talence, France",44.813,-0.59,JérômeCahuzac1952,AA
+V5DEV_152,Jack Parsons,STATUS,ORIGINAL,male,1914-10-02,20:45,-08:00,"Los Angeles, CA, United States",34.052,-118.243,JackParsons1914,AA
+V5DEV_155,Gerhard Stoltenberg,STATUS,ORIGINAL,male,1928-09-29,18:15,+01:00,"Kiel, Germany",54.323,10.136,GerhardStoltenberg1928,AA
+V5DEV_156,Renato Ruggiero,STATUS,ORIGINAL,male,1930-04-09,00:15,+01:00,"Naples, Italy",40.84,14.253,RenatoRuggiero1930,AA
+V5DEV_158,Yves Saint Laurent,STATUS,ORIGINAL,male,1936-08-01,19:45,+00:00,"Oran, Algeria",35.699,-0.632,YvesSaintLaurent1936,AA
+V5DEVX_004,Jérôme Le Banner,COMPETITIVE,E1,male,1972-12-26,06:45,+01:00,"Le Havre, France",49.493,0.106,JérômeLeBanner1972,
+V5DEVX_007,Gianluca Rinaldini,COMPETITIVE,E1,male,1959-08-10,15:45,+01:00,"Faenza, Italy",44.285,11.883,GianlucaRinaldini1959,
+V5DEVX_008,Wolfgang Staudte,PROJECT,E1,male,1906-10-09,00:30,+01:00,"Saarbrücken, Germany",49.235,6.994,WolfgangStaudte1906,
+V5DEVX_010,Duilio Loi,COMPETITIVE,E1,male,1929-04-19,16:40,+01:00,"Trieste, Italy",45.654,13.779,DuilioLoi1929,
+V5DEVX_017,Artur Axmann,STATUS,E1,male,1913-02-18,22:15,+01:00,"Hagen, Germany",51.362,7.463,ArturAxmann1913,
+V5DEVX_025,Alex Ferguson,COMPETITIVE,E1,male,1941-12-31,16:30,+01:00,"Glasgow, United Kingdom",55.866,-4.257,AlexFerguson1941,
+V5DEVX_031,Jack Kramer,COMPETITIVE,E1,male,1921-08-01,01:45,-08:00,"Las Vegas, NV, United States",36.169,-115.141,JackKramer1921,
+V5DEVX_036,Paul Lücke,STATUS,E1,male,1914-11-13,06:00,+01:00,"Marienheide, Germany",51.083,7.53,PaulLucke1914,
+V5DEVX_038,Roland Dumas,STATUS,E1,male,1922-08-23,01:00,+01:00,"Limoges, France",45.829,1.262,RolandDumas1922,AA
+V5DEVX_046,Ronda Rousey,COMPETITIVE,E1,female,1987-02-01,12:39,-08:00,"Riverside, CA, United States",33.981,-117.377,RondaRousey1987,
+V5DEVX_048,Jean Van Houtte,STATUS,E1,male,1907-03-17,01:00,+00:00,"Ghent, Belgium",51.054,3.722,JeanvanHoutte1907,AA
+V5DEVX_049,Arnaud Clément,COMPETITIVE,E1,male,1977-12-17,13:15,+01:00,"Aix-en-Provence, France",43.525,5.454,ArnaudClément1977,
+V5DEVX_050,Rob Cohen,PROJECT,E1,male,1949-03-12,09:22,-05:00,"Cornwall, NY, United States",41.44,-74.03,RobCohen1949,
+V5DEVX_052,Shirley Fry,COMPETITIVE,E1,female,1927-06-30,12:35,-04:00,"Akron, OH, United States",41.085,-81.516,ShirleyFry1927,
+V5DEVX_055,Don Budge,COMPETITIVE,E1,male,1915-06-13,04:00,-08:00,"Oakland, CA, United States",37.805,-122.272,DonBudge1915,
+V5DEVX_066,Guido Ferracin,COMPETITIVE,E1,male,1926-01-18,12:45,+01:00,"Villamarzana, Italy",45.015,11.698,GuidoFerracin1926,
+V5DEVX_089,Floyd Patterson,COMPETITIVE,E1,male,1935-01-04,14:30,-05:00,"Waco, NC, United States",35.362,-81.428,FloydPatterson1935,
+V5DEVX_103,Chuck McKinley,COMPETITIVE,E1,male,1941-01-05,01:20,-06:00,"Saint Louis, MO, United States",38.635,-90.201,ChuckMcKinley1941,
+V5DEVX_106,Francesco Damiani,COMPETITIVE,E1,male,1958-10-04,18:15,+01:00,"Bagnacavallo, Italy",44.413,11.978,FrancescoDamiani1958,
+V5DEVX_108,Pete McCloskey,STATUS,E1,male,1927-09-29,08:35,-08:00,"Loma Linda, CA, United States",34.049,-117.261,PeteMcCloskey1927,AA
+V5DEVX_115,Ezzard Charles,COMPETITIVE,E1,male,1921-07-07,21:00,-04:00,"Lawrenceville, GA, United States",33.955,-83.988,EzzardCharles1921,
+V5DEVX_122,Henry Kissinger,STATUS,E1,male,1923-05-27,05:30,+01:00,"Fürth, Germany",49.477,10.99,HenryKissinger1923,AA
+V5DEVX_128,Tom Foley,STATUS,E1,male,1929-03-06,13:40,-08:00,"Spokane, WA, United States",47.659,-117.425,TomFoley1929,AA
+V5DEVX_131,José Mourinho,STATUS,E1,male,1963-01-26,07:00,+00:00,"Setúbal, Portugal",38.525,-8.893,JoseMourinho1963,AA
+V5DEVX_132,Bruno Visintin,COMPETITIVE,E1,male,1932-11-23,16:00,+01:00,"La Spezia, Italy",44.107,9.829,BrunoVisintin1932,
+V5DEVX_142,Stan Smith,COMPETITIVE,E1,male,1946-12-14,22:13,-06:00,"Pasadena, TX, United States",29.693,-95.193,StanSmith1946,
+V5DEVX_147,Michele Sindona,STATUS,E1,male,1920-05-08,05:20,+02:00,"Patti, Italy",38.141,14.966,MicheleSindona1920,AA
+V5DEVX_148,Omar Camporese,COMPETITIVE,E1,male,1968-05-08,10:40,+01:00,"Bologna, Italy",44.494,11.347,OmarCamporese1968,
+V5DEVX_154,Richard Gasquet,COMPETITIVE,E1,male,1986-06-18,09:00,+02:00,"Sérignan, France",43.282,3.283,RichardGasquet1986,
+V5DEVE2_001,Henri Leconte,COMPETITIVE,E2,male,1963-07-04,08:45,+01:00,"Lillers, France",50.564,2.482,HenriLeconte1963,
+V5DEVE2_003,Richard Nixon,STATUS,E2,male,1913-01-09,21:35,-08:00,"Yorba Linda, CA, United States",33.889,-117.824,RichardNixon1913,AA
+V5DEVE2_004,Joey Maxim,COMPETITIVE,E2,male,1922-03-28,00:00,-05:00,"Cleveland, OH, United States",41.505,-81.691,JoeyMaxim1922,
+V5DEVE2_007,Gaston Reiff,COMPETITIVE,E2,male,1921-02-24,01:00,+00:00,"Braine-l'Alleud, Belgique",50.683,4.37,GastonReiff1921,
+V5DEVE2_009,Jimmy Carter,STATUS,E2,male,1924-10-01,07:00,-05:00,"Plains, GA, United States",32.034,-84.394,JimmyCarter1924,AA
+V5DEVE2_013,Bernard Hinault,COMPETITIVE,E2,male,1954-11-14,08:15,+01:00,"Yffiniac, France",48.484,-2.676,BernardHinault1954,
+V5DEVE2_014,Julie Newmar,PROJECT,E2,female,1933-08-16,23:26,-08:00,"Los Angeles, CA, United States",34.052,-118.243,JulieNewmar1933,
+V5DEVE2_015,Alain Peyrefitte,STATUS,E2,male,1925-08-26,10:00,+01:00,"Najac, France",44.22,1.979,AlainPeyrefitte1925,AA
+V5DEVE2_022,Gottfried von Cramm,COMPETITIVE,E2,male,1909-07-07,17:45,+01:00,"Söhlde, Germany",52.189,10.232,GottfriedvonCramm1909,
+V5DEVE2_027,Dan Quayle,STATUS,E2,male,1947-02-04,11:48,-06:00,"Indianapolis, IN, United States",39.768,-86.156,DanQuayle1947,
+V5DEVE2_028,Laurent Fignon,COMPETITIVE,E2,male,1960-08-12,03:10,+01:00,"Paris, France",48.857,2.351,LaurentFignon1960,
+V5DEVE2_042,Massimo D'Alema,STATUS,E2,male,1949-04-20,10:30,+01:00,"Rome, Italy",41.891,12.494,MassimoD'alema1949,AA
+V5DEVE2_061,Giuseppe Pella,STATUS,E2,male,1902-04-18,05:00,+01:00,"Valdengo, Italy",45.571,8.136,GiuseppePella1902,AA
+V5DEVE2_080,François de Menthon,STATUS,E2,male,1900-01-08,13:00,+00:09,"Montreuil, France",48.858,2.437,FrançoisdeMenthon1900,AA
+V5DEVE2_083,Valentino Rossi,COMPETITIVE,E2,male,1979-02-16,18:20,+01:00,"Urbino, Italy",43.725,12.637,ValentinoRossi1979,
+V5DEVE2_106,Gaël Monfils,COMPETITIVE,E2,male,1986-09-01,04:50,+02:00,"Paris, France",48.857,2.351,GaëlMonfils1986,
+V5DEVE2_115,John Ruiz,COMPETITIVE,E2,male,1972-01-04,13:59,-05:00,"Methuen Town, MA, United States",42.73,-71.184,JohnRuiz1972,
+V5DEVE2_126,Hacine Cherifi,COMPETITIVE,E2,male,1967-12-12,06:50,+01:00,"Lyon, France",45.767,4.834,HacineCherifi1967,
+V5DEVE2_128,C. William O'Neill,STATUS,E2,male,1916-02-14,04:00,-05:00,"Marietta, OH, United States",39.42,-81.457,C.WilliamO'Neill1916,AA
+V5DEVE2_145,Laurent Boudouani,COMPETITIVE,E2,male,1966-12-29,18:25,+01:00,"Sallanches, France",45.937,6.631,LaurentBoudouani1966,
+V5DEVE2_154,René Lacoste,COMPETITIVE,E2,male,1904-07-02,05:00,+00:09,"Paris, France",48.857,2.351,RenéLacoste1904,
+V5DEVE2_160,François Bayrou,STATUS,E2,male,1951-05-25,16:00,+01:00,"Bordères-sur-l'Échez, France",43.259,0.051,FrançoisBayrou1951,

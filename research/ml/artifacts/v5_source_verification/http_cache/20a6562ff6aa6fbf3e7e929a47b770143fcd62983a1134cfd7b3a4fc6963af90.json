@@ -1,0 +1,9 @@
+{
+  "url": "https://www.ysl.com/en-gb/collections/heritage",
+  "ok": false,
+  "status_code": 403,
+  "final_url": "https://www.ysl.com/en-gb/collections/heritage",
+  "content_type": "text/html",
+  "title": "",
+  "error": "HTTP_403"
+}

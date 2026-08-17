@@ -1,0 +1,39 @@
+{
+  "version": "V5_E1_FINAL_EVENT_FREEZE_PROTOCOL_V1",
+  "status": "PREDECLARED_AFTER_MANUAL_BACKFILL_BEFORE_E1_EVENT_FREEZE",
+  "required_inputs": {
+    "assembled_events": "V5_E1_EVENTS_ASSEMBLED_PRE_QA.csv",
+    "source_auto_results": "V5_E1_SOURCE_QA_AUTO_RESULTS.csv",
+    "source_manual_review": "V5_E1_ELIGIBLE_SOURCE_MANUAL_REVIEW.csv",
+    "semantic_manual_review": "V5_E1_ELIGIBLE_SEMANTIC_MANUAL_REVIEW.csv",
+    "qa_decision": "V5_E1_SOURCE_SEMANTIC_QA_DECISION.json",
+    "source_override": "V5_E1_SOURCE_MANUAL_OVERRIDE.csv",
+    "semantic_override": "V5_E1_SEMANTIC_MANUAL_OVERRIDE.csv",
+    "event_corrections": "V5_E1_EVENT_CORRECTIONS.csv"
+  },
+  "frozen_correction_set": {
+    "set_exclude_rows_n": 10,
+    "field_corrections_n": 4,
+    "expected_eligible_rows_after_corrections": 277
+  },
+  "allowed_actions": [
+    "apply_exact_hashed_overrides",
+    "stable_sort",
+    "duplicate_QA",
+    "coverage_QA",
+    "hash",
+    "freeze"
+  ],
+  "forbidden_actions": [
+    "membership_change",
+    "new_event_search",
+    "pair_generation",
+    "pair_gap_inspection",
+    "chronology_balancing",
+    "astrology_generation",
+    "control_scoring",
+    "confirm_research"
+  ],
+  "success_status": "V5_E1_EVENT_CORPUS_FROZEN_READY_FOR_COMBINED_PREPAIR_GATE",
+  "next_rule": "Combine original frozen DEV and E1 frozen DEV, then run a necessary-condition upper-bound gate before any 1-5y pair generation."
+}

@@ -1,0 +1,11 @@
+{
+  "version": "V5_E1_EVENT_FREEZE_DECISION_V1",
+  "status": "V5_E1_EVENT_CORPUS_FROZEN_READY_FOR_COMBINED_PREPAIR_GATE",
+  "full_corpus_sha256": "75d1bc6d9d0bb65e5039123809b8a6c9b82c838bfdfd77396582e0678983423c",
+  "eligible_corpus_sha256": "a76a5b850fc3f75156765139deefca8412272098229c6e2494fca5b558c15753",
+  "manifest_sha256": "8d9b4829148262ce304e1d34f4ec1e0ba8e0aac731a904a2e70dda6e661a0831",
+  "combined_prepair_gate_allowed": true,
+  "pair_generation_allowed": false,
+  "astrology_generation_allowed": false,
+  "confirm_event_research_allowed": false
+}

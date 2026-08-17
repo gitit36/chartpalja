@@ -1,0 +1,9 @@
+{
+  "url": "https://www.bundestag.de/dokumente/textarchiv/alterspraesidenten-07-herbert-wehner-213730",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='www.bundestag.de', port=443): Max retries exceeded with url: /dokumente/textarchiv/alterspraesidenten-07-herbert-wehner-213730 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1076)')))\"))"
+}

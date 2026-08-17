@@ -1,0 +1,167 @@
+{
+  "version": "V4_UNIFIED_DEV_COMBINED_MODELING_PREREGISTRATION_V1",
+  "purpose": "Predeclare the feature families, candidate architectures, baselines, validation design, and promotion gates for the clean unified-development corpus before any astrology feature generation or model scoring on that corpus.",
+  "target_corpus": {
+    "required_freeze_status": "V4_UNIFIED_DEV_WAVE2_FROZEN_COMBINED_TARGETS_MET_READY_FOR_FEATURE_GENERATION_GATE",
+    "required_pairs": 101,
+    "required_axis_counts": {
+      "COMPETITIVE": 31,
+      "PROJECT": 25,
+      "STATUS": 45
+    },
+    "required_same_year_pairs": 0,
+    "membership_or_pair_selection_may_not_change_after_feature_generation": true,
+    "role": "DEVELOPMENT_DISCOVERY",
+    "not_final_holdout": true
+  },
+  "primary_task": {
+    "unit": "same-subject same-axis positive-year versus negative-year pair",
+    "outcome": "positive year should receive the higher model score",
+    "primary_metric": "subject_macro_pairwise_accuracy",
+    "secondary_metrics": [
+      "axis_specific_pairwise_accuracy",
+      "repeated_outer_cv_p10",
+      "bootstrap_delta_vs_CONTROL_FIXED",
+      "bootstrap_delta_vs_NUISANCE_AGE_AXIS"
+    ]
+  },
+  "baselines": [
+    {
+      "name": "CHANCE_050",
+      "role": "reference_only",
+      "description": "0.50 pairwise reference."
+    },
+    {
+      "name": "AGE_YOUNGER_FIXED",
+      "role": "nuisance_reference",
+      "description": "Always predicts the younger/calendar-earlier event year as positive."
+    },
+    {
+      "name": "AGE_LATER_FIXED",
+      "role": "nuisance_reference",
+      "description": "Always predicts the later event year as positive."
+    },
+    {
+      "name": "NUISANCE_AGE_AXIS",
+      "role": "nuisance_reference",
+      "description": "Age/year-gap plus axis metadata only. No astrology features."
+    },
+    {
+      "name": "CONTROL_FIXED",
+      "role": "production_reference",
+      "description": "Current production annual Control score (candle.close); no refit."
+    }
+  ],
+  "winner_eligible_architectures": [
+    {
+      "name": "TG10_STEM_BRANCH_L2",
+      "family": "interpretable_theory_first",
+      "features": "Exact 10 Ten-God encodings for Daewoon/Sewoon stems plus branch hidden-stem Ten-God distributions, generated with the frozen production feature lineage.",
+      "model": "StandardScaler + LogisticRegression(penalty=L2, C=0.3)",
+      "reason": "The prior V4 diagnostic showed richer exact Ten-God stem+branch representation recovered relative to TG5, but it was not previously validated as predictive."
+    },
+    {
+      "name": "ALL_L2",
+      "family": "broad_linear_astrology",
+      "features": "All preregistered astrology features available from the frozen V4 feature generator, excluding production Control, nuisance-only metadata, collection-origin metadata, labels, and any post-outcome information.",
+      "model": "StandardScaler + LogisticRegression(penalty=L2, C=0.3)",
+      "reason": "Tests whether a broad but low-variance linear astrology representation is useful."
+    },
+    {
+      "name": "ALL_ELASTICNET_AUTO",
+      "family": "sparse_data_driven_astrology",
+      "features": "Same ALL astrology feature universe as ALL_L2.",
+      "model": "StandardScaler + LogisticRegression(penalty=elasticnet, solver=saga)",
+      "inner_cv_grid": {
+        "C": [
+          0.03,
+          0.1,
+          0.3,
+          1.0
+        ],
+        "l1_ratio": [
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ]
+      },
+      "selection_rule": "Choose hyperparameters only inside each outer-training split by inner subject-level CV.",
+      "reason": "Retains the prior sparse-selection hypothesis while forcing all selection to occur inside nested CV; prior ElasticNet instability is not treated as evidence of a winner."
+    }
+  ],
+  "forbidden": {
+    "models": [
+      "TG5_GROUP_L2",
+      "TG10_STEM_L2",
+      "TG10_SB_STRENGTH_L2",
+      "TG10_SB_RELATIONS_L2",
+      "HGB_ALL_EXPLORATORY",
+      "posthoc_feature_subsets"
+    ],
+    "predictors": [
+      "collection_wave",
+      "pair_origin",
+      "positive_earlier",
+      "event_description",
+      "source_domain",
+      "event_polarity_label",
+      "future/outcome-derived metadata"
+    ],
+    "actions": [
+      "No feature/weight/model addition after seeing unified-corpus performance.",
+      "No coefficient hand-tuning on the 101-pair corpus.",
+      "No opening NEW_CONFIRM, Validation_B, Public_CHECK, or Public_FINAL.",
+      "No changing event labels, pair membership, or axis assignment after feature generation starts."
+    ]
+  },
+  "validation": {
+    "seed": 20260816,
+    "outer": {
+      "folds": 5,
+      "repeats": 10,
+      "split_unit": "subject",
+      "balance_targets": [
+        "axis",
+        "positive_earlier"
+      ],
+      "rule": "No subject may appear in both train and test within an outer split."
+    },
+    "inner_for_elasticnet": {
+      "folds": 3,
+      "split_unit": "subject"
+    },
+    "bootstrap": {
+      "n": 20000,
+      "resample_unit": "subject"
+    },
+    "feature_generation": {
+      "engine_file": "saju_engine.py",
+      "record_engine_sha256_at_generation": true,
+      "record_sajupy_version": true,
+      "strict_birth_lineage_required": true
+    }
+  },
+  "promotion_gates": {
+    "all_required": true,
+    "rules": {
+      "overall_subject_macro_pairwise": ">= 0.55",
+      "delta_vs_CONTROL_FIXED": ">= 0.01",
+      "bootstrap_P_delta_gt_0_vs_CONTROL_FIXED": ">= 0.80",
+      "delta_vs_NUISANCE_AGE_AXIS": ">= 0.01",
+      "bootstrap_P_delta_gt_0_vs_NUISANCE_AGE_AXIS": ">= 0.80",
+      "repeated_outer_cv_p10": ">= 0.48",
+      "axis_floor_diagnostic": "No axis should be catastrophically inverted; report each axis separately."
+    },
+    "tie_break": [
+      "Higher overall subject-macro pairwise accuracy",
+      "Higher bootstrap delta versus CONTROL_FIXED",
+      "Higher repeated-CV p10",
+      "Prefer the simpler/more interpretable architecture when empirical differences are negligible"
+    ]
+  },
+  "decision_rule": {
+    "if_one_or_more_survive": "Freeze the highest-ranked survivor as the development architecture. Do not tune it again on this corpus. Then construct a completely new, prospectively collected GOLD holdout under one frozen collection protocol and score the frozen architecture and Production Control once.",
+    "if_none_survive": "Do not open a holdout. Conclude that the current preregistered astrology representations did not demonstrate sufficient improvement over Control/nuisance on this corpus; diagnose representation or collect more development data without post-hoc winner creation."
+  }
+}

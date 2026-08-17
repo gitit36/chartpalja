@@ -1,0 +1,9 @@
+{
+  "url": "https://www.bundesregierung.de/breg-de/service/newsletter-und-abos/bulletin/zum-wechsel-im-amt-des-bundesministers-der-verteidigung-erklaerung-des-bundesministers-der-verteidigung-789114",
+  "ok": false,
+  "status_code": null,
+  "final_url": "",
+  "content_type": "",
+  "title": "",
+  "error": "SSLError(MaxRetryError(\"HTTPSConnectionPool(host='www.bundesregierung.de', port=443): Max retries exceeded with url: /breg-de/service/newsletter-und-abos/bulletin/zum-wechsel-im-amt-des-bundesministers-der-verteidigung-erklaerung-des-bundesministers-der-verteidigung-789114 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1076)')))\"))"
+}

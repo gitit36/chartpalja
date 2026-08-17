@@ -1,0 +1,1489 @@
+{
+  "measured_at": "2026-08-13T02:47:43",
+  "phase": "V2_MONTH",
+  "validation_b_scored": false,
+  "production_scoring_modified": false,
+  "parent": "V2_DY_B",
+  "composition": "M = clamp(Y_parent + MonthlyDev)",
+  "policies": {
+    "HISTORICAL_DY_VALIDATION": "civil year",
+    "LIVE_MONTH_PARENT_CONTEXT": "立春 Sewoon",
+    "month_boundary": "solar 節"
+  },
+  "date_precision_audit": {
+    "year_only_life_events": {
+      "OLD_DEV": {
+        "n": 584,
+        "pos": 380,
+        "neg": 204
+      },
+      "FRESH_A_DEV": {
+        "n": 56,
+        "pos": 28,
+        "neg": 28
+      }
+    },
+    "year_only_note": "Cannot assign solar-term month without guessing — excluded from primary Month KPI",
+    "month_known_no_day_n": 0,
+    "exact_date_n": 163,
+    "evaluable_freeze": {
+      "n_events": 163,
+      "n_positive": 101,
+      "n_negative": 62,
+      "n_subjects": 14,
+      "by_pool": {
+        "OLD_DEV": {
+          "n_events": 163,
+          "n_pos": 101,
+          "n_neg": 62,
+          "n_subjects": 14
+        },
+        "FRESH_A_DEV": {
+          "n_events": 0,
+          "n_pos": 0,
+          "n_neg": 0,
+          "n_subjects": 0
+        }
+      },
+      "path": "/Users/sangjinlee/Desktop/projects/saju/test/experiments/V2_MONTH_EVALUABLE_FREEZE.json"
+    },
+    "primary_data_sparse": true,
+    "sparsity_reasons": [
+      "FRESH_A_DEV has zero exact-dated month events",
+      "only 14 subjects with month-evaluable events"
+    ]
+  },
+  "feature_duplication_audit": [
+    {
+      "feature": "month_yongshin_fit_net",
+      "class": "NEW_MONTH_INFORMATION",
+      "note": "Month-pillar yongshin fit; not G_CLEAN_AXIS year breakdown"
+    },
+    {
+      "feature": "month_fav_unfav_supply",
+      "class": "RELATED_BUT_DIFFERENT_TIMESCALE",
+      "note": "Same fav/unfav concept as D, applied to month pillar"
+    },
+    {
+      "feature": "month_natal_relations_contextual",
+      "class": "NEW_MONTH_INFORMATION",
+      "note": "Month↔natal timing; valence contextualized by fit — not fixed 합+/충−"
+    },
+    {
+      "feature": "month_sewoon_relations_contextual",
+      "class": "NEW_MONTH_INFORMATION",
+      "note": "PRIMARY short-term axis Month↔Sewoon"
+    },
+    {
+      "feature": "month_daewoon_relations_contextual",
+      "class": "RELATED_BUT_DIFFERENT_TIMESCALE",
+      "note": "M2 only; excluded when redundant with Y_parent/Sewoon flags"
+    },
+    {
+      "feature": "event_intensity",
+      "class": "NEW_MONTH_INFORMATION",
+      "note": "Explanation/diagnostic only — NOT added into MonthlyDev valence"
+    },
+    {
+      "feature": "G_CLEAN_AXIS",
+      "class": "ALREADY_IN_Y",
+      "note": "Excluded from MonthlyDev"
+    },
+    {
+      "feature": "B_trigger",
+      "class": "ALREADY_IN_Y",
+      "note": "Excluded from MonthlyDev"
+    },
+    {
+      "feature": "legacy_month_종합",
+      "class": "DUPLICATE",
+      "note": "Reference only — not in M1/M2"
+    }
+  ],
+  "amplitudes": {
+    "CONSERVATIVE": 1.5,
+    "BALANCED": 2.5,
+    "EXPRESSIVE": 4.0
+  },
+  "weights": {
+    "natal_struct": 0.35,
+    "month_sewoon": 0.4,
+    "rel_timing": 0.25,
+    "month_daewoon_m2": 0.15
+  },
+  "results": {
+    "M1_CONSERVATIVE": {
+      "candidate": "V2_MONTH_LOCAL",
+      "cand_code": "M1",
+      "amplitude": "CONSERVATIVE",
+      "amp_value": 1.5,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.5828,
+        "window_pm1_hit": 0.8834,
+        "pos_mean_MonthlyDev": 0.0753,
+        "neg_mean_MonthlyDev": -0.1039,
+        "pos_neg_sep": 0.1792,
+        "pos_mean_percentile": 0.566,
+        "neg_mean_percentile": 0.4637,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "pos_mean_dev": -0.1284,
+            "neg_mean_dev": -0.0984,
+            "sep": -0.03,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "pos_mean_dev": -0.4112,
+            "neg_mean_dev": 0.0439,
+            "sep": -0.4551,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "pos_mean_dev": 0.2231,
+            "neg_mean_dev": -0.2499,
+            "sep": 0.473,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "pos_mean_dev": 0.2692,
+            "neg_mean_dev": -0.1241,
+            "sep": 0.3933,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "pos_mean_dev": -0.1053,
+            "neg_mean_dev": -0.224,
+            "sep": 0.1187,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "pos_mean_dev": 0.1415,
+            "neg_mean_dev": -0.121,
+            "sep": 0.2626,
+            "hit": 1
+          },
+          {
+            "name": "Kamala Harris",
+            "pos_mean_dev": 0.0452,
+            "neg_mean_dev": 0.3203,
+            "sep": -0.2752,
+            "hit": 0
+          },
+          {
+            "name": "Al Gore",
+            "pos_mean_dev": 0.304,
+            "neg_mean_dev": -0.1816,
+            "sep": 0.4856,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "pos_mean_dev": 0.642,
+            "neg_mean_dev": -0.5445,
+            "sep": 1.1865,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "pos_mean_dev": -0.0756,
+            "neg_mean_dev": 0.2786,
+            "sep": -0.3542,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "pos_mean_dev": -0.0319,
+            "neg_mean_dev": 0.213,
+            "sep": -0.2449,
+            "hit": 0
+          },
+          {
+            "name": "Björk",
+            "pos_mean_dev": 0.5692,
+            "neg_mean_dev": -0.4889,
+            "sep": 1.0581,
+            "hit": 1
+          },
+          {
+            "name": "윤석열",
+            "pos_mean_dev": 0.302,
+            "neg_mean_dev": -0.3808,
+            "sep": 0.6827,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "pos_mean_dev": -0.0293,
+            "neg_mean_dev": 0.0353,
+            "sep": -0.0646,
+            "hit": 0
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_complete_years": 819,
+        "frac_median_abs_lt_0.15": 1.0,
+        "median_MonthlyDev_abs_mean": 0.0,
+        "abs_MonthlyDev_p50": 0.3799,
+        "abs_MonthlyDev_p75": 0.6784,
+        "abs_MonthlyDev_p90": 1.0012,
+        "abs_MonthlyDev_p95": 1.1815,
+        "abs_MonthlyDev_max": 2.0144,
+        "abs_annual_dev_p50": 1.5488,
+        "abs_annual_dev_p90": 4.1723,
+        "month_over_annual_p90_ratio": 0.24,
+        "frac_cross_Y_parent": 0.5,
+        "saturation_frac": 0.0,
+        "within_year_range_p50": 1.9301,
+        "adj_jump_p50": 0.5222,
+        "adj_jump_p90": 1.308,
+        "hierarchy_qa": {
+          "years_with_fav_month_in_hard_D": 0,
+          "years_with_hard_month_in_fav_D": 515,
+          "years_with_fav_month_in_hard_Y": 118,
+          "years_with_hard_month_in_fav_Y": 493,
+          "n_years": 819,
+          "note": "D/Y crossing asymmetry from closure audit NOT modified; Month-only observation"
+        }
+      }
+    },
+    "M1_BALANCED": {
+      "candidate": "V2_MONTH_LOCAL",
+      "cand_code": "M1",
+      "amplitude": "BALANCED",
+      "amp_value": 2.5,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.5828,
+        "window_pm1_hit": 0.8834,
+        "pos_mean_MonthlyDev": 0.1255,
+        "neg_mean_MonthlyDev": -0.1732,
+        "pos_neg_sep": 0.2987,
+        "pos_mean_percentile": 0.566,
+        "neg_mean_percentile": 0.4637,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "pos_mean_dev": -0.2139,
+            "neg_mean_dev": -0.1639,
+            "sep": -0.05,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "pos_mean_dev": -0.6853,
+            "neg_mean_dev": 0.0732,
+            "sep": -0.7585,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "pos_mean_dev": 0.3719,
+            "neg_mean_dev": -0.4165,
+            "sep": 0.7884,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "pos_mean_dev": 0.4487,
+            "neg_mean_dev": -0.2068,
+            "sep": 0.6555,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "pos_mean_dev": -0.1755,
+            "neg_mean_dev": -0.3734,
+            "sep": 0.1978,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "pos_mean_dev": 0.2359,
+            "neg_mean_dev": -0.2017,
+            "sep": 0.4376,
+            "hit": 1
+          },
+          {
+            "name": "Kamala Harris",
+            "pos_mean_dev": 0.0753,
+            "neg_mean_dev": 0.5339,
+            "sep": -0.4586,
+            "hit": 0
+          },
+          {
+            "name": "Al Gore",
+            "pos_mean_dev": 0.5067,
+            "neg_mean_dev": -0.3027,
+            "sep": 0.8093,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "pos_mean_dev": 1.07,
+            "neg_mean_dev": -0.9074,
+            "sep": 1.9774,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "pos_mean_dev": -0.126,
+            "neg_mean_dev": 0.4643,
+            "sep": -0.5903,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "pos_mean_dev": -0.0532,
+            "neg_mean_dev": 0.355,
+            "sep": -0.4081,
+            "hit": 0
+          },
+          {
+            "name": "Björk",
+            "pos_mean_dev": 0.9487,
+            "neg_mean_dev": -0.8148,
+            "sep": 1.7635,
+            "hit": 1
+          },
+          {
+            "name": "윤석열",
+            "pos_mean_dev": 0.5033,
+            "neg_mean_dev": -0.6346,
+            "sep": 1.1379,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "pos_mean_dev": -0.0489,
+            "neg_mean_dev": 0.0588,
+            "sep": -0.1077,
+            "hit": 0
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_complete_years": 819,
+        "frac_median_abs_lt_0.15": 1.0,
+        "median_MonthlyDev_abs_mean": 0.0,
+        "abs_MonthlyDev_p50": 0.6331,
+        "abs_MonthlyDev_p75": 1.1307,
+        "abs_MonthlyDev_p90": 1.6687,
+        "abs_MonthlyDev_p95": 1.9692,
+        "abs_MonthlyDev_max": 3.3573,
+        "abs_annual_dev_p50": 1.5488,
+        "abs_annual_dev_p90": 4.1723,
+        "month_over_annual_p90_ratio": 0.3999,
+        "frac_cross_Y_parent": 0.5,
+        "saturation_frac": 0.0,
+        "within_year_range_p50": 3.2169,
+        "adj_jump_p50": 0.8703,
+        "adj_jump_p90": 2.18,
+        "hierarchy_qa": {
+          "years_with_fav_month_in_hard_D": 0,
+          "years_with_hard_month_in_fav_D": 570,
+          "years_with_fav_month_in_hard_Y": 121,
+          "years_with_hard_month_in_fav_Y": 545,
+          "n_years": 819,
+          "note": "D/Y crossing asymmetry from closure audit NOT modified; Month-only observation"
+        }
+      }
+    },
+    "M1_EXPRESSIVE": {
+      "candidate": "V2_MONTH_LOCAL",
+      "cand_code": "M1",
+      "amplitude": "EXPRESSIVE",
+      "amp_value": 4.0,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.5828,
+        "window_pm1_hit": 0.8834,
+        "pos_mean_MonthlyDev": 0.2009,
+        "neg_mean_MonthlyDev": -0.2771,
+        "pos_neg_sep": 0.478,
+        "pos_mean_percentile": 0.566,
+        "neg_mean_percentile": 0.4637,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "pos_mean_dev": -0.3423,
+            "neg_mean_dev": -0.2623,
+            "sep": -0.08,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "pos_mean_dev": -1.0965,
+            "neg_mean_dev": 0.1171,
+            "sep": -1.2136,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "pos_mean_dev": 0.595,
+            "neg_mean_dev": -0.6664,
+            "sep": 1.2614,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "pos_mean_dev": 0.718,
+            "neg_mean_dev": -0.3309,
+            "sep": 1.0489,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "pos_mean_dev": -0.2809,
+            "neg_mean_dev": -0.5974,
+            "sep": 0.3165,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "pos_mean_dev": 0.3775,
+            "neg_mean_dev": -0.3228,
+            "sep": 0.7002,
+            "hit": 1
+          },
+          {
+            "name": "Kamala Harris",
+            "pos_mean_dev": 0.1205,
+            "neg_mean_dev": 0.8542,
+            "sep": -0.7337,
+            "hit": 0
+          },
+          {
+            "name": "Al Gore",
+            "pos_mean_dev": 0.8107,
+            "neg_mean_dev": -0.4842,
+            "sep": 1.2949,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "pos_mean_dev": 1.712,
+            "neg_mean_dev": -1.4519,
+            "sep": 3.1639,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "pos_mean_dev": -0.2016,
+            "neg_mean_dev": 0.7429,
+            "sep": -0.9445,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "pos_mean_dev": -0.0851,
+            "neg_mean_dev": 0.5679,
+            "sep": -0.653,
+            "hit": 0
+          },
+          {
+            "name": "Björk",
+            "pos_mean_dev": 1.5179,
+            "neg_mean_dev": -1.3038,
+            "sep": 2.8216,
+            "hit": 1
+          },
+          {
+            "name": "윤석열",
+            "pos_mean_dev": 0.8053,
+            "neg_mean_dev": -1.0154,
+            "sep": 1.8206,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "pos_mean_dev": -0.0783,
+            "neg_mean_dev": 0.0941,
+            "sep": -0.1723,
+            "hit": 0
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_complete_years": 819,
+        "frac_median_abs_lt_0.15": 1.0,
+        "median_MonthlyDev_abs_mean": 0.0,
+        "abs_MonthlyDev_p50": 1.013,
+        "abs_MonthlyDev_p75": 1.8091,
+        "abs_MonthlyDev_p90": 2.67,
+        "abs_MonthlyDev_p95": 3.1507,
+        "abs_MonthlyDev_max": 5.3717,
+        "abs_annual_dev_p50": 1.5488,
+        "abs_annual_dev_p90": 4.1723,
+        "month_over_annual_p90_ratio": 0.6399,
+        "frac_cross_Y_parent": 0.5,
+        "saturation_frac": 0.0,
+        "within_year_range_p50": 5.147,
+        "adj_jump_p50": 1.3925,
+        "adj_jump_p90": 3.488,
+        "hierarchy_qa": {
+          "years_with_fav_month_in_hard_D": 0,
+          "years_with_hard_month_in_fav_D": 576,
+          "years_with_fav_month_in_hard_Y": 121,
+          "years_with_hard_month_in_fav_Y": 550,
+          "n_years": 819,
+          "note": "D/Y crossing asymmetry from closure audit NOT modified; Month-only observation"
+        }
+      }
+    },
+    "M2_CONSERVATIVE": {
+      "candidate": "V2_MONTH_CONTEXTUAL",
+      "cand_code": "M2",
+      "amplitude": "CONSERVATIVE",
+      "amp_value": 1.5,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.5706,
+        "window_pm1_hit": 0.8773,
+        "pos_mean_MonthlyDev": 0.0835,
+        "neg_mean_MonthlyDev": -0.1072,
+        "pos_neg_sep": 0.1907,
+        "pos_mean_percentile": 0.566,
+        "neg_mean_percentile": 0.4704,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "pos_mean_dev": -0.052,
+            "neg_mean_dev": -0.0348,
+            "sep": -0.0172,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "pos_mean_dev": -0.3214,
+            "neg_mean_dev": 0.057,
+            "sep": -0.3783,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "pos_mean_dev": 0.1625,
+            "neg_mean_dev": -0.2797,
+            "sep": 0.4422,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "pos_mean_dev": 0.3091,
+            "neg_mean_dev": -0.0415,
+            "sep": 0.3506,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "pos_mean_dev": -0.1456,
+            "neg_mean_dev": -0.231,
+            "sep": 0.0854,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "pos_mean_dev": 0.1973,
+            "neg_mean_dev": -0.2234,
+            "sep": 0.4206,
+            "hit": 1
+          },
+          {
+            "name": "Kamala Harris",
+            "pos_mean_dev": -0.0698,
+            "neg_mean_dev": 0.3352,
+            "sep": -0.405,
+            "hit": 0
+          },
+          {
+            "name": "Al Gore",
+            "pos_mean_dev": 0.3162,
+            "neg_mean_dev": -0.18,
+            "sep": 0.4961,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "pos_mean_dev": 0.59,
+            "neg_mean_dev": -0.615,
+            "sep": 1.205,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "pos_mean_dev": -0.1378,
+            "neg_mean_dev": 0.2603,
+            "sep": -0.3981,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "pos_mean_dev": 0.0016,
+            "neg_mean_dev": 0.1407,
+            "sep": -0.1391,
+            "hit": 0
+          },
+          {
+            "name": "Björk",
+            "pos_mean_dev": 0.5926,
+            "neg_mean_dev": -0.376,
+            "sep": 0.9686,
+            "hit": 1
+          },
+          {
+            "name": "윤석열",
+            "pos_mean_dev": 0.3377,
+            "neg_mean_dev": -0.429,
+            "sep": 0.7667,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "pos_mean_dev": -0.0129,
+            "neg_mean_dev": 0.0204,
+            "sep": -0.0332,
+            "hit": 0
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_complete_years": 819,
+        "frac_median_abs_lt_0.15": 1.0,
+        "median_MonthlyDev_abs_mean": 0.0,
+        "abs_MonthlyDev_p50": 0.3872,
+        "abs_MonthlyDev_p75": 0.6878,
+        "abs_MonthlyDev_p90": 1.0017,
+        "abs_MonthlyDev_p95": 1.1908,
+        "abs_MonthlyDev_max": 2.0227,
+        "abs_annual_dev_p50": 1.5488,
+        "abs_annual_dev_p90": 4.1723,
+        "month_over_annual_p90_ratio": 0.2401,
+        "frac_cross_Y_parent": 0.4999,
+        "saturation_frac": 0.0,
+        "within_year_range_p50": 1.9393,
+        "adj_jump_p50": 0.5344,
+        "adj_jump_p90": 1.3153,
+        "hierarchy_qa": {
+          "years_with_fav_month_in_hard_D": 0,
+          "years_with_hard_month_in_fav_D": 523,
+          "years_with_fav_month_in_hard_Y": 118,
+          "years_with_hard_month_in_fav_Y": 498,
+          "n_years": 819,
+          "note": "D/Y crossing asymmetry from closure audit NOT modified; Month-only observation"
+        }
+      }
+    },
+    "M2_BALANCED": {
+      "candidate": "V2_MONTH_CONTEXTUAL",
+      "cand_code": "M2",
+      "amplitude": "BALANCED",
+      "amp_value": 2.5,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.5706,
+        "window_pm1_hit": 0.8773,
+        "pos_mean_MonthlyDev": 0.1391,
+        "neg_mean_MonthlyDev": -0.1787,
+        "pos_neg_sep": 0.3178,
+        "pos_mean_percentile": 0.566,
+        "neg_mean_percentile": 0.4704,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "pos_mean_dev": -0.0867,
+            "neg_mean_dev": -0.058,
+            "sep": -0.0286,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "pos_mean_dev": -0.5356,
+            "neg_mean_dev": 0.095,
+            "sep": -0.6306,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "pos_mean_dev": 0.2709,
+            "neg_mean_dev": -0.4661,
+            "sep": 0.737,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "pos_mean_dev": 0.5152,
+            "neg_mean_dev": -0.0691,
+            "sep": 0.5843,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "pos_mean_dev": -0.2427,
+            "neg_mean_dev": -0.385,
+            "sep": 0.1423,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "pos_mean_dev": 0.3288,
+            "neg_mean_dev": -0.3723,
+            "sep": 0.7011,
+            "hit": 1
+          },
+          {
+            "name": "Kamala Harris",
+            "pos_mean_dev": -0.1163,
+            "neg_mean_dev": 0.5586,
+            "sep": -0.6749,
+            "hit": 0
+          },
+          {
+            "name": "Al Gore",
+            "pos_mean_dev": 0.527,
+            "neg_mean_dev": -0.3,
+            "sep": 0.8269,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "pos_mean_dev": 0.9833,
+            "neg_mean_dev": -1.025,
+            "sep": 2.0083,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "pos_mean_dev": -0.2297,
+            "neg_mean_dev": 0.4338,
+            "sep": -0.6634,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "pos_mean_dev": 0.0027,
+            "neg_mean_dev": 0.2345,
+            "sep": -0.2318,
+            "hit": 0
+          },
+          {
+            "name": "Björk",
+            "pos_mean_dev": 0.9877,
+            "neg_mean_dev": -0.6267,
+            "sep": 1.6144,
+            "hit": 1
+          },
+          {
+            "name": "윤석열",
+            "pos_mean_dev": 0.5628,
+            "neg_mean_dev": -0.715,
+            "sep": 1.2778,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "pos_mean_dev": -0.0215,
+            "neg_mean_dev": 0.034,
+            "sep": -0.0554,
+            "hit": 0
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_complete_years": 819,
+        "frac_median_abs_lt_0.15": 1.0,
+        "median_MonthlyDev_abs_mean": 0.0,
+        "abs_MonthlyDev_p50": 0.6454,
+        "abs_MonthlyDev_p75": 1.1464,
+        "abs_MonthlyDev_p90": 1.6695,
+        "abs_MonthlyDev_p95": 1.9847,
+        "abs_MonthlyDev_max": 3.3712,
+        "abs_annual_dev_p50": 1.5488,
+        "abs_annual_dev_p90": 4.1723,
+        "month_over_annual_p90_ratio": 0.4001,
+        "frac_cross_Y_parent": 0.4999,
+        "saturation_frac": 0.0,
+        "within_year_range_p50": 3.2322,
+        "adj_jump_p50": 0.8906,
+        "adj_jump_p90": 2.1923,
+        "hierarchy_qa": {
+          "years_with_fav_month_in_hard_D": 0,
+          "years_with_hard_month_in_fav_D": 569,
+          "years_with_fav_month_in_hard_Y": 121,
+          "years_with_hard_month_in_fav_Y": 544,
+          "n_years": 819,
+          "note": "D/Y crossing asymmetry from closure audit NOT modified; Month-only observation"
+        }
+      }
+    },
+    "M2_EXPRESSIVE": {
+      "candidate": "V2_MONTH_CONTEXTUAL",
+      "cand_code": "M2",
+      "amplitude": "EXPRESSIVE",
+      "amp_value": 4.0,
+      "timing": {
+        "n_events": 163,
+        "n_pos": 101,
+        "n_neg": 62,
+        "exact_direction_hit": 0.5706,
+        "window_pm1_hit": 0.8773,
+        "pos_mean_MonthlyDev": 0.2226,
+        "neg_mean_MonthlyDev": -0.2859,
+        "pos_neg_sep": 0.5085,
+        "pos_mean_percentile": 0.566,
+        "neg_mean_percentile": 0.4704,
+        "subject_hit_rate": 0.5714,
+        "subjects": [
+          {
+            "name": "Donald Trump",
+            "pos_mean_dev": -0.1387,
+            "neg_mean_dev": -0.0928,
+            "sep": -0.0458,
+            "hit": 0
+          },
+          {
+            "name": "Barack Obama",
+            "pos_mean_dev": -0.857,
+            "neg_mean_dev": 0.1519,
+            "sep": -1.0089,
+            "hit": 0
+          },
+          {
+            "name": "Michael Jackson",
+            "pos_mean_dev": 0.4334,
+            "neg_mean_dev": -0.7458,
+            "sep": 1.1791,
+            "hit": 1
+          },
+          {
+            "name": "Justin Bieber",
+            "pos_mean_dev": 0.8243,
+            "neg_mean_dev": -0.1106,
+            "sep": 0.9348,
+            "hit": 1
+          },
+          {
+            "name": "Chris Brown",
+            "pos_mean_dev": -0.3882,
+            "neg_mean_dev": -0.616,
+            "sep": 0.2278,
+            "hit": 1
+          },
+          {
+            "name": "Hillary Clinton",
+            "pos_mean_dev": 0.526,
+            "neg_mean_dev": -0.5957,
+            "sep": 1.1217,
+            "hit": 1
+          },
+          {
+            "name": "Kamala Harris",
+            "pos_mean_dev": -0.1861,
+            "neg_mean_dev": 0.8938,
+            "sep": -1.0799,
+            "hit": 0
+          },
+          {
+            "name": "Al Gore",
+            "pos_mean_dev": 0.8431,
+            "neg_mean_dev": -0.4799,
+            "sep": 1.3231,
+            "hit": 1
+          },
+          {
+            "name": "Monica Lewinsky",
+            "pos_mean_dev": 1.5733,
+            "neg_mean_dev": -1.64,
+            "sep": 3.2133,
+            "hit": 1
+          },
+          {
+            "name": "Madonna",
+            "pos_mean_dev": -0.3675,
+            "neg_mean_dev": 0.694,
+            "sep": -1.0615,
+            "hit": 0
+          },
+          {
+            "name": "Dennis Rodman",
+            "pos_mean_dev": 0.0043,
+            "neg_mean_dev": 0.3752,
+            "sep": -0.3709,
+            "hit": 0
+          },
+          {
+            "name": "Björk",
+            "pos_mean_dev": 1.5804,
+            "neg_mean_dev": -1.0027,
+            "sep": 2.583,
+            "hit": 1
+          },
+          {
+            "name": "윤석열",
+            "pos_mean_dev": 0.9004,
+            "neg_mean_dev": -1.1441,
+            "sep": 2.0445,
+            "hit": 1
+          },
+          {
+            "name": "Lionel Messi",
+            "pos_mean_dev": -0.0343,
+            "neg_mean_dev": 0.0543,
+            "sep": -0.0887,
+            "hit": 0
+          }
+        ]
+      },
+      "hierarchy": {
+        "n_complete_years": 819,
+        "frac_median_abs_lt_0.15": 1.0,
+        "median_MonthlyDev_abs_mean": 0.0,
+        "abs_MonthlyDev_p50": 1.0326,
+        "abs_MonthlyDev_p75": 1.8342,
+        "abs_MonthlyDev_p90": 2.6712,
+        "abs_MonthlyDev_p95": 3.1754,
+        "abs_MonthlyDev_max": 5.394,
+        "abs_annual_dev_p50": 1.5488,
+        "abs_annual_dev_p90": 4.1723,
+        "month_over_annual_p90_ratio": 0.6402,
+        "frac_cross_Y_parent": 0.4999,
+        "saturation_frac": 0.0,
+        "within_year_range_p50": 5.1715,
+        "adj_jump_p50": 1.425,
+        "adj_jump_p90": 3.5076,
+        "hierarchy_qa": {
+          "years_with_fav_month_in_hard_D": 0,
+          "years_with_hard_month_in_fav_D": 576,
+          "years_with_fav_month_in_hard_Y": 121,
+          "years_with_hard_month_in_fav_Y": 550,
+          "n_years": 819,
+          "note": "D/Y crossing asymmetry from closure audit NOT modified; Month-only observation"
+        }
+      }
+    }
+  },
+  "winner": "M1_CONSERVATIVE",
+  "status": "V2_MONTH_TIMING_ONLY",
+  "status_reason": "hierarchy/coherence pass but exact-date data insufficient for accuracy claim (sparse=True, n=163, hit=0.5828, sep=0.1792)",
+  "mapped_events_n": 163,
+  "traces_sample": [
+    {
+      "name": "Donald Trump",
+      "label": "Ivana Trump와 결혼",
+      "polarity": "positive",
+      "at": "1977-04-07T12:00:00+09:00",
+      "Y_parent": 61.230576750000004,
+      "month_pillar": "甲辰",
+      "natal_interactions": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['지지충(辰↯戌)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간합(甲己)', '천간정극(甲克己)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['천간합(甲己)', '천간정극(甲克己)']}",
+      "sewoon_interactions": "",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "정관",
+        "branch": "겁재"
+      },
+      "directional_valence_evidence": {
+        "fit_net": 0.3500000000000001,
+        "supply": 0.0,
+        "natal_rel": 0.35,
+        "sw_rel": 0.0,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 2.0,
+      "raw_month_signal": 0.154875,
+      "centering_adjustment": -0.02881249999999999,
+      "MonthlyDev": 0.27553125,
+      "final_M": 61.506108000000005,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "Trump Tower 오픈",
+      "polarity": "positive",
+      "at": "1983-11-30T12:00:00+09:00",
+      "Y_parent": 67.7477348497066,
+      "month_pillar": "癸亥",
+      "natal_interactions": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['천간정극(癸克丙)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['반합(木반합:亥未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['지지충(亥↯巳)']}",
+      "sewoon_interactions": "지지형(자형:亥刑亥)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "편재",
+        "branch": "정재"
+      },
+      "directional_valence_evidence": {
+        "fit_net": 1.3,
+        "supply": 1.0,
+        "natal_rel": 0.0,
+        "sw_rel": -0.5,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 3.0,
+      "raw_month_signal": 0.20775,
+      "centering_adjustment": -0.3295,
+      "MonthlyDev": 0.805875,
+      "final_M": 68.5536098497066,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "The Art of the Deal 출간",
+      "polarity": "positive",
+      "at": "1987-11-01T12:00:00+09:00",
+      "Y_parent": 64.9161604122066,
+      "month_pillar": "庚戌",
+      "natal_interactions": "{'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['천간충(庚↯甲)', '천간편극(庚克甲)', '반합(火반합:戌午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['지지파(戌×未)', '지지형(지세지형:戌刑未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['원진(戌↔巳)']}",
+      "sewoon_interactions": "지지합(戌卯)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "상관",
+        "branch": "겁재"
+      },
+      "directional_valence_evidence": {
+        "fit_net": -0.75,
+        "supply": 0.0,
+        "natal_rel": -1.1,
+        "sw_rel": 0.6,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 3.8,
+      "raw_month_signal": -0.17937500000000003,
+      "centering_adjustment": -0.09225000000000003,
+      "MonthlyDev": -0.1306875,
+      "final_M": 64.7854729122066,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "The Apprentice 첫 방송",
+      "polarity": "positive",
+      "at": "2004-01-08T12:00:00+09:00",
+      "Y_parent": 61.694401750000004,
+      "month_pillar": "乙丑",
+      "natal_interactions": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['지지형(지세지형:丑刑戌)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지해(丑↦午)', '원진(丑↔午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간편극(乙克己)', '지지충(丑↯未)', '지지형(지세지형:丑刑未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['천간편극(乙克己)', '반합(金반합:丑巳)']}",
+      "sewoon_interactions": "지지충(丑↯未) 지지형(지세지형:丑刑未)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "편관",
+        "branch": "비견"
+      },
+      "directional_valence_evidence": {
+        "fit_net": 0.050000000000000044,
+        "supply": 0.0,
+        "natal_rel": -1.4500000000000002,
+        "sw_rel": -1.1,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 3.8,
+      "raw_month_signal": -0.7928750000000001,
+      "centering_adjustment": -0.27612500000000006,
+      "MonthlyDev": -0.7751250000000001,
+      "final_M": 60.91927675,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "Melania Trump와 결혼",
+      "polarity": "positive",
+      "at": "2005-01-22T12:00:00+09:00",
+      "Y_parent": 62.916123250000005,
+      "month_pillar": "丁丑",
+      "natal_interactions": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['지지형(지세지형:丑刑戌)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지해(丑↦午)', '원진(丑↔午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['지지충(丑↯未)', '지지형(지세지형:丑刑未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['반합(金반합:丑巳)']}",
+      "sewoon_interactions": "",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "편인",
+        "branch": "비견"
+      },
+      "directional_valence_evidence": {
+        "fit_net": -0.6499999999999999,
+        "supply": -1.0,
+        "natal_rel": -0.7500000000000001,
+        "sw_rel": 0.0,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 3.8,
+      "raw_month_signal": -0.470125,
+      "centering_adjustment": -0.2515625,
+      "MonthlyDev": -0.32784375,
+      "final_M": 62.588279500000006,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "미국 대통령 당선",
+      "polarity": "positive",
+      "at": "2016-11-08T12:00:00+09:00",
+      "Y_parent": 63.896362249999996,
+      "month_pillar": "己亥",
+      "natal_interactions": "{'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['천간합(己甲)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['반합(木반합:亥未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['지지충(亥↯巳)']}",
+      "sewoon_interactions": "지지해(亥↦申)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "비견",
+        "branch": "정재"
+      },
+      "directional_valence_evidence": {
+        "fit_net": 0.65,
+        "supply": 0.0,
+        "natal_rel": 0.0,
+        "sw_rel": -0.4,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 2.8,
+      "raw_month_signal": -0.03487500000000002,
+      "centering_adjustment": -0.10625000000000001,
+      "MonthlyDev": 0.10706249999999999,
+      "final_M": 64.00342475,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "제45대 대통령 취임",
+      "polarity": "positive",
+      "at": "2017-01-20T12:00:00+09:00",
+      "Y_parent": 63.896362249999996,
+      "month_pillar": "辛丑",
+      "natal_interactions": "{'with': '연주(丙戌)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['천간합(辛丙)', '지지형(지세지형:丑刑戌)']} {'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['천간정극(辛克甲)', '지지해(丑↦午)', '원진(丑↔午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['지지충(丑↯未)', '지지형(지세지형:丑刑未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['반합(金반합:丑巳)']}",
+      "sewoon_interactions": "천간합(辛丙)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "식신",
+        "branch": "비견"
+      },
+      "directional_valence_evidence": {
+        "fit_net": -0.1499999999999999,
+        "supply": 0.0,
+        "natal_rel": -0.7500000000000001,
+        "sw_rel": 0.6,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 3.8,
+      "raw_month_signal": 0.02362499999999998,
+      "centering_adjustment": -0.10625000000000001,
+      "MonthlyDev": 0.1948125,
+      "final_M": 64.09117475,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Donald Trump",
+      "label": "미국 대통령 재선 당선",
+      "polarity": "positive",
+      "at": "2024-11-05T12:00:00+09:00",
+      "Y_parent": 63.80691396279341,
+      "month_pillar": "甲戌",
+      "natal_interactions": "{'with': '월주(甲午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['반합(火반합:戌午)']} {'with': '일주(己未)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['천간합(甲己)', '천간정극(甲克己)', '지지파(戌×未)', '지지형(지세지형:戌刑未)']} {'with': '시주(己巳)', 'pillar_idx': 3, 'with_pillar_key': '시', 'relations': ['천간합(甲己)', '천간정극(甲克己)', '원진(戌↔巳)']}",
+      "sewoon_interactions": "지지충(戌↯辰)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "정관",
+        "branch": "겁재"
+      },
+      "directional_valence_evidence": {
+        "fit_net": -0.44999999999999996,
+        "supply": 0.0,
+        "natal_rel": -1.1749999999999998,
+        "sw_rel": -0.6,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 3.8,
+      "raw_month_signal": -0.6203749999999999,
+      "centering_adjustment": -0.19031250000000002,
+      "MonthlyDev": -0.6450937499999998,
+      "final_M": 63.16182021279341,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "label": "Copa 결승 패배·은퇴 선언",
+      "polarity": "negative",
+      "at": "2016-06-26T12:00:00+09:00",
+      "Y_parent": 63.4039614002934,
+      "month_pillar": "甲午",
+      "natal_interactions": "{'with': '연주(丁卯)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['지지파(午×卯)']} {'with': '월주(丙午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지형(자형:午刑午)']}",
+      "sewoon_interactions": "",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "비견",
+        "branch": "상관"
+      },
+      "directional_valence_evidence": {
+        "fit_net": -0.65,
+        "supply": 0.0,
+        "natal_rel": -1.1,
+        "sw_rel": 0.0,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 1.8,
+      "raw_month_signal": -0.40012500000000006,
+      "centering_adjustment": 0.07650000000000001,
+      "MonthlyDev": -0.7149375000000001,
+      "final_M": 62.6890239002934,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "label": "세금사기 유죄 판결",
+      "polarity": "negative",
+      "at": "2016-07-06T12:00:00+09:00",
+      "Y_parent": 63.4039614002934,
+      "month_pillar": "甲午",
+      "natal_interactions": "{'with': '연주(丁卯)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['지지파(午×卯)']} {'with': '월주(丙午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지형(자형:午刑午)']}",
+      "sewoon_interactions": "",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "비견",
+        "branch": "상관"
+      },
+      "directional_valence_evidence": {
+        "fit_net": -0.65,
+        "supply": 0.0,
+        "natal_rel": -1.1,
+        "sw_rel": 0.0,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 1.8,
+      "raw_month_signal": -0.40012500000000006,
+      "centering_adjustment": 0.07650000000000001,
+      "MonthlyDev": -0.7149375000000001,
+      "final_M": 62.6890239002934,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "label": "Barcelona 이적 요청 공개",
+      "polarity": "negative",
+      "at": "2020-08-25T12:00:00+09:00",
+      "Y_parent": 63.9253665877934,
+      "month_pillar": "甲申",
+      "natal_interactions": "{'with': '연주(丁卯)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['원진(申↔卯)']} {'with': '일주(甲辰)', 'pillar_idx': 2, 'with_pillar_key': '일', 'relations': ['반합(水반합:申辰)']}",
+      "sewoon_interactions": "천간충(甲↯庚) 반합(水반합:申子)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "비견",
+        "branch": "편관"
+      },
+      "directional_valence_evidence": {
+        "fit_net": 0.95,
+        "supply": 1.0,
+        "natal_rel": 0.975,
+        "sw_rel": 0.0,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 2.0,
+      "raw_month_signal": 0.5841249999999999,
+      "centering_adjustment": -0.10250000000000002,
+      "MonthlyDev": 1.0299375,
+      "final_M": 64.9553040877934,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    },
+    {
+      "name": "Lionel Messi",
+      "label": "Barcelona 결별·PSG 이적",
+      "polarity": "negative",
+      "at": "2021-08-05T12:00:00+09:00",
+      "Y_parent": 64.3232206502934,
+      "month_pillar": "乙未",
+      "natal_interactions": "{'with': '연주(丁卯)', 'pillar_idx': 0, 'with_pillar_key': '연', 'relations': ['반합(木반합:未卯)']} {'with': '월주(丙午)', 'pillar_idx': 1, 'with_pillar_key': '월', 'relations': ['지지합(未午)']}",
+      "sewoon_interactions": "천간충(乙↯辛) 지지충(未↯丑) 지지형(지세지형:未刑丑)",
+      "daewoon_interactions": "N/A (M1)",
+      "ten_god": {
+        "stem": "겁재",
+        "branch": "정재"
+      },
+      "directional_valence_evidence": {
+        "fit_net": -0.04999999999999993,
+        "supply": 0.0,
+        "natal_rel": 0.4,
+        "sw_rel": -1.1,
+        "dw_rel": 0.0
+      },
+      "event_intensity": 3.0,
+      "raw_month_signal": -0.3496250000000001,
+      "centering_adjustment": 0.1186875,
+      "MonthlyDev": -0.7024687500000001,
+      "final_M": 63.62075190029339,
+      "NUMERIC_SCORE_DRIVER": [
+        "fit_net",
+        "supply",
+        "natal_rel",
+        "sw_rel",
+        "dw_rel"
+      ],
+      "EXPLANATION_ONLY": [
+        "intensity",
+        "tg_stem",
+        "tg_branch",
+        "rel_texts"
+      ]
+    }
+  ],
+  "hashes": {
+    "experiment_v2_month.py": "1dbf9fa75a5711f0",
+    "month_day_labels.json": "c9560eb87ab8596b",
+    "V2_MONTH_EVALUABLE_FREEZE.json": "5b09221015d62ce8"
+  },
+  "dy_qa_flag": {
+    "good_year_in_hard_D_crossing_was_0": true,
+    "month_observation": {
+      "years_with_fav_month_in_hard_D": 0,
+      "years_with_hard_month_in_fav_D": 515,
+      "years_with_fav_month_in_hard_Y": 118,
+      "years_with_hard_month_in_fav_Y": 493,
+      "n_years": 819,
+      "note": "D/Y crossing asymmetry from closure audit NOT modified; Month-only observation"
+    },
+    "action": "revisit in Full Hierarchy QA / blind user QA; D/Y untouched"
+  }
+}

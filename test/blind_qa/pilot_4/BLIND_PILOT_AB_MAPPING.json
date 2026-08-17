@@ -1,0 +1,26 @@
+{
+  "purpose": "internal unblinding only — do not show to participants",
+  "seed": 20260815,
+  "assignment": "balanced_shuffle_2_CONTROL_as_A_and_2_V2_as_A",
+  "CONTROL_definition": "production engine candle.close (arm_control)",
+  "V2_definition": "frozen V2_DY_B",
+  "participants": {
+    "P01": {
+      "A": "V2_DY_B",
+      "B": "CONTROL"
+    },
+    "P02": {
+      "A": "CONTROL",
+      "B": "V2_DY_B"
+    },
+    "P03": {
+      "A": "CONTROL",
+      "B": "V2_DY_B"
+    },
+    "P04": {
+      "A": "V2_DY_B",
+      "B": "CONTROL"
+    }
+  },
+  "reveal_after_all_responses": true
+}

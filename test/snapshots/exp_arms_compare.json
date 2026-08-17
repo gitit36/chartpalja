@@ -1,0 +1,1414 @@
+{
+  "measured_at": "2026-08-12T01:46:43",
+  "phase": {
+    "current": "6E",
+    "order_note": "6D daewoon → 6E sewoon → 6B month → 6C day",
+    "0": {
+      "name": "KPI·데이터 위생",
+      "status": "done"
+    },
+    "1": {
+      "name": "세운 composite 재설계",
+      "status": "done",
+      "version": "B1_gated_discord",
+      "result": "train 75% / holdout 80%"
+    },
+    "2": {
+      "name": "실패 패턴별 composite 보강",
+      "status": "done",
+      "version": "B2_pattern",
+      "result": "train 100% / holdout 80%"
+    },
+    "3": {
+      "name": "건강악재 + 대운 KPI 도입",
+      "status": "done",
+      "version": "B3_health_hier",
+      "result": "sewoon 100%; daewoon 재정의 필요"
+    },
+    "4": {
+      "name": "계층 혼합 + climate KPI",
+      "status": "done",
+      "version": "B4_hier_blend",
+      "result": "sewoon 100%; dae climate excl-mixed 4/4"
+    },
+    "5": {
+      "name": "climate α + 세운독립 진폭",
+      "status": "done",
+      "version": "B5_hier_amp",
+      "result": "α=0.40 amp=2.25; σ↑"
+    },
+    "6A": {
+      "name": "세운 HP (대운 미선확정·과도기)",
+      "status": "superseded_by_6E",
+      "version": "B6_hp_hier",
+      "result": "α=0.45 — 6D 없이 진행한 실수. 6E로 대체"
+    },
+    "6D": {
+      "name": "대운 climate HP (조립→재료)",
+      "status": "done",
+      "version": "B7_dae_first",
+      "result": "D1: year_resid가 block_*보다 climate KPI 우위(block 25%대); D2: resid_scale≈2.10 + 재료 재가중; dae 4/4 sep≈+11.6 (control 75%/+1.4)"
+    },
+    "6E": {
+      "name": "세운 재스윕 (확정 climate 부모)",
+      "status": "done",
+      "version": "B7_dae_first",
+      "target_train_rate": 100.0,
+      "target_holdout_rate": 90.0,
+      "result": "α≥0.35 제약 채택 α=0.38 amp=2.93; sewoon 100% sep≈+6.1; dae 100% 유지"
+    },
+    "6B": {
+      "name": "월운 계층 스모크",
+      "status": "done",
+      "version": "B6B_month_hier",
+      "result": "β=0.72 amp=2.34; 라벨 후 분리도 재스윕 필요"
+    },
+    "6C": {
+      "name": "일운 계층 스모크",
+      "status": "done",
+      "version": "B6C_day_hier",
+      "result": "γ=0.56 amp=2.42; 라벨 후 분리도 재스윕 필요"
+    }
+  },
+  "cohort": "core_strict",
+  "exclude_collisions": true,
+  "soft_exclude": [
+    "John Ritter",
+    "Sean Penn"
+  ],
+  "holdout": [
+    "Barack Obama",
+    "Justin Bieber",
+    "Lionel Messi",
+    "Monica Lewinsky",
+    "윤석열"
+  ],
+  "arms": {
+    "control": {
+      "id": "control",
+      "version": "production"
+    },
+    "A": {
+      "id": "A_proto",
+      "version": "proto_multiaxis.general"
+    },
+    "B": {
+      "id": "B_composite_v2",
+      "version": "B7_dae_first",
+      "config": {
+        "w_career": 0.4,
+        "w_health": 0.35,
+        "w_relationship": 0.25,
+        "yfit_career_normal": 0.3,
+        "yfit_career_conflict": 0.2,
+        "career_conflict_pen": -6.0,
+        "yfit_health": 0.25,
+        "yfit_rel": 0.3,
+        "rel_weight": 0.42,
+        "struct_career": 0.45,
+        "struct_health": 0.55,
+        "base": 51.7,
+        "yfit_pos_scale": 0.77,
+        "discord_yfit_min": 2.5,
+        "discord_rel_max": -2.5,
+        "discord_pen": -12.5,
+        "require_risk_gate": true,
+        "yangin_risk_pen": -4.0,
+        "hyungsal_pen": -1.6,
+        "hyungsal_cap": -4.8,
+        "hyungsal_skip": [
+          "역마",
+          "도화"
+        ],
+        "gate_hae": true,
+        "gate_extreme_yfit": 7.5,
+        "hollow_yfit_min": 5.0,
+        "hollow_bal_min": 3.0,
+        "hollow_rel_max": 2.5,
+        "hollow_pen": -9.9,
+        "yangin_geopsal_rel_max": -3.5,
+        "yangin_geopsal_pen": -4.5,
+        "health_guan_yfit_min": 10.0,
+        "health_guan_pen": -13.5,
+        "daewoon_blend": 0.38,
+        "daewoon_parent": "climate",
+        "yindep_amp": 2.93,
+        "dae_resid_scale": 2.1,
+        "dae_climate_mode": "year_resid",
+        "dae_open_weight": 0.67,
+        "dae_gen_amp": 2.47
+      }
+    }
+  },
+  "summary": {
+    "primary_control": {
+      "pass": 7,
+      "fail": 6,
+      "evalable": 13,
+      "rate": 53.84615384615385,
+      "avg_sep": 0.6603274893196643
+    },
+    "primary_A_proto": {
+      "pass": 9,
+      "fail": 4,
+      "evalable": 13,
+      "rate": 69.23076923076923,
+      "avg_sep": 0.576604362909084
+    },
+    "primary_B_composite_v2": {
+      "pass": 13,
+      "fail": 0,
+      "evalable": 13,
+      "rate": 100.0,
+      "avg_sep": 6.12968636211358
+    },
+    "train_control": {
+      "pass": 4,
+      "fail": 4,
+      "evalable": 8,
+      "rate": 50.0,
+      "avg_sep": -0.46053223404479393
+    },
+    "train_A_proto": {
+      "pass": 5,
+      "fail": 3,
+      "evalable": 8,
+      "rate": 62.5,
+      "avg_sep": -0.04326259375518138
+    },
+    "train_B_composite_v2": {
+      "pass": 8,
+      "fail": 0,
+      "evalable": 8,
+      "rate": 100.0,
+      "avg_sep": 7.628591711732808
+    },
+    "holdout_control": {
+      "pass": 3,
+      "fail": 2,
+      "evalable": 5,
+      "rate": 60.0,
+      "avg_sep": 2.4537030467027976
+    },
+    "holdout_A_proto": {
+      "pass": 4,
+      "fail": 1,
+      "evalable": 5,
+      "rate": 80.0,
+      "avg_sep": 1.5683914935719088
+    },
+    "holdout_B_composite_v2": {
+      "pass": 5,
+      "fail": 0,
+      "evalable": 5,
+      "rate": 100.0,
+      "avg_sep": 3.731437802722817
+    },
+    "soft_control": {
+      "pass": 0,
+      "fail": 2,
+      "evalable": 2,
+      "rate": 0.0,
+      "avg_sep": -7.633116883116887
+    },
+    "soft_A_proto": {
+      "pass": 0,
+      "fail": 2,
+      "evalable": 2,
+      "rate": 0.0,
+      "avg_sep": -3.695183982683986
+    },
+    "soft_B_composite_v2": {
+      "pass": 0,
+      "fail": 2,
+      "evalable": 2,
+      "rate": 0.0,
+      "avg_sep": -11.334983766233773
+    },
+    "core_control": {
+      "pass": 7,
+      "fail": 8,
+      "evalable": 15,
+      "rate": 46.666666666666664,
+      "avg_sep": -0.4454650936718759
+    },
+    "core_A_proto": {
+      "pass": 9,
+      "fail": 6,
+      "evalable": 15,
+      "rate": 60.0,
+      "avg_sep": 0.0070325834966747415
+    },
+    "core_B_composite_v2": {
+      "pass": 13,
+      "fail": 2,
+      "evalable": 15,
+      "rate": 86.66666666666667,
+      "avg_sep": 3.801063678333934
+    },
+    "primary_dae_control": {
+      "pass": 3,
+      "fail": 1,
+      "evalable": 4,
+      "rate": 75.0,
+      "avg_sep": 1.4435685685685655
+    },
+    "primary_dae_A": {
+      "pass": 3,
+      "fail": 1,
+      "evalable": 4,
+      "rate": 75.0,
+      "avg_sep": 1.4435685685685655
+    },
+    "primary_dae_B": {
+      "pass": 4,
+      "fail": 0,
+      "evalable": 4,
+      "rate": 100.0,
+      "avg_sep": 11.539700277200277
+    },
+    "train_dae_B": {
+      "pass": 3,
+      "fail": 0,
+      "evalable": 3,
+      "rate": 100.0,
+      "avg_sep": 15.345726495726495
+    },
+    "holdout_dae_B": {
+      "pass": 1,
+      "fail": 0,
+      "evalable": 1,
+      "rate": 100.0,
+      "avg_sep": 0.12162162162162105
+    }
+  },
+  "amplitude": {
+    "control": {
+      "n": 1400,
+      "mu": 63.01,
+      "sigma": 9.79,
+      "range": 62.0,
+      "p10_p90": 25.0
+    },
+    "A_proto": {
+      "n": 1400,
+      "mu": 51.96,
+      "sigma": 3.71,
+      "range": 20.7,
+      "p10_p90": 9.8
+    },
+    "B_composite_v2": {
+      "n": 1400,
+      "mu": 43.99,
+      "sigma": 10.28,
+      "range": 60.8,
+      "p10_p90": 19.7
+    }
+  },
+  "rows": [
+    {
+      "name": "Donald Trump",
+      "bucket": "train",
+      "control": {
+        "status": "pass",
+        "sep": 0.4047619047619051,
+        "good_avg": 61.57142857142857,
+        "bad_avg": 61.166666666666664,
+        "good_used": 8,
+        "bad_used": 7,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 1.61666666666666,
+        "good_avg": 53.8,
+        "bad_avg": 52.18333333333334,
+        "good_used": 8,
+        "bad_used": 7,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 15.875000000000007,
+        "good_avg": 50.050000000000004,
+        "bad_avg": 34.175,
+        "good_used": 8,
+        "bad_used": 7,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 65.0,
+        "bad_avg": 69.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 65.0,
+        "bad_avg": 69.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 38.75,
+        "bad_avg": 39.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 21.305999999999997,
+        "max_abs_open_delta": 64.0,
+        "n": 100
+      }
+    },
+    {
+      "name": "Barack Obama",
+      "bucket": "holdout",
+      "control": {
+        "status": "pass",
+        "sep": 2.2111111111111086,
+        "good_avg": 67.6,
+        "bad_avg": 65.38888888888889,
+        "good_used": 9,
+        "bad_used": 4,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 2.05555555555555,
+        "good_avg": 53.066666666666656,
+        "bad_avg": 51.011111111111106,
+        "good_used": 9,
+        "bad_used": 4,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 3.3388888888888886,
+        "good_avg": 47.86666666666667,
+        "bad_avg": 44.52777777777778,
+        "good_used": 9,
+        "bad_used": 4,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 58.0,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 58.0,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 40.375,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 13.730000000000002,
+        "max_abs_open_delta": 41.3,
+        "n": 100
+      }
+    },
+    {
+      "name": "Michael Jackson",
+      "bucket": "train",
+      "control": {
+        "status": "fail",
+        "sep": -6.231884057971023,
+        "good_avg": 58.333333333333336,
+        "bad_avg": 64.56521739130436,
+        "good_used": 9,
+        "bad_used": 6,
+        "severity": "hard_fail"
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 0.12304347826086115,
+        "good_avg": 52.16,
+        "bad_avg": 52.036956521739135,
+        "good_used": 9,
+        "bad_used": 6,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 6.700579710144915,
+        "good_avg": 49.52666666666666,
+        "bad_avg": 42.82608695652174,
+        "good_used": 9,
+        "bad_used": 6,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "fail",
+        "sep": -18.5,
+        "good_avg": 47.5,
+        "bad_avg": 66.0,
+        "good_used": 4,
+        "bad_used": 3,
+        "severity": "hard_fail",
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "fail",
+        "sep": -18.5,
+        "good_avg": 47.5,
+        "bad_avg": 66.0,
+        "good_used": 4,
+        "bad_used": 3,
+        "severity": "hard_fail",
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "pass",
+        "sep": 17.503846153846155,
+        "good_avg": 50.35,
+        "bad_avg": 32.84615384615385,
+        "good_used": 4,
+        "bad_used": 3,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 30.955,
+        "max_abs_open_delta": 87.0,
+        "n": 100
+      }
+    },
+    {
+      "name": "Justin Bieber",
+      "bucket": "holdout",
+      "control": {
+        "status": "pass",
+        "sep": 1.9620493358633766,
+        "good_avg": 64.90322580645162,
+        "bad_avg": 62.94117647058824,
+        "good_used": 7,
+        "bad_used": 4,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "fail",
+        "sep": -1.0465844402276971,
+        "good_avg": 51.738709677419365,
+        "bad_avg": 52.78529411764706,
+        "good_used": 7,
+        "bad_used": 4,
+        "severity": "near_miss"
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 4.257210626185952,
+        "good_avg": 44.04838709677419,
+        "bad_avg": 39.79117647058824,
+        "good_used": 7,
+        "bad_used": 4,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": NaN,
+        "bad_avg": NaN,
+        "good_used": 0,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": NaN,
+        "bad_avg": NaN,
+        "good_used": 0,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": NaN,
+        "bad_avg": NaN,
+        "good_used": 0,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 22.177000000000003,
+        "max_abs_open_delta": 67.0,
+        "n": 100
+      }
+    },
+    {
+      "name": "Chris Brown",
+      "bucket": "train",
+      "control": {
+        "status": "fail",
+        "sep": -2.2923976608187147,
+        "good_avg": 56.44444444444444,
+        "bad_avg": 58.73684210526316,
+        "good_used": 5,
+        "bad_used": 6,
+        "severity": "hard_fail"
+      },
+      "A_proto": {
+        "status": "fail",
+        "sep": -3.4502923976608173,
+        "good_avg": 48.24444444444444,
+        "bad_avg": 51.69473684210526,
+        "good_used": 5,
+        "bad_used": 6,
+        "severity": "hard_fail"
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 9.185964912280696,
+        "good_avg": 41.23333333333333,
+        "bad_avg": 32.04736842105263,
+        "good_used": 5,
+        "bad_used": 6,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "pass",
+        "sep": 5.0,
+        "good_avg": 56.0,
+        "bad_avg": 51.0,
+        "good_used": 2,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "pass",
+        "sep": 5.0,
+        "good_avg": 56.0,
+        "bad_avg": 51.0,
+        "good_used": 2,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "pass",
+        "sep": 18.199999999999996,
+        "good_avg": 44.099999999999994,
+        "bad_avg": 25.9,
+        "good_used": 2,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 14.039000000000001,
+        "max_abs_open_delta": 51.4,
+        "n": 100
+      }
+    },
+    {
+      "name": "Hillary Clinton",
+      "bucket": "train",
+      "control": {
+        "status": "fail",
+        "sep": -3.6932195353248005,
+        "good_avg": 65.98245614035088,
+        "bad_avg": 69.67567567567568,
+        "good_used": 7,
+        "bad_used": 4,
+        "severity": "hard_fail"
+      },
+      "A_proto": {
+        "status": "fail",
+        "sep": -4.380512091038412,
+        "good_avg": 49.57894736842105,
+        "bad_avg": 53.95945945945946,
+        "good_used": 7,
+        "bad_used": 4,
+        "severity": "hard_fail"
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 13.666951161688008,
+        "good_avg": 42.05614035087719,
+        "bad_avg": 28.389189189189185,
+        "good_used": 7,
+        "bad_used": 4,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "pass",
+        "sep": 5.8148148148148096,
+        "good_avg": 78.81481481481481,
+        "bad_avg": 73.0,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "pass",
+        "sep": 5.8148148148148096,
+        "good_avg": 78.81481481481481,
+        "bad_avg": 73.0,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "pass",
+        "sep": 10.333333333333332,
+        "good_avg": 30.833333333333332,
+        "bad_avg": 20.5,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 29.401,
+        "max_abs_open_delta": 87.0,
+        "n": 100
+      }
+    },
+    {
+      "name": "Kamala Harris",
+      "bucket": "train",
+      "control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 60.0,
+        "bad_avg": 60.0,
+        "good_used": 5,
+        "bad_used": 1,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 52.87777777777777,
+        "bad_avg": 51.7,
+        "good_used": 5,
+        "bad_used": 1,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 47.25555555555555,
+        "bad_avg": 44.6,
+        "good_used": 5,
+        "bad_used": 1,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 54.714285714285715,
+        "bad_avg": NaN,
+        "good_used": 4,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 54.714285714285715,
+        "bad_avg": NaN,
+        "good_used": 4,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 38.41428571428571,
+        "bad_avg": NaN,
+        "good_used": 4,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 17.452,
+        "max_abs_open_delta": 48.7,
+        "n": 100
+      }
+    },
+    {
+      "name": "Al Gore",
+      "bucket": "train",
+      "control": {
+        "status": "fail",
+        "sep": -3.413525498891353,
+        "good_avg": 60.768292682926834,
+        "bad_avg": 64.18181818181819,
+        "good_used": 9,
+        "bad_used": 4,
+        "severity": "hard_fail"
+      },
+      "A_proto": {
+        "status": "fail",
+        "sep": -2.1590909090909065,
+        "good_avg": 50.550000000000004,
+        "bad_avg": 52.70909090909091,
+        "good_used": 9,
+        "bad_used": 4,
+        "severity": "hard_fail"
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 5.938543976348846,
+        "good_avg": 43.95975609756098,
+        "bad_avg": 38.02121212121213,
+        "good_used": 9,
+        "bad_used": 4,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 67.86363636363636,
+        "bad_avg": 67.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 67.86363636363636,
+        "bad_avg": 67.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 35.63181818181818,
+        "bad_avg": 39.7,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 21.963,
+        "max_abs_open_delta": 59.4,
+        "n": 100
+      }
+    },
+    {
+      "name": "Monica Lewinsky",
+      "bucket": "holdout",
+      "control": {
+        "status": "pass",
+        "sep": 10.405405405405403,
+        "good_avg": 76.4054054054054,
+        "bad_avg": 66.0,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 4.0837837837837725,
+        "good_avg": 54.783783783783775,
+        "bad_avg": 50.7,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 7.437837837837833,
+        "good_avg": 47.537837837837834,
+        "bad_avg": 40.1,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "pass",
+        "sep": 13.459459459459453,
+        "good_avg": 78.45945945945945,
+        "bad_avg": 65.0,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 0,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "pass",
+        "sep": 13.459459459459453,
+        "good_avg": 78.45945945945945,
+        "bad_avg": 65.0,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 0,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "pass",
+        "sep": 0.12162162162162105,
+        "good_avg": 30.921621621621618,
+        "bad_avg": 30.799999999999997,
+        "good_used": 4,
+        "bad_used": 2,
+        "severity": null,
+        "n_mixed_blocks": 0,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 23.67800000000001,
+        "max_abs_open_delta": 57.0,
+        "n": 100
+      }
+    },
+    {
+      "name": "Madonna",
+      "bucket": "train",
+      "control": {
+        "status": "pass",
+        "sep": 5.74637681159421,
+        "good_avg": 64.41304347826087,
+        "bad_avg": 58.666666666666664,
+        "good_used": 6,
+        "bad_used": 3,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 3.196376811594206,
+        "good_avg": 52.163043478260875,
+        "bad_avg": 48.96666666666667,
+        "good_used": 6,
+        "bad_used": 3,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 1.9231884057971058,
+        "good_avg": 43.75652173913044,
+        "bad_avg": 41.833333333333336,
+        "good_used": 6,
+        "bad_used": 3,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 63.0,
+        "bad_avg": 56.0,
+        "good_used": 2,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 63.0,
+        "bad_avg": 56.0,
+        "good_used": 2,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 45.9,
+        "bad_avg": 41.1,
+        "good_used": 2,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 19.372000000000003,
+        "max_abs_open_delta": 78.5,
+        "n": 100
+      }
+    },
+    {
+      "name": "Dennis Rodman",
+      "bucket": "train",
+      "control": {
+        "status": "pass",
+        "sep": 1.9881588999235973,
+        "good_avg": 59.3116883116883,
+        "bad_avg": 57.3235294117647,
+        "good_used": 9,
+        "bad_used": 5,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 1.116615737203972,
+        "good_avg": 51.6077922077922,
+        "bad_avg": 50.49117647058823,
+        "good_used": 9,
+        "bad_used": 5,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 2.331321619556917,
+        "good_avg": 46.307792207792204,
+        "bad_avg": 43.97647058823529,
+        "good_used": 9,
+        "bad_used": 5,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 67.0,
+        "bad_avg": 69.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 67.0,
+        "bad_avg": 69.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 41.99310344827586,
+        "bad_avg": 31.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 15.829000000000002,
+        "max_abs_open_delta": 43.5,
+        "n": 100
+      }
+    },
+    {
+      "name": "John Ritter",
+      "bucket": "soft_exclude",
+      "control": {
+        "status": "fail",
+        "sep": -4.678571428571431,
+        "good_avg": 59.75,
+        "bad_avg": 64.42857142857143,
+        "good_used": 5,
+        "bad_used": 3,
+        "severity": "hard_fail"
+      },
+      "A_proto": {
+        "status": "fail",
+        "sep": -0.17380952380952408,
+        "good_avg": 52.55,
+        "bad_avg": 52.72380952380952,
+        "good_used": 5,
+        "bad_used": 3,
+        "severity": "near_miss"
+      },
+      "B_composite_v2": {
+        "status": "fail",
+        "sep": -13.630357142857143,
+        "good_avg": 34.6125,
+        "bad_avg": 48.24285714285714,
+        "good_used": 5,
+        "bad_used": 3,
+        "severity": "hard_fail"
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 50.0,
+        "bad_avg": 63.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 50.0,
+        "bad_avg": 63.0,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 25.879999999999995,
+        "bad_avg": 41.4,
+        "good_used": 3,
+        "bad_used": 1,
+        "severity": null,
+        "n_mixed_blocks": 1,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 18.769000000000002,
+        "max_abs_open_delta": 76.1,
+        "n": 100
+      }
+    },
+    {
+      "name": "Sean Penn",
+      "bucket": "soft_exclude",
+      "control": {
+        "status": "fail",
+        "sep": -10.587662337662344,
+        "good_avg": 47.840909090909086,
+        "bad_avg": 58.42857142857143,
+        "good_used": 6,
+        "bad_used": 5,
+        "severity": "hard_fail"
+      },
+      "A_proto": {
+        "status": "fail",
+        "sep": -7.216558441558448,
+        "good_avg": 46.09772727272726,
+        "bad_avg": 53.31428571428571,
+        "good_used": 6,
+        "bad_used": 5,
+        "severity": "hard_fail"
+      },
+      "B_composite_v2": {
+        "status": "fail",
+        "sep": -9.039610389610402,
+        "good_avg": 39.93181818181817,
+        "bad_avg": 48.971428571428575,
+        "good_used": 6,
+        "bad_used": 5,
+        "severity": "hard_fail"
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 48.8,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 48.8,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 39.38,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 16.509000000000004,
+        "max_abs_open_delta": 46.2,
+        "n": 100
+      }
+    },
+    {
+      "name": "Björk",
+      "bucket": "train",
+      "control": {
+        "status": "pass",
+        "sep": 3.807471264367827,
+        "good_avg": 53.72413793103449,
+        "bad_avg": 49.916666666666664,
+        "good_used": 7,
+        "bad_used": 3,
+        "severity": null
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 3.5910919540229855,
+        "good_avg": 50.83275862068967,
+        "bad_avg": 47.24166666666668,
+        "good_used": 7,
+        "bad_used": 3,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 5.4071839080459725,
+        "good_avg": 44.81551724137931,
+        "bad_avg": 39.40833333333334,
+        "good_used": 7,
+        "bad_used": 3,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 55.0,
+        "bad_avg": NaN,
+        "good_used": 1,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 55.0,
+        "bad_avg": NaN,
+        "good_used": 1,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 48.1,
+        "bad_avg": NaN,
+        "good_used": 1,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 3,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 16.213000000000008,
+        "max_abs_open_delta": 48.2,
+        "n": 100
+      }
+    },
+    {
+      "name": "윤석열",
+      "bucket": "holdout",
+      "control": {
+        "status": "fail",
+        "sep": -2.118136872235212,
+        "good_avg": 66.60317460317462,
+        "bad_avg": 68.72131147540983,
+        "good_used": 7,
+        "bad_used": 6,
+        "severity": "hard_fail"
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 0.6568306010929135,
+        "good_avg": 53.26666666666667,
+        "bad_avg": 52.60983606557376,
+        "good_used": 7,
+        "bad_used": 6,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 1.8217017954723005,
+        "good_avg": 48.03809523809525,
+        "bad_avg": 46.21639344262295,
+        "good_used": 7,
+        "bad_used": 6,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 55.0,
+        "bad_avg": NaN,
+        "good_used": 1,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 55.0,
+        "bad_avg": NaN,
+        "good_used": 1,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 39.5,
+        "bad_avg": NaN,
+        "good_used": 1,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 26.895000000000003,
+        "max_abs_open_delta": 86.0,
+        "n": 100
+      }
+    },
+    {
+      "name": "Lionel Messi",
+      "bucket": "holdout",
+      "control": {
+        "status": "fail",
+        "sep": -0.19191374663068927,
+        "good_avg": 71.65714285714287,
+        "bad_avg": 71.84905660377356,
+        "good_used": 16,
+        "bad_used": 6,
+        "severity": "near_miss"
+      },
+      "A_proto": {
+        "status": "pass",
+        "sep": 2.092371967655005,
+        "good_avg": 53.64142857142859,
+        "bad_avg": 51.549056603773586,
+        "good_used": 16,
+        "bad_used": 6,
+        "severity": null
+      },
+      "B_composite_v2": {
+        "status": "pass",
+        "sep": 1.8015498652291129,
+        "good_avg": 46.93928571428572,
+        "bad_avg": 45.137735849056604,
+        "good_used": 16,
+        "bad_used": 6,
+        "severity": null
+      },
+      "dae_control": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 80.0,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_A": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 80.0,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "dae_B": {
+        "status": "na",
+        "sep": NaN,
+        "good_avg": 29.515384615384612,
+        "bad_avg": NaN,
+        "good_used": 3,
+        "bad_used": 0,
+        "severity": null,
+        "n_mixed_blocks": 2,
+        "coverage": "climate_excl_mixed"
+      },
+      "hier_consistency_B": {
+        "mean_abs_open_delta": 23.278000000000006,
+        "max_abs_open_delta": 74.0,
+        "n": 100
+      }
+    }
+  ]
+}
